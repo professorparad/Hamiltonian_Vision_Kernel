@@ -1,6 +1,6 @@
 # Hamiltonian_Vision_Kernel
 A spatially aware hybrid autoencoder framework responsible for reconstruction of high quality images using tensor network contraction and field peturbation 
-This is a research documenetary mainly used for Portfolio creation and Research Analysis it is still not ready for open source and viable usage 
+This is a research documenetary mainly used for Research Analysis and record my current ongoing project it is still not ready for open source and viable usage.
 The concept essentially comes by thinking of a spatially aware , autoencoding framework which uses hamiltonina cost function for training the model.
 The hamiltonina used here is the Hisenberg Hamiltonian which acts as primary filter training the model in specifc weights instead of random weights giving accurate results than an usually used quantumn autoencoding framework
 Before feeding into the Variational Model the Model First goes to 3 layers:
