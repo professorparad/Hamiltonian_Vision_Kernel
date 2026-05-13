@@ -6,7 +6,7 @@ This is a research documenetary mainly used for Research Analysis and record my 
 
 The concept essentially comes by thinking of a spatially aware , autoencoding framework which uses hamiltonina cost function for training the model.
 The hamiltonina used here is the Hisenberg Hamiltonian which acts as primary filter training the model in specifc weights instead of random weights giving accurate results than an usually used quantumn autoencoding framework
-Before feeding into the Variational Model the Model First goes to 3 layers:
+Before feeding into the Variational Model the Model First goes to 4 layers:
 1. The Patching layer: Here the image is broken into patches for easier computation
 2. The MPS layer: this layers uses hard coded SVD to flatten each patches and compress the data to a specififc dimensional tensor 
 3. The positional encoded layer : this layer essentially provides and encoded each patch with spatial information using Fourier analysis
