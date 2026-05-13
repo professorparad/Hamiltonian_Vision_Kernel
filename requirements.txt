@@ -1,0 +1,10 @@
+quimb
+torch
+numpy
+pandas
+matplotlib
+seaborn
+pennylane
+qiskit
+jupyter
+scikit-learn
