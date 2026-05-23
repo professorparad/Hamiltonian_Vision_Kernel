@@ -16,7 +16,7 @@ def two_site_expectation(mps , operator_1 , operator_2 , site_1 , site_2 ):
 def extract_mps_features(patch :np.ndarray , n_sites : int = 12 , bond_dim: int = 4):
     vector = patch.flatten()
     vector = vector /(np.linalg.norm(vector)+ 1e-8)
-    psi = vector.reshape([2]** n_sites)
+    psi = vector.reshape([2]* n_sites)
     mps = qtn.MatrixProductState.from_dense(psi)
     mps.compress(max_bond = bond_dim)
     mps.normalize()
