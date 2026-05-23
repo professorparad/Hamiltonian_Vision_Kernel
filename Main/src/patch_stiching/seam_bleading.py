@@ -2,7 +2,7 @@ import numpy as np
 def blend_seams(image:np.ndarray , patch_size: int = 64 , blend_width : int = 10):
     original = image.copy()
     weight = np.ones_like(original , dtype= np.float32)
-    for seam in range(patch_size , image,shape[0] , patch_size):
+    for seam in range(patch_size , image.shape[0] , patch_size):
         for d in range(blend_width):
             alpha = d /blend_width
             for pos in [seam - d , seam+d]:
