@@ -7,4 +7,3 @@ def load_image_grayscale(img_path:str , size : tuple =(256 , 256)):
     img = cv2.resize(img , size).astype(np.float32)
     img = img/255.0
     return img 
-    return img 
