@@ -2,7 +2,7 @@ import torch
 import pennylane as qml 
 
 n_qubits = 6
-n_layer = 2 
+n_layers = 2 
 n_bonds = n_qubits-1
 observable_dim =(n_qubits + n_qubits + 3*n_bonds)
 device = qml.device("default.qubit" , wires = n_qubits)
