@@ -2,9 +2,9 @@ import numpy as np
 import torch 
 import torch.nn as nn 
 import pennylane as qml 
-from src.quantum.circuit import(VQC , n_qubits , n_layers , n_bonds)
+from src.quantum.circuit import(VQC , n_qubits, n_layers, n_bonds)
 
-class QuantumModel(nn.module):
+class QuantumModel(nn.Module):
     def __init__( self , feature_dim : int , positional_dim : int):
         super().__init__()
         self.feature_projection = nn.Linear(feature_dim , n_qubits)
