@@ -74,8 +74,7 @@ img_path = (
 def build_dataset():
 
     image = load_image_grayscale(
-        img_path
-    )
+        img_path )
 
     patches, positions = extract_patch(
         image,
