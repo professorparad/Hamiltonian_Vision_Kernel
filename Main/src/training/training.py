@@ -10,7 +10,7 @@ from src.preprocessing.patching import (
 )
 
 from src.preprocessing.positional_encoding import (
-    sinusodial_encoding
+    sinusoidal_positional_encoding
 )
 
 from src.tensornetworks.mps_features import (
@@ -76,7 +76,7 @@ def build_dataset():
     image = load_image_grayscale(
         img_path )
 
-    patches, positions = extract_patch(
+    patches, positions = extract_patches(
         image,
         patch_size=64
     )
@@ -134,7 +134,7 @@ def train():
     ).to(device)
 
     decoder = PatchDecoder(
-        observable_dim=OBSERVABLE_DIM,
+        observable_dim=observable_dim,
         positional_dim=positions.shape[1],
         patch_size=64
     ).to(device)
@@ -219,7 +219,7 @@ def train():
         ).cpu().numpy()
 
     img_rec = blend_seams(
-        stitch(pred)
+        stictch_patches(pred)
     )
 
     mps_patches = np.array([
@@ -228,7 +228,7 @@ def train():
     ])
 
     img_mps = blend_seams(
-        stitch(mps_patches)
+        stictch_patches(mps_patches)
     )
 
     plot_reconstructions(
