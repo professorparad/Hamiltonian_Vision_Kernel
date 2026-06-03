@@ -1,0 +1,12 @@
+{
+  "image_path": "data/monalisa.jpg",
+  "image_size": 256,
+  "patch_size": 64,
+  "positional_dim": 8,
+  "steps": 120,
+  "lr": 0.003,
+  "device": "auto",
+  "output_dir": "outputs/training_analysis",
+  "save_outputs": true,
+  "show_plots": false
+}
