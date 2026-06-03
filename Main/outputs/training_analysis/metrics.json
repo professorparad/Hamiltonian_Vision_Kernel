@@ -1,0 +1,7 @@
+{
+  "final_total_loss": -0.02195281721651554,
+  "final_reconstruction_loss": 0.0005203558830544353,
+  "final_energy_loss": -2.247317314147949,
+  "mean_energy": -2.289876699447632,
+  "std_energy": 0.04506969451904297
+}
