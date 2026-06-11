@@ -1,6 +1,6 @@
-import torch
 import unittest
 
+import torch
 from utils.pathing import add_main_to_path
 
 add_main_to_path()

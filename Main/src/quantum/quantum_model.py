@@ -1,7 +1,9 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from src.quantum.circuit import VQC, n_qubits, n_layers, n_bonds
+
+from src.quantum.circuit import VQC, n_bonds, n_layers, n_qubits
+
 
 class QuantumModel(nn.Module):
     def __init__(self, feature_dim: int, positional_dim: int):
@@ -19,7 +21,9 @@ class QuantumModel(nn.Module):
         observables = []
         energies = []
 
-        for feature_vector, position_vector in zip(projected_features, projected_positions):
+        for feature_vector, position_vector in zip(
+            projected_features, projected_positions
+        ):
             output = torch.stack(VQC(feature_vector, position_vector, self.weights))
             zz_start = 2 * n_qubits
             xx_start = zz_start + n_bonds
@@ -27,7 +31,7 @@ class QuantumModel(nn.Module):
 
             ZZ = output[zz_start:xx_start]
             XX = output[xx_start:yy_start]
-            YY = output[yy_start:yy_start + n_bonds]
+            YY = output[yy_start : yy_start + n_bonds]
             energy = (
                 torch.sum(self.Jz * ZZ)
                 + torch.sum(self.Jx * XX)

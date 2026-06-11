@@ -9,7 +9,7 @@ def mps_reconstruct(
     patch_size: int = 64,
 ):
     vector = patch.flatten()
-    if vector.size != 2 ** n_sites:
+    if vector.size != 2**n_sites:
         raise ValueError("patch size must contain exactly 2 ** n_sites values")
 
     norm = np.linalg.norm(vector) + 1e-8

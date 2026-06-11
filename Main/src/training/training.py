@@ -19,58 +19,20 @@ import numpy as np
 import torch
 import torch.optim as optim
 
+from src.decoder.patch_decoder import PatchDecoder
 from src.preprocessing.image_loader import load_image_grayscale
-
 from src.preprocessing.patching import extract_patches
-
-from src.preprocessing.positional_encoding import (
-    sinusoidal_positional_encoding
-)
-
-from src.tensornetworks.mps_features import (
-    extract_mps_features
-)
-
-from src.tensornetworks.mps_reconstruction import (
-    mps_reconstruct
-)
-
-from src.quantum.circuit import (
-    observable_dim
-)
-
-from src.quantum.quantum_model import (
-    QuantumModel
-)
-
-from src.decoder.patch_decoder import (
-    PatchDecoder
-)
-
-from src.reconstruction.patch_stitching import (
-    stictch_patches
-)
-
-from src.reconstruction.seam_bleading import (
-    blend_seams
-)
-
-from src.visualization.entropy_maps import (
-    plot_entropy_map
-)
-
-from src.visualization.observable_plots import (
-    plot_observables
-)
-
-from src.visualization.training_curve import (
-    plot_training_curves
-)
-
-from src.visualization.reconstruction_plots import (
-    plot_reconstructions
-)
-
+from src.preprocessing.positional_encoding import sinusoidal_positional_encoding
+from src.quantum.circuit import observable_dim
+from src.quantum.quantum_model import QuantumModel
+from src.reconstruction.patch_stitching import stictch_patches
+from src.reconstruction.seam_bleading import blend_seams
+from src.tensornetworks.mps_features import extract_mps_features
+from src.tensornetworks.mps_reconstruction import mps_reconstruct
+from src.visualization.entropy_maps import plot_entropy_map
+from src.visualization.observable_plots import plot_observables
+from src.visualization.reconstruction_plots import plot_reconstructions
+from src.visualization.training_curve import plot_training_curves
 
 DEFAULT_IMAGE_PATH = PROJECT_ROOT / "data" / "monalisa.jpg"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "outputs" / "training_analysis"
@@ -91,44 +53,22 @@ def build_dataset(
     device: torch.device | str = "auto",
 ):
     device = resolve_device(device) if isinstance(device, str) else device
-    image = load_image_grayscale(
-        str(image_path),
-        size=(image_size, image_size)
-    )
+    image = load_image_grayscale(str(image_path), size=(image_size, image_size))
 
-    patches, positions = extract_patches(
-        image,
-        patch_size=patch_size
-    )
+    patches, positions = extract_patches(image, patch_size=patch_size)
     raw_positions = positions.copy()
 
-    features = np.array([
-        extract_mps_features(p)
-        for p in patches
-    ])
+    features = np.array([extract_mps_features(p) for p in patches])
 
-    features = torch.tensor(
-        features,
-        dtype=torch.float32
+    features = torch.tensor(features, dtype=torch.float32)
+
+    features = (features - features.mean(dim=0)) / (
+        features.std(dim=0, unbiased=False) + 1e-8
     )
 
-    features = (
-        features
-        - features.mean(dim=0)
-    ) / (
-        features.std(dim=0, unbiased=False)
-        + 1e-8
-    )
+    positions = sinusoidal_positional_encoding(positions, d_model=positional_dim)
 
-    positions = sinusoidal_positional_encoding(
-        positions,
-        d_model=positional_dim
-    )
-
-    targets = torch.tensor(
-        patches,
-        dtype=torch.float32
-    ).unsqueeze(1)
+    targets = torch.tensor(patches, dtype=torch.float32).unsqueeze(1)
 
     return (
         image,
@@ -136,7 +76,7 @@ def build_dataset(
         raw_positions,
         features.to(device),
         positions.to(device),
-        targets.to(device)
+        targets.to(device),
     )
 
 
@@ -154,14 +94,7 @@ def train(
 ):
     device = resolve_device(device) if isinstance(device, str) else device
 
-    (
-        image,
-        patches,
-        raw_positions,
-        features,
-        positions,
-        targets
-    ) = build_dataset(
+    (image, patches, raw_positions, features, positions, targets) = build_dataset(
         image_path=image_path,
         image_size=image_size,
         patch_size=patch_size,
@@ -170,75 +103,48 @@ def train(
     )
 
     model = QuantumModel(
-        feature_dim=features.shape[1],
-        positional_dim=positions.shape[1]
+        feature_dim=features.shape[1], positional_dim=positions.shape[1]
     ).to(device)
 
     decoder = PatchDecoder(
         observable_dim=observable_dim,
         positional_dim=positions.shape[1],
-        patch_size=patch_size
+        patch_size=patch_size,
     ).to(device)
 
-    optimizer = optim.Adam(
-        list(model.parameters())
-        +
-        list(decoder.parameters()),
-        lr=lr
-    )
+    optimizer = optim.Adam(list(model.parameters()) + list(decoder.parameters()), lr=lr)
 
     total_losses = []
     reconstruction_losses = []
     energy_losses = []
 
     for step in range(steps):
-
         model.train()
         decoder.train()
 
         optimizer.zero_grad()
 
-        observables, energies = model(
-            features,
-            positions
-        )
+        observables, energies = model(features, positions)
 
-        output = decoder(
-            observables,
-            positions
-        )
+        output = decoder(observables, positions)
 
-        reconstruction_loss = torch.mean(
-            (output - targets) ** 2
-        )
+        reconstruction_loss = torch.mean((output - targets) ** 2)
 
-        energy_loss = torch.mean(
-            energies
-        )
+        energy_loss = torch.mean(energies)
 
-        loss = (
-            reconstruction_loss
-            + 0.01 * energy_loss
-        )
+        loss = reconstruction_loss + 0.01 * energy_loss
 
         loss.backward()
 
         optimizer.step()
 
-        total_losses.append(
-            loss.item()
-        )
+        total_losses.append(loss.item())
 
-        reconstruction_losses.append(
-            reconstruction_loss.item()
-        )
+        reconstruction_losses.append(reconstruction_loss.item())
 
-        energy_losses.append(
-            energy_loss.item()
-        )
+        energy_losses.append(energy_loss.item())
 
         if step % 20 == 0 or step == steps - 1:
-
             print(
                 f"Step: {step:>4d} | "
                 f"Loss: {loss.item():.6f} | "
@@ -250,66 +156,34 @@ def train(
     decoder.eval()
 
     with torch.no_grad():
+        observables, energies = model(features, positions)
 
-        observables, energies = model(
-            features,
-            positions
-        )
+        pred = decoder(observables, positions).cpu().numpy()
 
-        pred = decoder(
-            observables,
-            positions
-        ).cpu().numpy()
+        zero_pred = decoder(torch.zeros_like(observables), positions).cpu().numpy()
 
-        zero_pred = decoder(
-            torch.zeros_like(observables),
-            positions
-        ).cpu().numpy()
-
-        random_pred = decoder(
-            torch.randn_like(observables),
-            positions
-        ).cpu().numpy()
+        random_pred = decoder(torch.randn_like(observables), positions).cpu().numpy()
 
     img_rec = blend_seams(
-        stictch_patches(
-            pred,
-            image_size=image_size,
-            patch_size=patch_size
-        ),
-        patch_size=patch_size
+        stictch_patches(pred, image_size=image_size, patch_size=patch_size),
+        patch_size=patch_size,
     )
 
-    mps_patches = np.array([
-        [mps_reconstruct(p)]
-        for p in patches
-    ])
+    mps_patches = np.array([[mps_reconstruct(p)] for p in patches])
 
     img_mps = blend_seams(
-        stictch_patches(
-            mps_patches,
-            image_size=image_size,
-            patch_size=patch_size
-        ),
-        patch_size=patch_size
+        stictch_patches(mps_patches, image_size=image_size, patch_size=patch_size),
+        patch_size=patch_size,
     )
 
     img_random = blend_seams(
-        stictch_patches(
-            random_pred,
-            image_size=image_size,
-            patch_size=patch_size
-        ),
-        patch_size=patch_size
+        stictch_patches(random_pred, image_size=image_size, patch_size=patch_size),
+        patch_size=patch_size,
     )
 
     img_zero = blend_seams(
-        stictch_patches(
-            zero_pred,
-            image_size=image_size,
-            patch_size=patch_size
-        ),
-        patch_size=patch_size
+        stictch_patches(zero_pred, image_size=image_size, patch_size=patch_size),
+        patch_size=patch_size,
     )
 
     history = {
@@ -347,29 +221,19 @@ def train(
             quantum_reconstruction=img_rec,
             mps_baseline=img_mps,
             random_latent=img_random,
-            zero_latent=img_zero
+            zero_latent=img_zero,
         )
         plot_entropy_map(
-            entropy_features,
-            grid_size=get_grid_size(image_size, patch_size)
+            entropy_features, grid_size=get_grid_size(image_size, patch_size)
         )
-        plot_observables(
-            observables.cpu().numpy()
-        )
-        plot_training_curves(
-            total_losses,
-            reconstruction_losses,
-            energy_losses
-        )
+        plot_observables(observables.cpu().numpy())
+        plot_training_curves(total_losses, reconstruction_losses, energy_losses)
 
     return model, decoder, outputs
 
 
 def get_grid_size(image_size: int, patch_size: int) -> tuple[int, int]:
-    return (
-        image_size // patch_size,
-        image_size // patch_size
-    )
+    return (image_size // patch_size, image_size // patch_size)
 
 
 def get_entropy_features(features: torch.Tensor) -> np.ndarray:
@@ -389,36 +253,20 @@ def save_analysis_outputs(
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    save_reconstruction_plot(
-        outputs,
-        output_dir / "reconstructions.png"
-    )
-    save_training_curve(
-        outputs["history"],
-        output_dir / "training_curves.png"
-    )
-    save_observable_plot(
-        outputs["observables"],
-        output_dir / "observables.png"
-    )
+    save_reconstruction_plot(outputs, output_dir / "reconstructions.png")
+    save_training_curve(outputs["history"], output_dir / "training_curves.png")
+    save_observable_plot(outputs["observables"], output_dir / "observables.png")
     save_entropy_plot(
         get_entropy_features(features),
         output_dir / "entropy_map.png",
-        grid_size=get_grid_size(image_size, patch_size)
+        grid_size=get_grid_size(image_size, patch_size),
     )
 
     np.save(
-        output_dir / "quantum_reconstruction.npy",
-        outputs["quantum_reconstruction"]
+        output_dir / "quantum_reconstruction.npy", outputs["quantum_reconstruction"]
     )
-    np.save(
-        output_dir / "mps_baseline.npy",
-        outputs["mps_baseline"]
-    )
-    np.save(
-        output_dir / "observables.npy",
-        outputs["observables"]
-    )
+    np.save(output_dir / "mps_baseline.npy", outputs["mps_baseline"])
+    np.save(output_dir / "observables.npy", outputs["observables"])
 
     metrics = {
         "final_total_loss": outputs["history"]["total_loss"][-1],
@@ -428,8 +276,7 @@ def save_analysis_outputs(
         "std_energy": float(np.std(outputs["energies"])),
     }
     (output_dir / "metrics.json").write_text(
-        json.dumps(metrics, indent=2),
-        encoding="utf-8"
+        json.dumps(metrics, indent=2), encoding="utf-8"
     )
 
     return metrics
@@ -598,12 +445,8 @@ def main():
 
     if config["save_outputs"]:
         print(f"Results saved to: {config['output_dir']}")
-    print(
-        "Final loss:",
-        outputs["history"]["total_loss"][-1]
-    )
+    print("Final loss:", outputs["history"]["total_loss"][-1])
 
 
 if __name__ == "__main__":
-
     main()

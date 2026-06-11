@@ -1,8 +1,8 @@
-import numpy as np
-import torch
 import unittest
 from unittest import mock
 
+import numpy as np
+import torch
 from utils.pathing import add_main_to_path
 
 add_main_to_path()
@@ -20,7 +20,9 @@ class TrainingSmokeTests(unittest.TestCase):
             return original_extract_patches(image_arg, patch_size=2)
 
         patches = [
-            mock.patch.object(training, "load_image_grayscale", lambda path, size: image),
+            mock.patch.object(
+                training, "load_image_grayscale", lambda path, size: image
+            ),
             mock.patch.object(
                 training,
                 "extract_mps_features",

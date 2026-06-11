@@ -13,7 +13,7 @@ def extract_patches(image: np.ndarray, patch_size: int = 64):
     positions = []
     for i in range(0, height, patch_size):
         for j in range(0, width, patch_size):
-            patches.append(image[i:i + patch_size, j:j + patch_size])
+            patches.append(image[i : i + patch_size, j : j + patch_size])
             positions.append([i / height, j / width])
 
     patches = np.array(patches, dtype=np.float32)

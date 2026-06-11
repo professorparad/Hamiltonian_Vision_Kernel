@@ -1,7 +1,7 @@
-import numpy as np
-import torch
 import unittest
 
+import numpy as np
+import torch
 from utils.pathing import add_main_to_path
 
 add_main_to_path()

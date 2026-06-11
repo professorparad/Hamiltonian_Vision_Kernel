@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hvk"
+version = "1.0.0"
+description = "A spatially aware hybrid autoencoder framework responsible for reconstruction of high quality images using tensor network contraction and field perturbation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+dependencies = [
+    "quimb",
+    "torch",
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "seaborn",
+    "pennylane",
+    "qiskit",
+    "scikit-learn"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "pre-commit"
+]
+
+[project.scripts]
+hvk-run = "main:main"
+
+[tool.setuptools]
+package-dir = {"" = "Main"}
+
+[tool.setuptools.packages.find]
+where = ["Main"]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+exclude = [
+    "Main2",
+    "*.ipynb",
+    ".venv",
+    "build",
+    "dist",
+    "__pycache__"
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E402"]
