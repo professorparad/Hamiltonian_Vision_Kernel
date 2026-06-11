@@ -20,7 +20,7 @@ def two_site_expectation(mps, operator_1, operator_2, site_1, site_2):
 
 def extract_mps_features(patch: np.ndarray, n_sites: int = 12, bond_dim: int = 4):
     vector = patch.flatten()
-    if vector.size != 2 ** n_sites:
+    if vector.size != 2**n_sites:
         raise ValueError("patch size must contain exactly 2 ** n_sites values")
 
     vector = vector / (np.linalg.norm(vector) + 1e-8)
@@ -37,9 +37,9 @@ def extract_mps_features(patch: np.ndarray, n_sites: int = 12, bond_dim: int = 4
     for site in range(n_sites - 1):
         features.append(two_site_expectation(mps, Z_OP, Z_OP, site, site + 1))
 
-    for bond in range(1 , n_sites):
+    for bond in range(1, n_sites):
         schmidt_values = mps.schmidt_values(bond)
-        probabilities = schmidt_values ** 2
+        probabilities = schmidt_values**2
         probabilities = probabilities / (probabilities.sum() + 1e-8)
         entropy = -np.sum(probabilities * np.log(probabilities + 1e-8))
         features.append(float(entropy))

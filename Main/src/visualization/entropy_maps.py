@@ -1,13 +1,10 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_entropy_map(
-    entropy_features: np.ndarray,
-    grid_size: tuple = (4, 4),
-    cmap: str = "inferno"
+    entropy_features: np.ndarray, grid_size: tuple = (4, 4), cmap: str = "inferno"
 ):
-
     """
     Visualize average patch entanglement entropy.
 
@@ -24,31 +21,19 @@ def plot_entropy_map(
     """
 
     if entropy_features.ndim != 2:
-        raise ValueError(
-            "entropy_features must have shape (N, M)"
-        )
+        raise ValueError("entropy_features must have shape (N, M)")
 
     patch_entropy = entropy_features.mean(axis=1)
 
-    entropy_map = patch_entropy.reshape(
-        grid_size
-    )
+    entropy_map = patch_entropy.reshape(grid_size)
 
     plt.figure(figsize=(6, 6))
 
-    image = plt.imshow(
-        entropy_map,
-        cmap=cmap
-    )
+    image = plt.imshow(entropy_map, cmap=cmap)
 
-    plt.colorbar(
-        image,
-        label="Average Entanglement Entropy"
-    )
+    plt.colorbar(image, label="Average Entanglement Entropy")
 
-    plt.title(
-        "HVK Entanglement Entropy Map"
-    )
+    plt.title("HVK Entanglement Entropy Map")
 
     plt.axis("off")
 

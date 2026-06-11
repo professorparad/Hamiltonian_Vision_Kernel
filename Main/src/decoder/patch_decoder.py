@@ -25,7 +25,7 @@ class PatchDecoder(nn.Module):
             nn.Linear(128, 256),
             nn.ReLU(),
             nn.Linear(256, patch_size * patch_size),
-            nn.Sigmoid()
+            nn.Sigmoid(),
         )
 
     def forward(self, observables: torch.Tensor, positional_encoding: torch.Tensor):
