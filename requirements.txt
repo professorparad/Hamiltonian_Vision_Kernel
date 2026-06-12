@@ -4,6 +4,7 @@ numpy
 pandas
 matplotlib
 seaborn
+opencv-python
 pennylane
 qiskit
 jupyter
