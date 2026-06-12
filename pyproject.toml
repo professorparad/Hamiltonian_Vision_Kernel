@@ -23,6 +23,7 @@ dependencies = [
     "pandas",
     "matplotlib",
     "seaborn",
+    "opencv-python",
     "pennylane",
     "qiskit",
     "scikit-learn"
