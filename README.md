@@ -2,6 +2,8 @@
 A spatially aware hybrid autoencoder framework responsible for reconstruction of high quality images using tensor network contraction and field peturbation 
 
 *NOTE:*
+In this following codebase the 
+Main is for the hamiltonian_vision_kernel for 1D generic cost function and the Main2 is the hamiltonina_vision_kernel 2D generic cost function each have there own perksreconstruction quality and phase transition epoch.
 This is a research documenetary mainly used for Research Analysis and record my current ongoing project it is still not ready for open source and viable usage.
 
 The concept essentially comes by thinking of a spatially aware , autoencoding framework which uses hamiltonian cost function for training the model.

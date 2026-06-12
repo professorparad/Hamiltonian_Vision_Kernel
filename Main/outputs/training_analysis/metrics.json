@@ -1,7 +1,21 @@
 {
-  "final_total_loss": -0.02195281721651554,
-  "final_reconstruction_loss": 0.0005203558830544353,
-  "final_energy_loss": -2.247317314147949,
-  "mean_energy": -2.289876699447632,
-  "std_energy": 0.04506969451904297
+  "final_total_loss": -0.03687296807765961,
+  "final_reconstruction_loss": 0.0003374143852852285,
+  "final_energy_loss": -3.721038341522217,
+  "mean_energy": -3.7821004390716553,
+  "std_energy": 0.7314711213111877,
+  "phase_transition": {
+    "detected": true,
+    "critical_epoch": 11,
+    "max_susceptibility": 0.002316191792488098,
+    "order_parameter_jump": 0.002316191792488098,
+    "susceptibility_baseline": 0.0005035307258367538,
+    "susceptibility_spread": 0.00038915983168408275,
+    "susceptibility_threshold": 0.0012818503892049193,
+    "proof": "Phase transition at epoch 11: susceptibility peak 0.002316 exceeds threshold 0.001282 (median 0.000504 + 2*std 0.000389); order-parameter jump 0.002316."
+  },
+  "media": {
+    "phase_transition_epoch_vs_order_parameter_gif": "Main/outputs/training_analysis/phase_transition_epoch_vs_order_parameter.gif",
+    "phase_transition_order_parameter_reconstruction_gif": "Main/outputs/training_analysis/phase_transition_order_parameter_reconstruction.gif"
+  }
 }

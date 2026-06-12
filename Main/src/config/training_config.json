@@ -3,10 +3,14 @@
   "image_size": 256,
   "patch_size": 64,
   "positional_dim": 8,
-  "steps": 120,
+  "steps": 200,
   "lr": 0.003,
   "device": "auto",
   "output_dir": "outputs/training_analysis",
   "save_outputs": true,
-  "show_plots": false
+  "show_plots": false,
+  "track_order_parameters": true,
+  "save_epoch_media": true,
+  "epoch_frame_interval": 1,
+  "zero_latent_uses_positions": false
 }
