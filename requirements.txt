@@ -9,4 +9,3 @@ pennylane
 qiskit
 jupyter
 scikit-learn
-#a
