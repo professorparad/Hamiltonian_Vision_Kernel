@@ -29,6 +29,16 @@ from src.reconstruction.patch_stitching import stictch_patches
 from src.reconstruction.seam_bleading import blend_seams
 from src.tensornetworks.mps_features import extract_mps_features
 from src.tensornetworks.mps_reconstruction import mps_reconstruct
+from src.training.data_generator import TrainingDataGenerator
+from src.training.order_parameters import detect_phase_transition
+from src.training.phase_media import (
+    save_epoch_frame,
+    save_frames_as_gif,
+    save_merged_phase_transition_gif,
+    save_order_parameter_gif,
+    save_order_parameter_plot,
+    save_phase_transition_order_parameter_gif,
+)
 from src.visualization.entropy_maps import plot_entropy_map
 from src.visualization.observable_plots import plot_observables
 from src.visualization.reconstruction_plots import plot_reconstructions
@@ -91,6 +101,10 @@ def train(
     output_dir: str | Path | None = DEFAULT_OUTPUT_DIR,
     save_outputs: bool = True,
     show_plots: bool = False,
+    track_order_parameters: bool = True,
+    save_epoch_media: bool = True,
+    epoch_frame_interval: int = 1,
+    zero_latent_uses_positions: bool = False,
 ):
     device = resolve_device(device) if isinstance(device, str) else device
 
@@ -117,6 +131,14 @@ def train(
     total_losses = []
     reconstruction_losses = []
     energy_losses = []
+    epoch_frame_paths = []
+    data_generator = None
+    frame_dir = None
+    if save_outputs and output_dir is not None and track_order_parameters:
+        output_dir = Path(output_dir)
+        data_generator = TrainingDataGenerator(output_dir, Path(image_path).name)
+        if save_epoch_media:
+            frame_dir = output_dir / "phase_transition_frames"
 
     for step in range(steps):
         model.train()
@@ -152,6 +174,58 @@ def train(
                 f"Energy: {energy_loss.item():.6f}"
             )
 
+        should_track = data_generator is not None and (
+            step % max(epoch_frame_interval, 1) == 0 or step == steps - 1
+        )
+        if should_track:
+            model.eval()
+            decoder.eval()
+            with torch.no_grad():
+                tracked_observables, tracked_energies = model(features, positions)
+                tracked_pred = decoder(tracked_observables, positions).cpu().numpy()
+            tracked_reconstruction = blend_seams(
+                stictch_patches(
+                    tracked_pred, image_size=image_size, patch_size=patch_size
+                ),
+                patch_size=patch_size,
+            )
+            frame_path = ""
+            if frame_dir is not None:
+                quick_summary = data_generator.record(
+                    epoch=step,
+                    step=step,
+                    frame_path="",
+                    total_loss=loss.item(),
+                    reconstruction_mse=reconstruction_loss.item(),
+                    observables=tracked_observables.cpu().numpy(),
+                    energies=tracked_energies.cpu().numpy(),
+                    positions=raw_positions,
+                )
+                saved_frame = save_epoch_frame(
+                    original=image,
+                    reconstruction=tracked_reconstruction,
+                    epoch=step,
+                    total_loss=loss.item(),
+                    order_parameter=quick_summary["mean_order_parameter"],
+                    output_dir=frame_dir,
+                )
+                frame_path = str(saved_frame)
+                epoch_frame_paths.append(saved_frame)
+                data_generator.epoch_rows[-1]["reconstructed_image"] = frame_path
+            else:
+                data_generator.record(
+                    epoch=step,
+                    step=step,
+                    frame_path=frame_path,
+                    total_loss=loss.item(),
+                    reconstruction_mse=reconstruction_loss.item(),
+                    observables=tracked_observables.cpu().numpy(),
+                    energies=tracked_energies.cpu().numpy(),
+                    positions=raw_positions,
+                )
+            model.train()
+            decoder.train()
+
     model.eval()
     decoder.eval()
 
@@ -160,7 +234,11 @@ def train(
 
         pred = decoder(observables, positions).cpu().numpy()
 
-        zero_pred = decoder(torch.zeros_like(observables), positions).cpu().numpy()
+        zero_positions = (
+            positions if zero_latent_uses_positions else torch.zeros_like(positions)
+        )
+
+        zero_pred = decoder(torch.zeros_like(observables), zero_positions).cpu().numpy()
 
         random_pred = decoder(torch.randn_like(observables), positions).cpu().numpy()
 
@@ -202,6 +280,13 @@ def train(
         "energies": energies.cpu().numpy(),
         "positions": raw_positions,
         "history": history,
+        "media": {},
+        "epoch_order_parameters": data_generator.epoch_rows if data_generator else [],
+        "phase_transition": (
+            detect_phase_transition(data_generator.epoch_rows)
+            if data_generator
+            else detect_phase_transition([])
+        ),
     }
 
     if save_outputs and output_dir is not None:
@@ -211,6 +296,9 @@ def train(
             output_dir=output_dir,
             image_size=image_size,
             patch_size=patch_size,
+            data_generator=data_generator,
+            epoch_frame_paths=epoch_frame_paths,
+            save_epoch_media=save_epoch_media,
         )
 
     if show_plots:
@@ -249,6 +337,9 @@ def save_analysis_outputs(
     output_dir: str | Path,
     image_size: int,
     patch_size: int,
+    data_generator: TrainingDataGenerator | None = None,
+    epoch_frame_paths: list[Path] | None = None,
+    save_epoch_media: bool = True,
 ):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -261,6 +352,52 @@ def save_analysis_outputs(
         output_dir / "entropy_map.png",
         grid_size=get_grid_size(image_size, patch_size),
     )
+    if data_generator is not None:
+        data_generator.write_csvs()
+        media_paths = outputs.setdefault("media", {})
+        order_curve_path = save_order_parameter_plot(
+            data_generator.epoch_rows,
+            output_dir / "hvk_order_parameter_curve.png",
+        )
+        if order_curve_path is not None:
+            media_paths["order_parameter_curve"] = str(order_curve_path)
+        if save_epoch_media:
+            phase_order_gif_path = save_phase_transition_order_parameter_gif(
+                data_generator.epoch_rows,
+                outputs["phase_transition"],
+                output_dir / "phase_transition_epoch_vs_order_parameter.gif",
+            )
+            if phase_order_gif_path is not None:
+                media_paths["phase_transition_epoch_vs_order_parameter_gif"] = str(
+                    phase_order_gif_path
+                )
+            merged_gif_path = save_merged_phase_transition_gif(
+                data_generator.epoch_rows,
+                outputs["phase_transition"],
+                epoch_frame_paths or [],
+                output_dir / "phase_transition_order_parameter_reconstruction.gif",
+            )
+            if merged_gif_path is not None:
+                media_paths[
+                    "phase_transition_order_parameter_reconstruction_gif"
+                ] = str(merged_gif_path)
+            order_signal_gif_path = save_order_parameter_gif(
+                data_generator.epoch_rows,
+                outputs["phase_transition"],
+                output_dir / "hvk_order_parameter_phase_transition.gif",
+            )
+            if order_signal_gif_path is not None:
+                media_paths["order_parameter_phase_transition_gif"] = str(
+                    order_signal_gif_path
+                )
+            reconstruction_gif_path = save_frames_as_gif(
+                epoch_frame_paths or [],
+                output_dir / "hvk_reconstruction_phase_transition.gif",
+            )
+            if reconstruction_gif_path is not None:
+                media_paths["reconstruction_phase_transition_gif"] = str(
+                    reconstruction_gif_path
+                )
 
     np.save(
         output_dir / "quantum_reconstruction.npy", outputs["quantum_reconstruction"]
@@ -274,6 +411,8 @@ def save_analysis_outputs(
         "final_energy_loss": outputs["history"]["energy_loss"][-1],
         "mean_energy": float(np.mean(outputs["energies"])),
         "std_energy": float(np.std(outputs["energies"])),
+        "phase_transition": outputs["phase_transition"],
+        "media": outputs.get("media", {}),
     }
     (output_dir / "metrics.json").write_text(
         json.dumps(metrics, indent=2), encoding="utf-8"
@@ -397,6 +536,10 @@ def parse_args():
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--no-save", action="store_true")
     parser.add_argument("--show-plots", action="store_true")
+    parser.add_argument("--no-order-tracking", action="store_true")
+    parser.add_argument("--no-epoch-media", action="store_true")
+    parser.add_argument("--epoch-frame-interval", type=int)
+    parser.add_argument("--zero-latent-uses-positions", action="store_true")
     return parser.parse_args()
 
 
@@ -413,6 +556,10 @@ def main():
         "output_dir": str(DEFAULT_OUTPUT_DIR),
         "save_outputs": True,
         "show_plots": False,
+        "track_order_parameters": True,
+        "save_epoch_media": True,
+        "epoch_frame_interval": 1,
+        "zero_latent_uses_positions": False,
     }
     config.update(load_config(args.config))
 
@@ -437,6 +584,14 @@ def main():
         config["save_outputs"] = False
     if args.show_plots:
         config["show_plots"] = True
+    if args.no_order_tracking:
+        config["track_order_parameters"] = False
+    if args.no_epoch_media:
+        config["save_epoch_media"] = False
+    if args.epoch_frame_interval is not None:
+        config["epoch_frame_interval"] = args.epoch_frame_interval
+    if args.zero_latent_uses_positions:
+        config["zero_latent_uses_positions"] = True
 
     print("Running HVK analysis with config:")
     print(json.dumps({k: str(v) for k, v in config.items()}, indent=2))
