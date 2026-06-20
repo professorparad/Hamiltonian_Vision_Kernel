@@ -48,10 +48,11 @@ def evaluate_scaling(
     image_size: int,
     patch_size: int,
     bond_dims: list[int],
-) -> list[dict]:
+) -> tuple[np.ndarray, list[dict], dict[int, np.ndarray]]:
     image = load_image_grayscale(str(image_path), size=(image_size, image_size))
     patches, _ = extract_patches(image, patch_size=patch_size)
     rows = []
+    reconstructions = {}
     for bond_dim in bond_dims:
         reconstructed_patches = np.array(
             [
@@ -67,6 +68,7 @@ def evaluate_scaling(
             ),
             patch_size=patch_size,
         )
+        reconstructions[bond_dim] = reconstruction
         mse = float(np.mean((reconstruction - image) ** 2))
         rows.append(
             {
@@ -75,31 +77,110 @@ def evaluate_scaling(
                 "psnr": psnr_from_mse(mse),
             }
         )
-    return rows
+    return image, rows, reconstructions
 
 
-def save_plot(path: Path, rows: list[dict], title: str) -> None:
+def save_plot(
+    path: Path,
+    original: np.ndarray,
+    rows: list[dict],
+    reconstructions: dict[int, np.ndarray],
+    title: str,
+) -> None:
     bond_dims = [row["bond_dim"] for row in rows]
     mse = [row["mse"] for row in rows]
     psnr = [row["psnr"] for row in rows]
+    best_row = min(rows, key=lambda row: row["mse"])
+    default_row = next((row for row in rows if row["bond_dim"] == 4), rows[0])
 
-    fig, ax_mse = plt.subplots(figsize=(7.2, 4.6))
-    ax_mse.plot(bond_dims, mse, marker="o", color="#3b6ea8", label="MSE")
+    fig, axes = plt.subplots(1, 2, figsize=(13.2, 5.4), constrained_layout=True)
+    ax_mse, ax_psnr = axes
+
+    ax_mse.plot(
+        bond_dims,
+        mse,
+        marker="o",
+        markersize=8,
+        linewidth=2.6,
+        color="#16a34a",
+        label="Reconstruction MSE",
+    )
+    ax_mse.fill_between(bond_dims, mse, min(mse), color="#16a34a", alpha=0.14)
     ax_mse.set_xscale("log", base=2)
     ax_mse.set_yscale("log")
-    ax_mse.set_xlabel("MPS bond dimension")
+    ax_mse.set_xlabel("MPS bond dimension chi")
+    ax_mse.set_xticks(bond_dims)
+    ax_mse.set_xticklabels([str(dim) for dim in bond_dims])
     ax_mse.set_ylabel("Reconstruction MSE")
     ax_mse.grid(True, which="both", linestyle=":", linewidth=0.7)
+    ax_mse.axvline(4, color="#334155", linestyle="--", linewidth=1.2)
+    ax_mse.text(
+        4.12,
+        default_row["mse"],
+        "default chi=4",
+        fontsize=9,
+        va="bottom",
+        color="#334155",
+    )
 
-    ax_psnr = ax_mse.twinx()
-    ax_psnr.plot(bond_dims, psnr, marker="s", color="#d97706", label="PSNR")
+    ax_psnr.plot(
+        bond_dims,
+        psnr,
+        marker="s",
+        markersize=8,
+        linewidth=2.6,
+        color="#2563eb",
+        label="PSNR",
+    )
+    ax_psnr.fill_between(bond_dims, psnr, min(psnr), color="#2563eb", alpha=0.12)
+    ax_psnr.set_xscale("log", base=2)
+    ax_psnr.set_xlabel("MPS bond dimension chi")
+    ax_psnr.set_xticks(bond_dims)
+    ax_psnr.set_xticklabels([str(dim) for dim in bond_dims])
     ax_psnr.set_ylabel("PSNR (dB)")
+    ax_psnr.grid(True, which="both", linestyle=":", linewidth=0.7)
+    ax_psnr.axvline(4, color="#334155", linestyle="--", linewidth=1.2)
+    ax_psnr.text(
+        4.12,
+        default_row["psnr"],
+        "default chi=4",
+        fontsize=9,
+        va="bottom",
+        color="#334155",
+    )
 
-    handles = ax_mse.get_lines() + ax_psnr.get_lines()
-    labels = [handle.get_label() for handle in handles]
-    ax_mse.legend(handles, labels, loc="best")
-    ax_mse.set_title(title)
-    fig.tight_layout()
+    for row in rows:
+        ax_mse.annotate(
+            f"{row['bond_dim']}",
+            (row["bond_dim"], row["mse"]),
+            textcoords="offset points",
+            xytext=(0, 8),
+            ha="center",
+            fontsize=8,
+            color="#1f2937",
+        )
+        ax_psnr.annotate(
+            f"{row['bond_dim']}",
+            (row["bond_dim"], row["psnr"]),
+            textcoords="offset points",
+            xytext=(0, 8),
+            ha="center",
+            fontsize=8,
+            color="#1f2937",
+        )
+
+    ax_mse.set_title("MSE vs bond dimension", fontsize=12)
+    ax_psnr.set_title("PSNR vs bond dimension", fontsize=12)
+    ax_mse.legend(loc="best")
+    ax_psnr.legend(loc="best")
+
+    summary = (
+        f"Monalisa image | default chi=4: MSE {default_row['mse']:.3e}, "
+        f"PSNR {default_row['psnr']:.2f} dB | best chi={best_row['bond_dim']}: "
+        f"MSE {best_row['mse']:.3e}, PSNR {best_row['psnr']:.2f} dB"
+    )
+    fig.suptitle(f"{title}: MPS chi scaling to reconstruction quality", fontsize=15, fontweight="bold")
+    fig.text(0.5, -0.02, summary, ha="center", va="top", fontsize=10)
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=180, bbox_inches="tight")
     plt.close(fig)
@@ -123,7 +204,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    rows = evaluate_scaling(
+    original, rows, reconstructions = evaluate_scaling(
         image_path=args.image_path,
         image_size=args.image_size,
         patch_size=args.patch_size,
@@ -160,7 +241,7 @@ def main() -> None:
     ]
     for csv_path, plot_path, title in targets:
         write_csv(csv_path, rows)
-        save_plot(plot_path, rows, title)
+        save_plot(plot_path, original, rows, reconstructions, title)
         print(f"Wrote {csv_path}")
         print(f"Wrote {plot_path}")
 
