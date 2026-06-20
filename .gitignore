@@ -54,4 +54,16 @@ env/
 *.swo
 
 # HVK generated outputs
-Main/outputs/
+**/outputs/
+**/_cache/
+
+# Dataset
+CFIR10Dataset/
+
+# LaTeX auxiliary files
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+
