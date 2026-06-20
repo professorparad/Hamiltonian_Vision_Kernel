@@ -1,4 +1,4 @@
-.PHONY: install test lint format run clean
+.PHONY: install test lint format run baseline-phl baseline-gan clean
 
 VENV = .venv
 PYTHON = $(VENV)/bin/python
@@ -18,6 +18,12 @@ format:
 
 run:
 	$(PYTHON) Main/main.py
+
+baseline-phl:
+	$(PYTHON) Baselines/phl_segmentation/run_phl.py
+
+baseline-gan:
+	$(PYTHON) Baselines/gan_reconstruction/run_gan.py
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
