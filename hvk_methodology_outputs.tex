@@ -372,78 +372,135 @@ This objective trains the decoder to preserve image structure while encouraging 
 
 \section{Order Parameters and Phase-Transition Detection}
 
-During training, the model records both patch-level and epoch-level observables. The order parameter is computed from the longitudinal magnetization of the learned quantum observable state. For patch $n$ at training epoch $t$, the patch-wise longitudinal order parameter is defined as
+During training, each image patch is represented by a variational quantum state whose measured observables are recorded at selected epochs. Let $n\in\{1,\ldots,N\}$ index image patches, $q\in\{1,\ldots,Q\}$ index qubits, and $t$ index the training epoch. In the Monalisa experiment $N=16$ and $Q=6$; in the CIFAR-10 benchmark the images are resized to the same $4\times4$ patch grid, so the same normalization applies. The local measured observables are
 \begin{equation}
-m_{n,t}^{(z)}
+Z_{nq}(t)=\langle Z_q\rangle_{n,t},
+\qquad
+X_{nq}(t)=\langle X_q\rangle_{n,t}.
+\end{equation}
+The patch-level longitudinal magnetization is the qubit average
+\begin{equation}
+m_n^{z}(t)
 =
 \frac{1}{Q}
-\sum_{q=1}^{Q}
-\langle Z_q\rangle_{n,t},
+\sum_{q=1}^{Q} Z_{nq}(t),
 \end{equation}
-where $Q=6$ is the number of qubits and $\langle Z_q\rangle_{n,t}$ is the local Pauli-$Z$ expectation value of qubit $q$ for patch $n$. The epoch-level order parameter is then obtained by averaging over all $N=16$ patches:
+and the global longitudinal order parameter is the patch average
 \begin{equation}
-m_t =
+M_z(t)
+=
 \frac{1}{N}
-\sum_{n=1}^{N}
-\;m_{n,t}^{(z)}
+\sum_{n=1}^{N}m_n^{z}(t)
 =
 \frac{1}{NQ}
 \sum_{n=1}^{N}
-\sum_{q=1}^{Q}
-\langle Z_q\rangle_{n,t}.
+\sum_{q=1}^{Q}Z_{nq}(t).
+\label{eq:global_order}
 \end{equation}
-This scalar tracks the global alignment of the learned latent spin configuration along the $Z$ axis.
+The factor $1/(NQ)$ is important: it makes $M_z(t)$ an intensive quantity, so its magnitude does not grow simply because the number of patches or qubits is increased. Since each Pauli expectation lies in $[-1,1]$, the normalized order parameter also satisfies $M_z(t)\in[-1,1]$.
 
-The absolute order parameter is computed as
+Two auxiliary order statistics are recorded. The absolute order parameter
 \begin{equation}
-|m|_t =
+|M_z|(t)
+=
 \frac{1}{N}
-\sum_{n=1}^{N}
-\left|m_{n,t}^{(z)}\right|,
+\sum_{n=1}^{N}\left|m_n^{z}(t)\right|
 \end{equation}
-which measures the strength of ordering independently of sign. The transverse order parameter is computed from local $X$ expectations:
+measures the strength of longitudinal ordering independently of sign, while the transverse order parameter
 \begin{equation}
-m_t^{(x)}
+M_x(t)
 =
 \frac{1}{NQ}
 \sum_{n=1}^{N}
-\sum_{q=1}^{Q}
-\langle X_q\rangle_{n,t}.
+\sum_{q=1}^{Q}X_{nq}(t)
 \end{equation}
-The lattice-correlation statistic differs between the two variants. For the 1D HVK, the recorded total lattice correlation is the average of the nearest-neighbor $ZZ$, $XX$, and $YY$ correlator sectors:
+tracks alignment along the $X$ sector. Together, $M_z(t)$, $|M_z|(t)$, and $M_x(t)$ distinguish sign-coherent longitudinal ordering, unsigned ordering strength, and transverse spin alignment.
+
+The lattice-correlation statistic is normalized by the number of patches and by the number of Hamiltonian interaction channels, so it is also intensive. For the 1D HVK, the chain graph has $B=Q-1=5$ nearest-neighbor bonds and three anisotropic Heisenberg sectors. With
 \begin{equation}
-C_t^{1D}
+ZZ_{nb}(t)=\langle Z_bZ_{b+1}\rangle_{n,t},
+\quad
+XX_{nb}(t)=\langle X_bX_{b+1}\rangle_{n,t},
+\quad
+YY_{nb}(t)=\langle Y_bY_{b+1}\rangle_{n,t},
+\end{equation}
+the recorded 1D lattice-correlation order statistic is
+\begin{equation}
+C_{1D}(t)
 =
-\frac{1}{3N}
+\frac{1}{3NB}
 \sum_{n=1}^{N}
+\sum_{b=1}^{B}
 \left[
-\overline{ZZ}_{n,t}
-+ \overline{XX}_{n,t}
-+ \overline{YY}_{n,t}
-\right],
+ZZ_{nb}(t)+XX_{nb}(t)+YY_{nb}(t)
+\right].
+\label{eq:1d_correlation_order}
 \end{equation}
-where each bar denotes the mean over the five nearest-neighbor bonds in that sector. For the 2D HVK, the lattice-correlation statistic is the mean $ZZ$ correlation over the two-dimensional edge set:
+For the 2D HVK, the qubits are arranged on a $2\times3$ grid with edge set
 \begin{equation}
-C_t^{2D}
+\mathcal{E}
+=
+\mathcal{E}_h\cup\mathcal{E}_v,
+\qquad
+|\mathcal{E}|=7.
+\end{equation}
+The 2D correlation order statistic is therefore
+\begin{equation}
+C_{2D}(t)
 =
 \frac{1}{N|\mathcal{E}|}
 \sum_{n=1}^{N}
-\sum_{(u,v)\in \mathcal{E}}
-\langle Z_u Z_v\rangle_{n,t},
-\qquad
-\mathcal{E}=\mathcal{E}_h\cup\mathcal{E}_v.
+\sum_{(u,v)\in\mathcal{E}}
+\langle Z_uZ_v\rangle_{n,t}.
+\label{eq:2d_correlation_order}
 \end{equation}
-Mean Hamiltonian energy is recorded separately as the average patch energy at epoch $t$.
+Equations~\eqref{eq:1d_correlation_order} and~\eqref{eq:2d_correlation_order} explain the scaling behavior: adding more patches, qubits, or bonds changes the number of measured terms, but the normalization converts the raw sum into a mean correlation per patch per interaction channel. This allows the 1D and 2D trajectories to be compared qualitatively even though their Hamiltonian graphs are different.
 
-A susceptibility-like signal is computed from the epoch-to-epoch change in the mean order parameter:
+Mean Hamiltonian energy is recorded separately as
 \begin{equation}
-\chi_t = |m_t - m_{t-1}|.
+\overline{E}(t)
+=
+\frac{1}{N}
+\sum_{n=1}^{N}E_n(t).
 \end{equation}
-A phase transition is detected when the maximum susceptibility exceeds a threshold defined by
+The energy is not used directly as the order parameter because the 1D and 2D Hamiltonians have different coupling graphs and different learned coupling tensors. Instead, the order parameters are computed from normalized observable averages, while $\overline{E}(t)$ is treated as a model-specific descent diagnostic.
+
+To detect a phase-transition-like event during optimization, the code uses a discrete susceptibility signal based on the epoch-to-epoch change of the global order parameter. To avoid confusion with the MPS bond dimension $\chi$, denote this susceptibility by
 \begin{equation}
-\tau = \operatorname{median}(\chi) + 2\sigma_\chi.
+\mathcal{X}(t)
+=
+\left|M_z(t)-M_z(t-\Delta t)\right|,
 \end{equation}
-This rule identifies abrupt reorganizations in the learned observable manifold during training. In this sense, the detected critical epoch is not treated as a thermodynamic phase transition in the strict infinite-system limit; rather, it is used as a finite-size diagnostic of rapid latent-state reorganization during optimization.
+where $\Delta t$ is the spacing between recorded epochs. In the runs reported here, order parameters are recorded at each saved epoch, so $\Delta t=1$ for the primary Monalisa runs. The candidate critical epoch is the peak-susceptibility epoch
+\begin{equation}
+t_c
+=
+\arg\max_t \mathcal{X}(t),
+\qquad
+\mathcal{X}_{\max}
+=
+\max_t \mathcal{X}(t).
+\end{equation}
+A transition is declared only if this peak exceeds a robust baseline threshold:
+\begin{equation}
+\tau
+=
+\operatorname{median}\{\mathcal{X}(t)\}_t
++2\,\operatorname{std}\{\mathcal{X}(t)\}_t,
+\qquad
+\mathcal{X}_{\max}>\tau.
+\label{eq:transition_threshold}
+\end{equation}
+The reported order-parameter jump is
+\begin{equation}
+\Delta M_z(t_c)
+=
+\left|M_z(t_c)-M_z(t_c-\Delta t)\right|
+=
+\mathcal{X}(t_c).
+\end{equation}
+
+This is a finite-size phase-transition diagnostic, not a claim of a thermodynamic singularity. A true equilibrium phase transition would require a control parameter, an infinite-size limit, and non-analytic behavior of a free-energy density. HVK instead observes a finite learned system during gradient optimization. Therefore, the phrase ``phase transition'' means a statistically sharp reorganization of the learned observable manifold: a sudden jump in normalized magnetization, accompanied by a susceptibility peak above the median-plus-two-standard-deviation threshold in Equation~\eqref{eq:transition_threshold}. Under this definition, the 1D HVK detects a later and smaller reorganization, while the 2D HVK detects an earlier and larger one, consistent with the stronger spatial coupling bias of the 2D interaction graph.
 
 \begin{figure}[t]
 \centering
@@ -601,12 +658,14 @@ PHL & -- & -- & -- & -- & -- & -- & $0.9706$ & $0.9428$ \\
 \midrule
 \multicolumn{9}{l}{\textit{CIFAR-10 Subset (10-Image Average)}} \\
 1D HVK & $6.7974\times10^{-5}$ & $5.0746\times10^{-5}$ & $42.55$ & -- & $-5.0789$ & $26.1$ & -- & -- \\
+2D HVK & $8.6420\times10^{-5}$ & $3.7584\times10^{-5}$ & $42.92$ & -- & $-6.9125$ & $60.3$ & -- & -- \\
 GAN & $4.1511\times10^{-4}$ & $7.4791\times10^{-4}$ & $34.03$ & $0.9944$ & -- & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 \parbox{0.96\linewidth}{\footnotesize
 CIFAR-10 averages are computed from the saved aggregate metric files
-\texttt{Baselines/cifar10\_benchmark/hvk1d/outputs/aggregate\_metrics.csv}
+\texttt{Baselines/cifar10\_benchmark/hvk1d/outputs/aggregate\_metrics.csv},
+\texttt{Baselines/cifar10\_benchmark/hvk2d/outputs/aggregate\_metrics.csv},
 and
 \texttt{Baselines/cifar10\_benchmark/gan/outputs/aggregate\_metrics.csv}.
 The original CIFAR-10 images are $32\times32$; for HVK reconstruction they are resized to the same $256\times256$/$64\times64$ patch geometry used by the MPS feature encoder.}
@@ -647,8 +706,15 @@ assuming normalized pixel intensities in $[0,1]$; therefore, lower MSE produces 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\linewidth]{Baselines/outputs/benchmark_metric_comparison.png}
-\caption{Reconstruction metric comparison for 1D HVK, 2D HVK, and the GAN baseline. The left panel shows MSE descent over training on a logarithmic scale. The right panel compares final MSE and the corresponding PSNR. Lower MSE and higher PSNR indicate better reconstruction quality.}
+\caption{Reconstruction metric comparison for 1D HVK, 2D HVK, and the GAN baseline on the Monalisa image reconstruction task. The left panel shows MSE descent over training on a logarithmic scale. The right panel compares final MSE and the corresponding PSNR. Lower MSE and higher PSNR indicate better reconstruction quality.}
 \label{fig:hvk_gan_metric_comparison}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{Baselines/outputs/cifar10_metric_comparison.png}
+\caption{CIFAR-10 test subset reconstruction metric comparison for 1D HVK, 2D HVK, and the GAN baseline. The left panel shows average MSE descent over 200 training epochs. The right panel compares the average final MSE and the corresponding PSNR across the 10-image test subset.}
+\label{fig:cifar10_metric_comparison}
 \end{figure}
 
 \begin{figure}[h]
