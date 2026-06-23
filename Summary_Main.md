@@ -16,6 +16,67 @@ Entry point: [`Main/main.py`](Main/main.py) → `run_hvk_analysis()` →
 
 ---
 
+## 0. Algorithm (step-by-step in words)
+
+The whole pipeline, in the order things actually happen:
+
+- **Load the image.** Read one grayscale image from disk and resize it to a fixed
+  square — by default **256 px × 256 px** — then scale pixel values to the range
+  **[0, 1]** (divide by 255).
+- **Break the image into patches.** Tile the 256×256 image into non-overlapping
+  square patches of **64 px × 64 px**, scanning left-to-right then top-to-bottom.
+  A 256×256 image gives a **4 × 4 = 16-patch grid**. Each patch also remembers its
+  **normalized position** `(row/height, col/width)` so the model knows where it sat.
+- **Turn each patch into a tensor-network (MPS) feature vector.** Flatten each
+  64×64 patch into a vector of 4096 numbers (= 2¹²), L2-normalize it so it behaves
+  like a 12-qubit quantum state, and build a **Matrix Product State** for it.
+  Compress that MPS to a small **bond dimension (4)** — a lossy squeeze that keeps
+  the dominant correlations — and read off physics-style descriptors:
+  per-site `⟨Z⟩` and `⟨X⟩`, neighbor `⟨ZZ⟩` correlations, and the **entanglement
+  entropy** at every bond. These numbers become that patch's feature vector.
+- **Standardize the features.** Across all 16 patches, z-score each feature
+  (subtract the mean, divide by the std) so every descriptor is on a comparable scale.
+- **Encode patch position.** Convert each patch's `(row, col)` location into a
+  smooth **sinusoidal (Fourier) positional encoding** (default length 8), the same
+  idea transformers use to inject location.
+- **Set up the learnable models.** Create the **quantum model** (a variational
+  quantum circuit + learnable spin-coupling constants) and the **decoder** (a small
+  neural network). Both train together with a single Adam optimizer.
+- **Run the training loop (repeat for ~120 steps):**
+  1. **Quantum encode each patch.** Squeeze the standardized features down to 6
+     numbers and feed them as rotation angles into a **6-qubit, 2-layer circuit**;
+     also rotate each qubit by the patch's position. Entangle the qubits, then
+     measure a fixed set of **27 expectation values** (local Z/X and ZZ/XX/YY
+     neighbor correlations). These 27 numbers are that patch's "quantum fingerprint."
+  2. **Compute a physics energy.** Combine the correlation measurements with the
+     learnable couplings (Jx, Jy, Jz) into a **Heisenberg-like spin energy** per patch.
+  3. **Decode back to pixels.** Feed the 27 observables plus the positional encoding
+     into the decoder MLP, which outputs a reconstructed **64×64 patch** (values in [0,1]).
+  4. **Score and improve.** The loss is **reconstruction error (MSE)** between the
+     decoded patch and the original patch, **plus a small (0.01×) energy term**.
+     Backpropagate and let Adam nudge both the circuit and the decoder.
+  5. **Snapshot periodically.** Every few steps, rebuild the full image (stitch +
+     seam-blend, below), reduce the 27-number fingerprints to a single
+     **order parameter** per snapshot, and save a frame for the animation.
+- **Stitch the patches back together.** Place each reconstructed 64×64 patch back
+  into its original grid cell to rebuild a 256×256 image.
+- **Smooth the seams.** Blend across patch boundaries (a weighted mix of the image
+  and a blurred copy near each seam) so the reconstruction doesn't show a grid of edges.
+- **Build comparison reconstructions.** After training, also produce baselines from
+  the same decoder/MPS: a **pure-MPS reconstruction** (no learning), a
+  **random-latent** image, and a **zero-latent** image — to show what the learned
+  quantum representation is actually contributing.
+- **Track the "phase transition."** Over all snapshots, watch how the order
+  parameter changes; its step-to-step change is the **susceptibility**. A sharp spike
+  (peak above `median + 2·std`) is flagged as a **phase transition**, with the epoch
+  where it happens recorded as the critical point.
+- **Save everything.** Write the reconstruction comparison, training curves,
+  observable maps, entropy map, order-parameter curve, the per-epoch and per-patch
+  **CSV tables**, `.npy` arrays, animated **GIFs** (including a merged
+  reconstruction + order-parameter proof animation), and a `metrics.json` summary.
+
+---
+
 ## 1. Top-level data-flow graph
 
 ```
