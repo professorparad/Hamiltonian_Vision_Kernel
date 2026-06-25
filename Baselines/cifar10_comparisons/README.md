@@ -6,9 +6,9 @@ This folder contains native 32x32 grayscale CIFAR reconstruction benchmarks.
 
 - `common.py` shared loading, metrics, plotting, and order-parameter helpers.
 - `download_cifar32.py` downloads a small CIFAR-10 subset into `datasets/`.
-- `run_comprehensive_benchmark.py` runs every model and writes aggregate metrics.
+- `main.py` runs every model and writes aggregate metrics/visualizations.
 - `hvk1d/`, `hvk2d/`, `symmetric_hvk1d/` quantum HVK runners.
-- `gan/`, `mlp/`, `cnn/`, `autoencoder/` classical baseline runners.
+- `gan/`, `phl/`, `mlp/`, `cnn/`, `autoencoder/` baseline runners.
 
 Generated files are written to `outputs/` folders and are ignored by git.
 
@@ -34,13 +34,21 @@ Download a small CIFAR-10 subset:
 Run all models:
 
 ```bash
-.venv/bin/python Baselines/cifar10_comparisons/run_comprehensive_benchmark.py --count 5 --epochs 100 --device cpu
+.venv/bin/python Baselines/cifar10_comparisons/main.py --count 5 --epochs 200 --device cpu
 ```
 
 Run only selected models:
 
 ```bash
-.venv/bin/python Baselines/cifar10_comparisons/run_comprehensive_benchmark.py --methods hvk1d hvk2d symmetric --count 3 --epochs 50 --device cpu --skip-download
+.venv/bin/python Baselines/cifar10_comparisons/main.py --methods hvk1d hvk2d symmetric phl gan --count 3 --epochs 200 --device cpu --skip-download
 ```
 
-Quantum runners also write per-image order-parameter CSV/PNG files.
+Quantum runners write per-image order-parameter CSV/PNG files. PHL writes
+per-image segmentation visuals in `phl/outputs/`. The combined outputs are:
+
+- `outputs/cifar32_per_image_metrics.csv`
+- `outputs/cifar32_aggregate_metrics.csv`
+- `outputs/cifar32_aggregate_metrics.json`
+- `outputs/cifar32_metric_comparison.png`
+- `outputs/visuals/<method>/`
+- `outputs/per_method_metrics/<method>/`

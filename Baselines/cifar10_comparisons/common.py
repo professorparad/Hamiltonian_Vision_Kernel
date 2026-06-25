@@ -220,13 +220,28 @@ def save_metric_comparison(rows: list[dict], output_path: Path) -> None:
         return
     output_path.parent.mkdir(parents=True, exist_ok=True)
     models = [row["model"] for row in rows]
-    fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
-    for ax, key, label in zip(
-        axes,
-        ("mean_mse", "mean_psnr", "mean_ssim"),
-        ("Mean MSE", "Mean PSNR", "Mean SSIM"),
-    ):
-        values = [row[key] for row in rows]
+    metric_panels = [
+        ("mean_mse", "Mean MSE"),
+        ("mean_psnr", "Mean PSNR"),
+        ("mean_ssim", "Mean SSIM"),
+        ("mean_dice", "Mean Dice"),
+        ("mean_iou", "Mean IoU"),
+    ]
+    available = [
+        (key, label)
+        for key, label in metric_panels
+        if any(key in row and row[key] is not None for row in rows)
+    ]
+    if not available:
+        return
+
+    fig, axes = plt.subplots(1, len(available), figsize=(4.8 * len(available), 4.5))
+    axes = np.atleast_1d(axes)
+    for ax, (key, label) in zip(axes, available):
+        values = [
+            float(row[key]) if key in row and row[key] is not None else np.nan
+            for row in rows
+        ]
         ax.bar(models, values, color="tab:blue")
         ax.set_title(label)
         ax.tick_params(axis="x", rotation=35)
