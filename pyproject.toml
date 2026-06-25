@@ -37,7 +37,7 @@ dev = [
 ]
 
 [project.scripts]
-hvk-run = "main:main"
+hvk-run = "main:cli_entry"
 
 [tool.setuptools]
 package-dir = {"" = "Main"}
@@ -47,10 +47,11 @@ where = ["Main"]
 include = ["src*"]
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 target-version = "py312"
 exclude = [
     "Main2",
+    "Baselines",
     "*.ipynb",
     ".venv",
     "build",
