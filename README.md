@@ -16,6 +16,25 @@ Before feeding into the Variational Model the Model First goes to 4 layers:
 
 this the overall architecture of the proposed kernel
 
+## CI and Architecture Page
+
+The repository has two GitHub Actions workflows:
+
+- `CI` installs the Python package, runs Ruff, and runs the unit tests.
+- `Pages` publishes the static architecture overview from `docs/`.
+
+To deploy the architecture page, enable GitHub Pages in the repository settings
+with GitHub Actions as the source. The page is intentionally static so people
+can inspect the HVK pipeline without installing the quantum ML dependencies.
+
+Useful local checks:
+
+```bash
+.venv/bin/python -m ruff check .
+.venv/bin/python -m unittest discover -s tests
+.venv/bin/python Baselines/cifar10_comparisons/smoke_test.py --epochs 1 --methods hvk1d --device cpu
+```
+
 */NOVELITY AND CREDIBILITY CHECK/* 
 1. The individual component like MPS , Hamiltonain or positional Encoding are not novel in the sense cause the MPS is pretty common in tensor networks and Hamiltonian based Energy functions are used in every day quantum algorthims specifically the Ising Hamiltonian and the Heisenberg Hamiltonian for algorithms like auto-optimization and error mitigiation moreoverthe positional encoding framework is mostly used in the Classical Vision transformers.
 2. the Novelity Lies in the intersection of all these and the concept of using peturbations for image reconstruction using the Quantum ML.

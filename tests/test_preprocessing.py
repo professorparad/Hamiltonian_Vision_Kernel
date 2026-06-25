@@ -38,6 +38,16 @@ class PreprocessingTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "divisible"):
             extract_patches(image, patch_size=2)
 
+    def test_extract_patches_supports_overlap_with_stride(self):
+        image = np.arange(16, dtype=np.float32).reshape(4, 4)
+
+        patches, positions = extract_patches(image, patch_size=2, stride=1)
+
+        self.assertEqual(patches.shape, (9, 2, 2))
+        self.assertEqual(positions.shape, (9, 2))
+        np.testing.assert_array_equal(patches[1], np.array([[1, 2], [5, 6]]))
+        np.testing.assert_allclose(positions[-1], np.array([0.5, 0.5], dtype=np.float32))
+
     def test_sinusoidal_positional_encoding_shape_and_origin_values(self):
         positions = np.array([[0.0, 0.0], [0.5, 0.25]], dtype=np.float32)
 

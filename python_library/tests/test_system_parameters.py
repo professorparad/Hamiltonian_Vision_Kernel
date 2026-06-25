@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import numpy as np
 
+from hvk.hvk2d.order_parameters import hvk2d_order_summary
 from hvk.preprocessing.patching import extract_patches
 from hvk.preprocessing.positional_encoding import sinusoidal_positional_encoding
-from hvk.hvk2d.order_parameters import hvk2d_order_summary
 from hvk.training.order_parameters import compute_order_parameters, detect_phase_transition
 
 

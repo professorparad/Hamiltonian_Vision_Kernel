@@ -10,7 +10,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-
 from src.training.training import (
     DEFAULT_CONFIG_PATH,
     DEFAULT_IMAGE_PATH,

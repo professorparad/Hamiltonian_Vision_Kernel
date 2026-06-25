@@ -134,7 +134,11 @@ def run_on_ibm(circuits: list[QuantumCircuit], backend_name: str | None, shots: 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run tiny HVK1D/HVK2D probe circuits on IBM Quantum.")
-    parser.add_argument("--dataset", type=Path, default=Path(__file__).resolve().parent / "datasets" / "monalisa_patches.npz")
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        default=Path(__file__).resolve().parent / "datasets" / "monalisa_patches.npz",
+    )
     parser.add_argument("--variant", choices=["hvk1d", "hvk2d", "both"], default="both")
     parser.add_argument("--backend")
     parser.add_argument("--n-qubits", type=int, default=6)
