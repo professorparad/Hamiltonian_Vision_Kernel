@@ -2,14 +2,9 @@ import argparse
 import json
 import os
 import shutil
-import sys
 from pathlib import Path
 
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 
 import matplotlib
 
@@ -20,20 +15,20 @@ import numpy as np
 import torch
 import torch.optim as optim
 
-from src.decoder.patch_decoder import PatchDecoder
-from src.preprocessing.image_loader import load_image_grayscale
-from src.preprocessing.patching import extract_patches
-from src.preprocessing.positional_encoding import sinusoidal_positional_encoding
-from src.quantum.circuit import observable_dim
-from src.quantum.quantum_model import QuantumModel
-from src.quantum.symmetric_model import SymmetricQuantumModel
-from src.reconstruction.patch_stitching import stictch_patches
-from src.reconstruction.seam_bleading import blend_seams
-from src.tensornetworks.mps_features import extract_mps_features
-from src.tensornetworks.mps_reconstruction import mps_reconstruct
-from src.training.data_generator import TrainingDataGenerator
-from src.training.order_parameters import detect_phase_transition
-from src.training.phase_media import (
+from hvk.decoder.patch_decoder import PatchDecoder
+from hvk.preprocessing.image_loader import load_image_grayscale
+from hvk.preprocessing.patching import extract_patches
+from hvk.preprocessing.positional_encoding import sinusoidal_positional_encoding
+from hvk.quantum.circuit import observable_dim
+from hvk.quantum.quantum_model import QuantumModel
+from hvk.quantum.symmetric_model import SymmetricQuantumModel
+from hvk.reconstruction.patch_stitching import stictch_patches
+from hvk.reconstruction.seam_bleading import blend_seams
+from hvk.tensornetworks.mps_features import extract_mps_features
+from hvk.tensornetworks.mps_reconstruction import mps_reconstruct
+from hvk.training.data_generator import TrainingDataGenerator
+from hvk.training.order_parameters import detect_phase_transition
+from hvk.training.phase_media import (
     save_epoch_frame,
     save_frames_as_gif,
     save_merged_phase_transition_gif,
@@ -41,14 +36,15 @@ from src.training.phase_media import (
     save_order_parameter_plot,
     save_phase_transition_order_parameter_gif,
 )
-from src.visualization.entropy_maps import plot_entropy_map
-from src.visualization.observable_plots import plot_observables
-from src.visualization.reconstruction_plots import plot_reconstructions
-from src.visualization.training_curve import plot_training_curves
+from hvk.visualization.entropy_maps import plot_entropy_map
+from hvk.visualization.observable_plots import plot_observables
+from hvk.visualization.reconstruction_plots import plot_reconstructions
+from hvk.visualization.training_curve import plot_training_curves
 
-DEFAULT_IMAGE_PATH = PROJECT_ROOT / "data" / "monalisa.jpg"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "outputs" / "training_analysis"
-DEFAULT_CONFIG_PATH = PROJECT_ROOT / "src" / "config" / "training_config.json"
+PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_IMAGE_PATH = Path("image.png")
+DEFAULT_OUTPUT_DIR = Path("hvk_outputs") / "training_analysis"
+DEFAULT_CONFIG_PATH = PACKAGE_ROOT / "config" / "training_config.json"
 
 
 def resolve_device(device_name: str = "auto") -> torch.device:
@@ -108,7 +104,6 @@ def train(
     epoch_frame_interval: int = 1,
     zero_latent_uses_positions: bool = False,
     model_variant: str = "standard",
-    log_prefix: str = "",
 ):
     device = resolve_device(device) if isinstance(device, str) else device
 
@@ -181,9 +176,8 @@ def train(
         energy_losses.append(energy_loss.item())
 
         if step % 20 == 0 or step == steps - 1:
-            prefix = f"[{log_prefix}] " if log_prefix else ""
             print(
-                f"{prefix}Step: {step:>4d} | "
+                f"Step: {step:>4d} | "
                 f"Loss: {loss.item():.6f} | "
                 f"Recon: {reconstruction_loss.item():.6f} | "
                 f"Energy: {energy_loss.item():.6f}"
@@ -531,7 +525,7 @@ def load_config(config_path: str | Path | None) -> dict:
     return json.loads(config_path.read_text(encoding="utf-8"))
 
 
-def resolve_path(value: str | Path, base_dir: Path = PROJECT_ROOT) -> Path:
+def resolve_path(value: str | Path, base_dir: Path = Path.cwd()) -> Path:
     path = Path(value)
     if path.is_absolute() or path.exists():
         return path
