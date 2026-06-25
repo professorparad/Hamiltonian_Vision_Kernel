@@ -29,7 +29,7 @@ def parse_args() -> argparse.Namespace:
         "--methods",
         nargs="+",
         default=["all"],
-        help="Methods to run, passed through to run_comprehensive_benchmark.py.",
+        help="Methods to run, passed through to main.py.",
     )
     return parser.parse_args()
 
@@ -40,7 +40,7 @@ def main() -> None:
         dataset_dir = create_smoke_dataset(Path(tmp))
         cmd = [
             sys.executable,
-            str(BENCH_ROOT / "run_comprehensive_benchmark.py"),
+            str(BENCH_ROOT / "main.py"),
             "--dataset-dir",
             str(dataset_dir),
             "--count",

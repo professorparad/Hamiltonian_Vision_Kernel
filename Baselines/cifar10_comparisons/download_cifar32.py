@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 import json
 import pickle
+import shutil
 import tarfile
 import urllib.request
 from pathlib import Path
@@ -19,6 +20,15 @@ CLASS_NAMES = [
     "airplane", "automobile", "bird", "cat", "deer",
     "dog", "frog", "horse", "ship", "truck",
 ]
+REQUIRED_CIFAR_FILES = (
+    "data_batch_1",
+    "data_batch_2",
+    "data_batch_3",
+    "data_batch_4",
+    "data_batch_5",
+    "test_batch",
+    "batches.meta",
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_DIR = REPO_ROOT / "Baselines" / "cifar10_comparisons" / "datasets"
@@ -33,18 +43,50 @@ def unpickle(path: Path) -> dict:
 def download_archive(cache_dir: Path) -> Path:
     cache_dir.mkdir(parents=True, exist_ok=True)
     archive_path = cache_dir / "cifar-10-python.tar.gz"
-    if archive_path.exists():
+    if archive_path.exists() and archive_is_valid(archive_path):
         return archive_path
+    if archive_path.exists():
+        archive_path.unlink()
     urllib.request.urlretrieve(CIFAR10_URL, archive_path)
     return archive_path
 
 
+def archive_is_valid(archive_path: Path) -> bool:
+    try:
+        with tarfile.open(archive_path, "r:gz") as tar:
+            names = set(tar.getnames())
+    except (EOFError, tarfile.TarError, OSError):
+        return False
+    return all(f"cifar-10-batches-py/{name}" in names for name in REQUIRED_CIFAR_FILES)
+
+
 def extract_archive(archive_path: Path, cache_dir: Path) -> Path:
     extracted_root = cache_dir / "cifar-10-batches-py"
-    if extracted_root.exists():
+    if extracted_root.exists() and all(
+        (extracted_root / name).exists() for name in REQUIRED_CIFAR_FILES
+    ):
         return extracted_root
-    with tarfile.open(archive_path, "r:gz") as tar:
-        tar.extractall(cache_dir)
+    if extracted_root.exists():
+        shutil.rmtree(extracted_root)
+    try:
+        with tarfile.open(archive_path, "r:gz") as tar:
+            tar.extractall(cache_dir)
+    except (EOFError, tarfile.TarError, OSError):
+        if extracted_root.exists():
+            shutil.rmtree(extracted_root)
+        archive_path.unlink(missing_ok=True)
+        raise RuntimeError(
+            f"The cached CIFAR-10 archive was corrupt and has been removed: {archive_path}. "
+            "Rerun the downloader to fetch a fresh archive."
+        )
+    missing = [
+        name for name in REQUIRED_CIFAR_FILES if not (extracted_root / name).exists()
+    ]
+    if missing:
+        raise FileNotFoundError(
+            f"CIFAR-10 extraction is incomplete. Missing: {', '.join(missing)}. "
+            f"Delete {archive_path} and rerun the downloader if the archive is corrupt."
+        )
     return extracted_root
 
 
