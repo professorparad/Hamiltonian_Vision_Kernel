@@ -29,6 +29,7 @@ from common import (
     save_order_parameter_plot,
     save_reconstruction_comparison,
     seed_everything,
+    stitch_overlapping_patches,
     write_csv,
 )
 from src.preprocessing.patching import extract_patches
@@ -37,12 +38,11 @@ from src.tensornetworks.mps_features import extract_mps_features
 from src.quantum.symmetric_model import SymmetricQuantumModel
 from src.decoder.patch_decoder import PatchDecoder
 from src.quantum.circuit import observable_dim
-from src.reconstruction.patch_stitching import stictch_patches
-from src.reconstruction.seam_bleading import blend_seams
 from src.training.training import resolve_device
 
 CIFAR_IMAGE_SIZE = 32
 CIFAR_PATCH_SIZE = 8
+CIFAR_PATCH_STRIDE = 4
 CIFAR_N_SITES = 6
 CIFAR_POSITIONAL_DIM = 4
 CIFAR_EPOCHS = 200
@@ -53,7 +53,11 @@ def train_symmetric_hvk1d(
     image: np.ndarray, device: torch.device, epochs: int
 ) -> tuple[np.ndarray, list[dict]]:
     """Train U(1)-symmetric HVK1D and return reconstruction."""
-    patches, raw_positions = extract_patches(image, patch_size=CIFAR_PATCH_SIZE)
+    patches, raw_positions = extract_patches(
+        image,
+        patch_size=CIFAR_PATCH_SIZE,
+        stride=CIFAR_PATCH_STRIDE,
+    )
     features = np.array([
         extract_mps_features(p, n_sites=CIFAR_N_SITES, bond_dim=4)
         for p in patches
@@ -114,8 +118,10 @@ def train_symmetric_hvk1d(
         obs, en = model(features_t, positions)
         pred = decoder(obs, positions).cpu().numpy()
 
-    reconstruction = blend_seams(
-        stictch_patches(pred, image_size=CIFAR_IMAGE_SIZE, patch_size=CIFAR_PATCH_SIZE),
+    reconstruction = stitch_overlapping_patches(
+        pred,
+        raw_positions,
+        image_size=CIFAR_IMAGE_SIZE,
         patch_size=CIFAR_PATCH_SIZE,
     )
     return reconstruction, order_rows
@@ -135,6 +141,7 @@ def run(args: argparse.Namespace) -> list[dict]:
             "image": img_path.name,
             "image_size": CIFAR_IMAGE_SIZE,
             "patch_size": CIFAR_PATCH_SIZE,
+            "patch_stride": CIFAR_PATCH_STRIDE,
             "epochs": args.epochs,
             **metrics,
         })

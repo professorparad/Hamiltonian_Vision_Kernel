@@ -80,6 +80,28 @@ def stitch_patches(patches: np.ndarray, image_size: int, patch_size: int) -> np.
     return image
 
 
+def stitch_overlapping_patches(
+    patches: np.ndarray,
+    positions: np.ndarray,
+    image_size: int,
+    patch_size: int,
+) -> np.ndarray:
+    """Average overlapping patch predictions using their normalized top-left positions."""
+    image = np.zeros((image_size, image_size), dtype=np.float32)
+    weights = np.zeros((image_size, image_size), dtype=np.float32)
+    patch_array = np.asarray(patches, dtype=np.float32)
+    if patch_array.ndim == 4:
+        patch_array = patch_array[:, 0]
+
+    for patch, (row_pos, col_pos) in zip(patch_array, positions):
+        row = int(round(float(row_pos) * image_size))
+        col = int(round(float(col_pos) * image_size))
+        image[row : row + patch_size, col : col + patch_size] += patch
+        weights[row : row + patch_size, col : col + patch_size] += 1.0
+
+    return image / np.maximum(weights, 1.0)
+
+
 def mse(prediction: np.ndarray, target: np.ndarray) -> float:
     return float(np.mean((prediction - target) ** 2))
 

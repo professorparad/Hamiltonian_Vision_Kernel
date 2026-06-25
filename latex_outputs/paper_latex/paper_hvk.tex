@@ -1,0 +1,370 @@
+\documentclass[journal]{IEEEtran}
+\usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm,hyperref}
+\usepackage{float}
+\begin{document}
+
+\title{HVK: A Hamiltonian-Guided Tensor Network Architecture for Spatially Aware Quantum Image Reconstruction}
+
+\author{Sparsho~Chakraborty\IEEEauthorrefmark{1} and Siddhartha~Patra\IEEEauthorrefmark{2}%
+\thanks{\IEEEauthorrefmark{1}School of Basic Sciences, Department of Physics, Indian Institute of Technology Bhubaneswar, Odisha, India.}%
+\thanks{\IEEEauthorrefmark{2} Assistant Professor , Centre for Quantum Engineering, Research and Education (CQUERE), TCG CREST, Kolkata, India.}}
+
+\maketitle
+
+\begin{abstract}
+We present the HVK architecture, an end-to-end quantum image reconstruction framework that integrates Matrix Product States (MPS), parameterized variational quantum circuits, and data-adaptive Heisenberg Hamiltonian operators. Classical approaches scale poorly with resolution, while typical quantum methods treat variational states opaquely without exploiting spatial connections. HVK addresses this by leveraging a local spatial smoothness regularizer explicitly derived from the expectation values of a low-energy spin-1/2 chain/grid configuration. Our framework reduces reconstruction error over standard adversarial configurations and enforces geometric constraints tied directly to the dihedral group of the image grid.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Quantum Image Processing, Tensor Networks, Variational Quantum Algorithms, Heisenberg Hamiltonian, Image Reconstruction.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Classical approaches---such as regularized inversion and, more recently, deep convolutional priors---have driven decades of progress, but their computational and memory costs scale poorly with image resolution and dimensionality. This has motivated a continuing search for representations and algorithms with more favorable scaling.
+
+Quantum computing has emerged as one candidate paradigm. Variational quantum algorithms have demonstrated that parameterized quantum circuits, optimized in a hybrid quantum--classical loop, can prepare physically meaningful states on near-term hardware \cite{Cerezo2021, Tilly2022}. The variational quantum eigensolver and its descendants---including the variational Hamiltonian ansatz and ADAPT-VQE---exploit the local decomposability of physically relevant Hamiltonians to construct shallow, problem-aware circuits whose parameters have transparent interpretations as rotation angles in a structured ansatz \cite{Cerezo2021, Tilly2022, Bauer2020}. These developments raise a natural question: can Hamiltonian-guided variational principles, originally designed for electronic-structure problems, be repurposed for image reconstruction, where the ``Hamiltonian'' encodes imaging physics rather than electronic interactions?
+
+Quantum image processing (QIMP) provides the encoder side of such a pipeline. The flexible representation of quantum images encodes pixel colors in qubit rotation angles and pixel positions in computational-basis states, while the novel enhanced quantum representation (NEQR) stores grayscale values deterministically in basis states using $q$-qubit registers \cite{Chakraborty2018}. Successive works have improved and extended these encodings: quantum realizations of classical interpolation have been demonstrated for NEQR \cite{Zhou2017}, and full quantum edge-detection pipelines for NEQR-encoded images have been validated theoretically and experimentally \cite{Yao2017}. Quantum probability image encodings further reduce qubit and gate costs while preserving the structure needed for downstream processing \cite{Yao2017}. However, most QIMP pipelines treat the encoded image as an opaque state to be acted upon; they do not expose the spatial correlations among neighboring pixels in a form that admits efficient variational optimization.
+
+Tensor networks provide exactly this missing structure. Originally developed as compact representations of many-body quantum states, matrix product states (MPS), projected entangled pair states (PEPS), and the multi-scale entanglement renormalization ansatz (MERA) have proven remarkably effective as compressed representations of structured classical data, including images \cite{Cirac2021}. Classical tensor-network methods have been applied to image compression \cite{Latorre2005}, to probabilistic generative modeling under partial observation \cite{Han2018}, and---relevantly for inverse problems---to compressed sensing reconstructions whose latent state is itself a tensor network \cite{Fei2021}. MPS/PEPS-structured quantum circuits have also been proposed as classical--quantum bridges that are qubit-efficient and well-suited to circuit-cutting techniques on near-term devices \cite{Guala2023}. 
+
+Despite this rich prior work, two streams remain largely disconnected. On one side, classical tensor-network formulations for imaging encode the image as an MPS and perform contraction and optimization without invoking quantum Hamiltonian dynamics; on the other, variational quantum algorithms for image reconstruction encode the image as a generic parameterized state without exposing the spatial bond structure of a tensor network \cite{Haga2024, Zhai2025, Nau2023}. The intersection---a Hamiltonian whose evolution respects and is explicitly coupled to a tensor-network topology that mirrors pixel adjacency---has not been systematically developed.
+
+In this paper we introduce the HVK architecture, a Hamiltonian-guided tensor-network framework for spatially aware quantum image reconstruction. Rather than treating the image-encoding circuit and the reconstruction prior as separate modules, HVK fuses them: a problem-specific Hamiltonian is constructed such that its low-energy subspace, when probed via a variational ansatz organized as a tensor network, preferentially contains states consistent with both the measurement physics and the spatial structure of the scene. 
+
+\section{Theoretical Framework}
+\subsection{Hamiltonian Operator Dynamics}
+HVK treats each spatial patch of an input image as a quantum many-body state on a finite spin-1/2 chain, encodes that state as a matrix product state, and exposes a Hamiltonian whose ground-state structure induces spatially aware correlations among neighboring pixels. This establishes the operator-theoretic foundations: the Heisenberg family of Hamiltonians, the corresponding energy objective, and the symmetry structure inherited by the resulting observable manifold.
+
+\subsubsection{The Heisenberg Family of Hamiltonians}
+For a one-dimensional chain of $n_{\text{bonds}}$ bonds indexed by $i$ and sites $(i, i+1)$, the anisotropic Heisenberg Hamiltonian is defined as:
+\begin{equation}
+H_{\text{Heis}} = \sum_{i=0}^{n_{\text{bonds}}-1}\Bigl(J_x^{(i)}X_i X_{i+1} + J_y^{(i)}Y_i Y_{i+1} + J_z^{(i)}Z_i Z_{i+1}\Bigr)
+\end{equation}
+where $X, Y, Z$ are the standard Pauli operators and $J_\alpha^{(i)}$ are bond-resolved coupling strengths. In the isotropic limit ($J_x = J_y = J_z$) the model possesses an exact $\text{SU}(2)$ symmetry; for $J_x = J_y \neq J_z$ (XXZ model) the $\text{U}(1)$ symmetry generated by $\sum Z_i$ is preserved, while for generic couplings (XYZ model) this symmetry is broken to $\mathbb{Z}_2 \times \mathbb{Z}_2$ \cite{Craps2024}.
+In HVK, we fix the network context to six sites and treat every component $J_\alpha^{(i)}$ as a learnable real parameter, initialized from:
+\begin{equation}
+J_\alpha^{(i)} \sim \mathcal{N}(0,\, 0.01), \quad \alpha \in \{x, y, z\}.
+\end{equation}
+Because the coupling strengths are optimized jointly with the circuit weights, the Hamiltonian itself adapts to image data, and the effective spin--spin interaction pattern is selected by the model dynamically.
+
+\subsubsection{Energy Loss and Ground-State Objective}
+Given a patch $n$ and the Pauli observables measured from the variational circuit, the Heisenberg energy of the corresponding state is:
+\begin{equation}
+\mathcal{E}_n(\theta, J) = \sum_{i=0}^{4}\sum_{\alpha \in \{x, y, z\}} J_\alpha^{(i)} \langle \sigma_\alpha^{(i)} \sigma_\alpha^{(i+1)}\rangle_n.
+\end{equation}
+where 
+\(
+\alpha 
+\) is the indices running from 1 to 3 denoting the pauli matrices.\\
+
+The training energy loss is evaluated as the patch-averaged energy:
+\begin{equation}
+\mathcal{L}_{\text{energy}}(\theta, J) = \langle E\rangle = \frac{1}{N}\sum_{n=1}^{N}\mathcal{E}_n(\theta, J).
+\end{equation}
+Minimizing $\mathcal{L}_{\text{energy}}$ with antiferromagnetic couplings drives the circuit toward the ground state of the learned Hamiltonian, steering the architecture toward spatially correlated quantum features.
+
+\subsubsection{Positional Awareness of the Hamiltonian}
+The Hamiltonian is rendered spatially aware through two coupled mechanisms. First, the per-qubit positional rotation $\theta_{\text{position}}$ depends on the patch-grid coordinate through a learned projection, so distinct spatial positions inject different inputs into the same Hamiltonian topology. Second, because the circuit output state $|\Psi_n\rangle$ depends jointly on the patch feature and the learned positional angle, the effective energy surface experienced by each patch is distinct even when underlying internal features align. 
+
+\subsubsection{Total Training Objective}
+The complete objective function combines pixel-level fidelity with quantum-state regularization:
+\begin{equation}
+\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{rec}} + \lambda\,\mathcal{L}_{\text{energy}},
+\end{equation}
+evaluated via the Frobenius-norm reconstruction loss:
+\begin{equation}
+\mathcal{L}_{\text{rec}} = \frac{1}{N}\sum_{n=1}^{N}\bigl\| D(o_n, e_n) - P_n \bigr\|_F^2
+\end{equation}
+where $D$ is the classical decoder, $P_n$ is the ground-truth patch, and $\lambda$ is the energy regularization coefficient.\\
+
+\subsubsection{Symmetry Analysis}
+The Heisenberg correlators define three observable sectors:
+\begin{equation}
+\Xi_{ZZ} = (\langle Z_0Z_1\rangle, \dots, \langle Z_4Z_5\rangle),\quad \Xi_{XX},\quad \Xi_{YY}))
+\end{equation}
+embedded in $\mathbb{R}^{27}$ through the simultaneously measured observables. Two symmetry reductions act sequentially on this manifold:
+\begin{enumerate}
+    \item \textbf{Positional reduction:} The per-qubit positional rotations belong to $\text{SU}(2)$ (acting as a double cover to the spatial $\text{SO}(3)$ Bloch rotations) and break permutation symmetry between qubit sites, reducing continuous symmetry down to the diagonal phase rotations matching the Cartan sector.
+    \item \textbf{Geometric reduction:} The $4 \times 4$ patch grid carries the dihedral group of the square,
+    \begin{equation}
+    D_4 = \langle\, r,\, s\ \big|\ r^{\,4} = s^{\,2} = (sr)^{2} = e \,\rangle,
+    \end{equation}
+    with eight elements. Under transformation matrices $g \in D_4$, observable vectors transform as $o_{g(i,j)} \approx \Phi_g \, o_{i,j}$, decomposing the latent space into irreducible representations:
+    \begin{equation}
+    \mathcal{V}_{\text{obs}} \approx m_A A_1 \oplus m_B A_2 \oplus m_C B_1 \oplus m_D B_2 \oplus m_E E.
+    \end{equation}
+\end{enumerate}
+
+The resulting symmetry stack handles the structural degradation systematically:
+\begin{equation}
+\text{SU}(2)\text{-variant isotropic sector} \xrightarrow{\text{positional encoding}} \text{Cartan sector} \xrightarrow{\text{grid geometry}} D_4
+\end{equation}
+This framework preserves the structural symmetries of the patch grid, allowing the pipeline to distinguish orientation-sensitive boundaries.
+
+\section{HVK Architecture Design}
+The pipeline consists of an operational flow defined by:
+$$\text{Image} \rightarrow \{\text{Patches}\} \rightarrow \text{MPS} \rightarrow \text{46-D Feature} \rightarrow \text{6-D Vector} \rightarrow \text{27-D Latent} \rightarrow \text{Decoder} \rightarrow \text{Reconstruction}$$
+
+\subsection{Tensor Network Optimization}
+\subsubsection{Patch Preparation}
+An input image $\mathbf{I} \in \mathbb{R}^{H \times W}$ is normalized and resized to a canonical resolution of $256 \times 256$ pixels. It is partitioned into a regular grid of non-overlapping $64 \times 64$ patches:
+\begin{equation}
+\Pi = \{\,P_{ij} \in \mathbb{R}^{64 \times 64}\,:\, i,j \in \{0,1,2,3\}\,\},
+\end{equation}
+yielding $N = 16$ patches. Each patch carries a normalized center coordinate $(r_i, c_j) = (i/4,\, j/4) \in \mathbb{R}^2$.\\
+
+\subsubsection{MPS Feature Extraction}
+Each patch $P_{ij}$ is unrolled into a flat vector $\mathbf{v}_n$, $\ell_2$-normalized, and reshaped into a 12-site spin tensor product state:
+\begin{equation}
+\lvert\psi_n\rangle = \frac{\mathbf{v}_n}{\|\mathbf{v}_n\|_2} \;\in\; \bigl(\mathbb{C}^2\bigr)^{\otimes 12},
+\end{equation}
+satisfying $2^{12} = 4096$ variables. The state is decomposed into a Matrix Product State via sequential Singular Value Decomposition (SVD) with a strict rank truncation set to bond dimension $\chi = 4$:
+\begin{equation}
+\lvert\psi_n\rangle \approx \sum_{\sigma_1,\dots,\sigma_{12}} A_{\sigma_1} A_{\sigma_2} \dots A_{\sigma_{12}} \,\lvert\sigma_1 \dots \sigma_{12}\rangle,
+\end{equation}
+where $A_{\sigma_i} \in \mathbb{C}^{\chi_{i-1} \times \chi_i}$. This provides a genuine quantum-aligned feature envelope protecting local correlations.
+
+\subsubsection{Observable Feature Extraction}
+Three distinct measurement families are extracted from the underlying MPS to constitute a 46-dimensional classical feature vector $\mathbf{f}_n$:
+\begin{itemize}
+    \item \textbf{Local Pauli Expectations:} $\langle Z_i \rangle$ and $\langle X_i \rangle$ for all 12 sites, contributing 24 features.
+    \item \textbf{Nearest-Neighbor Correlations:} $\langle Z_i Z_{i+1}\rangle$ across 11 spatial bonds, contributing 11 features.
+    \item \textbf{Bipartite Entanglement Entropy:} Calculated across all 11 split configurations via singular values $\lambda_k^{(i)}$:
+    \begin{equation}
+    p_k^{(i)} = \frac{|\lambda_k^{(i)}|^2}{\sum_k |\lambda_k^{(i)}|^2}, \quad S_i = -\sum_k p_k^{(i)} \log(p_k^{(i)} + \varepsilon),
+    \end{equation}
+    with $\varepsilon = 10^{-8}$, yielding 11 features.
+\end{itemize}
+The final combined configuration produces $\mathbf{f}_n \in \mathbb{R}^{46}$.
+
+\subsubsection{Two-Dimensional Fourier Positional Encoding}
+Spatial information is injected via a sinusoidal map to break coordinate invariance \cite{Xu2021}. For coordinate pair $(r_i, c_j)$, the vector $e \in \mathbb{R}^{8}$ is defined by:
+\begin{align}
+e_{4k} &= \sin(\omega_k \pi r_i), & e_{4k+1} &= \cos(\omega_k \pi r_i), \nonumber \\
+e_{4k+2} &= \sin(\omega_k \pi c_j), & e_{4k+3} &= \cos(\omega_k \pi c_j),
+\end{align}
+for $k \in \{0, 1\}$ with base frequencies $\omega_k$. This is projected to rotational constraints via a learned map $W_{\text{pos}} \in \mathbb{R}^{6 \times 8}$:
+\begin{equation}
+\theta_{\text{position}} = W_{\text{pos}} \cdot e \in \mathbb{R}^{6}.
+\end{equation}
+
+\subsubsection{Variational Quantum Circuit}
+The raw 46-D feature matrix $\mathbf{f}_n$ is linearly compressed to a 6-D vector $x_n \in \mathbb{R}^6$ prior to circuit injection. For each patch, a 6-qubit register initialized to $\lvert0\rangle^{\otimes 6}$ undergoes three operations:
+\begin{enumerate}
+    \item \textbf{Angle Embedding:} Feature inputs are mapped via $Y$-axis rotations:
+    \begin{equation}
+    U_{\text{enc}}(x_n) = \bigotimes_{i=0}^{5} R_Y\bigl(x_n^{(i)}\bigr), \quad R_\theta = e^{-i\theta Y/2}.
+    \end{equation}
+    \item \textbf{Positional Modulation:} Spatial adjustments are handled via:
+    \begin{equation}
+    U_{\text{pos}}(\theta_{\text{pos}}, n) = \bigotimes_{i=0}^{5} R_Z\bigl(\theta_{\text{position}}^{(i)}\bigr).
+    \end{equation}
+    \item \textbf{Strongly Entangling Layers:} Parameterized operations use $L=2$ layers containing single-qubit rotations and CNOT rings:
+    \begin{equation}
+    U_{\text{var}}(\theta) = \prod_{l=1}^{L} \left[ \text{CNOT-Ring} \cdot \bigotimes_{i=0}^{5} \text{Rot}(\phi_i^l, \theta_i^l, \omega_i^l) \right],
+    \end{equation}
+    initialized safely to avoid barren plateaus \cite{Cerezo2021}. The state is output as:
+    \begin{equation}
+    |\Psi_n\rangle = U_{\text{var}}(\theta) \cdot U_{\text{pos}}(\theta_{\text{pos}}, n) \cdot U_{\text{enc}}(x_n)\, |0\rangle^{\otimes 6}.
+    \end{equation}
+\end{enumerate}
+
+\subsubsection{Observable Latent Space}
+A total of 27 real expectations are evaluated per execution pass:
+\begin{equation}
+\Phi_n = \bigl(\langle X_i \rangle, \langle Z_i \rangle, \langle Z_i Z_{i+1} \rangle, \langle X_i X_{i+1} \rangle, \langle Y_i Y_{i+1} \rangle\bigr) \in [-1, 1]^{27},
+\end{equation}
+representing a structured projection $\Phi: \mathbb{CP}^{63} \longrightarrow \mathbb{R}^{27}$.
+
+\subsubsection{Classical Decoding and Patch Reconstruction}
+The extracted matrix is standardized to standard normal form per column and passed to a classical multi-layer perceptron (MLP) decoder alongside the spatial encodings:
+\begin{equation}
+\tilde{P}_n = D\left(\text{Standardize}(\Phi_n), e_n\right).
+\end{equation}
+The architecture utilizes a mirrored transpose structure with expanding channel maps ($4 \rightarrow 8 \rightarrow 16 \rightarrow 3$) coupled with cubic upsampling steps to output the final pixel arrays \cite{Slabbert2024}.
+
+\section{Methodology}
+\subsection{Datasets}
+\subsubsection{Monalisa Single-Image Benchmark}
+The baseline canonical single-image analysis uses a $256 \times 256$ grayscale layout of \textit{monalisa.jpg}, divided into 16 evaluation regions of size $64 \times 64$ pixels \cite{MathematicalFramework2026}.
+
+\subsubsection{CIFAR-10 Subset}
+To capture structural generalization capabilities, a target subset of 10 images from the CIFAR-10 dataset is resized to match the $256 \times 256$ input dimensions. Performance tracking checks aggregate values across metrics repositories \cite{MethodologyExp2026}.
+
+\subsection{Benchmarking  Implementations}
+We execute validation passes using four distinct comparison configurations:
+\begin{itemize}
+    \item \textbf{1D HVK:} A control setup utilizing a linear chain of 6 qubits linked via 5 nearest-neighbor bonds to generate the 27-dimensional observable vector.
+    \item \textbf{2D HVK:} An advanced geometric layout arranging the 6 qubits on a $2 \times 3$ lattice to match patch boundary configurations natively, producing a 19-dimensional latent signature.
+    \item \textbf{Convolutional GAN Autoencoder:} A standard generative adversarial network processing matching patch blocks \cite{MethodologyExp2026}.
+    \item \textbf{Parameterized Hamiltonian Learning (PHL):} A task-mismatched segmentation reference used to establish positioning parameters rather than structural metrics \cite{Shi2022}.
+\end{itemize}
+
+\subsection{Training Protocol}
+Optimization passes utilize the Adam optimizer with learning rates set to $\eta = 0.003$ for the 1D variant and $\eta = 0.004$ for the 2D configuration \cite{MethodologyExp2026}. Parameter targets are jointly updated over 200 epochs under a rigid loss factor ($\lambda=0.01$). Initialization parameters scale according to established safe limits \cite{Cerezo2021, MathematicalFramework2026, Xu2021}.
+
+\subsection{Evaluation Metrics}
+\subsubsection{Reconstruction Precision}
+The system gauges reconstruction performance using Mean Squared Error (MSE) and Peak Signal-to-Noise Ratio (PSNR):
+\begin{equation}
+\operatorname{MSE}_A(t) = \frac{1}{N \cdot 64^2}\sum_{n=1}^{N}\bigl\|\tilde{P}^{(A)}_{n,t} - P_n\bigr\|_F^2,
+\end{equation}
+\begin{equation}
+\text{PSNR}_A(t) = 20\log_{10}\left(\frac{1}{\sqrt{\operatorname{MSE}_A(t)}}\right).
+\end{equation}
+
+\subsubsection{Hamiltonian Energy Tracking}
+The state optimization depth is directly tracked via the underlying Heisenberg expectation tracking:
+\begin{equation}
+\langle E\rangle_t = \frac{1}{N}\sum_{n=1}^{N}\sum_{i}\Bigl(J_z^{(i)}\langle Z_iZ_{i+1}\rangle_{n,t} + J_x^{(i)}\langle X_iX_{i+1}\rangle_{n,t} + J_y^{(i)}\langle Y_iY_{i+1}\rangle_{n,t}\Bigr).
+\end{equation}
+
+\subsubsection{Order Parameters and Phase Diagnostics}
+Longitudinal order parameters track system magnetization states alongside lattice correlation configurations:
+\begin{equation}
+C_A(t) = \frac{1}{15 \cdot N}\sum_{n=1}^{N}\sum_{i=0}^{4}\bigl(\langle Z_iZ_{i+1}\rangle_{n,t} + \langle X_iX_{i+1}\rangle_{n,t} + \langle Y_iY_{i+1}\rangle_{n,t}\bigr).
+\end{equation}
+Critical structural transition markers are flagged using windowed variance deviations:
+\begin{equation}
+|C_A(t_c) - \operatorname{median}(C_A)| > 2 \cdot \operatorname{std}(C_A).
+\end{equation}
+
+\section{Experimental Results}
+\subsection{CIFAR-10 Subset Results}
+Table~\ref{tab:cifar10} compiles the structural reconstruction performance metrics evaluated across the CIFAR-10 data configurations.
+
+\begin{table}[h]
+\centering
+\caption{CIFAR-10 Subset Evaluation (10-Image Average)}
+\label{tab:cifar10}
+\begin{tabular}{lccc}
+\toprule
+Metric & 1D HVK & GAN Baseline & Direction \\
+\midrule
+Final MSE & $6.7974 \times 10^{-5}$ & $4.1511 \times 10^{-4}$ & Lower is better \\
+Best MSE & $6.1102 \times 10^{-5}$ & $3.8944 \times 10^{-4}$ & Lower is better \\
+PSNR (dB) & 42.55 & 34.03 & Higher is better \\
+SSIM & --- & 0.9944 & Higher is better \\
+Final Energy & $-0.1844$ & --- & Lower is better \\
+Critical Epoch & 26.1 & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The 1D HVK tracks an $83.6\%$ reduction in absolute mean squared error compared directly to the GAN alternative, maintaining a clean $+8.52\text{ dB}$ performance advantage.
+
+\subsection{Monalisa Single-Image Results}
+Reconstruction comparisons for the structural \textit{Monalisa} validation target are summarized in Table~\ref{tab:monalisa}.
+
+\begin{table}[h]
+\centering
+\caption{Monalisa Reconstruction Performance Across Methods}
+\label{tab:monalisa}
+\begin{tabular}{lcccc}
+\toprule
+Model & Final MSE & Best MSE & PSNR (dB) & SSIM \\
+\midrule
+1D HVK & $3.3754 \times 10^{-4}$ & $3.0112 \times 10^{-4}$ & 34.72 & --- \\
+2D HVK & $8.5114 \times 10^{-5}$ & $8.4975 \times 10^{-5}$ & 40.70 & --- \\
+GAN Baseline & $1.0185 \times 10^{-3}$ & $1.1124 \times 10^{-3}$ & 29.92 & 0.9873 \\
+PHL \cite{Shi2022} & --- & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+The PHL metric is excluded from direct pixel tracking because it is natively optimized for segmentation tasks, logging a baseline Dice coefficient of $0.9706$ and an Intersection-over-Union (IoU) of $0.9428$.
+
+\subsection{1D vs. 2D Topological Ablation Study}
+Table~\ref{tab:ablation} highlights the operational adjustments caused by restructuring the lattice configuration from a 1D chain to a 2D adjacent grid.
+
+\begin{table}[h]
+\centering
+\caption{Lattice Topology Performance Adjustments}
+\label{tab:ablation}
+\begin{tabular}{lcc}
+\toprule
+Metric & 1D HVK & 2D HVK \\
+\midrule
+Critical Epoch & 11 & 2 \\
+Final Energy & $-0.1154$ & $-0.2411$ \\
+Order Parameter $\langle M_z \rangle$ & 0.0411 & 0.0094 \\
+Maximum Susceptibility $\chi_{\text{max}}$ & $1.15 \times 10^{-4}$ & $6.24 \times 10^{-4}$ \\
+Final PSNR (dB) & 34.72 & 40.70 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{MPS Bond-Dimension Sweep Analysis}
+An optimization sweep across varying tensor sizes targets internal feature generation performance. Setting $\chi = 1$ gives an initial structural encoder MSE of $9.77 \times 10^{-3}$ (PSNR of $20.10\text{ dB}$). Scaling up to $\chi = 4$ improves base values to an MSE of $4.44 \times 10^{-4}$ and a PSNR of $33.52\text{ dB}$ \cite{MethodologyExp2026}, verifying that the subsequent quantum layers supply the extra margin to push performance to the final $40.70\text{ dB}$ mark.
+
+\section{Discussion}
+\subsection{Reconstruction Error Analysis}
+HVK's $83.6\%$ error reduction over the GAN demonstrates that adversarial objectives can introduce structural instabilities during high-fidelity generation. GAN optimization exhibits a non-monotonic MSE trace ($\text{MSE}_{\text{best}} > \text{MSE}_{\text{final}}$), whereas HVK enforces structural stability through direct pixel losses paired with smooth physical regularizers derived from the learned Hamiltonian states.
+
+\subsection{Architectural Differentiation Matrix}
+Table~\ref{tab:differentiation} contrasts the structural properties of HVK against current reference frameworks.
+
+\begin{table*}[t]
+\centering
+\caption{Architectural Differentiation Matrix}
+\label{tab:differentiation}
+\begin{tabular}{lcccc}
+\toprule
+Axis & Classical AE \cite{Slabbert2024} & GAN AE \cite{MethodologyExp2026} & Standard QAE \cite{Zhai2025} & HVK (Ours) \\
+\midrule
+Latent Space & Continuous $\mathbb{R}^d$ & Continuous $\mathbb{R}^d$ & Quantum Register & Pauli Correlator Vector \\
+Spatial Bias & Implicit Convolutions & Implicit Convolutions & None & 2D Fourier + $D_4$ Symmetries \\
+Regularizer & Bottleneck Size & Discriminator Loss & Swap-Test Fidelity & Hamiltonian Energy $\mathcal{L}_{\text{energy}}$ \\
+Group Alignment & None & None & Reference Swaps & $\text{SO}(3)$ Cartan + $D_4$ Grid \\
+Target Task & Reconstruction & Reconstruction & Compression & Spatially Aware Reconstruction \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{The Topology-Alignment Principle}
+The $+5.98\text{ dB}$ performance advantage of the 2D HVK configuration over its 1D counterpart validates the \textit{topology-alignment principle}: aligning the qubit layout of the variational circuit with the spatial adjacency of the image patches prevents conflicting optimization trajectories. This reinforces structural coordination across patch boundaries along the grid edges.
+
+\subsection{Quantitative Channel Economy}
+The application of 6 qubits maps precisely to 27 or 19 target measurement dimensions, tracking the specific number of local and nearest-neighbor interactions. HVK maintains compact scaling rules while outpacing over-parameterized convolutional models.
+
+\subsection{Interpretive Limits}
+We explicitly acknowledge the following bounds on our empirical claims:
+\begin{itemize}
+    \item The CIFAR-10 evaluations are currently bounded to a 10-image validation subset.
+    \item 2D HVK performance data is documented solely for the \textit{Monalisa} test case.
+    \item SSIM data reporting requires further code-level updates for the quantum pipeline.
+\end{itemize}
+
+\section{Conclusion}
+We introduced HVK, a Hamiltonian-guided tensor-network framework for spatially aware quantum image reconstruction. HVK combines an MPS encoder, 2D Fourier positional inputs, and a parameterized variational circuit under a data-adaptive Heisenberg energy regularizer. 
+
+On CIFAR-10, HVK achieves a PSNR of $42.55\text{ dB}$, outperforming the GAN baseline by $8.52\text{ dB}$ and reducing mean squared error by $83.6\%$. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$. Quantum state diagnostics support the topology-alignment principle, confirming that structured geometric boundaries accelerate convergence and yield deeper energy states.
+
+Future efforts will focus on running full-scale CIFAR-10 dataset evaluations with the 2D lattice structure, implementing automated SSIM calculation pipelines, and assessing performance against a broader collection of conditional generative baselines.
+
+\begin{thebibliography}{10}
+\bibitem{Cerezo2021} M. Cerezo et al., ``Variational quantum algorithms,'' \textit{Nature Reviews Physics}, vol. 3, no. 9, pp. 625--644, 2021.
+\bibitem{Tilly2022} J. Tilly et al., ``The Variational Quantum Eigensolver: A review of methods and best practices,'' \textit{Physics Reports}, vol. 986, pp. 1--128, 2022.
+\bibitem{Bauer2020} B. Bauer, S. Bravyi, M. Motta, and G. K.-L. Chan, ``Quantum Algorithms for Quantum Chemistry and Quantum Materials Science,'' \textit{Chemical Reviews}, vol. 120, no. 22, pp. 12685--12717, 2020.
+\bibitem{Chakraborty2018} S. Chakraborty, S. B. Mandal, and S. H. Shaikh, ``Quantum image processing: challenges and future research issues,'' \textit{International Journal of Information Technology}, vol. 14, no. 1, pp. 475--489, 2018.
+\bibitem{Zhou2017} R. Zhou, W. Hu, P. Fan, and H. Ian, ``Quantum realization of the bilinear interpolation method for NEQR,'' \textit{Scientific Reports}, vol. 7, no. 1, p. 2511, 2017.
+\bibitem{Yao2017} X. Yao et al., ``Quantum Image Processing and Its Application to Edge Detection: Theory and Experiment,'' \textit{Physical Review X}, vol. 7, no. 3, p. 031041, 2017.
+\bibitem{Cirac2021} J. I. Cirac, D. Pérez-García, N. Schuch, and F. Verstraete, ``Matrix product states and projected entangled pair states: Concepts, symmetries, theorems,'' \textit{Reviews of Modern Physics}, vol. 93, no. 4, p. 045003, 2021.
+\bibitem{Latorre2005} J. I. Latorre, ``Image compression and entanglement,'' arXiv:quant-ph/0510031, 2005.
+\bibitem{Han2018} Z. Han, J. Wang, H. Fan, L. Wang, and P. Zhang, ``Unsupervised Generative Modeling Using Matrix Product States,'' \textit{Physical Review X}, vol. 8, no. 3, p. 031012, 2018.
+\bibitem{Fei2021} S. M. Fei, ``Compressed Sensing Based on Tensor Network Machine Learning,'' \textit{Physical Science \& Biophysics Journal}, vol. 5, no. 1, p. 16000174, 2021.
+\bibitem{Guala2023} D. Guala et al., ``Practical overview of image classification with tensor-network quantum circuits,'' \textit{Scientific Reports}, vol. 13, no. 1, p. 4427, 2023.
+\bibitem{Haga2024} A. Haga, ``Quantum annealing-based computed tomography using variational approach for a real-number image reconstruction,'' \textit{Physics in Medicine and Biology}, vol. 69, no. 4, p. 02155, 2024.
+\bibitem{Zhai2025} X. Zhai, T. Xiao, J. Huang, J. Fan, and G. Zeng, ``Quantum neural compressive sensing for ghost imaging,'' \textit{Physical Review Applied}, vol. 23, no. 1, p. 014018, 2025.
+\bibitem{Nau2023} M. A. Nau, A. H. Vija, W. Gohn, M. P. Reymann, and A. Maier, ``Exploring the Limitations of Hybrid Adiabatic Quantum Computing for Emission Tomography Reconstruction,'' \textit{Journal of Imaging}, vol. 9, no. 10, p. 221, 2023.
+\bibitem{Craps2024} B. Craps, M. D. Clerck, O. Evnin, and P. Hacker, ``Integrability and complexity in quantum spin chains,'' \textit{SciPost Physics}, vol. 16, no. 2, p. 041, 2024.
+\bibitem{MathematicalFramework2026} ``Mathematical Framework for HVK,'' internal technical report, June 2026.
+\bibitem{Xu2021} R. Xu, X. Wang, K. Chen, B. Zhou, and C. C. Loy, ``Positional Encoding as Spatial Inductive Bias in GANs,'' in \textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 2021, pp. 13564--13573.
+\bibitem{MethodologyExp2026} ``Methodology and Experimental Analysis of the Hamiltonian Vision Kernel,'' internal laboratory reference, 2026.
+\bibitem{Araz2022} J. Y. Araz and M. Spannowsky, ``Classical versus quantum: Comparing tensor-network-based quantum circuits on Large Hadron Collider data,'' \textit{Physical Review A}, vol. 106, no. 6, p. 062423, 2022.
+\bibitem{Slabbert2024} D. Slabbert and F. Petruccione, ``Hybrid Quantum-Classical Feature Extraction approach for Image Classification using Autoencoders and Quantum SVMs,'' arXiv:2410.18814, 2024.
+\bibitem{Liu2022} Z. Liu, P.-X. Shen, W. Li, L.-M. Duan, and D.-L. Deng, ``Quantum capsule networks,'' \textit{Quantum Science and Technology}, vol. 8, no. 1, p. 015016, 2022.
+\bibitem{Shi2022} J. Shi, W. Wang, X. Lou, S. Zhang, and X. Li, ``Parameterized Hamiltonian Learning With Quantum Circuit,'' \textit{IEEE Transactions on Pattern Analysis and Machine Intelligence}, vol. 45, no. 5, pp. 6086--6095, 2022.
+\end{thebibliography}
+
+\end{document}

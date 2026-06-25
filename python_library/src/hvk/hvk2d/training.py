@@ -141,7 +141,10 @@ def save_hvk2d_outputs(outputs: dict, output_dir: Path):
     output_dir.mkdir(parents=True, exist_ok=True)
     save_reconstruction_plot(outputs, output_dir / "reconstructions.png")
     save_training_curve(outputs["history"], output_dir / "training_curves.png")
-    order_curve = save_order_parameter_plot(outputs["epoch_order_parameters"], output_dir / "hvk2d_order_parameter_curve.png")
+    order_curve = save_order_parameter_plot(
+        outputs["epoch_order_parameters"],
+        output_dir / "hvk2d_order_parameter_curve.png",
+    )
     if order_curve is not None:
         outputs["media"]["order_parameter_curve"] = str(order_curve)
     write_csv(output_dir / "hvk2d_epoch_order_parameters.csv", outputs["epoch_order_parameters"])
