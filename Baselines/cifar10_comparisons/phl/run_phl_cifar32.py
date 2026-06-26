@@ -23,6 +23,7 @@ from common import (  # noqa: E402
     compute_metrics,
     image_paths,
     load_grayscale_image,
+    resolve_device,
     seed_everything,
     write_csv,
 )
@@ -172,7 +173,8 @@ def save_phl_visualization(
 
 
 def run(args: argparse.Namespace) -> list[dict]:
-    device = torch.device("cuda" if args.device == "cuda" and torch.cuda.is_available() else "cpu")
+    device = resolve_device(args.device)
+    print(f"Using device: {device}")
     rows = []
     output_dir = Path(__file__).resolve().parent / "outputs"
     history_dir = output_dir / "training_history"
@@ -213,7 +215,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset-dir", type=Path, default=DEFAULT_DATASET_DIR)
     parser.add_argument("--count", type=int, default=10)
     parser.add_argument("--epochs", type=int, default=CIFAR_EPOCHS)
-    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     return parser.parse_args()
 
 

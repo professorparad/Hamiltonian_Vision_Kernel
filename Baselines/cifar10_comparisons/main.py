@@ -265,7 +265,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--count", type=int, default=5, help="Images per method.")
     parser.add_argument("--epochs", type=int, default=200, help="Training epochs per method.")
-    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument(
         "--methods",
         nargs="+",

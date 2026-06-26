@@ -128,7 +128,8 @@ def train_hvk2d(
 
 
 def run(args: argparse.Namespace) -> list[dict]:
-    device = resolve_device(args.device)
+    device = resolve_device(args.device, requires_quantum=True)
+    print(f"Using device: {device}")
     rows = []
     paths = image_paths(args.dataset_dir, args.count)
     for img_path in paths:

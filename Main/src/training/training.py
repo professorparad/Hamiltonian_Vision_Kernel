@@ -17,6 +17,7 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pennylane as qml
 import torch
 import torch.optim as optim
 
@@ -51,9 +52,29 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "outputs" / "training_analysis"
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "src" / "config" / "training_config.json"
 
 
-def resolve_device(device_name: str = "auto") -> torch.device:
+def quantum_cuda_available() -> bool:
+    if not torch.cuda.is_available():
+        return False
+    try:
+        qml.device("lightning.gpu", wires=1)
+    except Exception:
+        return False
+    return True
+
+
+def resolve_device(device_name: str = "auto", *, requires_quantum: bool = False) -> torch.device:
     if device_name == "auto":
+        if requires_quantum and not quantum_cuda_available():
+            return torch.device("cpu")
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device_name == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA was requested, but torch.cuda.is_available() is False.")
+    if device_name == "cuda" and requires_quantum and not quantum_cuda_available():
+        raise RuntimeError(
+            "CUDA was requested for an HVK quantum model, but pennylane-lightning-gpu "
+            "is not installed. Install that backend to run PennyLane quantum circuits on CUDA, "
+            "or use --device auto/--device cpu for this method."
+        )
     return torch.device(device_name)
 
 
@@ -110,7 +131,7 @@ def train(
     model_variant: str = "standard",
     log_prefix: str = "",
 ):
-    device = resolve_device(device) if isinstance(device, str) else device
+    device = resolve_device(device, requires_quantum=True) if isinstance(device, str) else device
 
     (image, patches, raw_positions, features, positions, targets) = build_dataset(
         image_path=image_path,

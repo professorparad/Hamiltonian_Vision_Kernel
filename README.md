@@ -1,42 +1,161 @@
-# Hamiltonian_Vision_Kernel
-A spatially aware hybrid autoencoder framework responsible for reconstruction of high quality images using tensor network contraction and field peturbation 
+# Hamiltonian Vision Kernel
 
-*NOTE:*
-In this following codebase the 
-Main is for the hamiltonian_vision_kernel for 1D generic cost function and the Main2 is the hamiltonina_vision_kernel 2D generic cost function each have there own perksreconstruction quality and phase transition epoch.
-This is a research documenetary mainly used for Research Analysis and record my current ongoing project it is still not ready for open source and viable usage.
+This repository is a working research codebase for image reconstruction with
+Hamiltonian Vision Kernel models. The central idea is to treat image patches as
+structured local states, encode those patches with tensor-network features and
+position information, then train a small hybrid quantum/classical decoder with a
+Hamiltonian-style energy term.
 
-The concept essentially comes by thinking of a spatially aware , autoencoding framework which uses hamiltonian cost function for training the model.
-The hamiltonina used here is the Hisenberg Hamiltonian which acts as primary filter training the model in specifc weights instead of random weights giving accurate results than an usually used quantumn autoencoding framework
-Before feeding into the Variational Model the Model First goes to 4 layers:
-1. The Patching layer: Here the image is broken into patches for easier computation
-2. The MPS layer: this layers uses hard coded SVD to flatten each patches and compress the data to a specififc dimensional tensor 
-3. The positional encoded layer : this layer essentially provides and encoded each patch with spatial information using Fourier analysis
-4. The Feature Extracter: from the mps layer we compute observables like expectation values of X , Z and interpatch correlation and generate the mps feature array then this Mps feature array is added with positional encoded array to make the overall feature space which is then feed into the variational circuit.
+The project is not a polished production library yet. It is closer to a lab
+notebook that has been made runnable: scripts, benchmark tables, generated
+figures, paper drafts, and a Python package copy live side by side. The code is
+useful for reproducing experiments and comparing variants, but some paths are
+still deliberately conservative.
 
-this the overall architecture of the proposed kernel
+## What HVK Is Trying To Test
 
-## CI and Architecture Page
+The question behind the project is simple enough:
 
-The repository has two GitHub Actions workflows:
+Can a reconstruction model use quantum-inspired latent structure, positional
+dependence, and Hamiltonian energy terms in a way that behaves like a practical
+autoencoder rather than just a toy classifier?
 
-- `CI` installs the Python package, runs Ruff, and runs the unit tests.
-- `Pages` publishes the static architecture overview from `docs/`.
+The current pipeline uses:
 
-To deploy the architecture page, enable GitHub Pages in the repository settings
-with GitHub Actions as the source. The page is intentionally static so people
-can inspect the HVK pipeline without installing the quantum ML dependencies.
+1. Image patching, so each image is broken into smaller local regions.
+2. MPS-style feature extraction, using tensor-network compression features from
+   each patch.
+3. Sinusoidal positional encoding, so the model knows where the patch came from.
+4. A variational quantum circuit, which returns observables such as Z, X, and
+   pairwise correlations.
+5. A Hamiltonian energy term, used beside reconstruction loss.
+6. A small neural decoder, which maps quantum observables back into image
+   patches.
 
-Useful local checks:
+The novelty is not in MPS, positional encoding, or Heisenberg-style Hamiltonians
+by themselves. Those are known tools. The experiment is in putting them together
+for reconstruction and then tracking whether order parameters show useful
+training structure.
 
-```bash
-.venv/bin/python -m ruff check .
-.venv/bin/python -m unittest discover -s tests
-.venv/bin/python Baselines/cifar10_comparisons/smoke_test.py --epochs 1 --methods hvk1d --device cpu
+## Repository Map
+
+- `Main/`: the main HVK1D implementation, including the standard and
+  U(1)-symmetric variants.
+- `Main2/`: the 2D-grid HVK variant, with lattice-style correlations.
+- `Baselines/`: CIFAR-10 and Mona Lisa comparison runners for HVK and classical
+  baselines.
+- `python_library/`: package-style copy of the HVK API.
+- `IBM_Cloud/`: small IBM Quantum hardware probe scripts. This is not full HVK
+  training.
+- `tests/`: unit and smoke tests for preprocessing, decoder behavior, training,
+  and benchmark helpers.
+- `docs/`: static architecture page.
+- `latex_outputs/`: paper drafts, figures, and exported LaTeX material.
+
+Generated outputs are intentionally kept out of git where possible. The virtual
+environment folders are ignored as well.
+
+## Environment Setup
+
+On Windows, this repo currently works best with a local Python 3.10 environment:
+
+```powershell
+py -3.10 -m venv .venv310
+.\.venv310\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-*/NOVELITY AND CREDIBILITY CHECK/* 
-1. The individual component like MPS , Hamiltonain or positional Encoding are not novel in the sense cause the MPS is pretty common in tensor networks and Hamiltonian based Energy functions are used in every day quantum algorthims specifically the Ising Hamiltonian and the Heisenberg Hamiltonian for algorithms like auto-optimization and error mitigiation moreoverthe positional encoding framework is mostly used in the Classical Vision transformers.
-2. the Novelity Lies in the intersection of all these and the concept of using peturbations for image reconstruction using the Quantum ML.
-3. Recent studies have shown that the most of the models mainly focus on the Building models used for image classification of particular dataset using hard encoded Hybrid Models but do not answer the fundamental question that can we define or construct a hybrid framework which works as closely as a classical autoencoder using Quantum latent features or is it to stretch of an question for current quantumn models.
-4. My model essentially uses the concept of spin movements. See think of each positional encoded pixel as spins. Each spin can have values 1 . -1. Now when the positonal Dependance is added and the rotations are viewed in the variantional Circuit the circuit learns different structures based on the energy and the realtion poositonals of each pixels its more like a spins state in a external field which slightly changes the overal hamiltonian depening upon the position of the spins.
+For CUDA-enabled Torch baselines, install the matching PyTorch CUDA wheels:
+
+```powershell
+python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+python cuda_check.py
+```
+
+Expected output:
+
+```text
+cuda
+```
+
+## Important CUDA Note
+
+Torch CUDA and PennyLane CUDA are different things.
+
+The CNN, MLP, autoencoder, GAN, and PHL baselines can use CUDA through PyTorch.
+The HVK quantum circuits require PennyLane's `lightning.gpu` backend if you want
+the quantum simulation itself to run on GPU. Native Windows pip currently fails
+for that backend in this environment because `custatevec-cu12` is not available.
+
+So on Windows:
+
+- PyTorch baselines: CUDA works.
+- HVK quantum circuits: use CPU or `lightning.qubit` unless you move to a Linux
+  environment with `pennylane-lightning-gpu`.
+
+For full HVK GPU experiments, WSL2 Ubuntu is the more realistic path.
+
+## Common Commands
+
+Run the main HVK1D pipeline:
+
+```powershell
+python Main\main.py --device auto
+```
+
+Run CIFAR baselines that can use PyTorch CUDA:
+
+```powershell
+python Baselines\cifar10_comparisons\main.py --methods cnn mlp autoencoder gan phl --count 5 --epochs 200 --device cuda
+```
+
+Run HVK CIFAR variants safely:
+
+```powershell
+python Baselines\cifar10_comparisons\main.py --methods hvk1d hvk2d symmetric --count 5 --epochs 200 --device auto
+```
+
+Run a fast smoke test:
+
+```powershell
+python Baselines\cifar10_comparisons\smoke_test.py --epochs 1 --methods cnn hvk1d --device auto
+```
+
+## Outputs
+
+Most experiment scripts write to `outputs/` folders next to the runner. The
+benchmark aggregator also copies results into:
+
+- `outputs/*_per_image_metrics.csv`
+- `outputs/*_aggregate_metrics.csv`
+- `outputs/*_aggregate_metrics.json`
+- `outputs/*_metric_comparison.png`
+- `outputs/visuals/<method>/`
+- `outputs/per_method_metrics/<method>/`
+
+Those files are meant for analysis, plots, and paper figures. They are not
+required to import or run the code.
+
+## Development Checks
+
+If test dependencies are installed:
+
+```powershell
+python -m pytest tests python_library\tests
+```
+
+Basic syntax check:
+
+```powershell
+python -m compileall Main Main2 Baselines python_library
+```
+
+## Current Research Caveats
+
+- The quantum part is simulated, not executed on a QPU, except for the separate
+  `IBM_Cloud/` probe scripts.
+- `lightning.gpu` is optional and environment-dependent.
+- CIFAR runs use small grayscale 32x32 samples to keep the experiments quick.
+- The benchmark methods are intentionally simple. They are comparison anchors,
+  not state-of-the-art reconstruction systems.

@@ -9,7 +9,22 @@ n_qubits = 6
 n_layers = 2
 n_bonds = n_qubits - 1
 observable_dim = n_qubits + n_qubits + 3 * n_bonds
-device = qml.device("default.qubit", wires=n_qubits)
+
+
+def _make_quantum_device(wires: int):
+    if torch.cuda.is_available():
+        try:
+            return qml.device("lightning.gpu", wires=wires)
+        except Exception:
+            pass
+    try:
+        return qml.device("lightning.qubit", wires=wires)
+    except Exception:
+        pass
+    return qml.device("default.qubit", wires=wires)
+
+
+device = _make_quantum_device(n_qubits)
 
 
 @qml.qnode(device, interface="torch")

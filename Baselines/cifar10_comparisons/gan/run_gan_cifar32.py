@@ -22,6 +22,7 @@ from common import (
     compute_metrics,
     image_paths,
     load_grayscale_image,
+    resolve_device,
     seed_everything,
     extract_patches,
     stitch_patches,
@@ -128,7 +129,8 @@ def train_gan(image: np.ndarray, device: torch.device, epochs: int = CIFAR_EPOCH
 
 
 def run(args: argparse.Namespace) -> list[dict]:
-    device = torch.device("cuda" if args.device == "cuda" and torch.cuda.is_available() else "cpu")
+    device = resolve_device(args.device)
+    print(f"Using device: {device}")
     rows = []
     paths = image_paths(args.dataset_dir, args.count)
     for img_path in paths:
@@ -153,7 +155,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset-dir", type=Path, default=DEFAULT_DATASET_DIR)
     parser.add_argument("--count", type=int, default=10)
     parser.add_argument("--epochs", type=int, default=CIFAR_EPOCHS)
-    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     return parser.parse_args()
 
 
