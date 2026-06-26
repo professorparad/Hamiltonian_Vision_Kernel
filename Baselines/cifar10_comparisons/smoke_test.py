@@ -24,7 +24,7 @@ def create_smoke_dataset(root: Path) -> Path:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Smoke-test the CIFAR-32 benchmark runners.")
     parser.add_argument("--epochs", type=int, default=1)
-    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument(
         "--methods",
         nargs="+",

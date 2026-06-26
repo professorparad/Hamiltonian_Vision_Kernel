@@ -16,7 +16,22 @@ EDGES_H = [(0, 1), (1, 2), (3, 4), (4, 5)]
 EDGES_V = [(0, 3), (1, 4), (2, 5)]
 ALL_EDGES = EDGES_H + EDGES_V
 OBS_DIM = N_QUBITS + N_QUBITS + len(ALL_EDGES)
-DEVICE = qml.device("default.qubit", wires=N_QUBITS)
+
+
+def _make_quantum_device(wires: int):
+    if torch.cuda.is_available():
+        try:
+            return qml.device("lightning.gpu", wires=wires)
+        except Exception:
+            pass
+    try:
+        return qml.device("lightning.qubit", wires=wires)
+    except Exception:
+        pass
+    return qml.device("default.qubit", wires=wires)
+
+
+DEVICE = _make_quantum_device(N_QUBITS)
 
 
 @qml.qnode(DEVICE, interface="torch")

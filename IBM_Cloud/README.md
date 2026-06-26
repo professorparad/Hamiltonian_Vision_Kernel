@@ -1,35 +1,46 @@
 # IBM Cloud HVK Probe
 
-Small IBM Quantum experiments for HVK1D and HVK2D.
+This folder contains small IBM Quantum experiments inspired by the HVK models.
+It is intentionally not the full image-reconstruction training loop. Full HVK
+training is too large and too iterative for a free-plan QPU workflow.
 
-This is intentionally separate from the full training code. A full image-reconstruction
-training loop is too large for a free-plan QPU workflow, so this folder runs compact
-HVK-style circuits on tiny image patches and records order parameters from hardware
+Instead, these scripts build compact HVK-style circuits from tiny image patches,
+submit or dry-run those circuits, and compute simple order parameters from
 measurement counts.
 
-## What This Runs
+## What Is In This Folder
 
-- `hvk1d`: chain entanglement with configurable qubit count.
-- `hvk2d`: grid entanglement with configurable qubit count.
-- Dataset choices:
-  - `monalisa`: resized Mona Lisa patches.
-  - `cifar`: a few already-downloaded CIFAR-10 32x32 grayscale samples.
+- `prepare_ibm_dataset.py`: creates a small `.npz` patch dataset from Mona Lisa
+  or already-downloaded CIFAR images.
+- `run_ibm_hvk_probe.py`: builds HVK1D/HVK2D-style circuits and optionally sends
+  them to IBM Quantum.
+- `requirements-ibm.txt`: Qiskit Runtime dependencies.
+- `datasets/`: tiny prepared datasets.
+- `outputs/`: generated circuit summaries and hardware-run results.
 
-Outputs are written to `IBM_Cloud/outputs/`.
+## What The Probe Measures
+
+The script computes lightweight hardware-friendly signals:
+
+- mean Z order
+- mean absolute Z order
+- nearest-neighbor or lattice ZZ correlations
+- a proxy loss based on order and correlation
+
+This is not neural training loss. It is a small measurement-side proxy that can
+fit into limited QPU time.
 
 ## Install IBM Runtime Support
 
-```bash
-source .venv/bin/activate
-pip install -r IBM_Cloud/requirements-ibm.txt
+```powershell
+python -m pip install -r IBM_Cloud\requirements-ibm.txt
 ```
 
-## IBM Account Setup
+## Account Setup
 
-Create an IBM Quantum account/instance and save your token once:
+Save an IBM Quantum token once:
 
-```bash
-python - <<'PY'
+```python
 from qiskit_ibm_runtime import QiskitRuntimeService
 
 QiskitRuntimeService.save_account(
@@ -37,106 +48,50 @@ QiskitRuntimeService.save_account(
     token="YOUR_IBM_QUANTUM_TOKEN",
     set_as_default=True,
 )
-PY
 ```
 
-You can also avoid saving credentials by setting an environment variable:
+Do not commit tokens. If a token is pasted into a file, log, or chat, rotate it
+from IBM before using it for real jobs.
 
-```bash
-export IBM_QUANTUM_TOKEN="YOUR_IBM_QUANTUM_TOKEN"
-```
-
-Do not commit API keys or account email addresses to this repository. If a token was
-pasted into chat, logs, or a file, rotate it from IBM Cloud before using it for real jobs.
-
-## Prepare a Tiny Dataset
+## Prepare Data
 
 Mona Lisa:
 
-```bash
-python IBM_Cloud/prepare_ibm_dataset.py --source monalisa --max-patches 1
+```powershell
+python IBM_Cloud\prepare_ibm_dataset.py --source monalisa --max-patches 1
 ```
 
 CIFAR, after running the CIFAR downloader:
 
-```bash
-python IBM_Cloud/prepare_ibm_dataset.py --source cifar --max-patches 1
+```powershell
+python IBM_Cloud\prepare_ibm_dataset.py --source cifar --max-patches 1
 ```
 
-## Dry Run Locally
+## Dry Run
 
-Build circuits and write metadata without submitting jobs:
+Use this before submitting anything to hardware:
 
-```bash
-python IBM_Cloud/run_ibm_hvk_probe.py --dataset IBM_Cloud/datasets/monalisa_patches.npz --variant both --dry-run
+```powershell
+python IBM_Cloud\run_ibm_hvk_probe.py --dataset IBM_Cloud\datasets\monalisa_patches.npz --variant both --dry-run
 ```
 
-## Submit to IBM Quantum
+## Submit A Small Job
 
-The free plan can be very tight. Start with one Mona Lisa patch, both variants, and
-100 shots. That builds two circuits total:
+Start tiny:
 
-```bash
-python IBM_Cloud/run_ibm_hvk_probe.py \
-  --dataset IBM_Cloud/datasets/monalisa_patches.npz \
-  --variant both \
-  --n-qubits 6 \
-  --shots 100 \
-  --max-patches 1
+```powershell
+python IBM_Cloud\run_ibm_hvk_probe.py --dataset IBM_Cloud\datasets\monalisa_patches.npz --variant both --n-qubits 6 --shots 100 --max-patches 1
 ```
 
-Optionally pick a backend:
+Optionally choose a backend:
 
-```bash
-python IBM_Cloud/run_ibm_hvk_probe.py --backend ibm_brisbane --n-qubits 6 --shots 100 --max-patches 1
+```powershell
+python IBM_Cloud\run_ibm_hvk_probe.py --backend ibm_brisbane --n-qubits 6 --shots 100 --max-patches 1
 ```
 
-## Larger IBM Devices
+## Practical Notes
 
-IBM backends may expose many more qubits than the conservative 6-qubit default.
-You can request more qubits:
-
-```bash
-python IBM_Cloud/run_ibm_hvk_probe.py \
-  --dataset IBM_Cloud/datasets/monalisa_patches.npz \
-  --variant hvk2d \
-  --n-qubits 27 \
-  --shots 100 \
-  --max-patches 1 \
-  --allow-large-free-plan-job
-```
-
-For the free plan, start with 6 qubits first. Larger qubit counts increase
-transpile time, queue risk, circuit width, and hardware noise. The script maps
-image-patch values across however many qubits you request.
-
-## Visual Outputs
-
-The runner writes:
-
-- `circuits_summary.json`
-- `circuit_summary.png`
-- `ibm_hvk_probe_results.json` after a hardware run
-- `ibm_hvk_probe_metrics.png` after a hardware run
-
-`ibm_hvk_probe_metrics.png` includes measured order parameters and a lightweight
-hardware-proxy loss:
-
-```text
-proxy_loss = (1 - mean_abs_order_parameter) + 0.5 * (1 - mean_zz_correlation)
-```
-
-This is not full neural training loss. It is a hardware-friendly signal that can
-be produced within the free-plan runtime window.
-
-## Notes
-
-- Keep `--max-patches` at `1` for the first free-plan run.
-- Keep `--shots` at `100` for the first free-plan run.
-- By default, the runner refuses jobs larger than 2 circuits or 100 shots. Use
-  `--allow-large-free-plan-job` only after confirming your account quota and queue time.
-- The scripts compute order parameters from measured bitstrings:
-  - mean Z order
-  - absolute Z order
-  - nearest-neighbor/lattice ZZ correlations
-- This is a hardware probe, not full HVK training.
+- Keep `--max-patches 1` for the first real run.
+- Keep `--shots 100` until you know your account quota and queue behavior.
+- Larger qubit counts increase transpilation time, noise, and queue risk.
+- This folder is for hardware probing, not for reproducing the full benchmark.

@@ -624,6 +624,40 @@ Both models exhibit a detected susceptibility peak. The 1D HVK detects a phase-t
 
 Overall, the comparison suggests that the 2D HVK improves the reconstruction benchmark by aligning the Hamiltonian interaction graph with the spatial structure of image patches. The 1D HVK remains useful as a controlled chain-based baseline because it includes the full anisotropic $ZZ$, $XX$, and $YY$ correlator sectors. The 2D HVK, in contrast, emphasizes spatially organized $ZZ$ interactions over horizontal and vertical edges, which appears to produce stronger low-energy organization and lower reconstruction error in the present experiment.
 
+\section{Methodological Observations}
+
+The experiments lead to several methodological observations about the role of the Hamiltonian Vision Kernel as a reconstruction architecture. These observations are stated cautiously because the reported experiments are finite-size simulations on a limited image set, rather than asymptotic claims about a universal quantum advantage.
+
+\subsection{Tensor-Network Features Provide A Structured Input Basis}
+
+The MPS feature stage contributes more than dimensionality reduction. By extracting local Pauli expectations, nearest-neighbor correlations, and entanglement entropies, the encoder converts each image patch into a feature vector whose coordinates already carry quantum-statistical meaning. This is important because the variational circuit is not asked to discover all local structure from raw pixels. Instead, it receives a compact representation in which patch-local amplitudes, correlations, and bipartite structure have already been separated into interpretable channels.
+
+The bond-dimension sweep supports this interpretation. Increasing the MPS bond dimension improves direct patch reconstruction before the Hamiltonian decoder is applied, showing that the tensor-network representation controls the amount of local visual structure available to the downstream quantum circuit. The HVK decoder then operates on a latent space that is not arbitrary, but organized by the tensor-network preprocessing step.
+
+\subsection{Spatial Positional Encoding Breaks Patch Degeneracy}
+
+The positional encoding is necessary because MPS features alone are content-based. Two visually similar patches from different regions of the image may have similar tensor-network descriptors, even though their correct role in the global image is different. The sinusoidal coordinate map and learned projection into qubit rotations break this degeneracy by conditioning the quantum state on patch location.
+
+This mechanism should be understood as a spatial inductive bias rather than as a post-hoc coordinate tag. Since the positional angles enter the circuit before measurement, the resulting observables are position-conditioned quantum features. Consequently, the decoder receives both patch-content structure and a learned representation of where that patch belongs in the image grid.
+
+\subsection{Hamiltonian Energy Acts As A Latent Regularizer}
+
+The energy term does not replace reconstruction loss. Instead, it regularizes the latent observable manifold by encouraging the measured correlators to move toward low-energy configurations of the learned Hamiltonian. The negative energy descent observed in both the 1D and 2D variants indicates that the model is not only reducing pixel-level error, but also organizing its internal observables according to the learned spin-correlation structure.
+
+This distinction is methodologically important. A classical autoencoder can reconstruct an image but offers limited physical interpretation of its latent coordinates. HVK produces reconstruction outputs while also exposing energy, magnetization, correlation, and susceptibility signals. These quantities provide a second diagnostic layer for understanding how the model reorganizes during training.
+
+\subsection{Topology Alignment Improves The Spatial Bias}
+
+The comparison between the 1D and 2D HVK variants suggests that the circuit interaction graph matters. The 1D chain is a useful control because it measures the effect of a nearest-neighbor Heisenberg structure without matching the two-dimensional geometry of the image grid. The 2D HVK introduces horizontal and vertical interactions, making the Hamiltonian graph more consistent with image-patch adjacency.
+
+The observed reduction in final MSE and the lower final Hamiltonian energy of the 2D variant are consistent with this topology-alignment principle. The result does not imply that the 2D graph is universally superior for every dataset or patch scale. It does indicate that, for the present benchmark, aligning the latent interaction graph with the data geometry improves reconstruction and produces stronger low-energy organization.
+
+\subsection{Finite-Size Phase Diagnostics Should Be Interpreted Conservatively}
+
+The detected critical epochs should be interpreted as optimization diagnostics rather than equilibrium phase transitions. The HVK system has a finite number of patches, a finite number of qubits, learned couplings, and a gradient-descent trajectory rather than a thermodynamic control parameter. Therefore, the susceptibility peak identifies a sharp reorganization in the trained observable field, not a singularity in a free-energy density.
+
+This conservative interpretation is still useful. The susceptibility signal marks epochs where the magnetization-like order parameter changes abruptly, and these epochs coincide with rapid qualitative improvement in the reconstruction frames. Thus, the phase-transition language is best understood as a finite-size diagnostic vocabulary for latent-state reorganization.
+
 \subsection{Benchmark Extension Against PHL and GAN Baselines}
 
 The repository now contains measured runs for the 1D HVK in \texttt{Main}, the 2D HVK in \texttt{Main2}, and two independent baselines under \texttt{Baselines}: a Parameterized Hamiltonian Learning (PHL) segmentation baseline and a GAN reconstruction baseline. The PHL baseline was evaluated against an Otsu pseudo-mask because the present image experiment does not include a manually annotated segmentation mask. The GAN baseline was evaluated on the same \texttt{monalisa.jpg} reconstruction task using the same $256\times256$ image size and $64\times64$ patch scale. Additionally, to evaluate generalization, the 1D HVK and GAN baselines were evaluated on a CIFAR-10 test subset consisting of 10 images of size $32\times32$, with their average performance metrics reported.

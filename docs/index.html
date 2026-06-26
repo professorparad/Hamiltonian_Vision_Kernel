@@ -297,7 +297,9 @@
       .variant,
       .upload-panel,
       .command-panel,
-      .portfolio-card {
+      .portfolio-card,
+      .artifact-card,
+      .data-link {
         border: 1px solid var(--line);
         background: var(--panel);
         backdrop-filter: blur(16px);
@@ -345,20 +347,77 @@
       }
 
       .variants,
-      .portfolio-grid {
+      .portfolio-grid,
+      .artifact-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
       }
 
       .variant,
-      .portfolio-card {
+      .portfolio-card,
+      .artifact-card {
         padding: 18px;
       }
 
       .variant h3,
-      .portfolio-card h3 {
+      .portfolio-card h3,
+      .artifact-card h3 {
         color: #d9fbff;
+      }
+
+      .artifact-card {
+        overflow: hidden;
+      }
+
+      .artifact-card.figure {
+        padding: 0;
+      }
+
+      .artifact-card img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        object-fit: cover;
+        border-bottom: 1px solid var(--line);
+        background: rgba(2, 6, 23, 0.62);
+      }
+
+      .artifact-body {
+        padding: 16px;
+      }
+
+      .artifact-body p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .artifact-actions,
+      .data-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .data-link {
+        display: block;
+        padding: 14px;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .data-link span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 4px;
       }
 
       .upload-panel {
@@ -486,7 +545,9 @@
 
         .architecture,
         .variants,
-        .portfolio-grid {
+        .portfolio-grid,
+        .artifact-grid,
+        .data-grid {
           grid-template-columns: 1fr;
         }
 
@@ -520,6 +581,7 @@
         <span>HVK</span>
       </div>
       <a class="button" href="#architecture">Architecture</a>
+      <a class="button" href="#artifacts">Artifacts</a>
       <a class="button" href="#benchmarks">Upload Data</a>
       <a class="button" href="#portfolio">Portfolio</a>
       <button type="button" id="autoscroll">Start auto-scroll</button>
@@ -542,6 +604,7 @@
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#architecture">Explore architecture</a>
+            <a class="button" href="#artifacts">View outputs</a>
             <a class="button" href="#benchmarks">Upload benchmark data</a>
             <a class="button" href="https://github.com/professorparad/Hamiltonian_Vision_Kernel">GitHub</a>
             <a class="button warning" href="#" title="Replace this href with your LinkedIn profile URL">LinkedIn</a>
@@ -616,6 +679,112 @@
             <h3>HVK2D</h3>
             <p>A grid circuit that better reflects the spatial geometry of image patches.</p>
           </article>
+        </div>
+      </section>
+
+      <section id="artifacts" aria-labelledby="artifacts-title">
+        <div class="section-head">
+          <h2 id="artifacts-title">Results & Data Artifacts</h2>
+          <p>
+            Paper-ready figures, PDFs, and benchmark tables are bundled inside
+            <code>docs/assets</code> so the static GitHub Pages site can serve
+            them directly.
+          </p>
+        </div>
+
+        <div class="artifact-grid">
+          <article class="artifact-card figure">
+            <img src="assets/figures/reconstructions.png" alt="Mona Lisa HVK reconstruction panels comparing original, HVK, MPS, random latent, and zero latent outputs" />
+            <div class="artifact-body">
+              <h3>Reconstruction Comparison</h3>
+              <p>Mona Lisa reconstruction panels from the main HVK1D output set.</p>
+              <div class="artifact-actions">
+                <a class="button" href="assets/figures/reconstructions.png">Open PNG</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="artifact-card figure">
+            <img src="assets/figures/benchmark_metric_comparison.png" alt="Metric comparison plot for HVK and GAN baselines on the Mona Lisa benchmark" />
+            <div class="artifact-body">
+              <h3>Mona Lisa Metrics</h3>
+              <p>Final MSE and PSNR comparison for the single-image benchmark.</p>
+              <div class="artifact-actions">
+                <a class="button" href="assets/figures/benchmark_metric_comparison.png">Open PNG</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="artifact-card figure">
+            <img src="assets/figures/cifar10_metric_comparison.png" alt="CIFAR-10 subset metric comparison showing average MSE and PSNR across benchmark methods" />
+            <div class="artifact-body">
+              <h3>CIFAR-10 Metrics</h3>
+              <p>Aggregate reconstruction metrics for the CIFAR-10 subset runs.</p>
+              <div class="artifact-actions">
+                <a class="button" href="assets/figures/cifar10_metric_comparison.png">Open PNG</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="artifact-card figure">
+            <img src="assets/figures/main_hvk_order_parameter_curve.png" alt="HVK1D order parameter curve over training epochs" />
+            <div class="artifact-body">
+              <h3>HVK1D Order Parameter</h3>
+              <p>Finite-size order-parameter trajectory from the 1D chain model.</p>
+              <div class="artifact-actions">
+                <a class="button" href="assets/figures/main_hvk_order_parameter_curve.png">Open PNG</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="artifact-card figure">
+            <img src="assets/figures/main2_hvk_order_parameter_curve.png" alt="HVK2D order parameter curve over training epochs" />
+            <div class="artifact-body">
+              <h3>HVK2D Order Parameter</h3>
+              <p>Order-parameter trajectory from the 2D lattice model.</p>
+              <div class="artifact-actions">
+                <a class="button" href="assets/figures/main2_hvk_order_parameter_curve.png">Open PNG</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="artifact-card figure">
+            <img src="assets/figures/training_curves.png" alt="HVK training curves showing reconstruction, energy, and total loss" />
+            <div class="artifact-body">
+              <h3>Training Curves</h3>
+              <p>Loss traces showing reconstruction and Hamiltonian energy behavior.</p>
+              <div class="artifact-actions">
+                <a class="button" href="assets/figures/training_curves.png">Open PNG</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="data-grid" aria-label="Downloadable research artifacts">
+          <a class="data-link" href="assets/papers/paper_hvk.pdf">
+            Paper PDF
+            <span>IEEE-style manuscript build</span>
+          </a>
+          <a class="data-link" href="assets/papers/hvk_methodology_outputs.pdf">
+            Methodology PDF
+            <span>Expanded experimental notes</span>
+          </a>
+          <a class="data-link" href="assets/data/cifar32_aggregate_metrics.csv">
+            Aggregate CSV
+            <span>CIFAR-32 benchmark summary</span>
+          </a>
+          <a class="data-link" href="assets/data/cifar32_per_image_metrics.csv">
+            Per-image CSV
+            <span>Image-level benchmark rows</span>
+          </a>
+          <a class="data-link" href="assets/data/cifar32_aggregate_metrics.json">
+            Aggregate JSON
+            <span>Machine-readable metrics</span>
+          </a>
+          <a class="data-link" href="assets/figures/mps_bond_dim_scaling_1d.png">
+            MPS Sweep
+            <span>1D bond-dimension plot</span>
+          </a>
         </div>
       </section>
 

@@ -42,7 +42,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--image-size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=200)
-    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="cpu")
+    parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument(
         "--methods",
         nargs="+",

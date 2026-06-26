@@ -7,77 +7,77 @@
   "original_image_size": 32,
   "saved_image_size": 32,
   "color_mode": "grayscale (native res)",
-  "images_dir": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+  "images_dir": "C:\\Users\\kusha\\OneDrive\\Desktop\\bichi\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
   "samples": [
     {
       "index": 0,
       "source_filename": "domestic_cat_s_000907.png",
       "class_id": 3,
       "class_name": "cat",
-      "image_path": "images/0000_cat_domestic_cat_s_000907.png"
+      "image_path": "images\\0000_cat_domestic_cat_s_000907.png"
     },
     {
       "index": 1,
       "source_filename": "hydrofoil_s_000078.png",
       "class_id": 8,
       "class_name": "ship",
-      "image_path": "images/0001_ship_hydrofoil_s_000078.png"
+      "image_path": "images\\0001_ship_hydrofoil_s_000078.png"
     },
     {
       "index": 2,
       "source_filename": "sea_boat_s_001456.png",
       "class_id": 8,
       "class_name": "ship",
-      "image_path": "images/0002_ship_sea_boat_s_001456.png"
+      "image_path": "images\\0002_ship_sea_boat_s_001456.png"
     },
     {
       "index": 3,
       "source_filename": "jetliner_s_001705.png",
       "class_id": 0,
       "class_name": "airplane",
-      "image_path": "images/0003_airplane_jetliner_s_001705.png"
+      "image_path": "images\\0003_airplane_jetliner_s_001705.png"
     },
     {
       "index": 4,
       "source_filename": "green_frog_s_001658.png",
       "class_id": 6,
       "class_name": "frog",
-      "image_path": "images/0004_frog_green_frog_s_001658.png"
+      "image_path": "images\\0004_frog_green_frog_s_001658.png"
     },
     {
       "index": 5,
       "source_filename": "crapaud_s_002124.png",
       "class_id": 6,
       "class_name": "frog",
-      "image_path": "images/0005_frog_crapaud_s_002124.png"
+      "image_path": "images\\0005_frog_crapaud_s_002124.png"
     },
     {
       "index": 6,
       "source_filename": "shooting_brake_s_000973.png",
       "class_id": 1,
       "class_name": "automobile",
-      "image_path": "images/0006_automobile_shooting_brake_s_000973.png"
+      "image_path": "images\\0006_automobile_shooting_brake_s_000973.png"
     },
     {
       "index": 7,
       "source_filename": "green_frog_s_000634.png",
       "class_id": 6,
       "class_name": "frog",
-      "image_path": "images/0007_frog_green_frog_s_000634.png"
+      "image_path": "images\\0007_frog_green_frog_s_000634.png"
     },
     {
       "index": 8,
       "source_filename": "tabby_cat_s_001397.png",
       "class_id": 3,
       "class_name": "cat",
-      "image_path": "images/0008_cat_tabby_cat_s_001397.png"
+      "image_path": "images\\0008_cat_tabby_cat_s_001397.png"
     },
     {
       "index": 9,
       "source_filename": "wagon_s_002806.png",
       "class_id": 1,
       "class_name": "automobile",
-      "image_path": "images/0009_automobile_wagon_s_002806.png"
+      "image_path": "images\\0009_automobile_wagon_s_002806.png"
     }
   ]
 }

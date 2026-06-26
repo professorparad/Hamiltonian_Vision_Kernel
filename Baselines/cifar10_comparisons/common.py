@@ -16,6 +16,7 @@ os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 import cv2
 import matplotlib
 import numpy as np
+import pennylane as qml
 import torch
 
 matplotlib.use("Agg")
@@ -33,9 +34,29 @@ def seed_everything(seed: int = 42) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def resolve_device(device: str) -> torch.device:
+def quantum_cuda_available() -> bool:
+    if not torch.cuda.is_available():
+        return False
+    try:
+        qml.device("lightning.gpu", wires=1)
+    except Exception:
+        return False
+    return True
+
+
+def resolve_device(device: str, *, requires_quantum: bool = False) -> torch.device:
     if device == "auto":
+        if requires_quantum and not quantum_cuda_available():
+            return torch.device("cpu")
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA was requested, but torch.cuda.is_available() is False.")
+    if device == "cuda" and requires_quantum and not quantum_cuda_available():
+        raise RuntimeError(
+            "CUDA was requested for an HVK quantum model, but pennylane-lightning-gpu "
+            "is not installed. Install that backend to run PennyLane quantum circuits on CUDA, "
+            "or use --device auto/--device cpu for this method."
+        )
     return torch.device(device)
 
 

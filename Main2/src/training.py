@@ -36,7 +36,7 @@ from src.training.training import resolve_device
 
 
 def run_main2(config: Main2Config):
-    device = resolve_device(config.device)
+    device = resolve_device(config.device, requires_quantum=True)
     data = build_main2_dataset(
         image_path=config.image_path,
         image_size=config.image_size,

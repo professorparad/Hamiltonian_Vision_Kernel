@@ -28,7 +28,7 @@ def run_hvk2d(config: HVK2DConfig | None = None, **overrides):
         config = HVK2DConfig(**{**config.__dict__, **overrides})
     config.validate()
 
-    device = resolve_device(config.device)
+    device = resolve_device(config.device, requires_quantum=True)
     data = build_hvk2d_dataset(config, device)
     model = Quantum2DGridModel(
         feature_dim=data["features"].shape[1],
