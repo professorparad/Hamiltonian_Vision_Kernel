@@ -1,18 +1,19 @@
 \documentclass[journal]{IEEEtran}
 \usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm,hyperref}
+\hypersetup{hypertexnames=false}
 \usepackage{float}
 \begin{document}
 
 \title{HVK: A Hamiltonian-Guided Tensor Network Architecture for Spatially Aware Quantum Image Reconstruction}
 
-\author{Sparsho~Chakraborty\IEEEauthorrefmark{1} and Siddhartha~Patra\IEEEauthorrefmark{2}%
+\author{Sparsho~Chakraborty\IEEEauthorrefmark{1} and Dr.~Siddhartha~Patra\IEEEauthorrefmark{2}%
 \thanks{\IEEEauthorrefmark{1}School of Basic Sciences, Department of Physics, Indian Institute of Technology Bhubaneswar, Odisha, India.}%
-\thanks{\IEEEauthorrefmark{2} Assistant Professor , Centre for Quantum Engineering, Research and Education (CQUERE), TCG CREST, Kolkata, India.}}
+\thanks{\IEEEauthorrefmark{2} Assistant Professor, Centre for Quantum Engineering, Research and Education (CQUERE), TCG CREST, Kolkata, India.}}
 
 \maketitle
 
 \begin{abstract}
-We present the HVK architecture, an end-to-end quantum image reconstruction framework that integrates Matrix Product States (MPS), parameterized variational quantum circuits, and data-adaptive Heisenberg Hamiltonian operators. Classical approaches scale poorly with resolution, while typical quantum methods treat variational states opaquely without exploiting spatial connections. HVK addresses this by leveraging a local spatial smoothness regularizer explicitly derived from the expectation values of a low-energy spin-1/2 chain/grid configuration. We evaluate HVK on a Monalisa reconstruction task, a five-image CIFAR-10 subset, and a small IBM Heron hardware probe. The results show that the 2D HVK topology improves over the 1D chain on reconstruction metrics and strongly outperforms GAN, autoencoder, and segmentation-oriented Hamiltonian baselines, while CNN and direct MLP baselines remain strong classical references. On IBM Heron, a 64-patch HVK2D probe produces stable positive order and nearest-neighbor $ZZ$ correlations, validating the hardware measurability of the Hamiltonian latent signal.
+We present the HVK architecture, an end-to-end quantum image reconstruction framework that integrates Matrix Product States (MPS), parameterized variational quantum circuits, and data-adaptive Heisenberg Hamiltonian operators. Classical approaches scale poorly with resolution, while typical quantum methods treat variational states opaquely without exploiting spatial connections. HVK addresses this by leveraging a local spatial smoothness regularizer explicitly derived from the expectation values of a low-energy spin-1/2 chain/grid configuration. We evaluate HVK on a Monalisa reconstruction task, a five-image CIFAR-10 subset, a reflection-constrained Symmetric HVK1D variant, and a small IBM Heron hardware probe. The results show that the 2D HVK topology improves over the 1D chain on reconstruction metrics and strongly outperforms GAN, autoencoder, and segmentation-oriented Hamiltonian baselines, while CNN and direct MLP baselines remain strong classical references. On IBM Heron, a 64-patch HVK2D probe produces stable positive order and nearest-neighbor $ZZ$ correlations, validating the hardware measurability of the Hamiltonian latent signal.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -81,7 +82,7 @@ where $D$ is the classical decoder, $P_n$ is the ground-truth patch, and $\lambd
 \subsubsection{Symmetry Analysis}
 The Heisenberg correlators define three observable sectors:
 \begin{equation}
-\Xi_{ZZ} = (\langle Z_0Z_1\rangle, \dots, \langle Z_4Z_5\rangle),\quad \Xi_{XX},\quad \Xi_{YY}))
+\Xi_{ZZ} = (\langle Z_0Z_1\rangle, \dots, \langle Z_4Z_5\rangle),\quad \Xi_{XX},\quad \Xi_{YY}
 \end{equation}
 embedded in $\mathbb{R}^{27}$ through the simultaneously measured observables. Two symmetry reductions act sequentially on this manifold:
 \begin{enumerate}
@@ -98,13 +99,41 @@ embedded in $\mathbb{R}^{27}$ through the simultaneously measured observables. T
 
 The resulting symmetry stack handles the structural degradation systematically:
 \begin{equation}
-\text{SU}(2)\text{-variant isotropic sector} \xrightarrow{\text{positional encoding}} \text{Cartan sector} \xrightarrow{\text{grid geometry}} D_4
+\begin{aligned}
+\text{SU}(2)\text{-variant sector}
+&\xrightarrow{\text{positional encoding}} \text{Cartan sector} \\
+&\xrightarrow{\text{grid geometry}} D_4 .
+\end{aligned}
 \end{equation}
 This framework preserves the structural symmetries of the patch grid, allowing the pipeline to distinguish orientation-sensitive boundaries.
 
+\subsubsection{Symmetric HVK1D Constraint}
+We also evaluate a reflection-constrained chain, denoted Symmetric HVK1D, to test whether explicit coupling symmetry can act as a useful structural prior. For a six-qubit chain with $n_{\text{bonds}}=5$, the unconstrained HVK1D Hamiltonian contains $3n_{\text{bonds}}$ independent couplings. Symmetric HVK1D ties mirror-related bonds:
+\begin{equation}
+J_{\alpha}^{(i)} = J_{\alpha}^{(n_{\text{bonds}}-1-i)}, \quad
+\alpha \in \{x,y,z\}.
+\end{equation}
+Equivalently, defining the folded bond index
+\begin{equation}
+\pi(i)=\min\{i, n_{\text{bonds}}-1-i\},
+\end{equation}
+the constrained Hamiltonian is
+\begin{equation}
+H_{\text{sym}}=\sum_{i=0}^{n_{\text{bonds}}-1}\sum_{\alpha \in \{x,y,z\}}
+J_{\alpha}^{(\pi(i))}\sigma_{\alpha}^{(i)}\sigma_{\alpha}^{(i+1)} .
+\end{equation}
+This reduces the number of independent coupling parameters from $3n_{\text{bonds}}$ to $3\lceil n_{\text{bonds}}/2\rceil$ and enforces left--right consistency in the latent spin chain. The constraint is weaker than the full 2D grid prior, but it provides an interpretable test of whether image reconstruction benefits from Hamiltonian parameter tying before adding a full lattice topology.
+
 \section{HVK Architecture Design}
 The pipeline consists of an operational flow defined by:
-$$\text{Image} \rightarrow \{\text{Patches}\} \rightarrow \text{MPS} \rightarrow \text{46-D Feature} \rightarrow \text{6-D Vector} \rightarrow \text{27-D Latent} \rightarrow \text{Decoder} \rightarrow \text{Reconstruction}$$
+\begin{equation}
+\begin{aligned}
+\text{Image} &\rightarrow \{\text{Patches}\} \rightarrow \text{MPS}
+\rightarrow \text{46-D Feature} \\
+&\rightarrow \text{6-D Vector} \rightarrow \text{Latent}\\
+&\rightarrow \text{Decoder} \rightarrow \text{Reconstruction}.
+\end{aligned}
+\end{equation}
 
 \subsection{Tensor Network Optimization}
 \subsubsection{Patch Preparation}
@@ -173,7 +202,11 @@ The raw 46-D feature matrix $\mathbf{f}_n$ is linearly compressed to a 6-D vecto
 \subsubsection{Observable Latent Space}
 A total of 27 real expectations are evaluated per execution pass:
 \begin{equation}
-\Phi_n = \bigl(\langle X_i \rangle, \langle Z_i \rangle, \langle Z_i Z_{i+1} \rangle, \langle X_i X_{i+1} \rangle, \langle Y_i Y_{i+1} \rangle\bigr) \in [-1, 1]^{27},
+\begin{aligned}
+\Phi_n = (&\langle X_i \rangle,\langle Z_i \rangle,\langle Z_iZ_{i+1}\rangle,\\
+&\langle X_iX_{i+1}\rangle,\langle Y_iY_{i+1}\rangle)
+\in [-1,1]^{27},
+\end{aligned}
 \end{equation}
 representing a structured projection $\Phi: \mathbb{CP}^{63} \longrightarrow \mathbb{R}^{27}$.
 
@@ -193,10 +226,14 @@ The baseline canonical single-image analysis uses a $256 \times 256$ grayscale l
 To capture structural generalization capabilities, a target subset of five CIFAR-10 images is processed at $32 \times 32$ resolution for rapid method comparison. Performance tracking uses per-image and aggregate metric repositories generated by the benchmark scripts \cite{MethodologyExp2026}.
 
 \subsection{Benchmarking  Implementations}
-We execute validation passes using four distinct comparison configurations:
+We execute validation passes using eight distinct comparison configurations:
 \begin{itemize}
     \item \textbf{1D HVK:} A control setup utilizing a linear chain of 6 qubits linked via 5 nearest-neighbor bonds to generate the 27-dimensional observable vector.
+    \item \textbf{Symmetric HVK1D:} A reflection-constrained 1D chain with mirror-tied Hamiltonian couplings, used to isolate the role of explicit coupling symmetry.
     \item \textbf{2D HVK:} An advanced geometric layout arranging the 6 qubits on a $2 \times 3$ lattice to match patch boundary configurations natively, producing a 19-dimensional latent signature.
+    \item \textbf{CNN:} A compact convolutional reconstruction baseline optimized directly in image space.
+    \item \textbf{MLP:} A direct pixel-space multilayer perceptron baseline.
+    \item \textbf{Autoencoder:} A classical bottleneck reconstruction model used as a non-Hamiltonian compression reference.
     \item \textbf{Convolutional GAN Autoencoder:} A standard generative adversarial network processing matching patch blocks \cite{MethodologyExp2026}.
     \item \textbf{Parameterized Hamiltonian Learning (PHL):} A task-mismatched segmentation reference used to establish positioning parameters rather than structural metrics \cite{Shi2022}.
 \end{itemize}
@@ -217,13 +254,23 @@ The system gauges reconstruction performance using Mean Squared Error (MSE) and 
 \subsubsection{Hamiltonian Energy Tracking}
 The state optimization depth is directly tracked via the underlying Heisenberg expectation tracking:
 \begin{equation}
-\langle E\rangle_t = \frac{1}{N}\sum_{n=1}^{N}\sum_{i}\Bigl(J_z^{(i)}\langle Z_iZ_{i+1}\rangle_{n,t} + J_x^{(i)}\langle X_iX_{i+1}\rangle_{n,t} + J_y^{(i)}\langle Y_iY_{i+1}\rangle_{n,t}\Bigr).
+\begin{aligned}
+\langle E\rangle_t = \frac{1}{N}\sum_{n=1}^{N}\sum_i
+&\Bigl(J_z^{(i)}\langle Z_iZ_{i+1}\rangle_{n,t}\\
+&+J_x^{(i)}\langle X_iX_{i+1}\rangle_{n,t}
++J_y^{(i)}\langle Y_iY_{i+1}\rangle_{n,t}\Bigr).
+\end{aligned}
 \end{equation}
 
 \subsubsection{Order Parameters and Phase Diagnostics}
 Longitudinal order parameters track system magnetization states alongside lattice correlation configurations:
 \begin{equation}
-C_A(t) = \frac{1}{15 \cdot N}\sum_{n=1}^{N}\sum_{i=0}^{4}\bigl(\langle Z_iZ_{i+1}\rangle_{n,t} + \langle X_iX_{i+1}\rangle_{n,t} + \langle Y_iY_{i+1}\rangle_{n,t}\bigr).
+\begin{aligned}
+C_A(t)=\frac{1}{15N}\sum_{n=1}^{N}\sum_{i=0}^{4}
+&\bigl(\langle Z_iZ_{i+1}\rangle_{n,t}\\
+&+\langle X_iX_{i+1}\rangle_{n,t}
++\langle Y_iY_{i+1}\rangle_{n,t}\bigr).
+\end{aligned}
 \end{equation}
 Critical structural transition markers are flagged using windowed variance deviations:
 \begin{equation}
@@ -254,53 +301,53 @@ CNN & $1.103\times10^{-4}$ & 40.93 & 0.9989 \\
 GAN & $2.732\times10^{-3}$ & 26.07 & 0.9694 \\
 HVK1D & $6.487\times10^{-4}$ & 32.40 & 0.9931 \\
 HVK2D & $4.642\times10^{-4}$ & 34.48 & 0.9958 \\
+MLP & $7.087\times10^{-7}$ & 75.13 & 0.9999 \\
 Symmetric HVK1D & $6.402\times10^{-4}$ & 32.89 & 0.9939 \\
 PHL & $4.342\times10^{-2}$ & 14.01 & 0.7879 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/cifar32_metric_comparison.png}
-\caption{CIFAR-10 subset aggregate metric comparison across classical, Hamiltonian, and HVK variants.}
+\includegraphics[width=\textwidth]{figures/cifar32_all_architecture_benchmark.png}
+\caption{CIFAR-10 subset reconstruction benchmark across all tested architectures. The left panel compares mean and best reconstruction error on a log scale; the right panel reports mean PSNR with mean MSE annotations.}
 \label{fig:cifar-metrics}
-\end{figure}
+\end{figure*}
 
 The CIFAR subset highlights a nuanced ranking. HVK2D reduces mean MSE by $83.0\%$ relative to the GAN baseline and by $94.6\%$ relative to the autoencoder, while improving over HVK1D by $28.4\%$ in MSE. The CNN and MLP references remain stronger purely classical pixel-space baselines on this small subset; this is expected because they optimize directly in image space without a constrained quantum-observable bottleneck. HVK's contribution is therefore not raw dominance over every classical architecture, but the combination of competitive reconstruction with interpretable Hamiltonian order, energy, and correlation channels.
 
 \subsection{Monalisa Single-Image Results}
-Reconstruction comparisons for the structural \textit{Monalisa} validation target are summarized in Table~\ref{tab:monalisa}.
+Cross-architecture reconstruction comparisons for the structural \textit{Monalisa} validation target are summarized in Table~\ref{tab:monalisa}. The table uses the unified baseline suite so that HVK, Symmetric HVK1D, CNN, MLP, autoencoder, GAN, and PHL are compared under the same metric export path.
 
 \begin{table}[h]
 \centering
-\caption{Monalisa Reconstruction Performance Across Methods}
+\caption{Monalisa Reconstruction Performance Across Methods in the Unified Baseline Suite}
 \label{tab:monalisa}
-\begin{tabular}{lcccc}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lccc}
 \toprule
-Model & Final MSE & Best MSE & PSNR (dB) & SSIM \\
+Model & Best MSE & Best PSNR (dB) & Best SSIM \\
 \midrule
-1D HVK & $3.3754 \times 10^{-4}$ & $3.0112 \times 10^{-4}$ & 34.72 & --- \\
-2D HVK & $8.5114 \times 10^{-5}$ & $8.4975 \times 10^{-5}$ & 40.70 & --- \\
-GAN Baseline & $1.0185 \times 10^{-3}$ & $1.1124 \times 10^{-3}$ & 29.92 & 0.9873 \\
-PHL \cite{Shi2022} & --- & --- & --- & --- \\
+Autoencoder & $1.2929 \times 10^{-2}$ & 18.88 & 0.7605 \\
+CNN & $4.7789 \times 10^{-5}$ & 43.21 & 0.9993 \\
+GAN & $2.0129 \times 10^{-3}$ & 26.96 & 0.9692 \\
+HVK1D & $7.9668 \times 10^{-4}$ & 30.99 & 0.9879 \\
+HVK2D & $5.1973 \times 10^{-4}$ & 32.84 & 0.9922 \\
+MLP & $8.0966 \times 10^{-8}$ & 70.92 & 0.9999 \\
+Symmetric HVK1D & $1.2059 \times 10^{-3}$ & 29.19 & 0.9814 \\
+PHL \cite{Shi2022} & $4.3750 \times 10^{-2}$ & 13.59 & 0.7592 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
-The PHL metric is excluded from direct pixel tracking because it is natively optimized for segmentation tasks, logging a baseline Dice coefficient of $0.9706$ and an Intersection-over-Union (IoU) of $0.9428$.
+PHL is included as a Hamiltonian learning reference, but its native output is segmentation-oriented; its additional Dice and IoU metrics are therefore not directly comparable to pixel reconstruction MSE.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\linewidth]{figures/reconstruction_error_vs_epoch.png}
-\caption{Local HVK training reconstruction error versus epoch on the Monalisa experiment.}
-\label{fig:reconstruction-error}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{figures/monalisa_original_vs_reconstruction_epoch_200.png}
-\caption{Original Monalisa target and local HVK reconstruction at epoch 200.}
-\label{fig:monalisa-reconstruction}
+\includegraphics[width=\linewidth]{figures/monalisa_metric_comparison.png}
+\caption{Unified Monalisa benchmark metric comparison across HVK variants and classical baselines.}
+\label{fig:monalisa-metrics}
 \end{figure}
 
 \subsection{1D vs. 2D Topological Ablation Study}
@@ -323,11 +370,107 @@ Final PSNR (dB) & 34.72 & 40.70 \\
 \end{tabular}
 \end{table}
 
+\begin{table}[h]
+\centering
+\caption{Monalisa Order-Parameter Tracking at Epoch 199}
+\label{tab:order-tracking}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Model & Final Energy & Final $\langle M_z\rangle$ & Final $|\langle M_z\rangle|$ & Peak Susceptibility Epoch \\
+\midrule
+HVK1D & $-4.4877$ & 0.2149 & 0.2225 & 3 \\
+HVK2D & $-6.0070$ & 0.3535 & 0.3674 & 138 \\
+Symmetric HVK1D & $-3.8677$ & $-2.14\times10^{-4}$ & 0.0358 & 3 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/cifar_frog_hvk1d_reconstruction.png}
+\\[-0.5ex](a) HVK1D chain
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/cifar_frog_symmetric_hvk1d_reconstruction.png}
+\\[-0.5ex](b) Symmetric HVK1D
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/cifar_frog_hvk2d_reconstruction.png}
+\\[-0.5ex](c) HVK2D grid
+\end{minipage}
+\caption{Representative CIFAR frog reconstruction outputs under the 1D chain, reflection-constrained Symmetric HVK1D, and 2D grid topologies. This example is used because the reconstruction differences are visually clearer than the cat sample.}
+\label{fig:cifar-reconstruction-examples}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/cifar_frog_hvk1d_order_parameters.png}
+\\[-0.5ex](a) HVK1D diagnostics
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/cifar_frog_symmetric_hvk1d_order_parameters.png}
+\\[-0.5ex](b) Symmetric HVK1D diagnostics
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/cifar_frog_hvk2d_order_parameters.png}
+\\[-0.5ex](c) HVK2D diagnostics
+\end{minipage}
+\caption{Order-parameter diagnostics for the same CIFAR frog sample, showing how the Hamiltonian latent trajectory changes under chain, symmetric-chain, and 2D-grid constraints.}
+\label{fig:cifar-order-diagnostics}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/monalisa_hvk1d_order_parameters.png}
+\\[-0.5ex](a) HVK1D
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/monalisa_symmetric_hvk1d_order_parameters.png}
+\\[-0.5ex](b) Symmetric HVK1D
+\end{minipage}\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/monalisa_hvk2d_order_parameters.png}
+\\[-0.5ex](c) HVK2D
+\end{minipage}
+\caption{Monalisa Hamiltonian order-parameter tracking for the 1D, Symmetric HVK1D, and 2D variants. These plots report graphical order diagnostics rather than original-versus-reconstructed image panels.}
+\label{fig:monalisa-order-tracking}
+\end{figure*}
+
 \subsection{MPS Bond-Dimension Sweep Analysis}
 An optimization sweep across varying tensor sizes targets internal feature generation performance. Setting $\chi = 1$ gives an initial structural encoder MSE of $9.77 \times 10^{-3}$ (PSNR of $20.10\text{ dB}$). Scaling up to $\chi = 4$ improves base values to an MSE of $4.44 \times 10^{-4}$ and a PSNR of $33.52\text{ dB}$ \cite{MethodologyExp2026}, verifying that the subsequent quantum layers supply the extra margin to push performance to the final $40.70\text{ dB}$ mark.
 
+\begin{figure*}[t]
+\centering
+\begin{minipage}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/mps_bond_dim_scaling_1d.png}
+\\[-0.5ex](a) 1D MPS sweep
+\end{minipage}\hfill
+\begin{minipage}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/mps_bond_dim_scaling_2d.png}
+\\[-0.5ex](b) 2D MPS sweep
+\end{minipage}
+\caption{Bond-dimension sweep showing how increasing the MPS truncation rank changes the pre-quantum feature quality for 1D and 2D HVK configurations.}
+\label{fig:bond-dimension-sweep}
+\end{figure*}
+
 \subsection{IBM Heron Hardware Validation}
-We executed a compact HVK2D hardware probe on IBM Heron processor \texttt{ibm\_fez}. A $64 \times 64$ Monalisa image was divided into 64 non-overlapping $8 \times 8$ patches, and one six-qubit HVK2D circuit was submitted per patch at epoch label 200 with 100 shots per circuit. The run completed under job identifier \texttt{d8vrdq1ropqc738ctg4g}. The aggregate hardware statistics are reported in Table~\ref{tab:heron}.
+We executed a compact HVK2D hardware probe on IBM Heron processor \texttt{ibm\_fez}. A $64 \times 64$ Monalisa image was divided into 64 non-overlapping $8 \times 8$ patches, and one six-qubit HVK2D circuit was submitted per patch at epoch label 200 with 100 shots per circuit. The aggregate hardware statistics are reported in Table~\ref{tab:heron}.
 
 \begin{table}[h]
 \centering
@@ -431,7 +574,7 @@ Future efforts will focus on running full-scale CIFAR-10 dataset evaluations wit
 \bibitem{Chakraborty2018} S. Chakraborty, S. B. Mandal, and S. H. Shaikh, ``Quantum image processing: challenges and future research issues,'' \textit{International Journal of Information Technology}, vol. 14, no. 1, pp. 475--489, 2018.
 \bibitem{Zhou2017} R. Zhou, W. Hu, P. Fan, and H. Ian, ``Quantum realization of the bilinear interpolation method for NEQR,'' \textit{Scientific Reports}, vol. 7, no. 1, p. 2511, 2017.
 \bibitem{Yao2017} X. Yao et al., ``Quantum Image Processing and Its Application to Edge Detection: Theory and Experiment,'' \textit{Physical Review X}, vol. 7, no. 3, p. 031041, 2017.
-\bibitem{Cirac2021} J. I. Cirac, D. Pérez-García, N. Schuch, and F. Verstraete, ``Matrix product states and projected entangled pair states: Concepts, symmetries, theorems,'' \textit{Reviews of Modern Physics}, vol. 93, no. 4, p. 045003, 2021.
+\bibitem{Cirac2021} J. I. Cirac, D. Perez-Garcia, N. Schuch, and F. Verstraete, ``Matrix product states and projected entangled pair states: Concepts, symmetries, theorems,'' \textit{Reviews of Modern Physics}, vol. 93, no. 4, p. 045003, 2021.
 \bibitem{Latorre2005} J. I. Latorre, ``Image compression and entanglement,'' arXiv:quant-ph/0510031, 2005.
 \bibitem{Han2018} Z. Han, J. Wang, H. Fan, L. Wang, and P. Zhang, ``Unsupervised Generative Modeling Using Matrix Product States,'' \textit{Physical Review X}, vol. 8, no. 3, p. 031012, 2018.
 \bibitem{Fei2021} S. M. Fei, ``Compressed Sensing Based on Tensor Network Machine Learning,'' \textit{Physical Science \& Biophysics Journal}, vol. 5, no. 1, p. 16000174, 2021.
@@ -450,3 +593,4 @@ Future efforts will focus on running full-scale CIFAR-10 dataset evaluations wit
 \end{thebibliography}
 
 \end{document}
+

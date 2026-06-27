@@ -12,7 +12,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
-
 DEFAULT_INPUT = (
     Path(__file__).resolve().parents[1]
     / "Main2"

@@ -13,7 +13,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from qiskit import QuantumCircuit
-
 from run_ibm_hvk_probe import (
     OUTPUT_DIR,
     angles_from_patch,
