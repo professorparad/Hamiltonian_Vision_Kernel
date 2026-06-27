@@ -1,0 +1,450 @@
+[
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 0,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 1,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 2,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 3,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 4,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 5,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 6,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 7,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 8,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 9,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 10,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 11,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 12,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 13,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 14,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk1d",
+    "epoch": 200,
+    "patch_index": 15,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 0,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 1,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 2,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 3,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 4,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 5,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 6,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 7,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 8,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 9,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 10,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 11,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 12,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 13,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 14,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "epoch": 200,
+    "patch_index": 15,
+    "epoch_strength": 0.24004258632642722,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  }
+]
