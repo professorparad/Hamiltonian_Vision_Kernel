@@ -43,14 +43,17 @@ training structure.
   U(1)-symmetric variants.
 - `Main2/`: the 2D-grid HVK variant, with lattice-style correlations.
 - `Baselines/`: CIFAR-10 and Mona Lisa comparison runners for HVK and classical
-  baselines.
+  baselines, including CNN, MLP, autoencoder, GAN, PHL, HVK1D, HVK2D, and
+  Symmetric HVK1D.
 - `python_library/`: package-style copy of the HVK API.
-- `IBM_Cloud/`: small IBM Quantum hardware probe scripts. This is not full HVK
-  training.
+- `IBM_Cloud/`: IBM Quantum hardware probe scripts for Heron-style patch
+  circuits. This is not full HVK training.
 - `tests/`: unit and smoke tests for preprocessing, decoder behavior, training,
   and benchmark helpers.
-- `docs/`: static architecture page.
-- `latex_outputs/`: paper drafts, figures, and exported LaTeX material.
+- `docs/`: static GitHub Pages site with real paper, metric, and figure
+  artifacts.
+- `latex_outputs/`: paper drafts, compiled PDF, figures, and exported LaTeX
+  material.
 
 Generated outputs are intentionally kept out of git where possible. The virtual
 environment folders are ignored as well.
@@ -116,6 +119,20 @@ Run HVK CIFAR variants safely:
 python Baselines\cifar10_comparisons\main.py --methods hvk1d hvk2d symmetric --count 5 --epochs 200 --device auto
 ```
 
+Run the Mona Lisa comparison suite:
+
+```powershell
+python Baselines\monalisa_comparisons\main.py --methods all --epochs 200 --device auto
+```
+
+Build the current paper PDF:
+
+```powershell
+cd latex_outputs\paper_latex
+pdflatex -interaction=nonstopmode paper_hvk.tex
+pdflatex -interaction=nonstopmode paper_hvk.tex
+```
+
 Run a fast smoke test:
 
 ```powershell
@@ -137,15 +154,32 @@ benchmark aggregator also copies results into:
 Those files are meant for analysis, plots, and paper figures. They are not
 required to import or run the code.
 
+The current manuscript adds:
+
+- Symmetric HVK1D math and benchmark results.
+- CIFAR-10 aggregate comparison across HVK, classical, and PHL baselines.
+- Mona Lisa comparison table including CNN, MLP, autoencoder, GAN, PHL, HVK1D,
+  HVK2D, and Symmetric HVK1D.
+- Order-parameter tracking tables and figures.
+- IBM Heron patch-proxy hardware results, reported as hardware measurements
+  rather than full image reconstruction.
+
+The deployed static site is served from `docs/` by `.github/workflows/pages.yml`.
+It only links to files committed under `docs/assets`.
+
 ## Development Checks
 
 If test dependencies are installed:
 
 ```powershell
-python -m pytest tests python_library\tests
+python -m unittest discover -s tests
+python -m ruff check .
 ```
 
-Basic syntax check:
+GitHub CI installs the smaller `requirements-ci.txt` set so it can lint and run
+the smoke tests without downloading the IBM/Qiskit/Jupyter stack.
+
+Optional broader checks:
 
 ```powershell
 python -m compileall Main Main2 Baselines python_library
@@ -159,3 +193,5 @@ python -m compileall Main Main2 Baselines python_library
 - CIFAR runs use small grayscale 32x32 samples to keep the experiments quick.
 - The benchmark methods are intentionally simple. They are comparison anchors,
   not state-of-the-art reconstruction systems.
+- IBM Heron outputs are order/correlation proxy measurements. They should not be
+  described as full real-hardware high-quality image reconstructions.

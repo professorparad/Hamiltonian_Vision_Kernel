@@ -1,0 +1,9 @@
+autoray>=0.6.12,<0.7
+cotengra>=0.7.1,<0.8
+matplotlib
+numpy
+opencv-python-headless
+pennylane
+quimb
+ruff
+torch
