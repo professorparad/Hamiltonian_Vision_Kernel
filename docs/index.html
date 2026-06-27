@@ -3,147 +3,74 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hamiltonian Vision Kernel | Project Portfolio</title>
+    <title>Hamiltonian Vision Kernel</title>
     <style>
       :root {
-        color-scheme: dark;
-        --bg: #05070d;
-        --panel: rgba(11, 18, 32, 0.82);
-        --panel-strong: rgba(15, 23, 42, 0.94);
-        --ink: #f8fafc;
-        --muted: #a8b3c7;
-        --line: rgba(148, 163, 184, 0.28);
-        --cyan: #3dd6d0;
-        --blue: #60a5fa;
-        --rose: #fb7185;
-        --lime: #bef264;
-        --shadow: rgba(0, 0, 0, 0.32);
+        color-scheme: light;
+        --bg: #f7f8fb;
+        --ink: #17202a;
+        --muted: #5c6673;
+        --panel: #ffffff;
+        --line: #d8dee8;
+        --accent: #0f766e;
+        --accent-2: #1d4ed8;
       }
 
       * {
         box-sizing: border-box;
       }
 
-      html {
-        scroll-behavior: smooth;
-      }
-
       body {
         margin: 0;
-        min-height: 100vh;
+        background: var(--bg);
         color: var(--ink);
-        background:
-          radial-gradient(circle at 70% 10%, rgba(61, 214, 208, 0.14), transparent 28rem),
-          radial-gradient(circle at 8% 24%, rgba(96, 165, 250, 0.13), transparent 24rem),
-          var(--bg);
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         line-height: 1.55;
-        overflow-x: hidden;
-      }
-
-      #quantum-field {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -2;
-      }
-
-      .noise {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: -1;
-        opacity: 0.28;
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-        background-size: 42px 42px;
-        mask-image: linear-gradient(to bottom, black, transparent 86%);
       }
 
       a {
-        color: inherit;
-      }
-
-      button,
-      .button {
-        border: 1px solid var(--line);
-        background: rgba(15, 23, 42, 0.72);
-        color: var(--ink);
-        cursor: pointer;
-        font: inherit;
-        text-decoration: none;
-        transition:
-          transform 160ms ease,
-          border-color 160ms ease,
-          background 160ms ease;
-      }
-
-      button:hover,
-      .button:hover {
-        transform: translateY(-2px);
-        border-color: rgba(61, 214, 208, 0.72);
-        background: rgba(19, 34, 55, 0.92);
+        color: var(--accent-2);
       }
 
       .wrap {
-        width: min(1160px, calc(100% - 32px));
+        width: min(1120px, calc(100% - 32px));
         margin: 0 auto;
       }
 
       header {
-        min-height: 94vh;
-        display: grid;
-        align-items: center;
-        padding: 72px 0 48px;
+        padding: 56px 0 30px;
+        border-bottom: 1px solid var(--line);
+        background: #ffffff;
       }
 
-      .hero-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-        gap: 36px;
-        align-items: center;
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 36px;
+        font-size: 0.95rem;
       }
 
-      .eyebrow {
-        display: inline-flex;
-        gap: 8px;
-        align-items: center;
-        width: fit-content;
-        margin-bottom: 18px;
-        border: 1px solid rgba(61, 214, 208, 0.42);
-        padding: 7px 11px;
-        color: #c8fffb;
-        background: rgba(13, 148, 136, 0.12);
-        font-size: 0.88rem;
-      }
-
-      .pulse-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: var(--cyan);
-        box-shadow: 0 0 18px var(--cyan);
+      nav a {
+        text-decoration: none;
+        color: var(--muted);
       }
 
       h1,
       h2,
       h3 {
         margin: 0;
-        line-height: 1.08;
+        line-height: 1.14;
       }
 
       h1 {
-        max-width: 900px;
-        font-size: clamp(2.7rem, 7vw, 6.5rem);
+        max-width: 860px;
+        font-size: clamp(2.4rem, 6vw, 5.4rem);
         letter-spacing: 0;
       }
 
       h2 {
-        font-size: clamp(1.8rem, 3.5vw, 3rem);
+        font-size: clamp(1.55rem, 3vw, 2.4rem);
       }
 
       h3 {
@@ -155,329 +82,127 @@
       }
 
       .lead {
-        max-width: 720px;
-        margin-top: 22px;
+        max-width: 780px;
+        margin-top: 18px;
         color: var(--muted);
-        font-size: clamp(1rem, 1.8vw, 1.24rem);
+        font-size: clamp(1rem, 1.6vw, 1.18rem);
       }
 
       .authors {
-        margin-top: 24px;
-        color: var(--ink);
-        font-weight: 800;
+        margin-top: 20px;
+        font-weight: 700;
       }
 
-      .affiliations {
-        max-width: 720px;
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 0.94rem;
-      }
-
-      .hero-actions {
+      .actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 30px;
+        gap: 10px;
+        margin-top: 26px;
       }
 
       .button {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        min-height: 44px;
-        padding: 10px 14px;
-        border-radius: 999px;
-        font-weight: 700;
+        min-height: 40px;
+        padding: 9px 13px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #ffffff;
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 650;
       }
 
       .button.primary {
-        border-color: rgba(61, 214, 208, 0.65);
-        background: linear-gradient(135deg, rgba(20, 184, 166, 0.9), rgba(37, 99, 235, 0.78));
-      }
-
-      .button.warning {
-        border-color: rgba(251, 113, 133, 0.55);
-      }
-
-      .visual-card {
-        border: 1px solid var(--line);
-        background: var(--panel);
-        box-shadow: 0 24px 70px var(--shadow);
-        backdrop-filter: blur(18px);
-        padding: 18px;
-      }
-
-      .kernel-map {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 10px;
-        aspect-ratio: 1;
-      }
-
-      .cell {
-        display: grid;
-        place-items: center;
-        min-width: 0;
-        border: 1px solid rgba(148, 163, 184, 0.22);
-        background: rgba(15, 23, 42, 0.86);
-        color: #c8fffb;
-        font-size: 0.8rem;
-        animation: spinGlow 4s ease-in-out infinite;
-        animation-delay: calc(var(--i) * 80ms);
-      }
-
-      @keyframes spinGlow {
-        0%,
-        100% {
-          transform: translateY(0);
-          border-color: rgba(148, 163, 184, 0.22);
-        }
-        50% {
-          transform: translateY(-6px);
-          border-color: rgba(61, 214, 208, 0.72);
-        }
-      }
-
-      .metric-strip {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        margin-top: 14px;
-      }
-
-      .metric {
-        border: 1px solid var(--line);
-        padding: 12px;
-        background: rgba(2, 6, 23, 0.38);
-      }
-
-      .metric span {
-        display: block;
-        color: var(--muted);
-        font-size: 0.76rem;
-      }
-
-      .metric strong {
-        display: block;
-        margin-top: 4px;
-        color: var(--cyan);
-        font-size: 1.08rem;
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #ffffff;
       }
 
       main {
-        padding: 22px 0 72px;
+        padding: 30px 0 60px;
       }
 
       section {
-        scroll-margin-top: 24px;
-        padding: 54px 0;
+        padding: 34px 0;
       }
 
       .section-head {
         display: flex;
         justify-content: space-between;
-        gap: 18px;
+        gap: 24px;
         align-items: end;
-        margin-bottom: 22px;
+        margin-bottom: 18px;
       }
 
       .section-head p {
-        max-width: 620px;
+        max-width: 600px;
         color: var(--muted);
       }
 
-      .architecture {
+      .grid {
         display: grid;
-        grid-template-columns: repeat(5, minmax(145px, 1fr));
-        gap: 14px;
-      }
-
-      .stage,
-      .variant,
-      .upload-panel,
-      .command-panel,
-      .portfolio-card,
-      .artifact-card,
-      .data-link {
-        border: 1px solid var(--line);
-        background: var(--panel);
-        backdrop-filter: blur(16px);
-        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
-      }
-
-      .stage {
-        min-height: 190px;
-        padding: 16px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .stage::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(61, 214, 208, 0.16), transparent 48%);
-        opacity: 0;
-        transition: opacity 180ms ease;
-      }
-
-      .stage:hover::before {
-        opacity: 1;
-      }
-
-      .num {
-        display: inline-grid;
-        place-items: center;
-        width: 34px;
-        height: 34px;
-        margin-bottom: 14px;
-        border: 1px solid rgba(61, 214, 208, 0.48);
-        border-radius: 999px;
-        color: var(--cyan);
-        font-weight: 800;
-      }
-
-      .stage p,
-      .variant p,
-      .portfolio-card p {
-        margin-top: 10px;
-        color: var(--muted);
-        font-size: 0.94rem;
-      }
-
-      .variants,
-      .portfolio-grid,
-      .artifact-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 16px;
       }
 
-      .variant,
-      .portfolio-card,
-      .artifact-card {
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
         padding: 18px;
       }
 
-      .variant h3,
-      .portfolio-card h3,
-      .artifact-card h3 {
-        color: #d9fbff;
+      .card p {
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 0.95rem;
       }
 
-      .artifact-card {
+      .metric {
+        display: grid;
+        gap: 4px;
+      }
+
+      .metric strong {
+        font-size: 1.6rem;
+        color: var(--accent);
+      }
+
+      .figure-card {
         overflow: hidden;
-      }
-
-      .artifact-card.figure {
         padding: 0;
       }
 
-      .artifact-card img {
+      .figure-card img {
         display: block;
         width: 100%;
         aspect-ratio: 16 / 10;
-        object-fit: cover;
+        object-fit: contain;
+        background: #eef2f7;
         border-bottom: 1px solid var(--line);
-        background: rgba(2, 6, 23, 0.62);
       }
 
-      .artifact-body {
+      .figure-card .body {
         padding: 16px;
       }
 
-      .artifact-body p {
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 0.92rem;
-      }
-
-      .artifact-actions,
-      .data-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 14px;
-      }
-
-      .data-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .data-link {
-        display: block;
-        padding: 14px;
-        color: var(--ink);
-        text-decoration: none;
-      }
-
-      .data-link span {
-        display: block;
-        color: var(--muted);
-        font-size: 0.82rem;
-        margin-top: 4px;
-      }
-
-      .upload-panel {
-        display: grid;
-        grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
-        gap: 20px;
-        padding: 20px;
-      }
-
-      .drop-zone {
-        display: grid;
-        place-items: center;
-        min-height: 260px;
-        border: 1px dashed rgba(61, 214, 208, 0.58);
-        background: rgba(8, 13, 24, 0.66);
-        padding: 20px;
-        text-align: center;
-      }
-
-      .drop-zone input {
-        width: 100%;
-        margin-top: 14px;
-      }
-
-      .preview {
-        min-height: 260px;
-        overflow: auto;
-        border: 1px solid var(--line);
-        background: rgba(2, 6, 23, 0.54);
-        padding: 14px;
-      }
-
-      .preview table {
+      table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 0.86rem;
-      }
-
-      .preview th,
-      .preview td {
-        border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-        padding: 8px;
-        text-align: left;
-        white-space: nowrap;
-      }
-
-      .preview img {
-        max-width: 100%;
-        height: auto;
+        background: #ffffff;
         border: 1px solid var(--line);
       }
 
-      .command-panel {
-        padding: 18px;
+      th,
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
       }
 
-      .commands {
-        display: grid;
-        gap: 12px;
-        margin-top: 14px;
+      th {
+        background: #eef2f7;
       }
 
       code,
@@ -488,69 +213,21 @@
       pre {
         overflow-x: auto;
         margin: 0;
-        border: 1px solid rgba(148, 163, 184, 0.18);
-        padding: 14px 16px;
-        background: rgba(0, 0, 0, 0.38);
-        color: #dbeafe;
-      }
-
-      .dock {
-        position: fixed;
-        right: 18px;
-        bottom: 18px;
-        z-index: 5;
-        display: grid;
-        gap: 8px;
-        width: min(220px, calc(100vw - 36px));
         border: 1px solid var(--line);
-        background: rgba(2, 6, 23, 0.82);
-        backdrop-filter: blur(14px);
-        padding: 10px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.36);
-        user-select: none;
-      }
-
-      .dock-title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: var(--muted);
-        font-size: 0.78rem;
-        cursor: grab;
-      }
-
-      .dock button,
-      .dock a {
-        width: 100%;
         border-radius: 8px;
-        padding: 9px 10px;
-        text-align: center;
+        padding: 14px;
+        background: #111827;
+        color: #e5e7eb;
       }
 
       footer {
         border-top: 1px solid var(--line);
-        padding: 26px 0 40px;
+        padding: 24px 0 36px;
         color: var(--muted);
+        background: #ffffff;
       }
 
-      @media (max-width: 980px) {
-        header {
-          min-height: auto;
-        }
-
-        .hero-grid,
-        .upload-panel {
-          grid-template-columns: 1fr;
-        }
-
-        .architecture,
-        .variants,
-        .portfolio-grid,
-        .artifact-grid,
-        .data-grid {
-          grid-template-columns: 1fr;
-        }
-
+      @media (max-width: 860px) {
         .section-head {
           display: block;
         }
@@ -558,503 +235,194 @@
         .section-head p {
           margin-top: 10px;
         }
-      }
 
-      @media (prefers-reduced-motion: reduce) {
-        html {
-          scroll-behavior: auto;
-        }
-
-        .cell {
-          animation: none;
+        .grid {
+          grid-template-columns: 1fr;
         }
       }
     </style>
   </head>
   <body>
-    <canvas id="quantum-field" aria-hidden="true"></canvas>
-    <div class="noise" aria-hidden="true"></div>
-
-    <nav class="dock" id="dock" aria-label="Floating controls">
-      <div class="dock-title" id="dock-handle">
-        <span>Drag controls</span>
-        <span>HVK</span>
-      </div>
-      <a class="button" href="#architecture">Architecture</a>
-      <a class="button" href="#artifacts">Artifacts</a>
-      <a class="button" href="#benchmarks">Upload Data</a>
-      <a class="button" href="#portfolio">Portfolio</a>
-      <button type="button" id="autoscroll">Start auto-scroll</button>
-    </nav>
-
-    <header class="wrap" id="top">
-      <div class="hero-grid">
-        <div>
-          <div class="eyebrow"><span class="pulse-dot"></span> Quantum ML research project</div>
-          <h1>Hamiltonian Vision Kernel</h1>
-          <p class="lead">
-            A spatially aware hybrid reconstruction framework that combines MPS
-            patch features, Fourier positions, variational quantum observables,
-            and Hamiltonian energy regularization.
-          </p>
-          <p class="authors">Sparsho Chakraborty and Siddhartha Patra</p>
-          <p class="affiliations">
-            Indian Institute of Technology Bhubaneswar; Centre for Quantum
-            Engineering, Research and Education (CQUERE), TCG CREST.
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#architecture">Explore architecture</a>
-            <a class="button" href="#artifacts">View outputs</a>
-            <a class="button" href="#benchmarks">Upload benchmark data</a>
-            <a class="button" href="https://github.com/professorparad/Hamiltonian_Vision_Kernel">GitHub</a>
-            <a class="button warning" href="#" title="Replace this href with your LinkedIn profile URL">LinkedIn</a>
-          </div>
+    <header>
+      <div class="wrap">
+        <nav aria-label="Site navigation">
+          <a href="#overview">Overview</a>
+          <a href="#results">Results</a>
+          <a href="#figures">Figures</a>
+          <a href="#runbook">Runbook</a>
+          <a href="https://github.com/professorparad/Hamiltonian_Vision_Kernel">GitHub</a>
+        </nav>
+        <h1>Hamiltonian Vision Kernel</h1>
+        <p class="lead">
+          A research codebase for image reconstruction with tensor-network patch
+          features, positional encodings, variational quantum observables, and
+          Hamiltonian energy regularization.
+        </p>
+        <p class="authors">
+          Sparsho Chakraborty and Dr. Siddhartha Patra
+        </p>
+        <p class="lead">
+          The current experiments cover HVK1D, HVK2D, Symmetric HVK1D, classical
+          baselines, CIFAR-10 subset metrics, Mona Lisa reconstruction metrics,
+          and a small IBM Heron hardware probe.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="assets/papers/paper_hvk.pdf">Open paper PDF</a>
+          <a class="button" href="assets/data/cifar32_aggregate_metrics.csv">CIFAR CSV</a>
+          <a class="button" href="#runbook">Run commands</a>
         </div>
-
-        <aside class="visual-card" aria-label="Animated kernel summary">
-          <div class="kernel-map" id="kernel-map"></div>
-          <div class="metric-strip">
-            <div class="metric"><span>Patch basis</span><strong>MPS</strong></div>
-            <div class="metric"><span>Latent field</span><strong>HVK2D</strong></div>
-            <div class="metric"><span>Benchmark</span><strong>CIFAR</strong></div>
-          </div>
-        </aside>
       </div>
     </header>
 
     <main class="wrap">
-      <section id="architecture" aria-labelledby="architecture-title">
+      <section id="overview">
         <div class="section-head">
-          <h2 id="architecture-title">Architecture Flow</h2>
+          <h2>Overview</h2>
           <p>
-            The page is static, but the diagram is designed like a developer
-            portfolio piece: fast to load, interactive, and readable without the
-            Python quantum stack.
+            The project is a runnable research repository. It is not presented as
+            a production service or as a full real-hardware reconstruction system.
           </p>
         </div>
-        <div class="architecture">
-          <article class="stage">
-            <span class="num">1</span>
-            <h3>Image Patches</h3>
-            <p>Images are converted to grayscale and split into local windows for reconstruction.</p>
+        <div class="grid">
+          <article class="card">
+            <h3>Patch Representation</h3>
+            <p>Images are split into local patches and represented through MPS-style feature extraction.</p>
           </article>
-          <article class="stage">
-            <span class="num">2</span>
-            <h3>MPS Features</h3>
-            <p>Each patch is compressed into tensor-network features using SVD-style structure.</p>
+          <article class="card">
+            <h3>Hamiltonian Latent Space</h3>
+            <p>Small circuits produce Pauli observables and correlation channels used by the decoder.</p>
           </article>
-          <article class="stage">
-            <span class="num">3</span>
-            <h3>Position Field</h3>
-            <p>Coordinates become Fourier positional encodings so patches keep spatial identity.</p>
-          </article>
-          <article class="stage">
-            <span class="num">4</span>
-            <h3>Quantum Kernel</h3>
-            <p>HVK circuits emit X, Z, and correlation observables over 1D or 2D qubit layouts.</p>
-          </article>
-          <article class="stage">
-            <span class="num">5</span>
-            <h3>Decoder</h3>
-            <p>Patch pixels are reconstructed while Hamiltonian energy regularizes the latent state.</p>
+          <article class="card">
+            <h3>Measured Diagnostics</h3>
+            <p>Training tracks reconstruction loss, energy, order parameters, susceptibility, and hardware proxy signals.</p>
           </article>
         </div>
       </section>
 
-      <section id="variants" aria-labelledby="variants-title">
+      <section id="results">
         <div class="section-head">
-          <h2 id="variants-title">Research Tracks</h2>
-          <p>Three variants are framed for viewers who want the model story before reading code.</p>
-        </div>
-        <div class="variants">
-          <article class="variant">
-            <h3>HVK1D</h3>
-            <p>Nearest-neighbor Heisenberg-style correlations for the standard quantum path.</p>
-          </article>
-          <article class="variant">
-            <h3>Symmetric HVK1D</h3>
-            <p>U(1)-symmetric coupling with a clearer physics constraint over XX, YY, and ZZ terms.</p>
-          </article>
-          <article class="variant">
-            <h3>HVK2D</h3>
-            <p>A grid circuit that better reflects the spatial geometry of image patches.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="artifacts" aria-labelledby="artifacts-title">
-        <div class="section-head">
-          <h2 id="artifacts-title">Results & Data Artifacts</h2>
+          <h2>Current Results</h2>
           <p>
-            Paper-ready figures, PDFs, and benchmark tables are bundled inside
-            <code>docs/assets</code> so the static GitHub Pages site can serve
-            them directly.
+            These values summarize the committed benchmark artifacts and the
+            current manuscript. IBM Heron values are hardware proxy measurements,
+            not decoded image reconstructions.
           </p>
         </div>
+        <div class="grid">
+          <article class="card metric">
+            <span>CIFAR-10 subset HVK2D mean PSNR</span>
+            <strong>34.48 dB</strong>
+            <p>Five grayscale 32x32 samples, 200 epoch comparison suite.</p>
+          </article>
+          <article class="card metric">
+            <span>Mona Lisa HVK2D best PSNR</span>
+            <strong>32.84 dB</strong>
+            <p>Unified baseline suite with CNN, MLP, autoencoder, GAN, PHL, and HVK variants.</p>
+          </article>
+          <article class="card metric">
+            <span>IBM Heron mean proxy loss</span>
+            <strong>0.4353</strong>
+            <p>64 patch circuits, 100 shots each, measured on an IBM Heron backend.</p>
+          </article>
+        </div>
 
-        <div class="artifact-grid">
-          <article class="artifact-card figure">
-            <img src="assets/figures/reconstructions.png" alt="Mona Lisa HVK reconstruction panels comparing original, HVK, MPS, random latent, and zero latent outputs" />
-            <div class="artifact-body">
-              <h3>Reconstruction Comparison</h3>
-              <p>Mona Lisa reconstruction panels from the main HVK1D output set.</p>
-              <div class="artifact-actions">
-                <a class="button" href="assets/figures/reconstructions.png">Open PNG</a>
-              </div>
+        <table aria-label="Architecture comparison">
+          <thead>
+            <tr>
+              <th>Track</th>
+              <th>Role</th>
+              <th>Reported evidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>HVK1D</td>
+              <td>Linear-chain control</td>
+              <td>Reconstruction metrics and order-parameter tracking</td>
+            </tr>
+            <tr>
+              <td>Symmetric HVK1D</td>
+              <td>Mirror-tied Hamiltonian couplings</td>
+              <td>CIFAR/Mona Lisa metrics and symmetric order diagnostics</td>
+            </tr>
+            <tr>
+              <td>HVK2D</td>
+              <td>Patch-grid topology</td>
+              <td>Best HVK reconstruction trend and Heron patch-proxy run</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="figures">
+        <div class="section-head">
+          <h2>Figures</h2>
+          <p>All links below point to committed files under <code>docs/assets</code>.</p>
+        </div>
+        <div class="grid">
+          <article class="card figure-card">
+            <img src="assets/figures/cifar32_all_architecture_benchmark.png" alt="CIFAR benchmark plot across all tested architectures" />
+            <div class="body">
+              <h3>CIFAR Architecture Benchmark</h3>
+              <p>Mean/best error and PSNR across HVK and baseline architectures.</p>
             </div>
           </article>
-
-          <article class="artifact-card figure">
-            <img src="assets/figures/benchmark_metric_comparison.png" alt="Metric comparison plot for HVK and GAN baselines on the Mona Lisa benchmark" />
-            <div class="artifact-body">
+          <article class="card figure-card">
+            <img src="assets/figures/monalisa_metric_comparison.png" alt="Mona Lisa metric comparison across methods" />
+            <div class="body">
               <h3>Mona Lisa Metrics</h3>
-              <p>Final MSE and PSNR comparison for the single-image benchmark.</p>
-              <div class="artifact-actions">
-                <a class="button" href="assets/figures/benchmark_metric_comparison.png">Open PNG</a>
-              </div>
+              <p>Unified metric comparison for the single-image benchmark.</p>
             </div>
           </article>
-
-          <article class="artifact-card figure">
-            <img src="assets/figures/cifar10_metric_comparison.png" alt="CIFAR-10 subset metric comparison showing average MSE and PSNR across benchmark methods" />
-            <div class="artifact-body">
-              <h3>CIFAR-10 Metrics</h3>
-              <p>Aggregate reconstruction metrics for the CIFAR-10 subset runs.</p>
-              <div class="artifact-actions">
-                <a class="button" href="assets/figures/cifar10_metric_comparison.png">Open PNG</a>
-              </div>
+          <article class="card figure-card">
+            <img src="assets/figures/monalisa_symmetric_hvk1d_order_parameters.png" alt="Symmetric HVK1D Mona Lisa order parameter tracking" />
+            <div class="body">
+              <h3>Symmetric HVK1D Order</h3>
+              <p>Hamiltonian order-parameter tracking for the symmetric chain variant.</p>
             </div>
           </article>
-
-          <article class="artifact-card figure">
-            <img src="assets/figures/main_hvk_order_parameter_curve.png" alt="HVK1D order parameter curve over training epochs" />
-            <div class="artifact-body">
-              <h3>HVK1D Order Parameter</h3>
-              <p>Finite-size order-parameter trajectory from the 1D chain model.</p>
-              <div class="artifact-actions">
-                <a class="button" href="assets/figures/main_hvk_order_parameter_curve.png">Open PNG</a>
-              </div>
+          <article class="card figure-card">
+            <img src="assets/figures/mps_bond_dim_scaling_1d.png" alt="1D MPS bond dimension sweep" />
+            <div class="body">
+              <h3>1D Bond Sweep</h3>
+              <p>Effect of MPS bond dimension on the 1D feature representation.</p>
             </div>
           </article>
-
-          <article class="artifact-card figure">
-            <img src="assets/figures/main2_hvk_order_parameter_curve.png" alt="HVK2D order parameter curve over training epochs" />
-            <div class="artifact-body">
-              <h3>HVK2D Order Parameter</h3>
-              <p>Order-parameter trajectory from the 2D lattice model.</p>
-              <div class="artifact-actions">
-                <a class="button" href="assets/figures/main2_hvk_order_parameter_curve.png">Open PNG</a>
-              </div>
+          <article class="card figure-card">
+            <img src="assets/figures/mps_bond_dim_scaling_2d.png" alt="2D MPS bond dimension sweep" />
+            <div class="body">
+              <h3>2D Bond Sweep</h3>
+              <p>Effect of MPS bond dimension on the 2D feature representation.</p>
             </div>
           </article>
-
-          <article class="artifact-card figure">
-            <img src="assets/figures/training_curves.png" alt="HVK training curves showing reconstruction, energy, and total loss" />
-            <div class="artifact-body">
+          <article class="card figure-card">
+            <img src="assets/figures/training_curves.png" alt="HVK training curves" />
+            <div class="body">
               <h3>Training Curves</h3>
-              <p>Loss traces showing reconstruction and Hamiltonian energy behavior.</p>
-              <div class="artifact-actions">
-                <a class="button" href="assets/figures/training_curves.png">Open PNG</a>
-              </div>
+              <p>Reconstruction, energy, and total loss traces.</p>
             </div>
           </article>
         </div>
-
-        <div class="data-grid" aria-label="Downloadable research artifacts">
-          <a class="data-link" href="assets/papers/paper_hvk.pdf">
-            Paper PDF
-            <span>IEEE-style manuscript build</span>
-          </a>
-          <a class="data-link" href="assets/papers/hvk_methodology_outputs.pdf">
-            Methodology PDF
-            <span>Expanded experimental notes</span>
-          </a>
-          <a class="data-link" href="assets/data/cifar32_aggregate_metrics.csv">
-            Aggregate CSV
-            <span>CIFAR-32 benchmark summary</span>
-          </a>
-          <a class="data-link" href="assets/data/cifar32_per_image_metrics.csv">
-            Per-image CSV
-            <span>Image-level benchmark rows</span>
-          </a>
-          <a class="data-link" href="assets/data/cifar32_aggregate_metrics.json">
-            Aggregate JSON
-            <span>Machine-readable metrics</span>
-          </a>
-          <a class="data-link" href="assets/figures/mps_bond_dim_scaling_1d.png">
-            MPS Sweep
-            <span>1D bond-dimension plot</span>
-          </a>
-        </div>
       </section>
 
-      <section id="benchmarks" aria-labelledby="benchmarks-title">
+      <section id="runbook">
         <div class="section-head">
-          <h2 id="benchmarks-title">Live Benchmark Upload</h2>
-          <p>
-            Drop a CSV, JSON, PNG, or JPG. Data is parsed in the browser only;
-            nothing is sent to a server.
-          </p>
+          <h2>Runbook</h2>
+          <p>Commands used for local validation and reproducibility.</p>
         </div>
-        <div class="upload-panel">
-          <label class="drop-zone" id="drop-zone">
-            <span>
-              <strong>Upload benchmark files</strong><br />
-              CIFAR metrics, Mona Lisa outputs, reconstructions, or plots.
-            </span>
-            <input id="file-input" type="file" multiple accept=".csv,.json,.png,.jpg,.jpeg" />
-          </label>
-          <div class="preview" id="preview">
-            <p>Uploaded data previews will appear here.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="portfolio" aria-labelledby="portfolio-title">
-        <div class="section-head">
-          <h2 id="portfolio-title">Developer Portfolio Framing</h2>
-          <p>Use this section when sharing the project with reviewers, recruiters, or collaborators.</p>
-        </div>
-        <div class="portfolio-grid">
-          <article class="portfolio-card">
-            <h3>Problem</h3>
-            <p>Can a hybrid quantum latent field reconstruct image structure instead of only classifying it?</p>
-          </article>
-          <article class="portfolio-card">
-            <h3>Engineering</h3>
-            <p>Python training pipeline, CIFAR benchmark runners, static deployment, CI linting, and tests.</p>
-          </article>
-          <article class="portfolio-card">
-            <h3>Next Step</h3>
-            <p>Publish live benchmark artifacts and replace the LinkedIn placeholder with the final profile URL.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="commands" aria-labelledby="commands-title">
-        <div class="command-panel">
-          <h2 id="commands-title">Runbook</h2>
-          <div class="commands">
-            <pre><code>python -m unittest discover -s tests</code></pre>
-            <pre><code>python Baselines/cifar10_comparisons/smoke_test.py --epochs 1 --methods hvk1d --device cpu</code></pre>
-            <pre><code>python Baselines/cifar10_comparisons/main.py --methods hvk1d hvk2d symmetric --count 5 --epochs 200</code></pre>
-          </div>
+        <div class="grid">
+          <pre><code>python -m ruff check .
+python -m unittest discover -s tests</code></pre>
+          <pre><code>python Baselines\cifar10_comparisons\main.py --methods hvk1d hvk2d symmetric --count 5 --epochs 200 --device auto</code></pre>
+          <pre><code>python IBM_Cloud\run_ibm_epoch_probe.py --dataset IBM_Cloud\datasets\monalisa_patches.npz --variant hvk2d --backend ibm_fez --shots 100 --max-patches 64</code></pre>
         </div>
       </section>
     </main>
 
-    <footer class="wrap">
-      Hamiltonian Vision Kernel research portfolio. Static deployment target:
-      GitHub Pages from <code>docs/</code>.
+    <footer>
+      <div class="wrap">
+        Hamiltonian Vision Kernel. Static GitHub Pages deployment from <code>docs/</code>.
+      </div>
     </footer>
-
-    <script>
-      const canvas = document.getElementById("quantum-field");
-      const ctx = canvas.getContext("2d");
-      const particles = [];
-      let width = 0;
-      let height = 0;
-
-      function resizeCanvas() {
-        const scale = window.devicePixelRatio || 1;
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = Math.floor(width * scale);
-        canvas.height = Math.floor(height * scale);
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
-        ctx.setTransform(scale, 0, 0, scale, 0, 0);
-      }
-
-      function seedParticles() {
-        particles.length = 0;
-        const count = Math.min(92, Math.max(36, Math.floor(width / 18)));
-        for (let i = 0; i < count; i += 1) {
-          particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.42,
-            vy: (Math.random() - 0.5) * 0.42,
-            phase: Math.random() * Math.PI * 2,
-          });
-        }
-      }
-
-      function drawField() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = "rgba(5, 7, 13, 0.36)";
-        ctx.fillRect(0, 0, width, height);
-
-        particles.forEach((p, i) => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.phase += 0.018;
-          if (p.x < -20) p.x = width + 20;
-          if (p.x > width + 20) p.x = -20;
-          if (p.y < -20) p.y = height + 20;
-          if (p.y > height + 20) p.y = -20;
-
-          for (let j = i + 1; j < particles.length; j += 1) {
-            const q = particles[j];
-            const dx = p.x - q.x;
-            const dy = p.y - q.y;
-            const distance = Math.hypot(dx, dy);
-            if (distance < 145) {
-              const alpha = (1 - distance / 145) * 0.22;
-              ctx.strokeStyle = `rgba(61, 214, 208, ${alpha})`;
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(q.x, q.y);
-              ctx.stroke();
-            }
-          }
-
-          const radius = 1.8 + Math.sin(p.phase) * 0.8;
-          ctx.fillStyle = i % 3 === 0 ? "rgba(190, 242, 100, 0.78)" : "rgba(96, 165, 250, 0.78)";
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        requestAnimationFrame(drawField);
-      }
-
-      resizeCanvas();
-      seedParticles();
-      drawField();
-      window.addEventListener("resize", () => {
-        resizeCanvas();
-        seedParticles();
-      });
-
-      const kernelMap = document.getElementById("kernel-map");
-      Array.from({ length: 36 }, (_, i) => {
-        const cell = document.createElement("div");
-        cell.className = "cell";
-        cell.style.setProperty("--i", i);
-        cell.textContent = i % 5 === 0 ? "ZZ" : i % 3 === 0 ? "X" : "Z";
-        kernelMap.appendChild(cell);
-      });
-
-      const preview = document.getElementById("preview");
-      const fileInput = document.getElementById("file-input");
-      const dropZone = document.getElementById("drop-zone");
-
-      function parseCsv(text) {
-        const rows = text.trim().split(/\r?\n/).map((line) => line.split(",").map((item) => item.trim()));
-        const headers = rows.shift() || [];
-        return { headers, rows: rows.slice(0, 12) };
-      }
-
-      function renderTable(headers, rows, name) {
-        const table = document.createElement("table");
-        const caption = document.createElement("p");
-        caption.innerHTML = `<strong>${name}</strong>`;
-        const thead = document.createElement("thead");
-        const headerRow = document.createElement("tr");
-        headers.forEach((header) => {
-          const th = document.createElement("th");
-          th.textContent = header;
-          headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-        const tbody = document.createElement("tbody");
-        rows.forEach((row) => {
-          const tr = document.createElement("tr");
-          row.forEach((value) => {
-            const td = document.createElement("td");
-            td.textContent = value;
-            tr.appendChild(td);
-          });
-          tbody.appendChild(tr);
-        });
-        table.append(thead, tbody);
-        preview.append(caption, table);
-      }
-
-      async function handleFiles(files) {
-        preview.innerHTML = "";
-        for (const file of files) {
-          if (file.type.startsWith("image/")) {
-            const img = document.createElement("img");
-            img.alt = file.name;
-            img.src = URL.createObjectURL(file);
-            const title = document.createElement("p");
-            title.innerHTML = `<strong>${file.name}</strong>`;
-            preview.append(title, img);
-          } else if (file.name.endsWith(".csv")) {
-            const { headers, rows } = parseCsv(await file.text());
-            renderTable(headers, rows, file.name);
-          } else if (file.name.endsWith(".json")) {
-            const pre = document.createElement("pre");
-            pre.textContent = JSON.stringify(JSON.parse(await file.text()), null, 2).slice(0, 4000);
-            preview.append(pre);
-          }
-        }
-      }
-
-      fileInput.addEventListener("change", (event) => handleFiles(event.target.files));
-      ["dragenter", "dragover"].forEach((name) => {
-        dropZone.addEventListener(name, (event) => {
-          event.preventDefault();
-          dropZone.style.borderColor = "rgba(190, 242, 100, 0.9)";
-        });
-      });
-      dropZone.addEventListener("dragleave", () => {
-        dropZone.style.borderColor = "rgba(61, 214, 208, 0.58)";
-      });
-      dropZone.addEventListener("drop", (event) => {
-        event.preventDefault();
-        dropZone.style.borderColor = "rgba(61, 214, 208, 0.58)";
-        handleFiles(event.dataTransfer.files);
-      });
-
-      const autoscroll = document.getElementById("autoscroll");
-      let scrollTimer = null;
-      autoscroll.addEventListener("click", () => {
-        if (scrollTimer) {
-          clearInterval(scrollTimer);
-          scrollTimer = null;
-          autoscroll.textContent = "Start auto-scroll";
-          return;
-        }
-        autoscroll.textContent = "Stop auto-scroll";
-        scrollTimer = setInterval(() => {
-          const next = window.scrollY + Math.max(260, window.innerHeight * 0.72);
-          if (next + window.innerHeight >= document.body.scrollHeight) {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          } else {
-            window.scrollTo({ top: next, behavior: "smooth" });
-          }
-        }, 2600);
-      });
-
-      const dock = document.getElementById("dock");
-      const handle = document.getElementById("dock-handle");
-      let dragging = false;
-      let offsetX = 0;
-      let offsetY = 0;
-
-      handle.addEventListener("pointerdown", (event) => {
-        dragging = true;
-        handle.setPointerCapture(event.pointerId);
-        const rect = dock.getBoundingClientRect();
-        offsetX = event.clientX - rect.left;
-        offsetY = event.clientY - rect.top;
-      });
-
-      handle.addEventListener("pointermove", (event) => {
-        if (!dragging) return;
-        dock.style.left = `${Math.min(window.innerWidth - dock.offsetWidth - 8, Math.max(8, event.clientX - offsetX))}px`;
-        dock.style.top = `${Math.min(window.innerHeight - dock.offsetHeight - 8, Math.max(8, event.clientY - offsetY))}px`;
-        dock.style.right = "auto";
-        dock.style.bottom = "auto";
-      });
-
-      handle.addEventListener("pointerup", () => {
-        dragging = false;
-      });
-    </script>
   </body>
 </html>

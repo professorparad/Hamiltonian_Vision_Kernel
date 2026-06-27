@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   deploy:
+    name: Deploy static documentation
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -26,6 +27,13 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v6
+
+      - name: Validate static site files
+        run: |
+          test -f docs/index.html
+          test -f docs/.nojekyll
+          test -f docs/assets/papers/paper_hvk.pdf
+          test -f docs/assets/figures/cifar32_all_architecture_benchmark.png
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v5
