@@ -1,0 +1,42 @@
+[
+  {
+    "provider": "ibm",
+    "backend": "ibm_fez",
+    "job_id": "d8vt6a1ropqc738d03eg",
+    "variant": "hvk1d",
+    "patch_index": 0,
+    "shots": 100,
+    "mean_order_parameter": 0.8366666666666667,
+    "mean_abs_order_parameter": 0.8366666666666667,
+    "mean_zz_correlation": 0.6719999999999997,
+    "hardware_proxy_loss": 0.3273333333333335,
+    "statevector_mean_order_parameter": 0.8721042357194343,
+    "statevector_mean_abs_order_parameter": 0.8721146057059938,
+    "statevector_mean_zz_correlation": 0.7393060243474943,
+    "statevector_hardware_proxy_loss": 0.2582323821202591,
+    "delta_mean_order_parameter": -0.035437569052767626,
+    "delta_mean_abs_order_parameter": -0.03544793903932708,
+    "delta_mean_zz_correlation": -0.06730602434749455,
+    "delta_hardware_proxy_loss": 0.06910095121307436
+  },
+  {
+    "provider": "ibm",
+    "backend": "ibm_fez",
+    "job_id": "d8vt6a1ropqc738d03eg",
+    "variant": "hvk2d",
+    "patch_index": 0,
+    "shots": 100,
+    "mean_order_parameter": 0.763333333333333,
+    "mean_abs_order_parameter": 0.763333333333333,
+    "mean_zz_correlation": 0.5685714285714285,
+    "hardware_proxy_loss": 0.45238095238095277,
+    "statevector_mean_order_parameter": 0.84640893235279,
+    "statevector_mean_abs_order_parameter": 0.8464167783282927,
+    "statevector_mean_zz_correlation": 0.6940548221621183,
+    "statevector_hardware_proxy_loss": 0.3065558105906482,
+    "delta_mean_order_parameter": -0.08307559901945705,
+    "delta_mean_abs_order_parameter": -0.08308344499495968,
+    "delta_mean_zz_correlation": -0.12548339359068983,
+    "delta_hardware_proxy_loss": 0.1458251417903046
+  }
+]

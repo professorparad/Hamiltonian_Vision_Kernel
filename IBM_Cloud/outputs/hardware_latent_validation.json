@@ -1,0 +1,18 @@
+[
+  {
+    "variant": "hvk1d",
+    "patch_index": 0,
+    "sim_mean_order_parameter": 0.8721042357194343,
+    "sim_mean_abs_order_parameter": 0.8721146057059938,
+    "sim_mean_zz_correlation": 0.7393060243474943,
+    "sim_hardware_proxy_loss": 0.2582323821202591
+  },
+  {
+    "variant": "hvk2d",
+    "patch_index": 0,
+    "sim_mean_order_parameter": 0.84640893235279,
+    "sim_mean_abs_order_parameter": 0.8464167783282927,
+    "sim_mean_zz_correlation": 0.6940548221621183,
+    "sim_hardware_proxy_loss": 0.3065558105906482
+  }
+]
