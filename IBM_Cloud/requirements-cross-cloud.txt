@@ -1,0 +1,5 @@
+-r requirements-ibm.txt
+qiskit-ionq
+qiskit-braket-provider
+azure-quantum[qiskit]
+amazon-braket-sdk
