@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\siddh\\\\Research_MAIN\\\\Codes\\\\research-group\\\\Hamiltonian_Vision_Kernel\\\\Main\\\\\" -Recurse -File | Where-Object { $_.Extension -eq \".py\" } | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\siddh\\\\Research_MAIN\\\\Codes\\\\research-group\\\\Hamiltonian_Vision_Kernel\\\\\", \"\"\\) })",
+      "PowerShell(Get-ChildItem \"c:\\\\Users\\\\siddh\\\\Research_MAIN\\\\Codes\\\\research-group\\\\Hamiltonian_Vision_Kernel\\\\python_library\\\\\" -Recurse -File | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\siddh\\\\Research_MAIN\\\\Codes\\\\research-group\\\\Hamiltonian_Vision_Kernel\\\\\", \"\"\\) })"
+    ]
+  }
+}
