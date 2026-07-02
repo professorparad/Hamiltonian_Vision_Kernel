@@ -43,26 +43,105 @@ Default runs **both** variants sequentially (standard HVK1D then symmetric HVK1D
 
 ### Step 5 — Quantum Model Forward Pass
 `src/quantum/quantum_model.py :: QuantumModel.forward()`  
-`src/quantum/circuit.py` (PennyLane QNode)
+`src/quantum/circuit.py :: VQC()` (PennyLane QNode)
 
-For each patch:
-1. **AngleEmbedding**: encodes 46-dim MPS features as qubit rotation angles (6 qubits take the first 6 features)
-2. **Positional modulation**: adds RY(position_angle) rotations on each qubit using the 8-dim positional encoding
-3. **StronglyEntanglingLayers** (2 layers): parameterized entangling circuit
-4. **Measure 27 Pauli observables**:
-   - 6 local Z: `<Z_0>...<Z_5>`
-   - 6 local X: `<X_0>...<X_5>`
-   - 5 ZZ: `<Z_0 Z_1>...<Z_4 Z_5>` (nearest-neighbor bonds)
-   - 5 XX: `<X_0 X_1>...<X_4 X_5>`
-   - 5 YY: `<Y_0 Y_1>...<Y_4 Y_5>`
-5. **Heisenberg Hamiltonian energy** (used as regularizer, not as objective):
-   - `H = Σ_bonds (Jz·ZZ + Jx·XX + Jy·YY)`
-   - Jx, Jy, Jz are **learned** per-bond `nn.Parameter` tensors [5]
-- Output: `observables` [16, 27], `energies` [16]
+#### 5a — Classical projections (before the circuit)
+
+The circuit has exactly **6 qubits**. Both the 46-dim MPS features and 8-dim positional encoding must be compressed to 6 values each before entering. This is done by two learned classical linear layers inside `QuantumModel.__init__()`:
+
+```
+features    [16, 46]  →  feature_projection  (Linear 46→6)  →  [16, 6]
+positions   [16,  8]  →  position_projection (Linear  8→6)  →  [16, 6]
+```
+
+These are standard `nn.Linear` layers — their weights are trained by backprop alongside the quantum circuit weights. The projection is **not** fixed; it learns which combinations of MPS features and which combinations of position coordinates are most informative for the circuit.
+
+After projection, the loop runs **once per patch** (16 iterations), feeding a single [6] vector for features and a single [6] vector for position into the circuit.
+
+#### 5b — Inside the VQC (circuit.py)
+
+The circuit has 3 stages executed in sequence on 6 qubits:
+
+**Stage 1 — AngleEmbedding (feature encoding)**
+```python
+qml.AngleEmbedding(inputs, wires=range(6))
+```
+- `inputs` = the projected feature vector [6], one value per qubit
+- Applies `RX(inputs[i])` rotation on qubit `i` for i=0..5
+- This encodes MPS-derived patch content into the initial qubit state
+- All 6 qubits start at |0⟩, then get rotated by their respective feature angle
+
+**Stage 2 — Positional modulation (RY gates)**
+```python
+for qubit in range(6):
+    qml.RY(positional_angles[qubit], wires=qubit)
+```
+- `positional_angles` = the projected position vector [6], one angle per qubit
+- Applies `RY(θ_i)` on each qubit **on top of** the AngleEmbedding state
+- This shifts the qubit state depending on where in the image the patch sits
+- Patches at different grid positions get different RY rotations → circuit "feels" location
+- Combined effect of Stage 1+2: qubit `i` has had `RX(feature_i)` then `RY(position_i)`
+
+**Stage 3 — StronglyEntanglingLayers (entanglement + trainable)**
+```python
+qml.StronglyEntanglingLayers(weights, wires=range(6))
+```
+- `weights` shape: `[n_layers=2, n_qubits=6, 3]` — an `nn.Parameter` initialized randomly in [0, π]
+- Each layer applies: parametrized single-qubit rotations (Rot gate = RZ·RY·RZ) on every qubit, followed by CNOT entangling gates between qubits (in a pattern that shifts per layer)
+- 2 layers × 6 qubits × 3 parameters = **36 trainable quantum weights**
+- This is where the circuit learns to create quantum correlations between qubits
+
+#### 5c — Measurement (27 observables)
+
+After the circuit runs, 27 Pauli expectation values are measured:
+
+```
+output[0:6]   = Z  = [⟨Z₀⟩, ⟨Z₁⟩, ⟨Z₂⟩, ⟨Z₃⟩, ⟨Z₄⟩, ⟨Z₅⟩]          # local spin-z
+output[6:12]  = X  = [⟨X₀⟩, ⟨X₁⟩, ⟨X₂⟩, ⟨X₃⟩, ⟨X₄⟩, ⟨X₅⟩]          # local spin-x
+output[12:17] = ZZ = [⟨Z₀Z₁⟩, ⟨Z₁Z₂⟩, ⟨Z₂Z₃⟩, ⟨Z₃Z₄⟩, ⟨Z₄Z₅⟩]     # nearest-neighbor ZZ
+output[17:22] = XX = [⟨X₀X₁⟩, ⟨X₁X₂⟩, ⟨X₂X₃⟩, ⟨X₃X₄⟩, ⟨X₄X₅⟩]     # nearest-neighbor XX
+output[22:27] = YY = [⟨Y₀Y₁⟩, ⟨Y₁Y₂⟩, ⟨Y₂Y₃⟩, ⟨Y₃Y₄⟩, ⟨Y₄Y₅⟩]     # nearest-neighbor YY
+```
+
+All values are in [-1, +1] (expectation values of Pauli operators).  
+This 27-dim vector is the **quantum latent representation** of the patch.
+
+#### 5d — Heisenberg energy (from the same observables)
+
+Back in `QuantumModel.forward()`, the Hamiltonian energy is computed from the measured ZZ/XX/YY values:
+
+```python
+energy = sum(Jz * ZZ) + sum(Jx * XX) + sum(Jy * YY)
+```
+
+- `Jz`, `Jx`, `Jy` are `nn.Parameter` vectors of shape [5], one coupling per bond
+- Initialized as `0.1 * randn` — small random values, learned during training
+- Energy is a scalar per patch; stacked to `energies` [16]
+- This energy goes into the loss as `0.01 * mean(energies)` — it regularizes the couplings toward physically meaningful values
+
+#### 5e — Training noise
+
+During training only (not eval):
+```python
+observables = observables + 0.01 * torch.randn_like(observables)
+```
+Small Gaussian noise is added to observables to act as a regularizer and prevent the decoder from overfitting to exact observable values.
+
+#### Summary of all trainable parameters in Step 5
+
+| Component | Shape | Count |
+|-----------|-------|-------|
+| `feature_projection` (Linear 46→6) | [6, 46] + bias [6] | 282 |
+| `position_projection` (Linear 8→6) | [6, 8] + bias [6] | 54 |
+| `weights` (VQC StronglyEntangling) | [2, 6, 3] | 36 |
+| `Jx`, `Jy`, `Jz` (Heisenberg couplings) | 3 × [5] | 15 |
+| **Total Step 5** | | **387** |
 
 For **SymmetricQuantumModel** (U(1) symmetric):
-- Same circuit, but Hamiltonian is `H = Σ J·ZZ + Σ K·(XX+YY)` — axial symmetry enforced
-- Parameters: J [5] and K [5] (fewer free parameters)
+- Same circuit, projections, weights — identical forward pass
+- Only the Hamiltonian changes: `H = Σ J·ZZ + Σ K·(XX+YY)` with J [5] and K [5]
+- Enforces axial (U(1)) symmetry: XX and YY couplings are tied together (same K)
+- 10 coupling parameters instead of 15, total Step 5 = 382
 
 ### Step 6 — Classical Decoder
 `src/decoder/patch_decoder.py :: PatchDecoder.forward()`
