@@ -62,6 +62,38 @@ After projection, the loop runs **once per patch** (16 iterations), feeding a si
 
 The circuit has 3 stages executed in sequence on 6 qubits:
 
+**Circuit diagram:**
+
+```
+         AngleEmbedding         Positional RY        StronglyEntanglingLayers (L1)      StronglyEntanglingLayers (L2)       Measure
+         (feature input)        (position input)     Rot gates        CNOT ring          Rot gates        CNOT ring (off=2)
+
+q0: |0>──RX(f0)────────────────RY(p0)──────────────Rot(w[0,0])──●──────────────────────Rot(w[1,0])──●──────────────────────── ⟨Z₀⟩ ⟨X₀⟩
+                                                                  │                                   │
+q1: |0>──RX(f1)────────────────RY(p1)──────────────Rot(w[0,1])──X──●───────────────────Rot(w[1,1])──┼──●──────────────────── ⟨Z₁⟩ ⟨X₁⟩
+                                                                     │                               │  │
+q2: |0>──RX(f2)────────────────RY(p2)──────────────Rot(w[0,2])─────X──●────────────────Rot(w[1,2])──X──┼──●──────────────── ⟨Z₂⟩ ⟨X₂⟩
+                                                                        │                              │  │
+q3: |0>──RX(f3)────────────────RY(p3)──────────────Rot(w[0,3])────────X──●─────────────Rot(w[1,3])───X──┼──●──────────────  ⟨Z₃⟩ ⟨X₃⟩
+                                                                           │                             │  │
+q4: |0>──RX(f4)────────────────RY(p4)──────────────Rot(w[0,4])───────────X──●──────────Rot(w[1,4])──────X──┼──●──────────  ⟨Z₄⟩ ⟨X₄⟩
+                                                                              │                             │  │
+q5: |0>──RX(f5)────────────────RY(p5)──────────────Rot(w[0,5])──────────────X──(→q0)──Rot(w[1,5])──────────X──(→q1)──────  ⟨Z₅⟩ ⟨X₅⟩
+
+                                                                                         also measures:
+                                                                                         ⟨Z₀Z₁⟩ ⟨Z₁Z₂⟩ ⟨Z₂Z₃⟩ ⟨Z₃Z₄⟩ ⟨Z₄Z₅⟩
+                                                                                         ⟨X₀X₁⟩ ⟨X₁X₂⟩ ⟨X₂X₃⟩ ⟨X₃X₄⟩ ⟨X₄X₅⟩
+                                                                                         ⟨Y₀Y₁⟩ ⟨Y₁Y₂⟩ ⟨Y₂Y₃⟩ ⟨Y₃Y₄⟩ ⟨Y₄Y₅⟩
+```
+
+Notes:
+- `Rot(φ,θ,ω) = RZ(φ)·RY(θ)·RZ(ω)` — 3 trainable angles per gate
+- Layer 1 CNOTs: offset=1 → ring q0→q1→q2→q3→q4→q5→q0
+- Layer 2 CNOTs: offset=2 → q0→q2, q1→q3, q2→q4, q3→q5, q4→q0, q5→q1
+- `(→q0)` and `(→q1)` mean the CNOT wraps around to qubit 0 and 1 respectively
+
+
+
 **Stage 1 — AngleEmbedding (feature encoding)**
 ```python
 qml.AngleEmbedding(inputs, wires=range(6))
