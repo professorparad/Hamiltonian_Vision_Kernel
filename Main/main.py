@@ -178,6 +178,7 @@ def parse_args():
     parser.add_argument("--no-epoch-media", action="store_true")
     parser.add_argument("--epoch-frame-interval", type=int)
     parser.add_argument("--zero-latent-uses-positions", action="store_true")
+    parser.add_argument("--shuffle-observables-at-eval", action="store_true")
     parser.add_argument(
         "--model-variant",
         choices=["standard", "symmetric", "both"],
@@ -203,6 +204,9 @@ def main():
         "epoch_frame_interval": args.epoch_frame_interval,
         "zero_latent_uses_positions": (
             True if args.zero_latent_uses_positions else None
+        ),
+        "shuffle_observables_at_eval": (
+            True if args.shuffle_observables_at_eval else None
         ),
         "model_variant": args.model_variant,
     }

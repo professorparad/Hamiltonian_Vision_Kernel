@@ -107,6 +107,7 @@ def train(
     save_epoch_media: bool = True,
     epoch_frame_interval: int = 1,
     zero_latent_uses_positions: bool = False,
+    shuffle_observables_at_eval: bool = False,
     model_variant: str = "standard",
     log_prefix: str = "",
 ):
@@ -249,6 +250,11 @@ def train(
 
         pred = decoder(observables, positions).cpu().numpy()
 
+        shuffled_pred = None
+        if shuffle_observables_at_eval:
+            perm = torch.randperm(observables.shape[0], device=observables.device)
+            shuffled_pred = decoder(observables[perm], positions).cpu().numpy()
+
         zero_positions = (
             positions if zero_latent_uses_positions else torch.zeros_like(positions)
         )
@@ -279,6 +285,13 @@ def train(
         patch_size=patch_size,
     )
 
+    img_shuffled = None
+    if shuffled_pred is not None:
+        img_shuffled = blend_seams(
+            stictch_patches(shuffled_pred, image_size=image_size, patch_size=patch_size),
+            patch_size=patch_size,
+        )
+
     history = {
         "total_loss": total_losses,
         "reconstruction_loss": reconstruction_losses,
@@ -291,6 +304,7 @@ def train(
         "mps_baseline": img_mps,
         "random_latent": img_random,
         "zero_latent": img_zero,
+        "shuffled_observables": img_shuffled,
         "observables": observables.cpu().numpy(),
         "energies": energies.cpu().numpy(),
         "positions": raw_positions,
@@ -419,7 +433,11 @@ def save_analysis_outputs(
         output_dir / "quantum_reconstruction.npy", outputs["quantum_reconstruction"]
     )
     np.save(output_dir / "mps_baseline.npy", outputs["mps_baseline"])
+    np.save(output_dir / "random_latent.npy", outputs["random_latent"])
+    np.save(output_dir / "zero_latent.npy", outputs["zero_latent"])
     np.save(output_dir / "observables.npy", outputs["observables"])
+    if outputs.get("shuffled_observables") is not None:
+        np.save(output_dir / "shuffled_observables.npy", outputs["shuffled_observables"])
 
     metrics = {
         "final_total_loss": outputs["history"]["total_loss"][-1],
@@ -446,6 +464,8 @@ def save_reconstruction_plot(outputs: dict, output_path: Path):
         ("Random Latent", outputs["random_latent"]),
         ("Zero Latent", outputs["zero_latent"]),
     ]
+    if outputs.get("shuffled_observables") is not None:
+        panels.append(("Shuffled Observables", outputs["shuffled_observables"]))
 
     fig, axes = plt.subplots(1, len(panels), figsize=(22, 5))
     for ax, (title, image) in zip(axes, panels):
@@ -557,6 +577,7 @@ def parse_args():
     parser.add_argument("--no-epoch-media", action="store_true")
     parser.add_argument("--epoch-frame-interval", type=int)
     parser.add_argument("--zero-latent-uses-positions", action="store_true")
+    parser.add_argument("--shuffle-observables-at-eval", action="store_true")
     parser.add_argument(
         "--model-variant",
         choices=["standard", "symmetric"],
@@ -582,6 +603,7 @@ def main():
         "save_epoch_media": True,
         "epoch_frame_interval": 1,
         "zero_latent_uses_positions": False,
+        "shuffle_observables_at_eval": False,
         "model_variant": "standard",
     }
     config.update(load_config(args.config))
@@ -615,6 +637,8 @@ def main():
         config["epoch_frame_interval"] = args.epoch_frame_interval
     if args.zero_latent_uses_positions:
         config["zero_latent_uses_positions"] = True
+    if args.shuffle_observables_at_eval:
+        config["shuffle_observables_at_eval"] = True
     if args.model_variant is not None:
         config["model_variant"] = args.model_variant
 
