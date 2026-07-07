@@ -189,6 +189,147 @@ Note that `Linear(6→27) + tanh` has 27×6 + 27 = 189 parameters, versus 36 VQC
 
 ---
 
+---
+
+## Next 5 Experiments — Beyond the Core
+
+These address questions the first five leave entirely unanswered. They are ordered by scientific priority.
+
+---
+
+### Exp 6 — Generalization to a Second Image
+
+**Question:** Does the model learn anything transferable, or has it memorized one image?
+
+**Why it matters:** Every experiment so far trains and evaluates on the same single image. The VQC weights, projections, and decoder are all optimized for 16 patches of that one image. If the trained model produces noise-level output on a different image, the paper's claim shifts from "a model that learns image structure via quantum observables" to "a per-image optimization procedure." That is a fundamentally different — and much weaker — contribution. This must be resolved before submission.
+
+**Branch:** `ablation/generalization`
+
+**What to do:** Take the trained model checkpoint from the baseline run. Without any further training, run inference on a second image of the same size. Measure MSE, PSNR, SSIM against that image.
+
+**Code change:** Minimal. In `main.py` or `training.py`, add a flag `--eval-only-image <path>` that skips the training loop and runs only the eval block on a new image using a loaded checkpoint. Alternatively, write a short standalone script:
+
+```python
+# load checkpoint
+model.load_state_dict(torch.load("checkpoint.pt"))
+decoder.load_state_dict(torch.load("decoder.pt"))
+# build_dataset with new image_path, same patch_size/positional_dim
+# run eval block, measure metrics
+```
+
+**What to look for:**
+- PSNR on new image close to baseline (32 dB) → model has learned a generalizable representation → strong result.
+- PSNR near random-latent floor (11 dB) → model memorized one image → paper framing must change.
+
+**Note:** Checkpoint saving must be added to `training.py` if not already present. Check whether `save_analysis_outputs` saves model weights.
+
+---
+
+### Exp 7 — Energy Loss Ablation
+
+**Question:** Does the Heisenberg energy regularizer actually improve reconstruction, or is it inert?
+
+**Why it matters:** The energy term `0.01 * energy_loss` is the physics motivation of the paper — it connects the VQC to a physical Hamiltonian (Jx XX + Jy YY + Jz ZZ). If removing it leaves PSNR unchanged, the energy term is not doing anything for reconstruction quality. That means the Hamiltonian physics is decorative, which undermines the paper's narrative. Conversely, if removing it hurts reconstruction, the energy term is genuine regularization and the physics connection is real.
+
+**Branch:** `ablation/no-energy-loss`
+
+**Code change:** In `training.py` line 172, replace:
+
+```python
+loss = reconstruction_loss + 0.01 * energy_loss
+```
+
+with:
+
+```python
+loss = reconstruction_loss
+```
+
+**What to look for:**
+- PSNR without energy loss ≈ baseline → energy term contributes nothing to reconstruction → physics motivation needs reframing.
+- PSNR without energy loss < baseline → energy regularization helps → Hamiltonian physics is load-bearing → this is the result the paper needs.
+
+**Also check:** Whether Jx/Jy/Jz converge to meaningful coupling values in the baseline run. If they stay near their `0.1 * randn` initialization throughout training, the energy loss is not shaping them.
+
+---
+
+### Exp 8 — MPS Features vs Simple Patch Statistics
+
+**Question:** Does the tensor-network MPS compression contribute anything, or would a simpler feature extractor work just as well?
+
+**Why it matters:** The pipeline is patch → MPS → feature vector → VQC → observables → decoder. All five core experiments test the VQC and decoder. None test the MPS encoder. If replacing MPS with mean + std of pixel values (2 numbers), or a small flattened downsampled version of the patch, gives the same PSNR, then the tensor-network step is not contributing. This would be a significant weakness: MPS is computationally expensive and is the primary motivation for using tensor networks at all.
+
+**Branch:** `ablation/no-mps`
+
+**Code change:** In `Main/src/tensornetworks/mps_features.py`, create an alternative feature extractor that computes simple statistics from the raw patch instead of MPS singular values. The output must have the same dimension as the current MPS feature vector so that the rest of the pipeline is unchanged.
+
+Example: if the current MPS feature vector has dimension 46, replace it with `[mean, std, min, max, 10th pct, 25th pct, 75th pct, 90th pct, ...]` computed directly from pixel values, padded to 46 dimensions.
+
+**What to look for:**
+- Simple stats ≈ MPS features in PSNR → MPS compression is not adding information the VQC couldn't get from raw statistics → tensor network step is unjustified.
+- MPS features > simple stats → MPS is capturing structure (entanglement entropy, bond correlations) that simple statistics miss → tensor network is genuinely useful.
+
+---
+
+### Exp 9 — Remove Entanglement Only (No CNOT Ring)
+
+**Question:** Does qubit-qubit entanglement specifically contribute, or do per-qubit rotations alone explain the performance?
+
+**Why it matters:** Exp 5 compares the full VQC against a classical linear layer — but those differ in many ways simultaneously (entanglement, quantum measurement, nonlinearity, parameter count). The most scientifically precise claim a quantum ML paper can make is that entanglement specifically provides an advantage. This experiment isolates that variable: keep everything else identical but remove only the CNOT entangling gates.
+
+**Branch:** `ablation/no-entanglement`
+
+**Code change:** In `Main/src/quantum/circuit.py`, replace `qml.StronglyEntanglingLayers` with per-qubit rotations only:
+
+```python
+# Replace:
+qml.StronglyEntanglingLayers(weights, wires=range(n_qubits))
+
+# With:
+for layer in range(n_layers):
+    for qubit in range(n_qubits):
+        qml.Rot(weights[layer, qubit, 0],
+                weights[layer, qubit, 1],
+                weights[layer, qubit, 2],
+                wires=qubit)
+```
+
+This keeps the same 36 weight parameters and the same circuit depth, but removes all two-qubit gates. The qubits evolve independently — no entanglement.
+
+**What to look for:**
+- No-entanglement VQC ≈ full VQC → entangling gates contribute nothing; the paper cannot claim an entanglement advantage.
+- No-entanglement VQC < full VQC → entanglement is specifically helpful → this is the sharpest quantum advantage result possible in this paper.
+
+**Note:** This is a stronger and more targeted test than Exp 5. Even if Exp 5 shows VQC > classical tanh, a reviewer will ask whether entanglement is the reason or just the rotation expressiveness. This experiment answers that follow-up directly.
+
+---
+
+### Exp 10 — Training Step Count Sweep
+
+**Question:** Is 120 steps a well-chosen operating point, or is the model underfit or overfit?
+
+**Why it matters:** The current setup trains for 120 steps on 16 patches with a 1.09M-parameter decoder. The shape of the loss curve determines whether all the experiments above are being run in a reasonable regime. If the model plateaus at step 40 and all experiments are compared at step 120, there is wasted compute and potentially misleading comparisons if different model variants plateau at different rates. If the model is still improving at step 120, the comparison is underfit. This also affects interpretation of the freeze experiments: if training quantum-only (Exp 3) needs more steps to converge than training the full model, a 120-step comparison is unfair.
+
+**Branch:** None needed — run on main with different `--steps` values.
+
+**Code change:** None. Run:
+
+```bash
+python Main/main.py --steps 30  --output-dir results/steps/030
+python Main/main.py --steps 60  --output-dir results/steps/060
+python Main/main.py --steps 120 --output-dir results/steps/120  # baseline
+python Main/main.py --steps 240 --output-dir results/steps/240
+python Main/main.py --steps 500 --output-dir results/steps/500
+```
+
+**What to look for:**
+- Loss curve and PSNR should be reported at each checkpoint.
+- Identify the step at which reconstruction loss plateaus — that is the true convergence point.
+- If PSNR at step 240+ is meaningfully higher than at step 120, the baseline was underfit and all five core experiments should be re-run at the higher step count.
+- If PSNR at step 120 ≈ step 240, the current 120-step setup is justified.
+
+---
+
 ## Cross-Cutting Issues
 
 ### 1. No shared baseline checkpoint
@@ -216,16 +357,25 @@ Exp 5 removes `Jx`/`Jy`/`Jz` but the spec does not mention that the energy compu
 **Immediate (no retraining required):**
 1. Fix `run_eval_controls.sh` to run both Exp 1 and Exp 2.
 2. Re-run both eval experiments from a single saved baseline with a fixed seed; recompute with SSIM included.
+3. Run Exp 10 (step count sweep) — no code change, just different `--steps` values. Establishes whether 120 steps is the right operating point before any further training experiments.
 
 **Before running Exp 3 and 4:**
-3. Update both freeze-experiment specs to include the optimizer filter line.
-4. Run Exp 4 (freeze quantum) first — it is the most direct test of the weak claim and requires the smallest code change.
-5. Run Exp 3 (freeze classical) second.
+4. Update both freeze-experiment specs to include the optimizer filter line.
+5. Run Exp 4 (freeze quantum) first — most direct test of the weak claim.
+6. Run Exp 3 (freeze classical) second.
 
 **Before running Exp 5:**
-6. Update the classical replacement spec to address the energy loss path.
-7. Run Exp 5 last — it requires the most structural change to the model.
+7. Update the classical replacement spec to address the energy loss path.
+8. Run Exp 5 (classical tanh replacement).
 
-**After all five are run:**
-8. Compile a single comparison table with MSE, PSNR, SSIM for all five experiments plus the shared baseline.
-9. Based on results, consult the decision tree in `PROJECT_STUDY/4_experiments_todo.md` to determine whether the weak or strong claim can be made.
+**In parallel with Exp 3–5:**
+9. Run Exp 7 (energy loss ablation) — one-line code change, high scientific value for the paper's physics narrative.
+10. Run Exp 9 (no entanglement) — isolates entanglement contribution; a reviewer will ask for this regardless.
+
+**After core results are stable:**
+11. Run Exp 8 (MPS vs simple statistics) — tests the encoder tier; needed to justify the tensor network component.
+12. Run Exp 6 (generalization to second image) — must be done before submission; add checkpoint saving to `training.py` first.
+
+**Final:**
+13. Compile a single comparison table with MSE, PSNR, SSIM for all ten experiments plus the shared baseline.
+14. Based on results, consult the decision tree in `PROJECT_STUDY/4_experiments_todo.md` to determine whether the weak or strong claim can be made.
