@@ -20,6 +20,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+import torch.nn.functional as F
 import torch.optim as optim
 
 from src.decoder.patch_decoder import PatchDecoder
@@ -117,6 +118,7 @@ def build_dataset(
 
 def train(
     image_path: str | Path = DEFAULT_IMAGE_PATH,
+    train_image_paths: list[str | Path] | None = None,
     image_size: int = 256,
     patch_size: int = 64,
     positional_dim: int = 8,
@@ -139,6 +141,9 @@ def train(
     mps_bond_dim: int = 4,
     qubit_count: int = 6,
     observable_set: str = "full",
+    energy_loss_mode: str = "linear",
+    energy_weight: float = 0.01,
+    energy_margin: float = 0.25,
     log_prefix: str = "",
 ):
     device = resolve_device(device) if isinstance(device, str) else device
@@ -155,6 +160,26 @@ def train(
         feature_mode=feature_mode,
         mps_bond_dim=mps_bond_dim,
     )
+    if train_image_paths:
+        train_datasets = [
+            build_dataset(
+                image_path=path,
+                image_size=image_size,
+                patch_size=patch_size,
+                positional_dim=positional_dim,
+                device=device,
+                feature_mode=feature_mode,
+                mps_bond_dim=mps_bond_dim,
+            )
+            for path in train_image_paths
+        ]
+        train_features = torch.cat([dataset[3] for dataset in train_datasets], dim=0)
+        train_positions = torch.cat([dataset[4] for dataset in train_datasets], dim=0)
+        train_targets = torch.cat([dataset[5] for dataset in train_datasets], dim=0)
+    else:
+        train_features = features
+        train_positions = positions
+        train_targets = targets
 
     model_classes = {
         "standard": QuantumModel,
@@ -182,6 +207,12 @@ def train(
             f"Unknown ablation_mode '{ablation_mode}'. "
             f"Use one of: {sorted(valid_ablation_modes)}"
         )
+    valid_energy_loss_modes = {"linear", "positive", "contrastive"}
+    if energy_loss_mode not in valid_energy_loss_modes:
+        raise ValueError(
+            f"Unknown energy_loss_mode '{energy_loss_mode}'. "
+            f"Use one of: {sorted(valid_energy_loss_modes)}"
+        )
     if (
         ablation_mode in {"classical-replacement", "classical-matched"}
         and model_variant != "standard"
@@ -191,8 +222,8 @@ def train(
         )
 
     model_kwargs = {
-        "feature_dim": features.shape[1],
-        "positional_dim": positions.shape[1],
+        "feature_dim": train_features.shape[1],
+        "positional_dim": train_positions.shape[1],
     }
     if model_variant == "standard":
         model_kwargs["qubit_count"] = qubit_count
@@ -269,18 +300,29 @@ def train(
 
         optimizer.zero_grad()
 
-        observables, energies = model(features, positions)
+        observables, energies = model(train_features, train_positions)
 
-        output = decoder(observables, positions)
+        output = decoder(observables, train_positions)
 
-        reconstruction_loss = torch.mean((output - targets) ** 2)
+        reconstruction_loss = torch.mean((output - train_targets) ** 2)
 
-        energy_loss = torch.mean(energies)
+        if energy_loss_mode == "linear":
+            energy_loss = torch.mean(energies)
+        elif energy_loss_mode == "positive":
+            energy_loss = torch.mean(energies.square())
+        else:
+            permutation = torch.randperm(
+                train_positions.shape[0], device=train_positions.device
+            )
+            _, negative_energies = model(train_features, train_positions[permutation])
+            energy_loss = F.softplus(
+                energies - negative_energies + energy_margin
+            ).mean()
 
         if ablation_mode == "no-energy-loss":
             loss = reconstruction_loss
         else:
-            loss = reconstruction_loss + 0.01 * energy_loss
+            loss = reconstruction_loss + energy_weight * energy_loss
 
         loss.backward()
 
@@ -446,7 +488,13 @@ def train(
         "mps_bond_dim": mps_bond_dim,
         "qubit_count": qubit_count,
         "observable_set": getattr(model, "observable_set", "full"),
+        "energy_loss_mode": energy_loss_mode,
+        "energy_weight": energy_weight,
+        "energy_margin": energy_margin,
         "eval_only_image": str(eval_only_image) if eval_only_image is not None else None,
+        "train_image_paths": (
+            [str(path) for path in train_image_paths] if train_image_paths else None
+        ),
         "zero_latent_uses_positions": zero_latent_uses_positions,
     }
 
@@ -644,8 +692,15 @@ def save_analysis_outputs(
         "model_variant": outputs.get("model_variant", "standard"),
         "ablation_mode": outputs.get("ablation_mode", "baseline"),
         "feature_mode": outputs.get("feature_mode", "mps"),
+        "mps_bond_dim": outputs.get("mps_bond_dim"),
+        "qubit_count": outputs.get("qubit_count"),
+        "observable_set": outputs.get("observable_set"),
+        "energy_loss_mode": outputs.get("energy_loss_mode", "linear"),
+        "energy_weight": outputs.get("energy_weight"),
+        "energy_margin": outputs.get("energy_margin"),
         "seed": outputs.get("seed", seed),
         "eval_only_image": outputs.get("eval_only_image"),
+        "train_image_paths": outputs.get("train_image_paths"),
     }
     (output_dir / "metrics.json").write_text(
         json.dumps(metrics, indent=2), encoding="utf-8"
@@ -835,6 +890,7 @@ def parse_args():
     )
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
     parser.add_argument("--image-path", type=Path)
+    parser.add_argument("--train-image-paths", type=Path, nargs="+")
     parser.add_argument("--image-size", type=int)
     parser.add_argument("--patch-size", type=int)
     parser.add_argument("--positional-dim", type=int)
@@ -852,6 +908,16 @@ def parse_args():
     parser.add_argument("--seed", type=int)
     parser.add_argument("--checkpoint-dir", type=Path)
     parser.add_argument("--eval-only-image", type=Path)
+    parser.add_argument("--mps-bond-dim", type=int)
+    parser.add_argument("--qubit-count", type=int)
+    parser.add_argument("--observable-set", choices=["full", "zz-only"])
+    parser.add_argument(
+        "--energy-loss-mode",
+        choices=["linear", "positive", "contrastive"],
+        default=None,
+    )
+    parser.add_argument("--energy-weight", type=float)
+    parser.add_argument("--energy-margin", type=float)
     parser.add_argument(
         "--model-variant",
         choices=["standard", "symmetric"],
@@ -870,6 +936,7 @@ def parse_args():
             "no-energy-loss",
             "no-obs-noise",
             "no-mps",
+            "zz-only",
         ],
         default=None,
     )
@@ -880,6 +947,7 @@ def main():
     args = parse_args()
     config = {
         "image_path": str(DEFAULT_IMAGE_PATH),
+        "train_image_paths": None,
         "image_size": 256,
         "patch_size": 64,
         "positional_dim": 8,
@@ -899,11 +967,18 @@ def main():
         "seed": 42,
         "checkpoint_dir": None,
         "eval_only_image": None,
+        "mps_bond_dim": 4,
+        "qubit_count": 6,
+        "observable_set": "full",
+        "energy_loss_mode": "linear",
+        "energy_weight": 0.01,
+        "energy_margin": 0.25,
     }
     config.update(load_config(args.config))
 
     for key in [
         "image_path",
+        "train_image_paths",
         "image_size",
         "patch_size",
         "positional_dim",
@@ -914,12 +989,22 @@ def main():
         "seed",
         "checkpoint_dir",
         "eval_only_image",
+        "mps_bond_dim",
+        "qubit_count",
+        "observable_set",
+        "energy_loss_mode",
+        "energy_weight",
+        "energy_margin",
     ]:
         value = getattr(args, key, None)
         if value is not None:
             config[key] = value
 
     config["image_path"] = resolve_path(config["image_path"])
+    if config.get("train_image_paths") is not None:
+        config["train_image_paths"] = [
+            resolve_path(path) for path in config["train_image_paths"]
+        ]
     config["output_dir"] = resolve_path(config["output_dir"])
 
     if args.no_save:

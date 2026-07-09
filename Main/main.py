@@ -23,6 +23,7 @@ from src.training.training import (
 def build_run_config(config_path: str | Path | None = DEFAULT_CONFIG_PATH, **overrides):
     config = {
         "image_path": DEFAULT_IMAGE_PATH,
+        "train_image_paths": None,
         "image_size": 256,
         "patch_size": 64,
         "positional_dim": 8,
@@ -41,6 +42,12 @@ def build_run_config(config_path: str | Path | None = DEFAULT_CONFIG_PATH, **ove
         "seed": 42,
         "checkpoint_dir": None,
         "eval_only_image": None,
+        "mps_bond_dim": 4,
+        "qubit_count": 6,
+        "observable_set": "full",
+        "energy_loss_mode": "linear",
+        "energy_weight": 0.01,
+        "energy_margin": 0.25,
     }
 
     config.update(load_config(config_path))
@@ -50,6 +57,10 @@ def build_run_config(config_path: str | Path | None = DEFAULT_CONFIG_PATH, **ove
             config[key] = value
 
     config["image_path"] = resolve_path(config["image_path"])
+    if config.get("train_image_paths") is not None:
+        config["train_image_paths"] = [
+            resolve_path(path) for path in config["train_image_paths"]
+        ]
     config["output_dir"] = resolve_path(config["output_dir"])
     if config.get("checkpoint_dir") is not None:
         config["checkpoint_dir"] = resolve_path(config["checkpoint_dir"])
@@ -179,6 +190,7 @@ def parse_args():
     )
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
     parser.add_argument("--image-path", type=Path)
+    parser.add_argument("--train-image-paths", type=Path, nargs="+")
     parser.add_argument("--image-size", type=int)
     parser.add_argument("--patch-size", type=int)
     parser.add_argument("--positional-dim", type=int)
@@ -196,6 +208,19 @@ def parse_args():
     parser.add_argument("--seed", type=int)
     parser.add_argument("--checkpoint-dir", type=Path)
     parser.add_argument("--eval-only-image", type=Path)
+    parser.add_argument("--mps-bond-dim", type=int)
+    parser.add_argument("--qubit-count", type=int)
+    parser.add_argument("--observable-set", choices=["full", "zz-only"])
+    parser.add_argument(
+        "--energy-loss-mode",
+        choices=["linear", "positive", "contrastive"],
+        help=(
+            "Hamiltonian objective: legacy signed mean energy, bounded positive "
+            "energy, or contrastive low-energy correct pairs vs shuffled pairs."
+        ),
+    )
+    parser.add_argument("--energy-weight", type=float)
+    parser.add_argument("--energy-margin", type=float)
     parser.add_argument(
         "--model-variant",
         choices=["standard", "symmetric", "both"],
@@ -213,6 +238,7 @@ def parse_args():
             "no-energy-loss",
             "no-obs-noise",
             "no-mps",
+            "zz-only",
         ],
     )
     return parser.parse_args()
@@ -222,6 +248,7 @@ def main():
     args = parse_args()
     overrides = {
         "image_path": args.image_path,
+        "train_image_paths": args.train_image_paths,
         "image_size": args.image_size,
         "patch_size": args.patch_size,
         "positional_dim": args.positional_dim,
@@ -232,6 +259,12 @@ def main():
         "seed": args.seed,
         "checkpoint_dir": args.checkpoint_dir,
         "eval_only_image": args.eval_only_image,
+        "mps_bond_dim": args.mps_bond_dim,
+        "qubit_count": args.qubit_count,
+        "observable_set": args.observable_set,
+        "energy_loss_mode": args.energy_loss_mode,
+        "energy_weight": args.energy_weight,
+        "energy_margin": args.energy_margin,
         "save_outputs": False if args.no_save else None,
         "show_plots": True if args.show_plots else None,
         "track_order_parameters": False if args.no_order_tracking else None,
