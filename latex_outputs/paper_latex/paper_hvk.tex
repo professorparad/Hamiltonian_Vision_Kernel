@@ -1,5 +1,6 @@
 \documentclass[journal]{IEEEtran}
-\usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm,hyperref}
+\usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm}
+\usepackage[hypertexnames=false]{hyperref}
 \usepackage{float}
 \begin{document}
 
@@ -190,7 +191,7 @@ The architecture utilizes a mirrored transpose structure with expanding channel 
 The baseline canonical single-image analysis uses a $256 \times 256$ grayscale layout of \textit{monalisa.jpg}, divided into 16 evaluation regions of size $64 \times 64$ pixels \cite{MathematicalFramework2026}.
 
 \subsubsection{CIFAR-10 Subset}
-To capture structural generalization capabilities, a target subset of 10 images from the CIFAR-10 dataset is resized to match the $256 \times 256$ input dimensions. Performance tracking checks aggregate values across metrics repositories \cite{MethodologyExp2026}.
+To capture structural behavior beyond the single-image \textit{Monalisa} benchmark, we evaluate the native $32 \times 32$ CIFAR-10 reconstruction suite available in the repository. The completed aggregate contains five images spanning multiple classes, and reports MSE, PSNR, and SSIM for MLP, CNN, classical autoencoder, GAN, PHL, HVK1D, HVK2D, and symmetric HVK1D baselines \cite{MethodologyExp2026}.
 
 \subsection{Benchmarking  Implementations}
 We execute validation passes using four distinct comparison configurations:
@@ -232,27 +233,64 @@ Critical structural transition markers are flagged using windowed variance devia
 
 \section{Experimental Results}
 \subsection{CIFAR-10 Subset Results}
-Table~\ref{tab:cifar10} compiles the structural reconstruction performance metrics evaluated across the CIFAR-10 data configurations.
+Table~\ref{tab:cifar10} compiles the completed CIFAR-10 native-resolution reconstruction benchmark. The comparison is intentionally broad: MLP and CNN represent high-capacity classical pixel regressors, the classical autoencoder and GAN represent common reconstruction baselines, PHL is included as a task-mismatched Hamiltonian-learning reference, and HVK1D/HVK2D/symmetric HVK1D test observable-latent reconstruction variants.
 
-\begin{table}[h]
+\begin{table*}[t]
 \centering
-\caption{CIFAR-10 Subset Evaluation (10-Image Average)}
+\caption{CIFAR-10 native $32 \times 32$ subset reconstruction benchmark over five images. Lower MSE and higher PSNR/SSIM are better.}
 \label{tab:cifar10}
-\begin{tabular}{lccc}
+\scriptsize
+\begin{tabular}{lcccccc}
 \toprule
-Metric & 1D HVK & GAN Baseline & Direction \\
+Model & Mean MSE & Best MSE & Mean PSNR & Best PSNR & Mean SSIM & Best SSIM \\
 \midrule
-Final MSE & $6.7974 \times 10^{-5}$ & $4.1511 \times 10^{-4}$ & Lower is better \\
-Best MSE & $6.1102 \times 10^{-5}$ & $3.8944 \times 10^{-4}$ & Lower is better \\
-PSNR (dB) & 42.55 & 34.03 & Higher is better \\
-SSIM & --- & 0.9944 & Higher is better \\
-Final Energy & $-0.1844$ & --- & Lower is better \\
-Critical Epoch & 26.1 & --- & --- \\
+MLP & $7.0865\times10^{-7}$ & $7.2702\times10^{-12}$ & 75.14 & 111.38 & 0.99999 & 1.00000 \\
+CNN & $1.1648\times10^{-4}$ & $3.3325\times10^{-5}$ & 40.61 & 44.77 & 0.99889 & 0.99928 \\
+HVK2D & $4.6655\times10^{-4}$ & $1.3237\times10^{-4}$ & 34.50 & 38.78 & 0.99578 & 0.99743 \\
+Symmetric HVK1D & $6.4739\times10^{-4}$ & $2.4391\times10^{-4}$ & 32.81 & 36.13 & 0.99382 & 0.99487 \\
+HVK1D & $6.4639\times10^{-4}$ & $3.4381\times10^{-4}$ & 32.42 & 34.64 & 0.99314 & 0.99448 \\
+GAN & $2.6448\times10^{-3}$ & $1.4853\times10^{-3}$ & 26.03 & 28.28 & 0.96885 & 0.97665 \\
+Classical AE & $8.6021\times10^{-3}$ & $6.3843\times10^{-3}$ & 20.78 & 21.95 & 0.88188 & 0.92745 \\
+PHL & $4.3415\times10^{-2}$ & $2.2253\times10^{-2}$ & 14.01 & 16.53 & 0.78792 & 0.91842 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{../../Baselines/cifar10_comparisons/outputs/visuals/_summary/metric_comparison.png}
+\caption{CIFAR-10 aggregate metric comparison across classical, GAN, PHL, and HVK variants. The HVK family improves substantially over GAN, classical autoencoder, and PHL in this benchmark, while the MLP and CNN remain stronger pure reconstruction baselines.}
+\label{fig:cifar_metric_comparison}
+\end{figure*}
+
+The CIFAR-10 result should be read carefully. HVK2D outperforms the GAN baseline by $8.47$ dB PSNR and reduces mean MSE by approximately $82.4\%$, while also improving over the classical autoencoder and PHL reference. However, the MLP and CNN baselines are stronger in pure pixel reconstruction. This makes the CIFAR evidence useful for positioning HVK as a compact observable-latent model, not as a universal replacement for high-capacity classical regressors.
+
+\subsection{IBM Heron Hardware Probe}
+The repository also includes an IBM Cloud circuit probe for the HVK1D and HVK2D patch circuits. Table~\ref{tab:ibm_probe} summarizes the circuit resources recorded for patch index $0$. Both variants use six measured qubits and depth-$18$ circuits after construction; the 2D lattice requires more CNOT gates because it encodes additional adjacency links.
+
+\begin{table}[t]
+\centering
+\caption{IBM Heron-class circuit probe summary for HVK patch circuits.}
+\label{tab:ibm_probe}
+\scriptsize
+\begin{tabular}{lccccc}
+\toprule
+Variant & Qubits & Depth & $R_Y$ & $R_Z$ & CNOT \\
+\midrule
+HVK1D & 6 & 18 & 11 & 6 & 10 \\
+HVK2D & 6 & 18 & 13 & 6 & 14 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The 1D HVK tracks an $83.6\%$ reduction in absolute mean squared error compared directly to the GAN alternative, maintaining a clean $+8.52\text{ dB}$ performance advantage.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../../IBM_Cloud/outputs/circuit_summary.png}
+\caption{IBM Cloud circuit-resource summary for the HVK1D and HVK2D hardware probes.}
+\label{fig:ibm_circuit_summary}
+\end{figure}
+
+This hardware probe validates that the observable circuits are small enough for Heron-class execution, but it is not used as a reconstruction-quality benchmark in the present manuscript because the repository records circuit resources rather than a complete backend-count reconstruction pipeline. The scientific claim is therefore limited to hardware feasibility of the measured patch circuit, while image-quality conclusions are drawn from the controlled simulation and reconstruction experiments.
 
 \subsection{Monalisa Single-Image Results}
 Reconstruction comparisons for the structural \textit{Monalisa} validation target are summarized in Table~\ref{tab:monalisa}.
@@ -294,9 +332,18 @@ Final PSNR (dB) & 34.72 & 40.70 \\
 \end{tabular}
 \end{table}
 
-\subsection{Quantum Contribution Ablation Study}
+\section{Ablation Study}
 \label{sec:quantum_ablation}
 The central empirical question is not whether HVK can reconstruct a single target image, but which part of the hybrid pipeline is responsible for that reconstruction. We therefore ran a controlled ablation suite on the \textit{Monalisa} benchmark using the same image size, patching rule, seed, and metric definitions whenever possible. Tables~\ref{tab:component_ablation}--\ref{tab:capacity_ablation} summarize the completed experiments. Lower MSE and higher PSNR/SSIM are better.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.32\textwidth]{../../experiments/quantum_contribution/results/baseline/shared-seed-42/reconstructions.png}
+\includegraphics[width=0.32\textwidth]{../../experiments/quantum_contribution/results/freeze_controls/freeze-classical/reconstructions.png}
+\includegraphics[width=0.32\textwidth]{../../experiments/quantum_contribution/results/vqc_replacements/random-vqc/reconstructions.png}
+\caption{Representative reconstruction ablations: shared HVK baseline (left), frozen-classical control (center), and random-VQC replacement (right). The frozen-classical control collapses because the decoder/projection stack cannot adapt, while random latents remain inferior to structured observables.}
+\label{fig:component_ablation_recons}
+\end{figure*}
 
 \begin{table*}[t]
 \centering
@@ -343,6 +390,14 @@ ZZ-only observables & $5.1503\times10^{-4}$ & 32.88 & 0.9930 & Nearest-neighbor 
 
 The Hamiltonian controls are the most important corrective result in the study. The legacy objective adds a signed mean energy term to the reconstruction loss. Because the learned energy can become negative, the optimizer can lower total loss by driving energy downward without improving reconstruction. Empirically, removing this term improves PSNR from $32.24$ dB to $33.30$ dB. We also tested a contrastive Hamiltonian objective that assigns lower energy to correct feature--position pairs than to shuffled pairs; this improves over the legacy baseline but remains below its own no-energy-loss counterpart. Consequently, the Hamiltonian should be interpreted as an energy diagnostic and correlation probe in the present system, not as the primary driver of reconstruction accuracy.
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{../../experiments/quantum_contribution/results/hamiltonian_core/contrastive/training_curves.png}
+\includegraphics[width=0.48\textwidth]{../../experiments/quantum_contribution/results/hamiltonian_core/contrastive/hvk_order_parameter_curve.png}
+\caption{Contrastive Hamiltonian-core diagnostics. The reconstruction and energy curves are useful for analyzing optimization dynamics, while the order parameter tracks observable-sector structure during training.}
+\label{fig:contrastive_hamiltonian_diagnostics}
+\end{figure*}
+
 \begin{table*}[t]
 \centering
 \caption{Capacity and feature-bottleneck sweeps. Increasing qubit count improves performance within the tested range, while the MPS bond-dimension sweep does not show monotonic gains.}
@@ -388,9 +443,17 @@ Second image, multi-image training & $1.4740\times10^{-3}$ & 28.31 & 0.9862 \\
 
 The generalization controls clarify scope. A model optimized on \textit{Monalisa} does not reconstruct a structurally different image without retraining, producing only $7.78$ dB PSNR. When training is extended to include the second image, PSNR rises to $28.31$ dB with SSIM $0.9862$. HVK should therefore be presented as a per-image or small-set reconstruction framework at this stage; broad dataset-level generalization remains a future validation target.
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{../../experiments/quantum_contribution/results/feature_bottleneck/no-mps/reconstructions.png}
+\includegraphics[width=0.48\textwidth]{../../experiments/quantum_contribution/results/generalization/second-image/reconstructions.png}
+\caption{Additional controls: no-MPS patch-statistics reconstruction (left) and second-image generalization reconstruction (right). These figures show that the current decoder can use compact non-MPS statistics and that generalization improves only when the second image is included in training.}
+\label{fig:bottleneck_generalization_recons}
+\end{figure*}
+
 \section{Discussion}
 \subsection{Reconstruction Error Analysis}
-HVK's $83.6\%$ error reduction over the tested GAN configuration demonstrates that adversarial objectives can introduce structural instabilities during high-fidelity generation. GAN optimization exhibits a non-monotonic MSE trace ($\text{MSE}_{\text{best}} > \text{MSE}_{\text{final}}$), whereas HVK uses direct pixel losses and an observable bottleneck whose patchwise alignment can be explicitly ablated. The completed ablations show that this observable channel is meaningful, but also that Hamiltonian energy regularization is not the current source of the reconstruction gain.
+HVK2D's approximately $82.4\%$ MSE reduction over the tested CIFAR GAN configuration shows that the observable-latent reconstruction route is competitive against adversarial and autoencoder-style baselines in the completed subset. The stronger MLP and CNN results, however, show that classical capacity remains a major confounder. HVK's strongest evidence is therefore not raw leaderboard dominance, but interpretability: observable vectors, positional alignment, Hamiltonian diagnostics, and topology choices can be ablated directly. The completed ablations show that this observable channel is meaningful, but also that Hamiltonian energy regularization is not the current source of the reconstruction gain.
 
 \subsection{Architectural Differentiation Matrix}
 Table~\ref{tab:differentiation} contrasts the structural properties of HVK against current reference frameworks.
@@ -421,7 +484,7 @@ The application of 6 qubits maps precisely to 27 or 19 target measurement dimens
 \subsection{Interpretive Limits}
 We explicitly acknowledge the following bounds on our empirical claims:
 \begin{itemize}
-    \item The CIFAR-10 evaluations are currently bounded to a 10-image validation subset.
+    \item The CIFAR-10 evaluations are currently bounded to a five-image native-resolution validation subset.
     \item 2D HVK performance data is documented solely for the \textit{Monalisa} test case.
     \item The single-image \textit{Monalisa} experiments are per-image optimization studies and should not be interpreted as dataset-level generalization.
     \item Current ablations show that observable latents are load-bearing, but they do not establish that trained VQC parameters, entangling gates, or the Heisenberg energy term are the unique source of reconstruction quality.
@@ -431,7 +494,7 @@ We explicitly acknowledge the following bounds on our empirical claims:
 \section{Conclusion}
 We introduced HVK, a tensor-network and quantum-observable framework for spatially aware image reconstruction. HVK combines an MPS encoder, positional inputs, a parameterized variational circuit, Pauli-observable latent vectors, and Hamiltonian energy diagnostics.
 
-On CIFAR-10, HVK achieves a PSNR of $42.55\text{ dB}$ in the reported 10-image subset, outperforming the tested GAN baseline by $8.52\text{ dB}$ and reducing mean squared error by $83.6\%$. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$. These results indicate that the observable-latent reconstruction pipeline is competitive with several non-convolutional reconstruction baselines.
+On CIFAR-10, HVK2D achieves $34.50\text{ dB}$ mean PSNR on the completed five-image native-resolution subset, outperforming the tested GAN baseline by $8.47\text{ dB}$ and reducing mean squared error by approximately $82.4\%$. The same table shows that high-capacity MLP and CNN baselines remain stronger in pure pixel accuracy. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$. These results indicate that the observable-latent reconstruction pipeline is competitive with several non-convolutional reconstruction baselines, while not yet establishing a dataset-level quantum advantage.
 
 However, the quantum-contribution ablation study imposes an important qualification. The observable channel is load-bearing, but the current experiments do not demonstrate that the trained VQC, entangling gates, or Hamiltonian energy loss are the decisive source of performance. Freeze-quantum, no-entanglement, no-energy-loss, and parameter-matched classical replacement controls all reconstruct at or above the shared VQC baseline. HVK should therefore be framed as a hybrid observable-latent reconstruction architecture and experimental platform, rather than as evidence of quantum advantage in its current form.
 
