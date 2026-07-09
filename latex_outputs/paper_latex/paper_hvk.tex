@@ -3,7 +3,7 @@
 \usepackage{float}
 \begin{document}
 
-\title{HVK: A Hamiltonian-Guided Tensor Network Architecture for Spatially Aware Quantum Image Reconstruction}
+\title{HVK: A Tensor-Network and Quantum-Observable Architecture for Spatially Aware Image Reconstruction}
 
 \author{Sparsho~Chakraborty\IEEEauthorrefmark{1} and Siddhartha~Patra\IEEEauthorrefmark{2}%
 \thanks{\IEEEauthorrefmark{1}School of Basic Sciences, Department of Physics, Indian Institute of Technology Bhubaneswar, Odisha, India.}%
@@ -12,11 +12,11 @@
 \maketitle
 
 \begin{abstract}
-We present the HVK architecture, an end-to-end quantum image reconstruction framework that integrates Matrix Product States (MPS), parameterized variational quantum circuits, and data-adaptive Heisenberg Hamiltonian operators. Classical approaches scale poorly with resolution, while typical quantum methods treat variational states opaquely without exploiting spatial connections. HVK addresses this by leveraging a local spatial smoothness regularizer explicitly derived from the expectation values of a low-energy spin-1/2 chain/grid configuration. Our framework reduces reconstruction error over standard adversarial configurations and enforces geometric constraints tied directly to the dihedral group of the image grid.
+We present the Hamiltonian Vision Kernel (HVK), a hybrid image reconstruction framework that combines matrix-product-state (MPS) patch features, positional encodings, parameterized variational quantum circuits, Pauli-observable latent vectors, and Hamiltonian energy diagnostics. The architecture was designed to test whether a quantum-observable bottleneck can provide useful patch-specific structure beyond a classical decoder alone. We report a controlled ablation study on the \textit{Monalisa} benchmark covering frozen classical/quantum parameters, random and classical VQC replacements, no-entanglement circuits, Hamiltonian-loss removal, observable-noise removal, ZZ-only observables, qubit-count sweeps, MPS bond-dimension sweeps, and single-image versus multi-image generalization. The results show that the observable channel is load-bearing: shuffling or zeroing observables sharply degrades reconstruction. However, the same ablations do not support a claim of quantum advantage in the current implementation: fixed quantum features, non-entangling circuits, and parameter-matched classical replacements reconstruct at or above the trained VQC baseline, while removing the Hamiltonian energy term slightly improves PSNR. HVK is therefore best characterized as an experimentally transparent observable-latent reconstruction platform, with the Hamiltonian currently serving as an interpretable diagnostic rather than the dominant source of reconstruction accuracy.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Quantum Image Processing, Tensor Networks, Variational Quantum Algorithms, Heisenberg Hamiltonian, Image Reconstruction.
+Quantum Image Processing, Tensor Networks, Variational Quantum Algorithms, Pauli Observables, Hamiltonian Diagnostics, Image Reconstruction.
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -294,67 +294,103 @@ Final PSNR (dB) & 34.72 & 40.70 \\
 \end{tabular}
 \end{table}
 
-\subsection{MPS Bond-Dimension Sweep Analysis}
-An optimization sweep across varying tensor sizes targets internal feature generation performance. Setting $\chi = 1$ gives an initial structural encoder MSE of $9.77 \times 10^{-3}$ (PSNR of $20.10\text{ dB}$). Scaling up to $\chi = 4$ improves base values to an MSE of $4.44 \times 10^{-4}$ and a PSNR of $33.52\text{ dB}$ \cite{MethodologyExp2026}, verifying that the subsequent quantum layers supply the extra margin to push performance to the final $40.70\text{ dB}$ mark.
-
 \subsection{Quantum Contribution Ablation Study}
 \label{sec:quantum_ablation}
-To separate the contribution of the quantum circuit from the surrounding classical projection and decoder, we performed a set of controlled ablations on the single-image \textit{Monalisa} reconstruction benchmark. These experiments are not intended to prove broad dataset-level generalization; rather, they identify which components are load-bearing inside the current per-image optimization setting. All completed ablations report MSE, PSNR, and SSIM against the target image. Pending experiments are retained as placeholders and will be populated after completion.
+The central empirical question is not whether HVK can reconstruct a single target image, but which part of the hybrid pipeline is responsible for that reconstruction. We therefore ran a controlled ablation suite on the \textit{Monalisa} benchmark using the same image size, patching rule, seed, and metric definitions whenever possible. Tables~\ref{tab:component_ablation}--\ref{tab:capacity_ablation} summarize the completed experiments. Lower MSE and higher PSNR/SSIM are better.
 
 \begin{table*}[t]
 \centering
-\caption{Completed quantum-contribution ablations on the \textit{Monalisa} benchmark. Lower MSE and higher PSNR/SSIM are better.}
-\label{tab:quantum_ablation_completed}
+\caption{Component-level ablations on the \textit{Monalisa} benchmark. The observable channel is load-bearing, but trained VQC parameters are not isolated as the dominant source of performance.}
+\label{tab:component_ablation}
 \scriptsize
-\begin{tabular}{p{0.28\textwidth}cccp{0.33\textwidth}}
+\begin{tabular}{p{0.27\textwidth}cccp{0.34\textwidth}}
 \toprule
 Experiment & MSE & PSNR (dB) & SSIM & Interpretation \\
 \midrule
-Shared VQC baseline & $5.9771\times10^{-4}$ & 32.24 & 0.9919 & Reference trained HVK run \\
-Shuffle observables at eval & $1.0727\times10^{-2}$ & 19.70 & 0.8423 & Observable--position pairing is load-bearing \\
-Zero observables, real positions & $2.9463\times10^{-2}$ & 15.31 & 0.8337 & Position alone cannot reconstruct \\
-Freeze classical, train quantum only & $8.0639\times10^{-2}$ & 10.93 & 0.0214 & Fails; decoder/projections are necessary \\
-Freeze quantum, train classical only & $4.8819\times10^{-4}$ & 33.11 & 0.9934 & Trained VQC weights are not required \\
-Classical tanh replacement, 189 params & $4.5146\times10^{-4}$ & 33.45 & 0.9939 & Classical map matches/beats VQC \\
-Classical matched replacement, 33 params & $4.7968\times10^{-4}$ & 33.19 & 0.9935 & Parameter-matched classical map beats VQC \\
-No entanglement & $5.4720\times10^{-4}$ & 32.62 & 0.9926 & Entangling gates are not load-bearing \\
-Second-image zero-shot generalization & $1.6657\times10^{-1}$ & 7.78 & 0.0196 & Per-image optimization does not transfer \\
+Shared VQC baseline & $5.9771\times10^{-4}$ & 32.24 & 0.9919 & Reference standard HVK run \\
+Shuffle observables at eval & $1.0727\times10^{-2}$ & 19.70 & 0.8423 & Observable--position alignment matters \\
+Zero observables, real positions & $3.2754\times10^{-2}$ & 14.85 & 0.6431 & Position alone is insufficient \\
+Freeze classical, train quantum only & $8.0639\times10^{-2}$ & 10.93 & 0.0214 & Frozen decoder/projections collapse \\
+Freeze quantum, train classical only & $4.8819\times10^{-4}$ & 33.11 & 0.9934 & Fixed quantum features remain usable \\
+Random VQC output & $2.5230\times10^{-3}$ & 25.98 & 0.9656 & Random latents are substantially worse \\
+No entanglement & $5.4720\times10^{-4}$ & 32.62 & 0.9926 & Entangling gates are not decisive here \\
+Classical tanh replacement & $4.5146\times10^{-4}$ & 33.45 & 0.9939 & Classical map matches or exceeds VQC \\
+Parameter-matched classical map & $4.7968\times10^{-4}$ & 33.19 & 0.9935 & Small classical control also exceeds baseline \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-The first two controls establish that the observable vector itself is meaningful. When the trained observable vectors are permuted across patch positions, PSNR drops from approximately $32.20$ dB to $19.70$ dB. When observables are zeroed while positional encodings are retained, PSNR drops to $15.31$ dB. Thus, the decoder is not reconstructing solely from position; the latent observable channel carries patch-specific information.
-
-The freeze experiments give a different conclusion about where the learning occurs. Freezing the classical projection and decoder while training only the quantum/Hamiltonian parameters produces a near-noise reconstruction (PSNR $10.93$ dB, SSIM $0.0214$). In contrast, freezing the VQC weights and Heisenberg couplings while training the classical projection and decoder still yields strong reconstruction (PSNR $33.11$ dB, SSIM $0.9934$). This indicates that, in the current single-image setting, the classical projection--decoder path carries most of the reconstruction capacity.
-
-The VQC replacement experiments further constrain the quantum-specific claim. A full classical $6\rightarrow27$ tanh map reconstructs slightly better than the VQC baseline, and a parameter-matched rank-one classical map with only $33$ trainable parameters also exceeds the VQC baseline. The no-entanglement experiment likewise performs slightly better than the entangling VQC reference. Therefore, these ablations do not support a claim that trained VQC parameters or entangling gates are the source of the observed reconstruction quality. The present evidence supports the weaker and more defensible claim that HVK is an observable-latent reconstruction framework whose current performance is dominated by the classical projection and decoder.
+The evaluation controls show that the decoder is not reconstructing solely from patch coordinates. Shuffling observable vectors across spatial positions drops PSNR from $32.24$ dB to $19.70$ dB, and replacing observables with zeros while retaining real positional encodings drops PSNR to $14.85$ dB. Thus, the Pauli-observable channel carries patch-specific information. At the same time, the freeze and replacement controls impose a sharp qualification: freezing the VQC weights and Hamiltonian couplings does not harm reconstruction, and purely classical replacements match or exceed the trained VQC baseline. These results support the claim that the \emph{observable-latent bottleneck} is useful, but they do not support a claim that trained quantum parameters, entangling gates, or quantum advantage are responsible for the measured reconstruction quality.
 
 \begin{table*}[t]
 \centering
-\caption{Ongoing ablations retained as placeholders for the final study table.}
-\label{tab:quantum_ablation_pending}
-\begin{tabular}{p{0.24\textwidth}p{0.18\textwidth}p{0.48\textwidth}}
+\caption{Hamiltonian and observable-sector controls. The current Hamiltonian energy objective is diagnostically useful but does not improve reconstruction accuracy.}
+\label{tab:hamiltonian_controls}
+\scriptsize
+\begin{tabular}{p{0.30\textwidth}cccp{0.32\textwidth}}
 \toprule
-Experiment & Status & Purpose \\
+Experiment & MSE & PSNR (dB) & SSIM & Interpretation \\
 \midrule
-Random VQC output & Running/pending & Test whether structured VQC outputs matter \\
-No MPS, patch statistics & Running/pending & Test whether MPS features are necessary \\
-Step-count sweep & Running/pending & Check convergence regime and underfitting \\
-No energy loss & Running/pending & Test Hamiltonian regularizer utility \\
-No observable noise & Running/pending & Test noise regularization utility \\
-Projection width sweep & Planned & Test the $46\rightarrow6$ bottleneck \\
-Qubit-count sweep & Planned & Test observable dimensionality and capacity \\
-Bond-dimension sweep & Planned & Test MPS compression fidelity \\
-ZZ-only observables & Planned & Test the need for full Heisenberg sectors \\
+Legacy baseline, signed energy & $5.9771\times10^{-4}$ & 32.24 & 0.9919 & Standard energy-regularized run \\
+No energy loss & $4.6772\times10^{-4}$ & 33.30 & 0.9937 & Removing energy improves PSNR \\
+No observable noise & $5.3518\times10^{-4}$ & 32.72 & 0.9928 & Noise is not essential \\
+Contrastive Hamiltonian core & $5.1975\times10^{-4}$ & 32.84 & 0.9930 & Stronger Hamiltonian objective helps modestly vs. baseline \\
+Contrastive, no energy loss & $4.6498\times10^{-4}$ & 33.33 & 0.9937 & Energy removal still performs best \\
+ZZ-only observables & $5.1503\times10^{-4}$ & 32.88 & 0.9930 & Nearest-neighbor $ZZ$ correlations are largely sufficient \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-The zero-shot second-image experiment should be interpreted carefully. A model optimized on 16 patches of \textit{Monalisa} is not expected to reconstruct a structurally unrelated image without retraining. The poor transfer result therefore does not invalidate the per-image reconstruction pipeline; instead, it clarifies the scope of the method. In its present form, HVK is a per-image hybrid reconstruction and analysis framework rather than a general image model. Dataset-level generalization must be evaluated by training on multiple images and testing on held-out images.
+The Hamiltonian controls are the most important corrective result in the study. The legacy objective adds a signed mean energy term to the reconstruction loss. Because the learned energy can become negative, the optimizer can lower total loss by driving energy downward without improving reconstruction. Empirically, removing this term improves PSNR from $32.24$ dB to $33.30$ dB. We also tested a contrastive Hamiltonian objective that assigns lower energy to correct feature--position pairs than to shuffled pairs; this improves over the legacy baseline but remains below its own no-energy-loss counterpart. Consequently, the Hamiltonian should be interpreted as an energy diagnostic and correlation probe in the present system, not as the primary driver of reconstruction accuracy.
+
+\begin{table*}[t]
+\centering
+\caption{Capacity and feature-bottleneck sweeps. Increasing qubit count improves performance within the tested range, while the MPS bond-dimension sweep does not show monotonic gains.}
+\label{tab:capacity_ablation}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Experiment & Setting & MSE & PSNR (dB) & SSIM \\
+\midrule
+Step sweep & 30 steps & $1.4777\times10^{-2}$ & 18.30 & 0.7467 \\
+Step sweep & 60 steps & $4.8797\times10^{-3}$ & 23.12 & 0.9306 \\
+Step sweep & 120 steps & $1.3336\times10^{-3}$ & 28.75 & 0.9818 \\
+Step sweep & 240 steps & $5.5542\times10^{-4}$ & 32.55 & 0.9927 \\
+Step sweep & 500 steps & $4.5941\times10^{-4}$ & 33.38 & 0.9938 \\
+Qubit count & $q=4$ & $5.3633\times10^{-4}$ & 32.71 & 0.9928 \\
+Qubit count & $q=6$ & $5.9771\times10^{-4}$ & 32.24 & 0.9919 \\
+Qubit count & $q=8$ & $4.9322\times10^{-4}$ & 33.07 & 0.9933 \\
+MPS bond dim. & $\chi=1$ & $5.0746\times10^{-4}$ & 32.95 & 0.9932 \\
+MPS bond dim. & $\chi=2$ & $5.3061\times10^{-4}$ & 32.75 & 0.9929 \\
+MPS bond dim. & $\chi=4$ & $5.9771\times10^{-4}$ & 32.24 & 0.9919 \\
+MPS bond dim. & $\chi=8$ & $5.6124\times10^{-4}$ & 32.51 & 0.9925 \\
+No MPS, patch statistics & --- & $5.3874\times10^{-4}$ & 32.69 & 0.9927 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The step-count sweep confirms that the model is convergence-limited at early iteration counts and approaches a plateau near $500$ steps. Within the tested circuit widths, $q=8$ gives the strongest qubit-count result. The MPS bond-dimension sweep is more nuanced: $\chi=1$ and $\chi=2$ outperform the default $\chi=4$ under the same training budget, while $\chi=8$ partially recovers. This suggests that reconstruction quality is not controlled only by MPS compression fidelity; downstream projection, circuit width, and decoder training dynamics interact with the feature basis.
+
+\begin{table}[t]
+\centering
+\caption{Generalization controls. Single-image optimization does not transfer zero-shot, while multi-image training gives a useful but weaker reconstruction on the second image.}
+\label{tab:generalization_controls}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Experiment & MSE & PSNR (dB) & SSIM \\
+\midrule
+Second image, zero-shot & $1.6657\times10^{-1}$ & 7.78 & 0.0196 \\
+Second image, multi-image training & $1.4740\times10^{-3}$ & 28.31 & 0.9862 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The generalization controls clarify scope. A model optimized on \textit{Monalisa} does not reconstruct a structurally different image without retraining, producing only $7.78$ dB PSNR. When training is extended to include the second image, PSNR rises to $28.31$ dB with SSIM $0.9862$. HVK should therefore be presented as a per-image or small-set reconstruction framework at this stage; broad dataset-level generalization remains a future validation target.
 
 \section{Discussion}
 \subsection{Reconstruction Error Analysis}
-HVK's $83.6\%$ error reduction over the GAN demonstrates that adversarial objectives can introduce structural instabilities during high-fidelity generation. GAN optimization exhibits a non-monotonic MSE trace ($\text{MSE}_{\text{best}} > \text{MSE}_{\text{final}}$), whereas HVK enforces structural stability through direct pixel losses paired with smooth physical regularizers derived from the learned Hamiltonian states.
+HVK's $83.6\%$ error reduction over the tested GAN configuration demonstrates that adversarial objectives can introduce structural instabilities during high-fidelity generation. GAN optimization exhibits a non-monotonic MSE trace ($\text{MSE}_{\text{best}} > \text{MSE}_{\text{final}}$), whereas HVK uses direct pixel losses and an observable bottleneck whose patchwise alignment can be explicitly ablated. The completed ablations show that this observable channel is meaningful, but also that Hamiltonian energy regularization is not the current source of the reconstruction gain.
 
 \subsection{Architectural Differentiation Matrix}
 Table~\ref{tab:differentiation} contrasts the structural properties of HVK against current reference frameworks.
@@ -369,7 +405,7 @@ Axis & Classical AE \cite{Slabbert2024} & GAN AE \cite{MethodologyExp2026} & Sta
 \midrule
 Latent Space & Continuous $\mathbb{R}^d$ & Continuous $\mathbb{R}^d$ & Quantum Register & Pauli Correlator Vector \\
 Spatial Bias & Implicit Convolutions & Implicit Convolutions & None & 2D Fourier + $D_4$ Symmetries \\
-Regularizer & Bottleneck Size & Discriminator Loss & Swap-Test Fidelity & Hamiltonian Energy $\mathcal{L}_{\text{energy}}$ \\
+Regularizer & Bottleneck Size & Discriminator Loss & Swap-Test Fidelity & Optional Hamiltonian energy diagnostic \\
 Group Alignment & None & None & Reference Swaps & $\text{SO}(3)$ Cartan + $D_4$ Grid \\
 Target Task & Reconstruction & Reconstruction & Compression & Spatially Aware Reconstruction \\
 \bottomrule
@@ -377,7 +413,7 @@ Target Task & Reconstruction & Reconstruction & Compression & Spatially Aware Re
 \end{table*}
 
 \subsection{The Topology-Alignment Principle}
-The $+5.98\text{ dB}$ performance advantage of the 2D HVK configuration over its 1D counterpart validates the \textit{topology-alignment principle}: aligning the qubit layout of the variational circuit with the spatial adjacency of the image patches prevents conflicting optimization trajectories. This reinforces structural coordination across patch boundaries along the grid edges.
+The reported $+5.98\text{ dB}$ performance advantage of the 2D HVK configuration over its 1D counterpart supports a \textit{topology-alignment principle}: aligning the latent interaction graph with image-patch adjacency can improve reconstruction. The ablation study tempers this claim by showing that circuit topology alone is not sufficient evidence of quantum advantage; topology alignment should be treated as an architectural inductive bias whose contribution must be separated from decoder capacity.
 
 \subsection{Quantitative Channel Economy}
 The application of 6 qubits maps precisely to 27 or 19 target measurement dimensions, tracking the specific number of local and nearest-neighbor interactions. HVK maintains compact scaling rules while outpacing over-parameterized convolutional models.
@@ -393,11 +429,11 @@ We explicitly acknowledge the following bounds on our empirical claims:
 \end{itemize}
 
 \section{Conclusion}
-We introduced HVK, a Hamiltonian-guided tensor-network framework for spatially aware quantum image reconstruction. HVK combines an MPS encoder, 2D Fourier positional inputs, and a parameterized variational circuit under a data-adaptive Heisenberg energy regularizer. 
+We introduced HVK, a tensor-network and quantum-observable framework for spatially aware image reconstruction. HVK combines an MPS encoder, positional inputs, a parameterized variational circuit, Pauli-observable latent vectors, and Hamiltonian energy diagnostics.
 
 On CIFAR-10, HVK achieves a PSNR of $42.55\text{ dB}$ in the reported 10-image subset, outperforming the tested GAN baseline by $8.52\text{ dB}$ and reducing mean squared error by $83.6\%$. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$. These results indicate that the observable-latent reconstruction pipeline is competitive with several non-convolutional reconstruction baselines.
 
-However, the quantum-contribution ablation study imposes an important qualification. The observable channel is load-bearing, but the current single-image experiments do not demonstrate that the trained VQC or entangling gates are the decisive source of performance. Freeze-quantum, no-entanglement, and parameter-matched classical replacement controls all reconstruct at or above the shared VQC baseline. HVK should therefore be framed as a hybrid observable-latent reconstruction architecture and experimental platform, rather than as evidence of quantum advantage in its current form.
+However, the quantum-contribution ablation study imposes an important qualification. The observable channel is load-bearing, but the current experiments do not demonstrate that the trained VQC, entangling gates, or Hamiltonian energy loss are the decisive source of performance. Freeze-quantum, no-entanglement, no-energy-loss, and parameter-matched classical replacement controls all reconstruct at or above the shared VQC baseline. HVK should therefore be framed as a hybrid observable-latent reconstruction architecture and experimental platform, rather than as evidence of quantum advantage in its current form.
 
 Future efforts will focus on full dataset-level train/test splits, multiple random seeds, stricter parameter-matched classical controls, reduced-capacity decoders, and tasks where Hamiltonian structure, entanglement, or observable dynamics can be isolated as a genuine source of generalization or regularization.
 
