@@ -24,3 +24,28 @@ def VQC(inputs: torch.Tensor, positional_angles: torch.Tensor, weights: torch.Te
     XX = [qml.expval(qml.PauliX(i) @ qml.PauliX(i + 1)) for i in range(n_bonds)]
     YY = [qml.expval(qml.PauliY(i) @ qml.PauliY(i + 1)) for i in range(n_bonds)]
     return Z + X + ZZ + XX + YY
+
+
+@qml.qnode(device, interface="torch")
+def VQCNoEntanglement(
+    inputs: torch.Tensor,
+    positional_angles: torch.Tensor,
+    weights: torch.Tensor,
+):
+    qml.AngleEmbedding(inputs, wires=range(n_qubits))
+    for qubit in range(n_qubits):
+        qml.RY(positional_angles[qubit], wires=qubit)
+    for layer in range(n_layers):
+        for qubit in range(n_qubits):
+            qml.Rot(
+                weights[layer, qubit, 0],
+                weights[layer, qubit, 1],
+                weights[layer, qubit, 2],
+                wires=qubit,
+            )
+    Z = [qml.expval(qml.PauliZ(i)) for i in range(n_qubits)]
+    X = [qml.expval(qml.PauliX(i)) for i in range(n_qubits)]
+    ZZ = [qml.expval(qml.PauliZ(i) @ qml.PauliZ(i + 1)) for i in range(n_bonds)]
+    XX = [qml.expval(qml.PauliX(i) @ qml.PauliX(i + 1)) for i in range(n_bonds)]
+    YY = [qml.expval(qml.PauliY(i) @ qml.PauliY(i + 1)) for i in range(n_bonds)]
+    return Z + X + ZZ + XX + YY

@@ -9,16 +9,34 @@ import numpy as np
 from src.quantum.circuit import n_bonds, n_qubits
 
 
+def infer_observable_layout(observable_dim: int) -> tuple[int, int, str]:
+    if (observable_dim + 3) % 5 == 0:
+        inferred_qubits = (observable_dim + 3) // 5
+        return inferred_qubits, inferred_qubits - 1, "full"
+    if (observable_dim + 1) % 3 == 0:
+        inferred_qubits = (observable_dim + 1) // 3
+        return inferred_qubits, inferred_qubits - 1, "zz-only"
+    return n_qubits, n_bonds, "full"
+
+
 def observable_slices(observables: np.ndarray) -> dict[str, np.ndarray]:
-    zz_start = 2 * n_qubits
-    xx_start = zz_start + n_bonds
-    yy_start = xx_start + n_bonds
+    inferred_qubits, inferred_bonds, observable_set = infer_observable_layout(
+        observables.shape[1]
+    )
+    zz_start = 2 * inferred_qubits
+    xx_start = zz_start + inferred_bonds
+    yy_start = xx_start + inferred_bonds
+    empty = np.zeros((observables.shape[0], inferred_bonds), dtype=observables.dtype)
     return {
-        "z": observables[:, :n_qubits],
-        "x": observables[:, n_qubits:zz_start],
+        "z": observables[:, :inferred_qubits],
+        "x": observables[:, inferred_qubits:zz_start],
         "zz": observables[:, zz_start:xx_start],
-        "xx": observables[:, xx_start:yy_start],
-        "yy": observables[:, yy_start : yy_start + n_bonds],
+        "xx": empty if observable_set == "zz-only" else observables[:, xx_start:yy_start],
+        "yy": (
+            empty
+            if observable_set == "zz-only"
+            else observables[:, yy_start : yy_start + inferred_bonds]
+        ),
     }
 
 

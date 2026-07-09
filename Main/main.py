@@ -37,6 +37,10 @@ def build_run_config(config_path: str | Path | None = DEFAULT_CONFIG_PATH, **ove
         "epoch_frame_interval": 1,
         "zero_latent_uses_positions": False,
         "model_variant": "both",
+        "ablation_mode": "baseline",
+        "seed": 42,
+        "checkpoint_dir": None,
+        "eval_only_image": None,
     }
 
     config.update(load_config(config_path))
@@ -47,6 +51,10 @@ def build_run_config(config_path: str | Path | None = DEFAULT_CONFIG_PATH, **ove
 
     config["image_path"] = resolve_path(config["image_path"])
     config["output_dir"] = resolve_path(config["output_dir"])
+    if config.get("checkpoint_dir") is not None:
+        config["checkpoint_dir"] = resolve_path(config["checkpoint_dir"])
+    if config.get("eval_only_image") is not None:
+        config["eval_only_image"] = resolve_path(config["eval_only_image"])
     return config
 
 
@@ -104,9 +112,15 @@ def run_hvk_analysis(config_path: str | Path | None = DEFAULT_CONFIG_PATH, **ove
         )
     print(f"\n=== Running {config['log_prefix']} ===")
     model, decoder, outputs = train(**config)
+    final_loss = (
+        outputs["history"]["total_loss"][-1]
+        if outputs["history"]["total_loss"]
+        else None
+    )
+    final_loss_text = f"{final_loss:.6f}" if final_loss is not None else "n/a"
     print(
         f"=== Finished {config['log_prefix']}: "
-        f"final_loss={outputs['history']['total_loss'][-1]:.6f}, "
+        f"final_loss={final_loss_text}, "
         f"output_dir={config['output_dir']} ==="
     )
     return model, decoder, outputs, config
@@ -179,9 +193,27 @@ def parse_args():
     parser.add_argument("--epoch-frame-interval", type=int)
     parser.add_argument("--zero-latent-uses-positions", action="store_true")
     parser.add_argument("--shuffle-observables-at-eval", action="store_true")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--checkpoint-dir", type=Path)
+    parser.add_argument("--eval-only-image", type=Path)
     parser.add_argument(
         "--model-variant",
         choices=["standard", "symmetric", "both"],
+    )
+    parser.add_argument(
+        "--ablation-mode",
+        choices=[
+            "baseline",
+            "freeze-classical",
+            "freeze-quantum",
+            "classical-replacement",
+            "classical-matched",
+            "random-vqc",
+            "no-entanglement",
+            "no-energy-loss",
+            "no-obs-noise",
+            "no-mps",
+        ],
     )
     return parser.parse_args()
 
@@ -197,6 +229,9 @@ def main():
         "lr": args.lr,
         "device": args.device,
         "output_dir": args.output_dir,
+        "seed": args.seed,
+        "checkpoint_dir": args.checkpoint_dir,
+        "eval_only_image": args.eval_only_image,
         "save_outputs": False if args.no_save else None,
         "show_plots": True if args.show_plots else None,
         "track_order_parameters": False if args.no_order_tracking else None,
@@ -209,6 +244,7 @@ def main():
             True if args.shuffle_observables_at_eval else None
         ),
         "model_variant": args.model_variant,
+        "ablation_mode": args.ablation_mode,
     }
 
     _, _, outputs, config = run_hvk_analysis(
@@ -219,6 +255,8 @@ def main():
     if config.get("model_variant") == "both":
         summary = {
             "model_variant": "both",
+            "ablation_mode": config.get("ablation_mode", "baseline"),
+            "seed": config.get("seed", 42),
             "standard_final_loss": outputs["variants"]["standard"]["history"][
                 "total_loss"
             ][-1],
@@ -232,9 +270,32 @@ def main():
     else:
         summary = {
             "model_variant": config.get("model_variant", "standard"),
-            "final_total_loss": outputs["history"]["total_loss"][-1],
-            "final_reconstruction_loss": outputs["history"]["reconstruction_loss"][-1],
-            "final_energy_loss": outputs["history"]["energy_loss"][-1],
+            "ablation_mode": config.get("ablation_mode", "baseline"),
+            "seed": config.get("seed", 42),
+            "final_total_loss": (
+                outputs["history"]["total_loss"][-1]
+                if outputs["history"]["total_loss"]
+                else None
+            ),
+            "final_reconstruction_loss": (
+                outputs["history"]["reconstruction_loss"][-1]
+                if outputs["history"]["reconstruction_loss"]
+                else None
+            ),
+            "final_energy_loss": (
+                outputs["history"]["energy_loss"][-1]
+                if outputs["history"]["energy_loss"]
+                else None
+            ),
+            "mse": outputs.get("comparison_metrics", {})
+            .get("quantum_reconstruction", {})
+            .get("mse"),
+            "psnr": outputs.get("comparison_metrics", {})
+            .get("quantum_reconstruction", {})
+            .get("psnr"),
+            "ssim": outputs.get("comparison_metrics", {})
+            .get("quantum_reconstruction", {})
+            .get("ssim"),
             "phase_transition": outputs["phase_transition"],
             "phase_transition_order_parameter_gif": outputs.get("media", {}).get(
                 "phase_transition_epoch_vs_order_parameter_gif"
