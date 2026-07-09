@@ -13,7 +13,7 @@
 \maketitle
 
 \begin{abstract}
-We present the Hamiltonian Vision Kernel (HVK), a hybrid image reconstruction framework that combines matrix-product-state (MPS) patch features, positional encodings, parameterized variational quantum circuits, Pauli-observable latent vectors, and Hamiltonian energy diagnostics. The architecture was designed to test whether a quantum-observable bottleneck can provide useful patch-specific structure beyond a classical decoder alone. We report a controlled ablation study on the \textit{Monalisa} benchmark covering frozen classical/quantum parameters, random and classical VQC replacements, no-entanglement circuits, Hamiltonian-loss removal, observable-noise removal, ZZ-only observables, qubit-count sweeps, MPS bond-dimension sweeps, and single-image versus multi-image generalization. The results show that the observable channel is load-bearing: shuffling or zeroing observables sharply degrades reconstruction. However, the same ablations do not support a claim of quantum advantage in the current implementation: fixed quantum features, non-entangling circuits, and parameter-matched classical replacements reconstruct at or above the trained VQC baseline, while removing the Hamiltonian energy term slightly improves PSNR. HVK is therefore best characterized as an experimentally transparent observable-latent reconstruction platform, with the Hamiltonian currently serving as an interpretable diagnostic rather than the dominant source of reconstruction accuracy.
+We present the Hamiltonian Vision Kernel (HVK), a hybrid image reconstruction framework that combines matrix-product-state (MPS) patch features, positional encodings, parameterized variational quantum circuits, Pauli-observable latent vectors, and Hamiltonian energy diagnostics. The architecture was designed to test whether a quantum-observable bottleneck can provide useful patch-specific structure beyond a classical decoder alone. We report a controlled ablation study on the \textit{Monalisa} benchmark covering frozen classical/quantum parameters, random and classical VQC replacements, no-entanglement circuits, Hamiltonian-loss removal, observable-noise removal, ZZ-only observables, qubit-count sweeps, MPS bond-dimension sweeps, and single-image versus multi-image generalization. The results show that the observable channel is load-bearing: shuffling or zeroing observables sharply degrades reconstruction. However, the same ablations do not support a claim of quantum advantage in the current implementation: fixed quantum features, non-entangling circuits, and parameter-matched classical replacements reconstruct at or above the trained VQC baseline, while removing the Hamiltonian energy term slightly improves PSNR. We also find that the current evaluation is primarily a per-image or small-set fitting study rather than a validated train/test generalization benchmark. HVK is therefore best characterized as an experimentally transparent observable-latent reconstruction platform, with the Hamiltonian currently serving as an interpretable diagnostic rather than the dominant source of reconstruction accuracy.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -79,7 +79,7 @@ evaluated via the Frobenius-norm reconstruction loss:
 \end{equation}
 where $D$ is the classical decoder, $P_n$ is the ground-truth patch, and $\lambda$ is the energy regularization coefficient.\\
 
-\subsubsection{Symmetry Analysis}
+\subsubsection{Symmetry Motivation and Current Status}
 The Heisenberg correlators define three observable sectors:
 \begin{equation}
 \Xi_{ZZ} = (\langle Z_0Z_1\rangle, \dots, \langle Z_4Z_5\rangle),\quad \Xi_{XX},\quad \Xi_{YY}))
@@ -97,11 +97,11 @@ embedded in $\mathbb{R}^{27}$ through the simultaneously measured observables. T
     \end{equation}
 \end{enumerate}
 
-The resulting symmetry stack handles the structural degradation systematically:
+The resulting symmetry stack motivates a possible structural degradation:
 \begin{equation}
 \text{SU}(2)\text{-variant isotropic sector} \xrightarrow{\text{positional encoding}} \text{Cartan sector} \xrightarrow{\text{grid geometry}} D_4
 \end{equation}
-This framework preserves the structural symmetries of the patch grid, allowing the pipeline to distinguish orientation-sensitive boundaries.
+In the present manuscript this group-theoretic construction should be read as architectural motivation rather than as an experimentally established mechanism. We do not yet include a dedicated $D_4$-equivariance ablation, a Cartan-sector removal study, or an irrep-level diagnostic proving that the decoder uses these symmetry sectors. Consequently, the symmetry discussion is not used as evidence of quantum advantage; it identifies a testable design hypothesis for future work.
 
 \section{HVK Architecture Design}
 The pipeline consists of an operational flow defined by:
@@ -191,7 +191,7 @@ The architecture utilizes a mirrored transpose structure with expanding channel 
 The baseline canonical single-image analysis uses a $256 \times 256$ grayscale layout of \textit{monalisa.jpg}, divided into 16 evaluation regions of size $64 \times 64$ pixels \cite{MathematicalFramework2026}.
 
 \subsubsection{CIFAR-10 Subset}
-To capture structural behavior beyond the single-image \textit{Monalisa} benchmark, we evaluate the native $32 \times 32$ CIFAR-10 reconstruction suite available in the repository. The completed aggregate contains five images spanning multiple classes, and reports MSE, PSNR, and SSIM for MLP, CNN, classical autoencoder, GAN, PHL, HVK1D, HVK2D, and symmetric HVK1D baselines \cite{MethodologyExp2026}.
+To capture structural behavior beyond the single-image \textit{Monalisa} benchmark, we evaluate the native $32 \times 32$ CIFAR-10 reconstruction suite available in the repository. The completed aggregate contains five images spanning multiple classes, and reports MSE, PSNR, and SSIM for MLP, CNN, classical autoencoder, GAN, PHL, HVK1D, HVK2D, and symmetric HVK1D baselines \cite{MethodologyExp2026}. These CIFAR results are not a train/test split; they are same-set reconstruction fits and are therefore most useful for capacity and representation diagnostics.
 
 \subsection{Benchmarking  Implementations}
 We execute validation passes using four distinct comparison configurations:
@@ -203,7 +203,7 @@ We execute validation passes using four distinct comparison configurations:
 \end{itemize}
 
 \subsection{Training Protocol}
-Optimization passes utilize the Adam optimizer with learning rates set to $\eta = 0.003$ for the 1D variant and $\eta = 0.004$ for the 2D configuration \cite{MethodologyExp2026}. Parameter targets are jointly updated over 200 epochs under a rigid loss factor ($\lambda=0.01$). Initialization parameters scale according to established safe limits \cite{Cerezo2021, MathematicalFramework2026, Xu2021}.
+Optimization passes utilize the Adam optimizer with learning rates set to $\eta = 0.003$ for the 1D variant and $\eta = 0.004$ for the 2D configuration \cite{MethodologyExp2026}. Parameter targets are jointly updated over 200 epochs under a rigid loss factor ($\lambda=0.01$). Initialization parameters scale according to established safe limits \cite{Cerezo2021, MathematicalFramework2026, Xu2021}. Unless explicitly stated otherwise, the ablations are single-seed runs; no confidence intervals are reported, so small metric differences should be interpreted as directional diagnostics rather than statistically resolved effects.
 
 \subsection{Evaluation Metrics}
 \subsubsection{Reconstruction Precision}
@@ -263,7 +263,7 @@ PHL & $4.3415\times10^{-2}$ & $2.2253\times10^{-2}$ & 14.01 & 16.53 & 0.78792 & 
 \label{fig:cifar_metric_comparison}
 \end{figure*}
 
-The CIFAR-10 result should be read carefully. HVK2D outperforms the GAN baseline by $8.47$ dB PSNR and reduces mean MSE by approximately $82.4\%$, while also improving over the classical autoencoder and PHL reference. However, the MLP and CNN baselines are stronger in pure pixel reconstruction. This makes the CIFAR evidence useful for positioning HVK as a compact observable-latent model, not as a universal replacement for high-capacity classical regressors.
+The CIFAR-10 result should be read carefully. HVK2D outperforms the GAN baseline by $8.47$ dB PSNR and reduces mean MSE by approximately $82.4\%$, while also improving over the classical autoencoder and PHL reference. However, the MLP and CNN baselines are stronger in pure pixel reconstruction. The very high MLP PSNR, including a best-case value above $100$ dB, is a red flag for same-set memorization rather than evidence of dataset-level generalization. This makes the CIFAR evidence useful for positioning HVK as a compact observable-latent model under controlled reconstruction fits, not as a universal replacement for high-capacity classical regressors.
 
 \subsection{IBM Heron Hardware Probe}
 The repository also includes an IBM Cloud circuit probe for the HVK1D and HVK2D patch circuits. Table~\ref{tab:ibm_probe} summarizes the circuit resources recorded for patch index $0$. Both variants use six measured qubits and depth-$18$ circuits after construction; the 2D lattice requires more CNOT gates because it encodes additional adjacency links.
@@ -303,8 +303,8 @@ Reconstruction comparisons for the structural \textit{Monalisa} validation targe
 \toprule
 Model & Final MSE & Best MSE & PSNR (dB) & SSIM \\
 \midrule
-1D HVK & $3.3754 \times 10^{-4}$ & $3.0112 \times 10^{-4}$ & 34.72 & --- \\
-2D HVK & $8.5114 \times 10^{-5}$ & $8.4975 \times 10^{-5}$ & 40.70 & --- \\
+1D HVK & $3.3754 \times 10^{-4}$ & $3.0112 \times 10^{-4}$ & 34.72 & not logged \\
+2D HVK & $8.5114 \times 10^{-5}$ & $8.4975 \times 10^{-5}$ & 40.70 & not logged \\
 GAN Baseline & $1.0185 \times 10^{-3}$ & $1.1124 \times 10^{-3}$ & 29.92 & 0.9873 \\
 PHL \cite{Shi2022} & --- & --- & --- & --- \\
 \bottomrule
@@ -312,7 +312,7 @@ PHL \cite{Shi2022} & --- & --- & --- & --- \\
 \end{table}
 The PHL metric is excluded from direct pixel tracking because it is natively optimized for segmentation tasks, logging a baseline Dice coefficient of $0.9706$ and an Intersection-over-Union (IoU) of $0.9428$.
 
-\subsection{1D vs. 2D Topological Ablation Study}
+\subsection{1D vs. 2D Lattice-Topology Study}
 Table~\ref{tab:ablation} highlights the operational adjustments caused by restructuring the lattice configuration from a 1D chain to a 2D adjacent grid.
 
 \begin{table}[h]
@@ -367,7 +367,7 @@ Parameter-matched classical map & $4.7968\times10^{-4}$ & 33.19 & 0.9935 & Small
 \end{tabular}
 \end{table*}
 
-The evaluation controls show that the decoder is not reconstructing solely from patch coordinates. Shuffling observable vectors across spatial positions drops PSNR from $32.24$ dB to $19.70$ dB, and replacing observables with zeros while retaining real positional encodings drops PSNR to $14.85$ dB. Thus, the Pauli-observable channel carries patch-specific information. At the same time, the freeze and replacement controls impose a sharp qualification: freezing the VQC weights and Hamiltonian couplings does not harm reconstruction, and purely classical replacements match or exceed the trained VQC baseline. These results support the claim that the \emph{observable-latent bottleneck} is useful, but they do not support a claim that trained quantum parameters, entangling gates, or quantum advantage are responsible for the measured reconstruction quality.
+The evaluation controls show that the decoder is not reconstructing solely from patch coordinates. Shuffling observable vectors across spatial positions drops PSNR from $32.24$ dB to $19.70$ dB, and replacing observables with zeros while retaining real positional encodings drops PSNR to $14.85$ dB. Thus, the Pauli-observable channel carries patch-specific information. At the same time, the freeze and replacement controls impose a sharp qualification: freezing the VQC weights and Hamiltonian couplings does not harm reconstruction, and purely classical replacements match or exceed the trained VQC baseline. Because these are single-seed runs, small gaps such as $32.24$ versus $32.62$ dB should not be overinterpreted. The robust conclusion is narrower: the observable-latent bottleneck is useful, but the current data do not support a claim that trained quantum parameters, entangling gates, or quantum advantage are responsible for the measured reconstruction quality.
 
 \begin{table*}[t]
 \centering
@@ -455,6 +455,9 @@ The generalization controls clarify scope. A model optimized on \textit{Monalisa
 \subsection{Reconstruction Error Analysis}
 HVK2D's approximately $82.4\%$ MSE reduction over the tested CIFAR GAN configuration shows that the observable-latent reconstruction route is competitive against adversarial and autoencoder-style baselines in the completed subset. The stronger MLP and CNN results, however, show that classical capacity remains a major confounder. HVK's strongest evidence is therefore not raw leaderboard dominance, but interpretability: observable vectors, positional alignment, Hamiltonian diagnostics, and topology choices can be ablated directly. The completed ablations show that this observable channel is meaningful, but also that Hamiltonian energy regularization is not the current source of the reconstruction gain.
 
+\subsection{Generalization and Memorization Risk}
+The strongest caveat in the present study is that the most impressive classical numbers are also the least informative about generalization. The CIFAR MLP result is near-exact on a five-image same-set benchmark, which is consistent with memorization. The zero-shot second-image result for HVK is also weak, reaching only $7.78$ dB PSNR before multi-image training. Together these observations indicate that the current experiments validate representation behavior under controlled reconstruction fits, not broad image-distribution generalization. A fair next benchmark must separate training and held-out images, report multiple random seeds, and use capacity-matched classical baselines.
+
 \subsection{Architectural Differentiation Matrix}
 Table~\ref{tab:differentiation} contrasts the structural properties of HVK against current reference frameworks.
 
@@ -485,8 +488,12 @@ The application of 6 qubits maps precisely to 27 or 19 target measurement dimens
 We explicitly acknowledge the following bounds on our empirical claims:
 \begin{itemize}
     \item The CIFAR-10 evaluations are currently bounded to a five-image native-resolution validation subset.
+    \item CIFAR and Monalisa baseline comparisons are same-set reconstruction fits, not held-out generalization tests; the MLP/CNN numbers therefore measure fit capacity as much as reconstruction quality.
     \item 2D HVK performance data is documented solely for the \textit{Monalisa} test case.
     \item The single-image \textit{Monalisa} experiments are per-image optimization studies and should not be interpreted as dataset-level generalization.
+    \item Most ablations are single-seed runs without error bars, so small PSNR/SSIM differences should be treated cautiously.
+    \item The $D_4$ and Cartan-sector symmetry analysis is currently a design motivation, not an empirically isolated mechanism.
+    \item Internal reports cited here are provenance references for implementation choices; all externally relevant experimental claims should be reproducible from the reported tables and repository outputs.
     \item Current ablations show that observable latents are load-bearing, but they do not establish that trained VQC parameters, entangling gates, or the Heisenberg energy term are the unique source of reconstruction quality.
     \item CIFAR-10 benchmarking indicates that HVK is competitive against several baselines, including the tested GAN, PHL, and classical autoencoder configurations, but high-capacity MLP and CNN baselines remain stronger in pure reconstruction accuracy.
 \end{itemize}
@@ -494,7 +501,7 @@ We explicitly acknowledge the following bounds on our empirical claims:
 \section{Conclusion}
 We introduced HVK, a tensor-network and quantum-observable framework for spatially aware image reconstruction. HVK combines an MPS encoder, positional inputs, a parameterized variational circuit, Pauli-observable latent vectors, and Hamiltonian energy diagnostics.
 
-On CIFAR-10, HVK2D achieves $34.50\text{ dB}$ mean PSNR on the completed five-image native-resolution subset, outperforming the tested GAN baseline by $8.47\text{ dB}$ and reducing mean squared error by approximately $82.4\%$. The same table shows that high-capacity MLP and CNN baselines remain stronger in pure pixel accuracy. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$. These results indicate that the observable-latent reconstruction pipeline is competitive with several non-convolutional reconstruction baselines, while not yet establishing a dataset-level quantum advantage.
+On CIFAR-10, HVK2D achieves $34.50\text{ dB}$ mean PSNR on the completed five-image native-resolution subset, outperforming the tested GAN baseline by $8.47\text{ dB}$ and reducing mean squared error by approximately $82.4\%$. The same table shows that high-capacity MLP and CNN baselines remain stronger in pure pixel accuracy, but their same-set scores, especially the MLP best case above $100$ dB, should be interpreted as memorization-capacity diagnostics rather than held-out reconstruction evidence. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$. These results indicate that the observable-latent reconstruction pipeline is competitive with several non-convolutional reconstruction baselines under per-image or small-set fitting, while not yet establishing dataset-level generalization or quantum advantage.
 
 However, the quantum-contribution ablation study imposes an important qualification. The observable channel is load-bearing, but the current experiments do not demonstrate that the trained VQC, entangling gates, or Hamiltonian energy loss are the decisive source of performance. Freeze-quantum, no-entanglement, no-energy-loss, and parameter-matched classical replacement controls all reconstruct at or above the shared VQC baseline. HVK should therefore be framed as a hybrid observable-latent reconstruction architecture and experimental platform, rather than as evidence of quantum advantage in its current form.
 
