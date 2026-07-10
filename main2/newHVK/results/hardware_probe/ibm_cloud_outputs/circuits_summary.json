@@ -1,0 +1,26 @@
+[
+  {
+    "variant": "hvk1d",
+    "patch_index": 0,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "ry": 11,
+      "cx": 10,
+      "rz": 6,
+      "measure": 6
+    }
+  },
+  {
+    "variant": "hvk2d",
+    "patch_index": 0,
+    "num_qubits": 6,
+    "depth": 18,
+    "num_ops": {
+      "cx": 14,
+      "ry": 13,
+      "rz": 6,
+      "measure": 6
+    }
+  }
+]

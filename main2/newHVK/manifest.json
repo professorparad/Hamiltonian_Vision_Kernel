@@ -1,0 +1,16 @@
+{
+  "workspace": "main2/newHVK",
+  "claim_status": "candidate only: the restricted pair-correlation task favors the entangling observable channel, but this is not a hardware quantum advantage proof or a broad CIFAR generalization result",
+  "new_model_variants": [
+    "newHVK-entangling-observables",
+    "newHVK-no-entanglement",
+    "parameter-matched-classical",
+    "raw-linear-classical"
+  ],
+  "imported_evidence": [
+    "CIFAR and Monalisa baselines copied from existing outputs",
+    "Legacy HVK ablations copied from experiments/quantum_contribution/results",
+    "IBM Cloud circuit-resource probe copied from IBM_Cloud/outputs"
+  ],
+  "restricted_benchmark_best_model": "newHVK-entangling-observables"
+}

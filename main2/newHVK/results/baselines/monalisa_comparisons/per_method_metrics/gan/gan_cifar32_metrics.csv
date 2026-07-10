@@ -1,0 +1,2 @@
+model,image,image_size,patch_size,epochs,mse,psnr,ssim
+GAN,monalisa.png,32,8,200,0.001965818228200078,27.064566422207278,0.9701149550822571
