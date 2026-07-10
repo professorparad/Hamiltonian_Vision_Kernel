@@ -1,0 +1,38 @@
+[
+  {
+    "model": "newHVK-real-cifar",
+    "feature_dim": 32,
+    "readout_parameters": 2112,
+    "cnot_or_pair_channels": 6,
+    "train_images_per_seed": 6,
+    "test_images_per_seed": 4,
+    "claim_role": "candidate entangling observable model"
+  },
+  {
+    "model": "strict-classical-rff",
+    "feature_dim": 32,
+    "readout_parameters": 2112,
+    "cnot_or_pair_channels": 0,
+    "train_images_per_seed": 6,
+    "test_images_per_seed": 4,
+    "claim_role": "same-width classical nonlinear control"
+  },
+  {
+    "model": "no-entanglement",
+    "feature_dim": 32,
+    "readout_parameters": 2112,
+    "cnot_or_pair_channels": 0,
+    "train_images_per_seed": 6,
+    "test_images_per_seed": 4,
+    "claim_role": "single-site observable ablation"
+  },
+  {
+    "model": "zz-only",
+    "feature_dim": 32,
+    "readout_parameters": 2112,
+    "cnot_or_pair_channels": 3,
+    "train_images_per_seed": 6,
+    "test_images_per_seed": 4,
+    "claim_role": "reduced observable-sector ablation"
+  }
+]

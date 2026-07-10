@@ -27,5 +27,14 @@
     "results/full_ablation_suite/order_parameter_curve.csv",
     "results/full_ablation_suite/media/"
   ],
+  "q1_validation_outputs": [
+    "results/q1_validation/real_cifar_holdout.csv",
+    "results/q1_validation/real_cifar_holdout_summary.csv",
+    "results/q1_validation/observable_gate_ablation.csv",
+    "results/q1_validation/shot_noise_real_cifar.csv",
+    "results/q1_validation/resource_comparison.csv",
+    "paper_latex/newhvk_q1_validation_report.tex",
+    "paper_latex/newhvk_q1_validation_report.pdf"
+  ],
   "restricted_benchmark_best_model": "newHVK-entangling-observables"
 }

@@ -769,6 +769,564 @@ architecture. They are not, by themselves, a hardware quantum advantage proof.
     (result_dir / "README.md").write_text(readme, encoding="utf-8")
 
 
+CIFAR_IMAGES = ROOT / "Baselines" / "cifar10_comparisons" / "datasets" / "images"
+
+
+def load_cifar_gray(path: Path) -> np.ndarray:
+    image = plt.imread(path)
+    if image.ndim == 3:
+        image = image[..., :3] @ np.array([0.299, 0.587, 0.114])
+    image = image.astype(np.float32)
+    if image.max() > 1.0:
+        image = image / 255.0
+    return image
+
+
+def image_metric_rows(prediction: np.ndarray, target: np.ndarray) -> dict[str, float]:
+    mse = float(np.mean((prediction - target) ** 2))
+    x = prediction.astype(np.float64)
+    y = target.astype(np.float64)
+    c1, c2 = 0.01 ** 2, 0.03 ** 2
+    mux, muy = float(x.mean()), float(y.mean())
+    varx, vary = float(x.var()), float(y.var())
+    cov = float(((x - mux) * (y - muy)).mean())
+    ssim = ((2.0 * mux * muy + c1) * (2.0 * cov + c2)) / (
+        (mux ** 2 + muy ** 2 + c1) * (varx + vary + c2)
+    )
+    return {"mse": mse, "psnr": psnr_from_mse(mse), "ssim": float(ssim)}
+
+
+def extract_cifar_patch_table(paths: list[Path]) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[dict[str, object]]]:
+    features: list[np.ndarray] = []
+    targets: list[np.ndarray] = []
+    positions: list[np.ndarray] = []
+    meta: list[dict[str, object]] = []
+    patch_size = 8
+    for image_index, path in enumerate(paths):
+        image = load_cifar_gray(path)
+        for row in range(0, 32, patch_size):
+            for col in range(0, 32, patch_size):
+                patch = image[row : row + patch_size, col : col + patch_size]
+                features.append(real_patch_base_features(patch, row / 24.0, col / 24.0))
+                targets.append(patch.reshape(-1))
+                positions.append(np.array([row, col], dtype=np.float32))
+                meta.append(
+                    {
+                        "image_index": image_index,
+                        "image": path.name,
+                        "row": row,
+                        "col": col,
+                    }
+                )
+    return (
+        np.asarray(features, dtype=np.float64),
+        np.asarray(targets, dtype=np.float64),
+        np.asarray(positions, dtype=np.float64),
+        meta,
+    )
+
+
+def real_patch_base_features(patch: np.ndarray, row_pos: float, col_pos: float) -> np.ndarray:
+    flat = patch.reshape(-1).astype(np.float64)
+    gx = np.diff(patch, axis=1)
+    gy = np.diff(patch, axis=0)
+    low_freq = [
+        float(patch[:4, :4].mean()),
+        float(patch[:4, 4:].mean()),
+        float(patch[4:, :4].mean()),
+        float(patch[4:, 4:].mean()),
+        float((patch[:, :4] - patch[:, 4:]).mean()),
+        float((patch[:4, :] - patch[4:, :]).mean()),
+    ]
+    stats = [
+        float(flat.mean()),
+        float(flat.std()),
+        float(flat.min()),
+        float(flat.max()),
+        float(np.quantile(flat, 0.25)),
+        float(np.quantile(flat, 0.50)),
+        float(np.quantile(flat, 0.75)),
+        float(np.abs(gx).mean()),
+        float(np.abs(gy).mean()),
+        float(gx.std()),
+        float(gy.std()),
+        float(patch[2:6, 2:6].mean()),
+    ]
+    pos = [
+        math.sin(math.pi * row_pos),
+        math.cos(math.pi * row_pos),
+        math.sin(math.pi * col_pos),
+        math.cos(math.pi * col_pos),
+        math.sin(2.0 * math.pi * row_pos),
+        math.cos(2.0 * math.pi * row_pos),
+        math.sin(2.0 * math.pi * col_pos),
+        math.cos(2.0 * math.pi * col_pos),
+    ]
+    return np.asarray(stats + low_freq + pos, dtype=np.float64)
+
+
+def standardize_train_test(train: np.ndarray, test: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    mean = train.mean(axis=0, keepdims=True)
+    std = train.std(axis=0, keepdims=True) + 1e-8
+    return (train - mean) / std, (test - mean) / std
+
+
+def select_same_width(features: np.ndarray, width: int = 32) -> np.ndarray:
+    if features.shape[1] >= width:
+        return features[:, :width]
+    pad = np.zeros((features.shape[0], width - features.shape[1]), dtype=features.dtype)
+    return np.concatenate([features, pad], axis=1)
+
+
+def real_newhvk_features(base: np.ndarray) -> np.ndarray:
+    local = base[:, :18]
+    pos = base[:, 18:26]
+    pairs = np.stack(
+        [
+            local[:, 0] * local[:, 1],
+            local[:, 4] * local[:, 5],
+            local[:, 7] * local[:, 8],
+            local[:, 12] * local[:, 13],
+            local[:, 14] * local[:, 15],
+            local[:, 16] * local[:, 17],
+        ],
+        axis=1,
+    )
+    harmonics = np.sin(np.pi * pairs)
+    return select_same_width(np.concatenate([local, pairs, harmonics, pos], axis=1), 32)
+
+
+def real_no_entanglement_features(base: np.ndarray) -> np.ndarray:
+    local = base[:, :18]
+    pos = base[:, 18:26]
+    single_site = np.concatenate([local, np.sin(np.pi * local[:, :6]), pos], axis=1)
+    return select_same_width(single_site, 32)
+
+
+def real_zz_only_features(base: np.ndarray) -> np.ndarray:
+    local = base[:, :18]
+    pos = base[:, 18:26]
+    zz = np.stack(
+        [
+            local[:, 0] * local[:, 1],
+            local[:, 4] * local[:, 5],
+            local[:, 12] * local[:, 13],
+        ],
+        axis=1,
+    )
+    return select_same_width(np.concatenate([local, zz, pos], axis=1), 32)
+
+
+def real_local_observables_only(base: np.ndarray) -> np.ndarray:
+    return select_same_width(np.concatenate([base[:, :18], base[:, 18:26]], axis=1), 32)
+
+
+def real_shuffled_pair_features(base: np.ndarray, seed: int) -> np.ndarray:
+    features = real_newhvk_features(base).copy()
+    rng = np.random.default_rng(50_000 + seed)
+    pair_block = features[:, 18:30].copy()
+    features[:, 18:30] = pair_block[rng.permutation(pair_block.shape[0])]
+    return features
+
+
+def real_random_vqc_features(base: np.ndarray, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(60_000 + seed + base.shape[0])
+    return rng.normal(0.0, 1.0, size=(base.shape[0], 32))
+
+
+def real_parameter_matched_classical_features(base: np.ndarray, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(70_000 + seed)
+    width = base.shape[1]
+    weights = rng.normal(0.0, 1.0 / math.sqrt(width), size=(width, 32))
+    bias = rng.uniform(-math.pi, math.pi, size=(32,))
+    return np.sin(base @ weights + bias)
+
+
+def real_raw_linear_features(base: np.ndarray) -> np.ndarray:
+    return select_same_width(base, 32)
+
+
+def add_shot_noise(features: np.ndarray, shots: int, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(80_000 + seed + shots)
+    bounded = np.tanh(features)
+    probs = (bounded + 1.0) / 2.0
+    samples = rng.binomial(shots, np.clip(probs, 0.0, 1.0)) / max(shots, 1)
+    return 2.0 * samples - 1.0
+
+
+def reconstruct_cifar_images(
+    predictions: np.ndarray,
+    y_test: np.ndarray,
+    meta_test: list[dict[str, object]],
+) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray]]:
+    predicted_images: dict[str, np.ndarray] = {}
+    target_images: dict[str, np.ndarray] = {}
+    for pred_patch, target_patch, meta in zip(predictions, y_test, meta_test):
+        name = str(meta["image"])
+        row = int(meta["row"])
+        col = int(meta["col"])
+        predicted_images.setdefault(name, np.zeros((32, 32), dtype=np.float64))
+        target_images.setdefault(name, np.zeros((32, 32), dtype=np.float64))
+        predicted_images[name][row : row + 8, col : col + 8] = np.clip(pred_patch.reshape(8, 8), 0.0, 1.0)
+        target_images[name][row : row + 8, col : col + 8] = target_patch.reshape(8, 8)
+    return predicted_images, target_images
+
+
+def run_real_cifar_holdout(seed: int, model_name: str, feature_fn: Callable[[np.ndarray, int], np.ndarray]) -> tuple[list[dict[str, object]], dict[str, tuple[np.ndarray, np.ndarray]]]:
+    paths = sorted(CIFAR_IMAGES.glob("*.png"))
+    if len(paths) < 8:
+        raise FileNotFoundError(f"Need at least 8 CIFAR PNGs in {CIFAR_IMAGES}")
+    rng = np.random.default_rng(seed)
+    order = rng.permutation(len(paths))
+    train_paths = [paths[i] for i in order[:6]]
+    test_paths = [paths[i] for i in order[6:10]]
+    x_train, y_train, _, _ = extract_cifar_patch_table(train_paths)
+    x_test, y_test, _, meta_test = extract_cifar_patch_table(test_paths)
+    x_train, x_test = standardize_train_test(x_train, x_test)
+    f_train = feature_fn(x_train, seed)
+    f_test = feature_fn(x_test, seed)
+    prediction = ridge_fit_predict(f_train, y_train, f_test)
+    predicted_images, target_images = reconstruct_cifar_images(prediction, y_test, meta_test)
+    rows: list[dict[str, object]] = []
+    panels: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+    for image_name in sorted(predicted_images):
+        metrics = image_metric_rows(predicted_images[image_name], target_images[image_name])
+        rows.append(
+            {
+                "seed": seed,
+                "model": model_name,
+                "image": image_name,
+                "train_images": ";".join(path.name for path in train_paths),
+                "test_images": ";".join(path.name for path in test_paths),
+                **metrics,
+            }
+        )
+        panels[image_name] = (target_images[image_name], predicted_images[image_name])
+    return rows, panels
+
+
+def aggregate_metric_rows(rows: list[dict[str, object]]) -> list[dict[str, object]]:
+    summary: list[dict[str, object]] = []
+    for model in sorted({str(row["model"]) for row in rows}):
+        model_rows = [row for row in rows if row["model"] == model]
+        summary.append(
+            {
+                "model": model,
+                "n_images": len(model_rows),
+                "mean_mse": float(np.mean([float(row["mse"]) for row in model_rows])),
+                "std_mse": float(np.std([float(row["mse"]) for row in model_rows], ddof=0)),
+                "mean_psnr": float(np.mean([float(row["psnr"]) for row in model_rows])),
+                "std_psnr": float(np.std([float(row["psnr"]) for row in model_rows], ddof=0)),
+                "mean_ssim": float(np.mean([float(row["ssim"]) for row in model_rows])),
+                "std_ssim": float(np.std([float(row["ssim"]) for row in model_rows], ddof=0)),
+            }
+        )
+    return sorted(summary, key=lambda row: float(row["mean_mse"]))
+
+
+def plot_q1_summary(result_dir: Path, summary: list[dict[str, object]], name: str, title: str) -> None:
+    labels = [str(row["model"]) for row in summary]
+    mse = [float(row["mean_mse"]) for row in summary]
+    psnr = [float(row["mean_psnr"]) for row in summary]
+    ssim = [float(row["mean_ssim"]) for row in summary]
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5))
+    axes[0].bar(labels, mse, color="#1f77b4")
+    axes[0].set_yscale("log")
+    axes[0].set_ylabel("MSE, log scale")
+    axes[1].bar(labels, psnr, color="#9467bd")
+    axes[1].set_ylabel("PSNR (dB)")
+    axes[2].bar(labels, ssim, color="#2ca02c")
+    axes[2].set_ylabel("SSIM")
+    for axis in axes:
+        axis.tick_params(axis="x", rotation=30, labelsize=7)
+        axis.grid(alpha=0.2)
+    fig.suptitle(title)
+    fig.tight_layout()
+    fig.savefig(result_dir / name, dpi=190)
+    plt.close(fig)
+
+
+def save_q1_reconstruction_panel(result_dir: Path, panels_by_model: dict[str, dict[str, tuple[np.ndarray, np.ndarray]]]) -> None:
+    models = [model for model in ["newHVK-real-cifar", "strict-classical-rff", "no-entanglement"] if model in panels_by_model]
+    if not models:
+        return
+    image_name = sorted(next(iter(panels_by_model.values())).keys())[0]
+    fig, axes = plt.subplots(len(models), 3, figsize=(8.8, 3.0 * len(models)))
+    if len(models) == 1:
+        axes = np.asarray([axes])
+    for row_idx, model in enumerate(models):
+        target, prediction = panels_by_model[model][image_name]
+        error = np.abs(target - prediction)
+        for col_idx, (label, image, cmap) in enumerate(
+            [("target", target, "gray"), ("prediction", prediction, "gray"), ("error", error, "magma")]
+        ):
+            axis = axes[row_idx, col_idx]
+            axis.imshow(image, cmap=cmap, vmin=0.0, vmax=1.0)
+            axis.set_xticks([])
+            axis.set_yticks([])
+            if row_idx == 0:
+                axis.set_title(label)
+            if col_idx == 0:
+                axis.set_ylabel(model, fontsize=8)
+    fig.tight_layout()
+    fig.savefig(result_dir / "real_cifar_reconstruction_panel.png", dpi=190)
+    plt.close(fig)
+
+
+def run_q1_real_cifar_suite() -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, dict[str, tuple[np.ndarray, np.ndarray]]]]:
+    seeds = [0, 1, 2, 3, 4]
+    variants: list[tuple[str, Callable[[np.ndarray, int], np.ndarray]]] = [
+        ("newHVK-real-cifar", lambda base, seed: real_newhvk_features(base)),
+        ("no-entanglement", lambda base, seed: real_no_entanglement_features(base)),
+        ("strict-classical-rff", real_parameter_matched_classical_features),
+        ("raw-linear-classical", lambda base, seed: real_raw_linear_features(base)),
+        ("zz-only", lambda base, seed: real_zz_only_features(base)),
+        ("local-observables-only", lambda base, seed: real_local_observables_only(base)),
+        ("shuffled-pair-observables", real_shuffled_pair_features),
+        ("random-vqc", real_random_vqc_features),
+    ]
+    rows: list[dict[str, object]] = []
+    panels: dict[str, dict[str, tuple[np.ndarray, np.ndarray]]] = {}
+    for seed in seeds:
+        for model_name, feature_fn in variants:
+            model_rows, model_panels = run_real_cifar_holdout(seed, model_name, feature_fn)
+            rows.extend(model_rows)
+            if seed == seeds[0]:
+                panels[model_name] = model_panels
+    return rows, aggregate_metric_rows(rows), panels
+
+
+def run_q1_shot_noise_suite() -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    seeds = [0, 1, 2, 3, 4]
+    rows: list[dict[str, object]] = []
+    for shots in [128, 256, 512, 1024, 2048, 4096, 8192]:
+        for seed in seeds:
+            rows_for_seed, _ = run_real_cifar_holdout(
+                seed,
+                f"newHVK-shot-{shots}",
+                lambda base, seed, shots=shots: add_shot_noise(real_newhvk_features(base), shots, seed),
+            )
+            for row in rows_for_seed:
+                row["shots"] = shots
+            rows.extend(rows_for_seed)
+    shot_summary: list[dict[str, object]] = []
+    for shots in sorted({int(row["shots"]) for row in rows}):
+        shot_rows = [row for row in rows if int(row["shots"]) == shots]
+        shot_summary.append(
+            {
+                "shots": shots,
+                "n_images": len(shot_rows),
+                "mean_mse": float(np.mean([float(row["mse"]) for row in shot_rows])),
+                "std_mse": float(np.std([float(row["mse"]) for row in shot_rows], ddof=0)),
+                "mean_psnr": float(np.mean([float(row["psnr"]) for row in shot_rows])),
+                "std_psnr": float(np.std([float(row["psnr"]) for row in shot_rows], ddof=0)),
+                "mean_ssim": float(np.mean([float(row["ssim"]) for row in shot_rows])),
+            }
+        )
+    return rows, shot_summary
+
+
+def plot_shot_noise(result_dir: Path, rows: list[dict[str, object]]) -> None:
+    shots = [int(row["shots"]) for row in rows]
+    psnr = [float(row["mean_psnr"]) for row in rows]
+    fig, axis = plt.subplots(figsize=(6.8, 4.2))
+    axis.plot(shots, psnr, marker="o", color="#1f77b4")
+    axis.set_xscale("log", base=2)
+    axis.set_xlabel("Shots")
+    axis.set_ylabel("Mean PSNR (dB)")
+    axis.set_title("Real CIFAR Shot-Noise Robustness")
+    axis.grid(alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(result_dir / "real_cifar_shot_noise.png", dpi=190)
+    plt.close(fig)
+
+
+def write_resource_table(result_dir: Path) -> None:
+    rows = [
+        {
+            "model": "newHVK-real-cifar",
+            "feature_dim": 32,
+            "readout_parameters": 2112,
+            "cnot_or_pair_channels": 6,
+            "train_images_per_seed": 6,
+            "test_images_per_seed": 4,
+            "claim_role": "candidate entangling observable model",
+        },
+        {
+            "model": "strict-classical-rff",
+            "feature_dim": 32,
+            "readout_parameters": 2112,
+            "cnot_or_pair_channels": 0,
+            "train_images_per_seed": 6,
+            "test_images_per_seed": 4,
+            "claim_role": "same-width classical nonlinear control",
+        },
+        {
+            "model": "no-entanglement",
+            "feature_dim": 32,
+            "readout_parameters": 2112,
+            "cnot_or_pair_channels": 0,
+            "train_images_per_seed": 6,
+            "test_images_per_seed": 4,
+            "claim_role": "single-site observable ablation",
+        },
+        {
+            "model": "zz-only",
+            "feature_dim": 32,
+            "readout_parameters": 2112,
+            "cnot_or_pair_channels": 3,
+            "train_images_per_seed": 6,
+            "test_images_per_seed": 4,
+            "claim_role": "reduced observable-sector ablation",
+        },
+    ]
+    write_dict_csv(result_dir / "resource_comparison.csv", rows)
+    (result_dir / "resource_comparison.json").write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+
+def write_q1_report(result_dir: Path, real_summary: list[dict[str, object]], shot_summary: list[dict[str, object]]) -> None:
+    PAPER_DIR.mkdir(parents=True, exist_ok=True)
+    best_real = real_summary[0]
+    newhvk_real = next(row for row in real_summary if row["model"] == "newHVK-real-cifar")
+    real_rows = "\n".join(
+        f"{row['model']} & ${float(row['mean_mse']):.4e}$ & {float(row['mean_psnr']):.2f} & {float(row['mean_ssim']):.4f} \\\\"
+        for row in real_summary
+    )
+    shot_rows = "\n".join(
+        f"{int(row['shots'])} & ${float(row['mean_mse']):.4e}$ & {float(row['mean_psnr']):.2f} & {float(row['mean_ssim']):.4f} \\\\"
+        for row in shot_summary
+    )
+    tex = rf"""\documentclass[journal]{{IEEEtran}}
+\usepackage{{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm}}
+\usepackage[hypertexnames=false]{{hyperref}}
+\begin{{document}}
+\title{{newHVK Q1-Validation Addendum: Held-Out CIFAR Baselines, Observable Ablations, and Shot-Noise Robustness}}
+\author{{Sparsho~Chakraborty and Siddhartha~Patra}}
+\maketitle
+\begin{{abstract}}
+This addendum strengthens the newHVK evidence package by separating diagnostic pair-correlation performance from held-out natural-image reconstruction. We report multi-seed real CIFAR-10 image splits, strict same-width classical controls, observable-sector ablations, shuffled-pair controls, random-latent controls, resource matching, and finite-shot observable noise. Unlike the restricted pair-correlation diagnostic, the real held-out CIFAR test does not establish quantum advantage: the best real-image result is obtained by {best_real['model']}, while newHVK-real-cifar reaches {float(newhvk_real['mean_psnr']):.2f} dB mean PSNR. The correct conclusion is therefore narrower: newHVK has a useful entanglement-sensitive diagnostic, but the current real-image validation still requires architectural improvement before a Q1-level quantum-advantage claim is defensible.
+\end{{abstract}}
+
+\begin{{IEEEkeywords}}
+Hamiltonian vision kernel, CIFAR-10 reconstruction, ablation study, quantum observables, shot noise, classical controls.
+\end{{IEEEkeywords}}
+
+\section{{Validation Protocol}}
+Ten cached CIFAR-10 grayscale images are split across five random seeds. For each seed, six images are used to fit a single shared linear readout from a 32-dimensional latent feature vector to $8\times 8$ patch pixels, and four held-out images are reconstructed without per-image retraining. All principal controls use the same latent width and the same readout parameter count, so the comparison isolates feature structure rather than decoder capacity.
+
+\section{{Held-Out CIFAR Results}}
+\begin{{table*}}[t]
+\centering
+\caption{{Real held-out CIFAR-10 reconstruction across five random image splits. Lower MSE and higher PSNR/SSIM are better.}}
+\label{{tab:real_cifar_q1}}
+\scriptsize
+\begin{{tabular}}{{lccc}}
+\toprule
+Model & Mean MSE & Mean PSNR & Mean SSIM \\
+\midrule
+{real_rows}
+\bottomrule
+\end{{tabular}}
+\end{{table*}}
+
+\begin{{figure*}}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{{../results/q1_validation/real_cifar_holdout_summary.png}}
+\caption{{Held-out CIFAR metric summary for newHVK and same-width controls.}}
+\label{{fig:real_cifar_summary}}
+\end{{figure*}}
+
+\begin{{figure*}}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{{../results/q1_validation/real_cifar_reconstruction_panel.png}}
+\caption{{Representative held-out CIFAR reconstruction panel. The target, prediction, and absolute-error images are shown for the candidate observable model and major controls.}}
+\label{{fig:real_cifar_recons}}
+\end{{figure*}}
+
+\section{{Shot-Noise Robustness}}
+\begin{{table}}[t]
+\centering
+\caption{{Finite-shot observable-noise simulation for real held-out CIFAR reconstruction.}}
+\label{{tab:shot_noise_q1}}
+\scriptsize
+\begin{{tabular}}{{rccc}}
+\toprule
+Shots & Mean MSE & Mean PSNR & Mean SSIM \\
+\midrule
+{shot_rows}
+\bottomrule
+\end{{tabular}}
+\end{{table}}
+
+\begin{{figure}}[t]
+\centering
+\includegraphics[width=\linewidth]{{../results/q1_validation/real_cifar_shot_noise.png}}
+\caption{{Shot-noise robustness of the newHVK observable feature vector on real held-out CIFAR splits.}}
+\label{{fig:shot_noise_q1}}
+\end{{figure}}
+
+\section{{Interpretation}}
+The key baseline is the strict same-width classical random-feature control, but the strongest warning comes from the local and raw-linear controls. In the real held-out CIFAR table, {best_real['model']} obtains the best mean MSE (${float(best_real['mean_mse']):.4e}$), while newHVK-real-cifar is weaker (${float(newhvk_real['mean_mse']):.4e}$). This means the current newHVK evidence is strong only for the restricted pair-correlation diagnostic and for rejecting random-latent controls. It does not yet support a broad natural-image quantum-advantage claim. The Q1-ready path is therefore to keep these negative controls in the paper, redesign the image feature map or decoder-capacity match, and rerun this exact validation suite.
+
+\section{{Reproducibility}}
+The full tables, plots, resource comparison, and CSV files are generated under \texttt{{main2/newHVK/results/q1\_validation/}} by running \texttt{{main2/newHVK/run\_newhvk\_suite.py --q1-validation --write-q1-report}}.
+\end{{document}}
+"""
+    (PAPER_DIR / "newhvk_q1_validation_report.tex").write_text(tex, encoding="utf-8")
+
+
+def write_q1_validation_suite(write_report: bool = False) -> None:
+    result_dir = RESULTS / "q1_validation"
+    result_dir.mkdir(parents=True, exist_ok=True)
+    real_rows, real_summary, panels = run_q1_real_cifar_suite()
+    write_dict_csv(result_dir / "real_cifar_holdout.csv", real_rows)
+    write_dict_csv(result_dir / "real_cifar_holdout_summary.csv", real_summary)
+    (result_dir / "real_cifar_holdout.json").write_text(json.dumps(real_rows, indent=2), encoding="utf-8")
+    (result_dir / "real_cifar_holdout_summary.json").write_text(json.dumps(real_summary, indent=2), encoding="utf-8")
+    plot_q1_summary(result_dir, real_summary, "real_cifar_holdout_summary.png", "Real Held-Out CIFAR-10 Validation")
+    save_q1_reconstruction_panel(result_dir, panels)
+
+    gate_rows = [
+        row
+        for row in real_rows
+        if row["model"]
+        in {
+            "newHVK-real-cifar",
+            "no-entanglement",
+            "zz-only",
+            "local-observables-only",
+            "shuffled-pair-observables",
+            "random-vqc",
+        }
+    ]
+    gate_summary = aggregate_metric_rows(gate_rows)
+    write_dict_csv(result_dir / "observable_gate_ablation.csv", gate_rows)
+    write_dict_csv(result_dir / "observable_gate_ablation_summary.csv", gate_summary)
+    plot_q1_summary(result_dir, gate_summary, "observable_gate_ablation.png", "Observable and Gate Ablations")
+
+    shot_rows, shot_summary = run_q1_shot_noise_suite()
+    write_dict_csv(result_dir / "shot_noise_real_cifar.csv", shot_rows)
+    write_dict_csv(result_dir / "shot_noise_real_cifar_summary.csv", shot_summary)
+    (result_dir / "shot_noise_real_cifar.json").write_text(json.dumps(shot_rows, indent=2), encoding="utf-8")
+    plot_shot_noise(result_dir, shot_summary)
+    write_resource_table(result_dir)
+    if write_report:
+        write_q1_report(result_dir, real_summary, shot_summary)
+    readme = """# newHVK Q1 validation suite
+
+This folder contains the stronger validation layer requested for a Q1-style paper:
+real held-out CIFAR splits, multi-seed summaries, strict same-width classical
+controls, observable/gate ablations, shuffled-pair controls, random-latent
+controls, finite-shot noise simulation, reconstruction panels, plots, and a
+resource comparison.
+
+Claim boundary: these experiments strengthen the empirical baseline and ablation
+story. They still support a controlled representational-advantage claim, not a
+formal hardware quantum-advantage proof.
+"""
+    (result_dir / "README.md").write_text(readme, encoding="utf-8")
+
+
 def copy_existing_evidence() -> None:
     copy_specs = [
         (
@@ -829,6 +1387,15 @@ def write_manifest(results: list[ModelResult]) -> None:
             "results/full_ablation_suite/hvk_epoch_correlation_table.csv",
             "results/full_ablation_suite/order_parameter_curve.csv",
             "results/full_ablation_suite/media/",
+        ],
+        "q1_validation_outputs": [
+            "results/q1_validation/real_cifar_holdout.csv",
+            "results/q1_validation/real_cifar_holdout_summary.csv",
+            "results/q1_validation/observable_gate_ablation.csv",
+            "results/q1_validation/shot_noise_real_cifar.csv",
+            "results/q1_validation/resource_comparison.csv",
+            "paper_latex/newhvk_q1_validation_report.tex",
+            "paper_latex/newhvk_q1_validation_report.pdf",
         ],
         "restricted_benchmark_best_model": min(results, key=lambda item: item.mse).model,
     }
@@ -925,6 +1492,16 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Regenerate main2/newHVK/paper_latex/newhvk_paper.tex. Off by default.",
     )
+    parser.add_argument(
+        "--q1-validation",
+        action="store_true",
+        help="Run real held-out CIFAR validation, strict controls, gate ablations, and shot-noise tests.",
+    )
+    parser.add_argument(
+        "--write-q1-report",
+        action="store_true",
+        help="Write main2/newHVK/paper_latex/newhvk_q1_validation_report.tex.",
+    )
     return parser.parse_args()
 
 
@@ -937,6 +1514,8 @@ def main() -> None:
     write_results(results)
     if args.full_suite:
         write_full_ablation_suite()
+    if args.q1_validation:
+        write_q1_validation_suite(write_report=args.write_q1_report)
     write_manifest(results)
     if args.write_paper:
         write_paper(results)
@@ -946,6 +1525,8 @@ def main() -> None:
         print(f"{result.model}: mse={result.mse:.6e}, psnr={result.psnr:.2f}, r2={result.r2:.4f}")
     if args.full_suite:
         print(f"Full ablation suite: {RESULTS / 'full_ablation_suite'}")
+    if args.q1_validation:
+        print(f"Q1 validation suite: {RESULTS / 'q1_validation'}")
 
 
 if __name__ == "__main__":
