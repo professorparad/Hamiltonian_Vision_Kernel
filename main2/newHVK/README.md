@@ -13,6 +13,7 @@ The original HVK ablations showed that the observable channel matters, but they 
 - compare entangling observables against no-entanglement, parameter-matched classical, raw-linear, random-VQC, freeze-quantum, and freeze-classical controls;
 - generate multi-seed summaries, held-out CIFAR-style proxy tests, observable-noise hardware proxies, epoch CSVs, order-parameter diagnostics, plots, GIFs, and MP4 videos;
 - generate a Q1-validation layer with real held-out CIFAR splits, strict same-width classical controls, observable/gate ablations, shuffled-pair controls, finite-shot noise simulation, and a compact IEEE-style PDF addendum;
+- generate a CIFAR-derived nonlocal patch-correlation diagnostic where the target depends on distant patch products and pair-observable features become load-bearing;
 - keep paper generation optional so the deleted `newhvk_paper.tex` is not recreated unless `--write-paper` is passed.
 
 ## Important claim boundary
@@ -37,6 +38,12 @@ or run only the stronger Q1-validation suite and PDF addendum:
 ./main2/newHVK/scripts/run_q1_validation_suite.sh
 ```
 
+or run only the CIFAR nonlocal correlation advantage diagnostic:
+
+```bash
+./main2/newHVK/scripts/run_cifar_nonlocal_advantage.sh
+```
+
 Outputs are written to:
 
 - `main2/newHVK/results/quantum_advantage_candidate/`
@@ -55,6 +62,8 @@ Outputs are written to:
 - `main2/newHVK/results/q1_validation/observable_gate_ablation.csv`
 - `main2/newHVK/results/q1_validation/shot_noise_real_cifar.csv`
 - `main2/newHVK/results/q1_validation/resource_comparison.csv`
+- `main2/newHVK/results/cifar_nonlocal_advantage/cifar_nonlocal_pair_summary.csv`
+- `main2/newHVK/results/cifar_nonlocal_advantage/cifar_nonlocal_advantage.png`
 - `main2/newHVK/paper_latex/newhvk_q1_validation_report.tex`
 - `main2/newHVK/paper_latex/newhvk_q1_validation_report.pdf`
 - `main2/newHVK/results/baselines/`

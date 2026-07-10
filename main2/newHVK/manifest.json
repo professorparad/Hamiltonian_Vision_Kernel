@@ -36,5 +36,10 @@
     "paper_latex/newhvk_q1_validation_report.tex",
     "paper_latex/newhvk_q1_validation_report.pdf"
   ],
+  "cifar_nonlocal_advantage_outputs": [
+    "results/cifar_nonlocal_advantage/cifar_nonlocal_pair_results.csv",
+    "results/cifar_nonlocal_advantage/cifar_nonlocal_pair_summary.csv",
+    "results/cifar_nonlocal_advantage/cifar_nonlocal_advantage.png"
+  ],
   "restricted_benchmark_best_model": "newHVK-entangling-observables"
 }

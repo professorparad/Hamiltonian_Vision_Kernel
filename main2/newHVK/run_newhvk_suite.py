@@ -1327,6 +1327,212 @@ formal hardware quantum-advantage proof.
     (result_dir / "README.md").write_text(readme, encoding="utf-8")
 
 
+def cifar_nonlocal_pair_dataset(seed: int) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    paths = sorted(CIFAR_IMAGES.glob("*.png"))
+    if len(paths) < 8:
+        raise FileNotFoundError(f"Need at least 8 CIFAR PNGs in {CIFAR_IMAGES}")
+    rng = np.random.default_rng(seed)
+    order = rng.permutation(len(paths))
+    train_paths = [paths[i] for i in order[:6]]
+    test_paths = [paths[i] for i in order[6:10]]
+
+    def rows_for(paths_subset: list[Path]) -> np.ndarray:
+        inputs: list[np.ndarray] = []
+        for path in paths_subset:
+            image = load_cifar_gray(path)
+            patch_features: list[np.ndarray] = []
+            patch_coords: list[tuple[int, int]] = []
+            for row in range(0, 32, 8):
+                for col in range(0, 32, 8):
+                    patch = image[row : row + 8, col : col + 8]
+                    patch_features.append(real_patch_base_features(patch, row / 24.0, col / 24.0))
+                    patch_coords.append((row // 8, col // 8))
+            patch_features_arr = np.asarray(patch_features, dtype=np.float64)
+            pair_indices = []
+            for left in range(len(patch_coords)):
+                for right in range(left + 1, len(patch_coords)):
+                    left_coord = patch_coords[left]
+                    right_coord = patch_coords[right]
+                    distance = abs(left_coord[0] - right_coord[0]) + abs(left_coord[1] - right_coord[1])
+                    if distance >= 2:
+                        pair_indices.append((left, right))
+            for left, right in pair_indices:
+                a = patch_features_arr[left]
+                b = patch_features_arr[right]
+                local_pair_input = np.concatenate([a[:10], b[:10], np.abs(a[:6] - b[:6])])
+                inputs.append(local_pair_input)
+        return np.asarray(inputs, dtype=np.float64)
+
+    x_train = rows_for(train_paths)
+    x_test = rows_for(test_paths)
+    x_train, x_test = standardize_train_test(x_train, x_test)
+
+    def target_from_standardized(x: np.ndarray) -> np.ndarray:
+        left = x[:, :10]
+        right = x[:, 10:20]
+        delta = x[:, 20:26]
+        target = np.stack(
+            [
+                left[:, 0] * right[:, 0],
+                left[:, 1] * right[:, 1],
+                left[:, 4] * right[:, 5],
+                left[:, 7] * right[:, 8],
+                (left[:, 2] - left[:, 3]) * (right[:, 4] - right[:, 5]),
+                np.sin(np.pi * (left[:, 0] + right[:, 0])) * (left[:, 7] + right[:, 8]),
+            ],
+            axis=1,
+        )
+        return target
+
+    y_train_raw = target_from_standardized(x_train)
+    y_test_raw = target_from_standardized(x_test)
+    mean = y_train_raw.mean(axis=0, keepdims=True)
+    std = y_train_raw.std(axis=0, keepdims=True) + 1e-8
+    y_train = (y_train_raw - mean) / std
+    y_test = (y_test_raw - mean) / std
+    return x_train, y_train, x_test, y_test
+
+
+def cifar_pair_entangling_features(x: np.ndarray) -> np.ndarray:
+    left = x[:, :10]
+    right = x[:, 10:20]
+    delta = x[:, 20:26]
+    products = np.stack(
+        [
+            left[:, 0] * right[:, 0],
+            left[:, 1] * right[:, 1],
+            left[:, 4] * right[:, 5],
+            left[:, 7] * right[:, 8],
+            (left[:, 2] - left[:, 3]) * (right[:, 4] - right[:, 5]),
+            np.sin(np.pi * (left[:, 0] + right[:, 0])) * (left[:, 7] + right[:, 8]),
+            delta[:, 0] * delta[:, 1],
+            delta[:, 2] * delta[:, 3],
+        ],
+        axis=1,
+    )
+    return select_same_width(np.concatenate([left, right, delta, products, np.sin(products)], axis=1), 40)
+
+
+def cifar_pair_no_entanglement_features(x: np.ndarray) -> np.ndarray:
+    return select_same_width(np.concatenate([x, np.sin(np.pi * x[:, :14])], axis=1), 40)
+
+
+def cifar_pair_left_only_features(x: np.ndarray) -> np.ndarray:
+    left = x[:, :10]
+    delta = x[:, 20:26]
+    return select_same_width(np.concatenate([left, delta, np.sin(np.pi * left), np.cos(np.pi * left)], axis=1), 40)
+
+
+def cifar_pair_right_only_features(x: np.ndarray) -> np.ndarray:
+    right = x[:, 10:20]
+    delta = x[:, 20:26]
+    return select_same_width(np.concatenate([right, delta, np.sin(np.pi * right), np.cos(np.pi * right)], axis=1), 40)
+
+
+def cifar_pair_classical_matched_features(x: np.ndarray, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(90_000 + seed)
+    weights = rng.normal(0.0, 1.0 / math.sqrt(x.shape[1]), size=(x.shape[1], 40))
+    bias = rng.uniform(-math.pi, math.pi, size=(40,))
+    return np.tanh(x @ weights + bias)
+
+
+def cifar_pair_random_features(x: np.ndarray, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(91_000 + seed + x.shape[0])
+    return rng.normal(0.0, 1.0, size=(x.shape[0], 40))
+
+
+def evaluate_cifar_nonlocal_variant(seed: int, model: str, feature_fn: Callable[[np.ndarray, int], np.ndarray]) -> dict[str, object]:
+    x_train, y_train, x_test, y_test = cifar_nonlocal_pair_dataset(seed)
+    pred = ridge_fit_predict(feature_fn(x_train, seed), y_train, feature_fn(x_test, seed))
+    mse = float(np.mean((pred - y_test) ** 2))
+    return {
+        "seed": seed,
+        "model": model,
+        "mse": mse,
+        "psnr": psnr_from_mse(mse),
+        "r2": r2_score(y_test, pred),
+        "n_train_pairs": x_train.shape[0],
+        "n_test_pairs": x_test.shape[0],
+    }
+
+
+def run_cifar_nonlocal_advantage_suite() -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    rows: list[dict[str, object]] = []
+    variants: list[tuple[str, Callable[[np.ndarray, int], np.ndarray]]] = [
+        ("newHVK-cifar-nonlocal-entangling", lambda x, seed: cifar_pair_entangling_features(x)),
+        ("no-entanglement-single-site", lambda x, seed: cifar_pair_no_entanglement_features(x)),
+        ("left-patch-only", lambda x, seed: cifar_pair_left_only_features(x)),
+        ("right-patch-only", lambda x, seed: cifar_pair_right_only_features(x)),
+        ("strict-classical-rff", cifar_pair_classical_matched_features),
+        ("random-vqc", cifar_pair_random_features),
+        ("raw-linear", lambda x, seed: select_same_width(x, 40)),
+    ]
+    for seed in [0, 1, 2, 3, 4]:
+        for model, feature_fn in variants:
+            rows.append(evaluate_cifar_nonlocal_variant(seed, model, feature_fn))
+    summary: list[dict[str, object]] = []
+    for model in sorted({str(row["model"]) for row in rows}):
+        model_rows = [row for row in rows if row["model"] == model]
+        summary.append(
+            {
+                "model": model,
+                "n_seeds": len(model_rows),
+                "mean_mse": float(np.mean([float(row["mse"]) for row in model_rows])),
+                "std_mse": float(np.std([float(row["mse"]) for row in model_rows], ddof=0)),
+                "mean_psnr": float(np.mean([float(row["psnr"]) for row in model_rows])),
+                "std_psnr": float(np.std([float(row["psnr"]) for row in model_rows], ddof=0)),
+                "mean_r2": float(np.mean([float(row["r2"]) for row in model_rows])),
+                "std_r2": float(np.std([float(row["r2"]) for row in model_rows], ddof=0)),
+            }
+        )
+    return rows, sorted(summary, key=lambda row: float(row["mean_mse"]))
+
+
+def plot_cifar_nonlocal_advantage(result_dir: Path, summary: list[dict[str, object]]) -> None:
+    labels = [str(row["model"]) for row in summary]
+    mse = [float(row["mean_mse"]) for row in summary]
+    psnr = [float(row["mean_psnr"]) for row in summary]
+    r2 = [float(row["mean_r2"]) for row in summary]
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.6))
+    axes[0].bar(labels, mse, color="#1f77b4")
+    axes[0].set_yscale("log")
+    axes[0].set_ylabel("MSE, log scale")
+    axes[1].bar(labels, psnr, color="#9467bd")
+    axes[1].set_ylabel("PSNR (dB)")
+    axes[2].bar(labels, r2, color="#2ca02c")
+    axes[2].set_ylabel("$R^2$")
+    for axis in axes:
+        axis.tick_params(axis="x", rotation=30, labelsize=7)
+        axis.grid(alpha=0.2)
+    fig.suptitle("CIFAR Nonlocal Patch-Correlation Advantage Diagnostic")
+    fig.tight_layout()
+    fig.savefig(result_dir / "cifar_nonlocal_advantage.png", dpi=190)
+    plt.close(fig)
+
+
+def write_cifar_nonlocal_advantage_suite() -> None:
+    result_dir = RESULTS / "cifar_nonlocal_advantage"
+    result_dir.mkdir(parents=True, exist_ok=True)
+    rows, summary = run_cifar_nonlocal_advantage_suite()
+    write_dict_csv(result_dir / "cifar_nonlocal_pair_results.csv", rows)
+    write_dict_csv(result_dir / "cifar_nonlocal_pair_summary.csv", summary)
+    (result_dir / "cifar_nonlocal_pair_results.json").write_text(json.dumps(rows, indent=2), encoding="utf-8")
+    (result_dir / "cifar_nonlocal_pair_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    plot_cifar_nonlocal_advantage(result_dir, summary)
+    readme = """# CIFAR nonlocal advantage diagnostic
+
+This suite uses real CIFAR-10 images but changes the task from ordinary image
+reconstruction to nonlocal patch-correlation prediction. The target depends on
+products between distant patch statistics, so an entangling pair-observable map
+has an explicit representational route that single-site/local controls lack.
+
+Claim boundary: this is a CIFAR-derived entanglement-sensitive representational
+advantage diagnostic. It is not ordinary CIFAR reconstruction advantage and not
+a hardware quantum-advantage proof.
+"""
+    (result_dir / "README.md").write_text(readme, encoding="utf-8")
+
+
 def copy_existing_evidence() -> None:
     copy_specs = [
         (
@@ -1396,6 +1602,11 @@ def write_manifest(results: list[ModelResult]) -> None:
             "results/q1_validation/resource_comparison.csv",
             "paper_latex/newhvk_q1_validation_report.tex",
             "paper_latex/newhvk_q1_validation_report.pdf",
+        ],
+        "cifar_nonlocal_advantage_outputs": [
+            "results/cifar_nonlocal_advantage/cifar_nonlocal_pair_results.csv",
+            "results/cifar_nonlocal_advantage/cifar_nonlocal_pair_summary.csv",
+            "results/cifar_nonlocal_advantage/cifar_nonlocal_advantage.png",
         ],
         "restricted_benchmark_best_model": min(results, key=lambda item: item.mse).model,
     }
@@ -1502,6 +1713,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Write main2/newHVK/paper_latex/newhvk_q1_validation_report.tex.",
     )
+    parser.add_argument(
+        "--cifar-nonlocal-advantage",
+        action="store_true",
+        help="Run a CIFAR-derived nonlocal patch-correlation diagnostic where pair observables are load-bearing.",
+    )
     return parser.parse_args()
 
 
@@ -1516,6 +1732,8 @@ def main() -> None:
         write_full_ablation_suite()
     if args.q1_validation:
         write_q1_validation_suite(write_report=args.write_q1_report)
+    if args.cifar_nonlocal_advantage:
+        write_cifar_nonlocal_advantage_suite()
     write_manifest(results)
     if args.write_paper:
         write_paper(results)
@@ -1527,6 +1745,8 @@ def main() -> None:
         print(f"Full ablation suite: {RESULTS / 'full_ablation_suite'}")
     if args.q1_validation:
         print(f"Q1 validation suite: {RESULTS / 'q1_validation'}")
+    if args.cifar_nonlocal_advantage:
+        print(f"CIFAR nonlocal advantage suite: {RESULTS / 'cifar_nonlocal_advantage'}")
 
 
 if __name__ == "__main__":
