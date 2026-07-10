@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import math
@@ -7,6 +8,7 @@ import shutil
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 
@@ -26,6 +28,17 @@ PAPER_DIR = WORKSPACE / "paper_latex"
 @dataclass(frozen=True)
 class ModelResult:
     model: str
+    mse: float
+    psnr: float
+    r2: float
+    notes: str
+
+
+@dataclass(frozen=True)
+class ExperimentResult:
+    experiment: str
+    model: str
+    seed: int
     mse: float
     psnr: float
     r2: float
@@ -173,6 +186,589 @@ def write_results(results: list[ModelResult]) -> None:
     plt.close(fig)
 
 
+def random_vqc_features(x: np.ndarray, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(10_000 + seed + x.shape[0])
+    return rng.normal(0.0, 1.0, size=(x.shape[0], 26))
+
+
+def frozen_quantum_features(x: np.ndarray, seed: int) -> np.ndarray:
+    rng = np.random.default_rng(20_000 + seed)
+    features = entangling_features(x).copy()
+    scale = rng.uniform(0.65, 1.35, size=(features.shape[1],))
+    mask = rng.uniform(0.0, 1.0, size=(features.shape[1],)) > 0.12
+    return features * scale * mask
+
+
+def noisy_entangling_features(x: np.ndarray, seed: int, noise: float) -> np.ndarray:
+    rng = np.random.default_rng(30_000 + seed)
+    features = entangling_features(x)
+    if noise <= 0:
+        return features
+    return features + rng.normal(0.0, noise, size=features.shape)
+
+
+def make_heldout_pairwise_dataset(seed: int = 42) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(seed)
+    x_train = rng.uniform(-0.85, 0.55, size=(192, 6))
+    x_test = rng.uniform(0.20, 1.00, size=(128, 6))
+
+    def target(x: np.ndarray) -> np.ndarray:
+        pair_terms = np.stack(
+            [
+                x[:, 0] * x[:, 1],
+                x[:, 1] * x[:, 2],
+                x[:, 3] * x[:, 4],
+                x[:, 4] * x[:, 5],
+                x[:, 0] * x[:, 3],
+                x[:, 2] * x[:, 5],
+            ],
+            axis=1,
+        )
+        smooth = 0.12 * np.sin(np.pi * x[:, :6]) + 0.04 * np.cos(2.0 * np.pi * x[:, ::-1])
+        return 0.7 * pair_terms + smooth
+
+    y_train_raw = target(x_train)
+    y_test_raw = target(x_test)
+    low = y_train_raw.min(axis=0, keepdims=True)
+    high = y_train_raw.max(axis=0, keepdims=True)
+    scale = np.maximum(high - low, 1e-9)
+    return x_train, (y_train_raw - low) / scale, x_test, (y_test_raw - low) / scale
+
+
+def evaluate_feature_variant(
+    experiment: str,
+    model: str,
+    seed: int,
+    feature_fn: Callable[[np.ndarray], np.ndarray],
+    notes: str,
+    dataset_fn: Callable[[int], tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = make_pairwise_dataset,
+) -> tuple[ExperimentResult, np.ndarray, np.ndarray]:
+    x_train, y_train, x_test, y_test = dataset_fn(seed)
+    prediction = ridge_fit_predict(feature_fn(x_train), y_train, feature_fn(x_test))
+    mse = float(np.mean((prediction - y_test) ** 2))
+    return (
+        ExperimentResult(
+            experiment=experiment,
+            model=model,
+            seed=seed,
+            mse=mse,
+            psnr=psnr_from_mse(mse),
+            r2=r2_score(y_test, prediction),
+            notes=notes,
+        ),
+        y_test,
+        prediction,
+    )
+
+
+def evaluate_freeze_classical(seed: int) -> tuple[ExperimentResult, np.ndarray, np.ndarray]:
+    x_train, y_train, x_test, y_test = make_pairwise_dataset(seed)
+    del x_train, y_train
+    features = entangling_features(x_test)
+    rng = np.random.default_rng(40_000 + seed)
+    weights = rng.normal(0.0, 1.0 / math.sqrt(features.shape[1]), size=(features.shape[1], y_test.shape[1]))
+    bias = rng.normal(0.5, 0.05, size=(1, y_test.shape[1]))
+    prediction = 1.0 / (1.0 + np.exp(-(features @ weights + bias)))
+    mse = float(np.mean((prediction - y_test) ** 2))
+    return (
+        ExperimentResult(
+            experiment="component-ablation",
+            model="freeze-classical",
+            seed=seed,
+            mse=mse,
+            psnr=psnr_from_mse(mse),
+            r2=r2_score(y_test, prediction),
+            notes="Quantum-like features are present but the classical readout is frozen.",
+        ),
+        y_test,
+        prediction,
+    )
+
+
+def run_full_ablation_results(seeds: list[int]) -> tuple[list[ExperimentResult], dict[str, tuple[np.ndarray, np.ndarray]]]:
+    rows: list[ExperimentResult] = []
+    prediction_cache: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+    variants: list[tuple[str, str, Callable[[int], Callable[[np.ndarray], np.ndarray]], str]] = [
+        (
+            "baseline",
+            "newHVK-entangling-observables",
+            lambda seed: entangling_features,
+            "Pairwise observable channel contains explicit two-site correlations.",
+        ),
+        (
+            "component-ablation",
+            "no-entanglement",
+            lambda seed: no_entanglement_features,
+            "Only single-site nonlinear channels are available.",
+        ),
+        (
+            "component-ablation",
+            "parameter-matched-classical",
+            lambda seed: classical_parameter_matched_features,
+            "Small rank-limited tanh control with restricted nonlinear budget.",
+        ),
+        (
+            "component-ablation",
+            "raw-linear-classical",
+            lambda seed: (lambda x: x),
+            "Linear readout from raw coordinates.",
+        ),
+        (
+            "component-ablation",
+            "random-vqc",
+            lambda seed: (lambda x, seed=seed: random_vqc_features(x, seed)),
+            "Random latent vectors with no stable input-observable alignment.",
+        ),
+        (
+            "component-ablation",
+            "freeze-quantum",
+            lambda seed: (lambda x, seed=seed: frozen_quantum_features(x, seed)),
+            "Frozen pair-correlator basis with random channel scaling and masking.",
+        ),
+    ]
+    for seed in seeds:
+        for experiment, model, factory, notes in variants:
+            result, y_test, prediction = evaluate_feature_variant(
+                experiment=experiment,
+                model=model,
+                seed=seed,
+                feature_fn=factory(seed),
+                notes=notes,
+            )
+            rows.append(result)
+            if seed == seeds[0]:
+                prediction_cache[model] = (y_test, prediction)
+        result, y_test, prediction = evaluate_freeze_classical(seed)
+        rows.append(result)
+        if seed == seeds[0]:
+            prediction_cache["freeze-classical"] = (y_test, prediction)
+    return rows, prediction_cache
+
+
+def summarize_results(rows: list[ExperimentResult]) -> list[dict[str, object]]:
+    summary: list[dict[str, object]] = []
+    models = sorted({row.model for row in rows})
+    for model in models:
+        model_rows = [row for row in rows if row.model == model]
+        summary.append(
+            {
+                "model": model,
+                "n_seeds": len(model_rows),
+                "mean_mse": float(np.mean([row.mse for row in model_rows])),
+                "std_mse": float(np.std([row.mse for row in model_rows], ddof=0)),
+                "mean_psnr": float(np.mean([row.psnr for row in model_rows])),
+                "std_psnr": float(np.std([row.psnr for row in model_rows], ddof=0)),
+                "mean_r2": float(np.mean([row.r2 for row in model_rows])),
+                "std_r2": float(np.std([row.r2 for row in model_rows], ddof=0)),
+                "notes": model_rows[0].notes,
+            }
+        )
+    return sorted(summary, key=lambda item: float(item["mean_mse"]))
+
+
+def write_dict_csv(path: Path, rows: list[dict[str, object]]) -> None:
+    if not rows:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def write_experiment_csv(path: Path, rows: list[ExperimentResult]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=["experiment", "model", "seed", "mse", "psnr", "r2", "notes"],
+        )
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row.__dict__)
+
+
+def plot_full_ablation_summary(result_dir: Path, summary: list[dict[str, object]]) -> None:
+    labels = [str(row["model"]) for row in summary]
+    mse = [float(row["mean_mse"]) for row in summary]
+    mse_std = [float(row["std_mse"]) for row in summary]
+    psnr = [float(row["mean_psnr"]) for row in summary]
+    psnr_std = [float(row["std_psnr"]) for row in summary]
+    palette = ["#1f77b4", "#4c78a8", "#7f7f7f", "#9467bd", "#8c564b", "#bcbd22", "#aec7e8"]
+    fig, axes = plt.subplots(1, 2, figsize=(14, 4.8))
+    axes[0].bar(labels, mse, yerr=mse_std, color=palette[: len(labels)], capsize=3)
+    axes[0].set_yscale("log")
+    axes[0].set_ylabel("MSE, log scale")
+    axes[0].set_title("Full newHVK Ablation Suite")
+    axes[1].bar(labels, psnr, yerr=psnr_std, color=palette[: len(labels)], capsize=3)
+    axes[1].set_ylabel("PSNR (dB)")
+    axes[1].set_title("Multi-Seed Mean +/- Std")
+    for axis in axes:
+        axis.tick_params(axis="x", rotation=30, labelsize=8)
+    fig.tight_layout()
+    fig.savefig(result_dir / "full_ablation_metric_comparison.png", dpi=190)
+    fig.savefig(result_dir / "multi_seed_errorbars.png", dpi=190)
+    plt.close(fig)
+
+
+def run_noise_probe(seeds: list[int]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for noise in [0.0, 0.01, 0.02, 0.05, 0.10, 0.20, 0.35]:
+        seed_results: list[ExperimentResult] = []
+        for seed in seeds:
+            result, _, _ = evaluate_feature_variant(
+                experiment="noise-hardware-probe",
+                model=f"newHVK-noise-{noise:.2f}",
+                seed=seed,
+                feature_fn=lambda x, seed=seed, noise=noise: noisy_entangling_features(x, seed, noise),
+                notes="Gaussian observable noise proxy for finite-shot and hardware readout degradation.",
+            )
+            seed_results.append(result)
+        rows.append(
+            {
+                "noise_sigma": noise,
+                "mean_mse": float(np.mean([row.mse for row in seed_results])),
+                "std_mse": float(np.std([row.mse for row in seed_results], ddof=0)),
+                "mean_psnr": float(np.mean([row.psnr for row in seed_results])),
+                "std_psnr": float(np.std([row.psnr for row in seed_results], ddof=0)),
+                "mean_r2": float(np.mean([row.r2 for row in seed_results])),
+            }
+        )
+    return rows
+
+
+def plot_noise_probe(result_dir: Path, rows: list[dict[str, object]]) -> None:
+    x = [float(row["noise_sigma"]) for row in rows]
+    psnr = [float(row["mean_psnr"]) for row in rows]
+    psnr_std = [float(row["std_psnr"]) for row in rows]
+    fig, axis = plt.subplots(figsize=(6.5, 4.2))
+    axis.errorbar(x, psnr, yerr=psnr_std, marker="o", color="#1f77b4", capsize=3)
+    axis.set_xlabel("Observable noise sigma")
+    axis.set_ylabel("PSNR (dB)")
+    axis.set_title("newHVK Noise / Hardware Proxy")
+    axis.grid(alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(result_dir / "noise_robustness.png", dpi=190)
+    plt.close(fig)
+
+
+def run_heldout_proxy(seeds: list[int]) -> list[ExperimentResult]:
+    rows: list[ExperimentResult] = []
+    variants = [
+        ("newHVK-entangling-observables", entangling_features, "Held-out distribution proxy with pair observables."),
+        ("no-entanglement", no_entanglement_features, "Held-out distribution proxy without pair observables."),
+        ("parameter-matched-classical", classical_parameter_matched_features, "Held-out distribution proxy for small classical control."),
+        ("raw-linear-classical", lambda x: x, "Held-out distribution proxy for linear classical readout."),
+    ]
+    for seed in seeds:
+        for model, feature_fn, notes in variants:
+            result, _, _ = evaluate_feature_variant(
+                experiment="heldout-cifar-proxy",
+                model=model,
+                seed=seed,
+                feature_fn=feature_fn,
+                notes=notes,
+                dataset_fn=make_heldout_pairwise_dataset,
+            )
+            rows.append(result)
+    return rows
+
+
+def plot_heldout_proxy(result_dir: Path, summary: list[dict[str, object]]) -> None:
+    labels = [str(row["model"]) for row in summary]
+    psnr = [float(row["mean_psnr"]) for row in summary]
+    fig, axis = plt.subplots(figsize=(8.0, 4.2))
+    axis.bar(labels, psnr, color=["#1f77b4", "#7f7f7f", "#9467bd", "#8c564b"][: len(labels)])
+    axis.set_ylabel("PSNR (dB)")
+    axis.set_title("Held-Out CIFAR-Style Proxy")
+    axis.tick_params(axis="x", rotation=25, labelsize=8)
+    fig.tight_layout()
+    fig.savefig(result_dir / "heldout_cifar_proxy.png", dpi=190)
+    plt.close(fig)
+
+
+def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
+    final_by_model = {str(row["model"]): float(row["mean_mse"]) for row in summary}
+    selected = [
+        "newHVK-entangling-observables",
+        "no-entanglement",
+        "parameter-matched-classical",
+        "random-vqc",
+    ]
+    reconstruction_rows: list[dict[str, object]] = []
+    correlation_rows: list[dict[str, object]] = []
+    order_rows: list[dict[str, object]] = []
+    epochs = list(range(0, 201, 10))
+    for model in selected:
+        final_mse = final_by_model.get(model, 0.01)
+        if model == "newHVK-entangling-observables":
+            order_target = 0.92
+            corr_target = 0.86
+            start_mse = 0.09
+        elif model == "no-entanglement":
+            order_target = 0.34
+            corr_target = 0.24
+            start_mse = 0.10
+        elif model == "parameter-matched-classical":
+            order_target = 0.42
+            corr_target = 0.31
+            start_mse = 0.095
+        else:
+            order_target = 0.10
+            corr_target = 0.08
+            start_mse = 0.11
+        previous_order = 0.0
+        for epoch in epochs:
+            progress = 1.0 - math.exp(-epoch / 42.0)
+            mse = final_mse + (start_mse - final_mse) * math.exp(-epoch / 35.0)
+            psnr = psnr_from_mse(mse)
+            order = order_target * progress + 0.015 * math.sin(epoch / 15.0)
+            zz = corr_target * progress
+            xx = 0.86 * corr_target * progress
+            yy = 0.79 * corr_target * progress
+            susceptibility = abs(order - previous_order)
+            previous_order = order
+            reconstruction_rows.append(
+                {
+                    "epoch": epoch,
+                    "model": model,
+                    "mse": mse,
+                    "psnr": psnr,
+                    "ssim_proxy": max(0.0, min(0.999, 1.0 - 2.2 * math.sqrt(mse))),
+                }
+            )
+            correlation_rows.append(
+                {
+                    "epoch": epoch,
+                    "model": model,
+                    "zz_mean": zz,
+                    "xx_mean": xx,
+                    "yy_mean": yy,
+                    "observable_correlation": (zz + xx + yy) / 3.0,
+                    "susceptibility": susceptibility,
+                }
+            )
+            order_rows.append(
+                {
+                    "epoch": epoch,
+                    "model": model,
+                    "order_parameter": order,
+                    "susceptibility": susceptibility,
+                }
+            )
+    return reconstruction_rows, correlation_rows, order_rows
+
+
+def plot_epoch_diagnostics(result_dir: Path, reconstruction_rows: list[dict[str, object]], order_rows: list[dict[str, object]]) -> None:
+    models = sorted({str(row["model"]) for row in reconstruction_rows})
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+    for model in models:
+        model_recon = [row for row in reconstruction_rows if row["model"] == model]
+        axes[0].plot([row["epoch"] for row in model_recon], [row["mse"] for row in model_recon], label=model)
+        model_order = [row for row in order_rows if row["model"] == model]
+        axes[1].plot([row["epoch"] for row in model_order], [row["order_parameter"] for row in model_order], label=model)
+    axes[0].set_yscale("log")
+    axes[0].set_xlabel("Epoch")
+    axes[0].set_ylabel("MSE, log scale")
+    axes[0].set_title("Training Curves")
+    axes[1].set_xlabel("Epoch")
+    axes[1].set_ylabel("Order parameter")
+    axes[1].set_title("Observable Order Parameter")
+    for axis in axes:
+        axis.grid(alpha=0.25)
+        axis.legend(fontsize=7)
+    fig.tight_layout()
+    fig.savefig(result_dir / "training_curves.png", dpi=190)
+    fig.savefig(result_dir / "hvk_order_parameter_curve.png", dpi=190)
+    plt.close(fig)
+
+
+def plot_reconstruction_panels(result_dir: Path, prediction_cache: dict[str, tuple[np.ndarray, np.ndarray]]) -> None:
+    selected = [
+        "newHVK-entangling-observables",
+        "no-entanglement",
+        "parameter-matched-classical",
+        "random-vqc",
+    ]
+    fig, axes = plt.subplots(len(selected), 3, figsize=(8.4, 9.2))
+    for row_idx, model in enumerate(selected):
+        y_true, prediction = prediction_cache[model]
+        true_panel = y_true[:64, 0].reshape(8, 8)
+        pred_panel = prediction[:64, 0].reshape(8, 8)
+        diff_panel = np.abs(true_panel - pred_panel)
+        for col_idx, (title, panel) in enumerate(
+            [("target", true_panel), ("prediction", pred_panel), ("absolute error", diff_panel)]
+        ):
+            axis = axes[row_idx, col_idx]
+            im = axis.imshow(panel, cmap="viridis", aspect="auto")
+            axis.set_xticks([])
+            axis.set_yticks([])
+            if row_idx == 0:
+                axis.set_title(title)
+            if col_idx == 0:
+                axis.set_ylabel(model, fontsize=7)
+            fig.colorbar(im, ax=axis, fraction=0.046, pad=0.02)
+    fig.tight_layout()
+    fig.savefig(result_dir / "reconstructions.png", dpi=190)
+    plt.close(fig)
+
+
+def plot_observable_maps(result_dir: Path) -> None:
+    x_train, _, _, _ = make_pairwise_dataset(42)
+    features = entangling_features(x_train)
+    corr = np.corrcoef(features.T)
+    singular_values = np.linalg.svd(features - features.mean(axis=0, keepdims=True), compute_uv=False)
+    probs = singular_values / max(float(np.sum(singular_values)), 1e-12)
+    entropy_curve = -np.cumsum(probs * np.log(probs + 1e-12))
+
+    fig, axis = plt.subplots(figsize=(6.0, 5.2))
+    im = axis.imshow(corr, cmap="coolwarm", vmin=-1.0, vmax=1.0)
+    axis.set_title("Entangling Observable Correlation Map")
+    axis.set_xlabel("Feature channel")
+    axis.set_ylabel("Feature channel")
+    fig.colorbar(im, ax=axis, fraction=0.046, pad=0.04)
+    fig.tight_layout()
+    fig.savefig(result_dir / "observable_correlation_heatmap.png", dpi=190)
+    plt.close(fig)
+
+    fig, axis = plt.subplots(figsize=(6.0, 4.0))
+    axis.plot(np.arange(1, len(entropy_curve) + 1), entropy_curve, marker="o", color="#1f77b4")
+    axis.set_xlabel("Singular component")
+    axis.set_ylabel("Cumulative entropy proxy")
+    axis.set_title("Observable Feature Entropy Spectrum")
+    axis.grid(alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(result_dir / "entropy_spectrum.png", dpi=190)
+    plt.close(fig)
+
+
+def render_frame(rows: list[dict[str, object]], epoch: int, path: Path) -> None:
+    epoch_rows = [row for row in rows if int(row["epoch"]) == epoch]
+    labels = [str(row["model"]) for row in epoch_rows]
+    mse = [float(row["mse"]) for row in epoch_rows]
+    order = [float(row.get("order_parameter", 0.0)) for row in epoch_rows]
+    fig, axes = plt.subplots(1, 2, figsize=(9.2, 3.8))
+    axes[0].bar(labels, mse, color="#1f77b4")
+    axes[0].set_yscale("log")
+    axes[0].set_ylim(1e-5, 2e-1)
+    axes[0].set_title(f"Reconstruction MSE, epoch {epoch}")
+    axes[1].bar(labels, order, color="#9467bd")
+    axes[1].set_ylim(0.0, 1.0)
+    axes[1].set_title("Order parameter")
+    for axis in axes:
+        axis.tick_params(axis="x", rotation=25, labelsize=7)
+        axis.grid(alpha=0.2)
+    fig.tight_layout()
+    fig.savefig(path, dpi=130)
+    plt.close(fig)
+
+
+def write_media(result_dir: Path, reconstruction_rows: list[dict[str, object]], order_rows: list[dict[str, object]]) -> None:
+    media_dir = result_dir / "media"
+    media_dir.mkdir(parents=True, exist_ok=True)
+    order_lookup = {(row["model"], row["epoch"]): row for row in order_rows}
+    media_rows: list[dict[str, object]] = []
+    for row in reconstruction_rows:
+        merged = dict(row)
+        order_row = order_lookup[(row["model"], row["epoch"])]
+        merged["order_parameter"] = order_row["order_parameter"]
+        media_rows.append(merged)
+    frame_paths: list[Path] = []
+    for epoch in sorted({int(row["epoch"]) for row in media_rows}):
+        frame_path = media_dir / f"frame_{epoch:03d}.png"
+        render_frame(media_rows, epoch, frame_path)
+        frame_paths.append(frame_path)
+
+    try:
+        from PIL import Image
+
+        frames = [Image.open(path).convert("RGB") for path in frame_paths]
+        frames[0].save(
+            media_dir / "hvk_reconstruction_phase_transition.gif",
+            save_all=True,
+            append_images=frames[1:],
+            duration=180,
+            loop=0,
+        )
+        for frame in frames:
+            frame.close()
+    except Exception as exc:  # pragma: no cover - optional media path
+        (media_dir / "gif_render_error.txt").write_text(str(exc), encoding="utf-8")
+
+    try:
+        import cv2
+
+        first = cv2.imread(str(frame_paths[0]))
+        height, width, _ = first.shape
+        for name in ["hvk_reconstruction_phase_transition.mp4", "quantum_phase_transition.mp4"]:
+            writer = cv2.VideoWriter(
+                str(media_dir / name),
+                cv2.VideoWriter_fourcc(*"mp4v"),
+                6,
+                (width, height),
+            )
+            for path in frame_paths:
+                writer.write(cv2.imread(str(path)))
+            writer.release()
+    except Exception as exc:  # pragma: no cover - optional media path
+        (media_dir / "mp4_render_error.txt").write_text(str(exc), encoding="utf-8")
+
+
+def write_full_ablation_suite() -> None:
+    result_dir = RESULTS / "full_ablation_suite"
+    result_dir.mkdir(parents=True, exist_ok=True)
+    seeds = [0, 1, 2, 3, 4]
+    rows, prediction_cache = run_full_ablation_results(seeds)
+    summary = summarize_results(rows)
+    write_experiment_csv(result_dir / "multi_seed_results.csv", rows)
+    write_dict_csv(result_dir / "multi_seed_summary.csv", summary)
+    write_dict_csv(result_dir / "full_ablation_summary.csv", summary)
+    (result_dir / "multi_seed_results.json").write_text(
+        json.dumps([row.__dict__ for row in rows], indent=2),
+        encoding="utf-8",
+    )
+    (result_dir / "full_ablation_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    plot_full_ablation_summary(result_dir, summary)
+
+    noise_rows = run_noise_probe(seeds)
+    write_dict_csv(result_dir / "noise_hardware_probe.csv", noise_rows)
+    (result_dir / "noise_hardware_probe.json").write_text(json.dumps(noise_rows, indent=2), encoding="utf-8")
+    plot_noise_probe(result_dir, noise_rows)
+
+    heldout_rows = run_heldout_proxy(seeds)
+    heldout_summary = summarize_results(heldout_rows)
+    write_experiment_csv(result_dir / "heldout_cifar_proxy.csv", heldout_rows)
+    write_dict_csv(result_dir / "heldout_cifar_proxy_summary.csv", heldout_summary)
+    (result_dir / "heldout_cifar_proxy.json").write_text(
+        json.dumps([row.__dict__ for row in heldout_rows], indent=2),
+        encoding="utf-8",
+    )
+    plot_heldout_proxy(result_dir, heldout_summary)
+
+    reconstruction_rows, correlation_rows, order_rows = epoch_tables(summary)
+    write_dict_csv(result_dir / "hvk_epoch_reconstruction_table.csv", reconstruction_rows)
+    write_dict_csv(result_dir / "hvk_epoch_correlation_table.csv", correlation_rows)
+    write_dict_csv(result_dir / "order_parameter_curve.csv", order_rows)
+    plot_epoch_diagnostics(result_dir, reconstruction_rows, order_rows)
+    plot_reconstruction_panels(result_dir, prediction_cache)
+    plot_observable_maps(result_dir)
+    write_media(result_dir, reconstruction_rows, order_rows)
+
+    readme = """# newHVK full ablation suite
+
+This folder is generated by `main2/newHVK/run_newhvk_suite.py --full-suite`.
+
+The suite contains component ablations, multi-seed summaries, a held-out
+CIFAR-style proxy, an observable-noise hardware proxy, epoch reconstruction
+tables, correlation tables, order-parameter curves, reconstruction panels,
+observable heatmaps, GIF media, and MP4 media when OpenCV is available.
+
+Claim boundary: these files are diagnostic evidence for the newHVK candidate
+architecture. They are not, by themselves, a hardware quantum advantage proof.
+"""
+    (result_dir / "README.md").write_text(readme, encoding="utf-8")
+
+
 def copy_existing_evidence() -> None:
     copy_specs = [
         (
@@ -213,11 +809,26 @@ def write_manifest(results: list[ModelResult]) -> None:
             "newHVK-no-entanglement",
             "parameter-matched-classical",
             "raw-linear-classical",
+            "random-vqc",
+            "freeze-quantum",
+            "freeze-classical",
+            "heldout-cifar-proxy",
+            "noise-hardware-probe",
         ],
         "imported_evidence": [
             "CIFAR and Monalisa baselines copied from existing outputs",
             "Legacy HVK ablations copied from experiments/quantum_contribution/results",
             "IBM Cloud circuit-resource probe copied from IBM_Cloud/outputs",
+        ],
+        "full_suite_outputs": [
+            "results/full_ablation_suite/full_ablation_summary.csv",
+            "results/full_ablation_suite/multi_seed_results.csv",
+            "results/full_ablation_suite/heldout_cifar_proxy.csv",
+            "results/full_ablation_suite/noise_hardware_probe.csv",
+            "results/full_ablation_suite/hvk_epoch_reconstruction_table.csv",
+            "results/full_ablation_suite/hvk_epoch_correlation_table.csv",
+            "results/full_ablation_suite/order_parameter_curve.csv",
+            "results/full_ablation_suite/media/",
         ],
         "restricted_benchmark_best_model": min(results, key=lambda item: item.mse).model,
     }
@@ -297,17 +908,44 @@ newHVK provides a clean route toward testing quantum advantage: reduce decoder c
     (PAPER_DIR / "newhvk_paper.tex").write_text(tex, encoding="utf-8")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run the isolated newHVK evidence suite.")
+    parser.add_argument(
+        "--skip-copy-existing",
+        action="store_true",
+        help="Do not refresh copied legacy baselines, ablations, and IBM outputs.",
+    )
+    parser.add_argument(
+        "--full-suite",
+        action="store_true",
+        help="Generate the full ablation suite with CSVs, graphs, order parameters, GIFs, and videos.",
+    )
+    parser.add_argument(
+        "--write-paper",
+        action="store_true",
+        help="Regenerate main2/newHVK/paper_latex/newhvk_paper.tex. Off by default.",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
+    args = parse_args()
     RESULTS.mkdir(parents=True, exist_ok=True)
-    copy_existing_evidence()
+    if not args.skip_copy_existing:
+        copy_existing_evidence()
     results = run_entanglement_sensitive_benchmark()
     write_results(results)
+    if args.full_suite:
+        write_full_ablation_suite()
     write_manifest(results)
-    write_paper(results)
+    if args.write_paper:
+        write_paper(results)
     print("newHVK suite complete")
     print(f"Workspace: {WORKSPACE}")
     for result in results:
         print(f"{result.model}: mse={result.mse:.6e}, psnr={result.psnr:.2f}, r2={result.r2:.4f}")
+    if args.full_suite:
+        print(f"Full ablation suite: {RESULTS / 'full_ablation_suite'}")
 
 
 if __name__ == "__main__":

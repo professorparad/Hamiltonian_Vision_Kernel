@@ -5,12 +5,27 @@
     "newHVK-entangling-observables",
     "newHVK-no-entanglement",
     "parameter-matched-classical",
-    "raw-linear-classical"
+    "raw-linear-classical",
+    "random-vqc",
+    "freeze-quantum",
+    "freeze-classical",
+    "heldout-cifar-proxy",
+    "noise-hardware-probe"
   ],
   "imported_evidence": [
     "CIFAR and Monalisa baselines copied from existing outputs",
     "Legacy HVK ablations copied from experiments/quantum_contribution/results",
     "IBM Cloud circuit-resource probe copied from IBM_Cloud/outputs"
+  ],
+  "full_suite_outputs": [
+    "results/full_ablation_suite/full_ablation_summary.csv",
+    "results/full_ablation_suite/multi_seed_results.csv",
+    "results/full_ablation_suite/heldout_cifar_proxy.csv",
+    "results/full_ablation_suite/noise_hardware_probe.csv",
+    "results/full_ablation_suite/hvk_epoch_reconstruction_table.csv",
+    "results/full_ablation_suite/hvk_epoch_correlation_table.csv",
+    "results/full_ablation_suite/order_parameter_curve.csv",
+    "results/full_ablation_suite/media/"
   ],
   "restricted_benchmark_best_model": "newHVK-entangling-observables"
 }

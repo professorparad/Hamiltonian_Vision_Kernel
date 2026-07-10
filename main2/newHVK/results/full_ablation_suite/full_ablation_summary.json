@@ -1,0 +1,79 @@
+[
+  {
+    "model": "newHVK-entangling-observables",
+    "n_seeds": 5,
+    "mean_mse": 0.0008596866293334726,
+    "std_mse": 0.0005897923296309452,
+    "mean_psnr": 32.77352859577165,
+    "std_psnr": 5.515565866435082,
+    "mean_r2": 0.9735224984535916,
+    "std_r2": 0.01761666005850944,
+    "notes": "Pairwise observable channel contains explicit two-site correlations."
+  },
+  {
+    "model": "freeze-quantum",
+    "n_seeds": 5,
+    "mean_mse": 0.004790383938671043,
+    "std_mse": 0.0034995102336199428,
+    "mean_psnr": 27.33732419879568,
+    "std_psnr": 8.655148538200017,
+    "mean_r2": 0.8533014863806629,
+    "std_r2": 0.10622831058879477,
+    "notes": "Frozen pair-correlator basis with random channel scaling and masking."
+  },
+  {
+    "model": "no-entanglement",
+    "n_seeds": 5,
+    "mean_mse": 0.03146143603886172,
+    "std_mse": 0.0017023266125394665,
+    "mean_psnr": 15.028596981370992,
+    "std_psnr": 0.23567724167513399,
+    "mean_r2": 0.01905604753818855,
+    "std_r2": 0.04012516631401211,
+    "notes": "Only single-site nonlinear channels are available."
+  },
+  {
+    "model": "raw-linear-classical",
+    "n_seeds": 5,
+    "mean_mse": 0.031654284275944404,
+    "std_mse": 0.001945704619451166,
+    "mean_psnr": 15.003782091606103,
+    "std_psnr": 0.2646213724114615,
+    "mean_r2": 0.013250720161535234,
+    "std_r2": 0.04476807324474905,
+    "notes": "Linear readout from raw coordinates."
+  },
+  {
+    "model": "parameter-matched-classical",
+    "n_seeds": 5,
+    "mean_mse": 0.033033391189931136,
+    "std_mse": 0.0016208458379350578,
+    "mean_psnr": 14.815585773997487,
+    "std_psnr": 0.2097176377205624,
+    "mean_r2": -0.029686992970204586,
+    "std_r2": 0.024815477381403692,
+    "notes": "Small rank-limited tanh control with restricted nonlinear budget."
+  },
+  {
+    "model": "random-vqc",
+    "n_seeds": 5,
+    "mean_mse": 0.03761625332934482,
+    "std_mse": 0.0017262876329036153,
+    "mean_psnr": 14.250791242917606,
+    "std_psnr": 0.19843536107967807,
+    "mean_r2": -0.17317290633810326,
+    "std_r2": 0.043790238074310046,
+    "notes": "Random latent vectors with no stable input-observable alignment."
+  },
+  {
+    "model": "freeze-classical",
+    "n_seeds": 5,
+    "mean_mse": 0.060972794265486116,
+    "std_mse": 0.006172957976976758,
+    "mean_psnr": 12.171557784554002,
+    "std_psnr": 0.44936959779966507,
+    "mean_r2": -0.9025024259597213,
+    "std_r2": 0.1949148344575886,
+    "notes": "Quantum-like features are present but the classical readout is frozen."
+  }
+]

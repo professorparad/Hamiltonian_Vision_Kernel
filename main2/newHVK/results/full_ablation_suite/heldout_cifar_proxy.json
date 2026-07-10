@@ -1,0 +1,182 @@
+[
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "newHVK-entangling-observables",
+    "seed": 0,
+    "mse": 0.03984964124508141,
+    "psnr": 13.995755840792324,
+    "r2": -0.13584780388500417,
+    "notes": "Held-out distribution proxy with pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "no-entanglement",
+    "seed": 0,
+    "mse": 0.5117613050579437,
+    "psnr": 2.909325547816208,
+    "r2": -13.586905585633998,
+    "notes": "Held-out distribution proxy without pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "parameter-matched-classical",
+    "seed": 0,
+    "mse": 0.23454526079439317,
+    "psnr": 6.297733379529667,
+    "r2": -5.685322905330531,
+    "notes": "Held-out distribution proxy for small classical control."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "raw-linear-classical",
+    "seed": 0,
+    "mse": 0.2388402850852875,
+    "psnr": 6.218924191060116,
+    "r2": -5.807745435521997,
+    "notes": "Held-out distribution proxy for linear classical readout."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "newHVK-entangling-observables",
+    "seed": 1,
+    "mse": 0.04772674201512302,
+    "psnr": 13.212382109961446,
+    "r2": -0.3750111637037157,
+    "notes": "Held-out distribution proxy with pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "no-entanglement",
+    "seed": 1,
+    "mse": 0.6914857653148109,
+    "psnr": 1.6021675569763458,
+    "r2": -18.92175888621929,
+    "notes": "Held-out distribution proxy without pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "parameter-matched-classical",
+    "seed": 1,
+    "mse": 0.24177666121079333,
+    "psnr": 6.165856240565638,
+    "r2": -5.9656044861078295,
+    "notes": "Held-out distribution proxy for small classical control."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "raw-linear-classical",
+    "seed": 1,
+    "mse": 0.22914605272083052,
+    "psnr": 6.398876195290653,
+    "r2": -5.6017156693818375,
+    "notes": "Held-out distribution proxy for linear classical readout."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "newHVK-entangling-observables",
+    "seed": 2,
+    "mse": 0.03895771768667059,
+    "psnr": 14.09406493916591,
+    "r2": -0.18956269774544854,
+    "notes": "Held-out distribution proxy with pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "no-entanglement",
+    "seed": 2,
+    "mse": 0.5520751448313602,
+    "psnr": 2.580018049438574,
+    "r2": -15.857455663233115,
+    "notes": "Held-out distribution proxy without pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "parameter-matched-classical",
+    "seed": 2,
+    "mse": 0.24557686816609112,
+    "psnr": 6.098125434793436,
+    "r2": -6.498618993778627,
+    "notes": "Held-out distribution proxy for small classical control."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "raw-linear-classical",
+    "seed": 2,
+    "mse": 0.25991137249918295,
+    "psnr": 5.851747173993913,
+    "r2": -6.936318958198022,
+    "notes": "Held-out distribution proxy for linear classical readout."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "newHVK-entangling-observables",
+    "seed": 3,
+    "mse": 0.046166196993977636,
+    "psnr": 13.35675899599947,
+    "r2": -0.39001715800875725,
+    "notes": "Held-out distribution proxy with pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "no-entanglement",
+    "seed": 3,
+    "mse": 0.6253585388200507,
+    "psnr": 2.038709157994521,
+    "r2": -17.828908497283205,
+    "notes": "Held-out distribution proxy without pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "parameter-matched-classical",
+    "seed": 3,
+    "mse": 0.21762498664215632,
+    "psnr": 6.622912425316507,
+    "r2": -5.5524666344833475,
+    "notes": "Held-out distribution proxy for small classical control."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "raw-linear-classical",
+    "seed": 3,
+    "mse": 0.23818884948735589,
+    "psnr": 6.230785733295647,
+    "r2": -6.171623594574624,
+    "notes": "Held-out distribution proxy for linear classical readout."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "newHVK-entangling-observables",
+    "seed": 4,
+    "mse": 0.05089434026315894,
+    "psnr": 12.933305109666858,
+    "r2": -0.2985784112647303,
+    "notes": "Held-out distribution proxy with pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "no-entanglement",
+    "seed": 4,
+    "mse": 0.506538026356384,
+    "psnr": 2.95387946124346,
+    "r2": -11.924410496528122,
+    "notes": "Held-out distribution proxy without pair observables."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "parameter-matched-classical",
+    "seed": 4,
+    "mse": 0.24821348013565406,
+    "psnr": 6.051746362556768,
+    "r2": -5.333212396946417,
+    "notes": "Held-out distribution proxy for small classical control."
+  },
+  {
+    "experiment": "heldout-cifar-proxy",
+    "model": "raw-linear-classical",
+    "seed": 4,
+    "mse": 0.2139645571162935,
+    "psnr": 6.6965816087337835,
+    "r2": -4.4593448546609045,
+    "notes": "Held-out distribution proxy for linear classical readout."
+  }
+]
