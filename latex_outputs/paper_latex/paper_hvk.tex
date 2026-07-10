@@ -13,7 +13,7 @@
 \maketitle
 
 \begin{abstract}
-We present the Hamiltonian Vision Kernel (HVK), a hybrid image reconstruction framework that combines matrix-product-state (MPS) patch features, positional encodings, parameterized variational quantum circuits, Pauli-observable latent vectors, and Hamiltonian energy diagnostics. The architecture was designed to test whether a quantum-observable bottleneck can provide useful patch-specific structure beyond a classical decoder alone. We report a controlled ablation study on the \textit{Monalisa} benchmark covering frozen classical/quantum parameters, random and classical VQC replacements, no-entanglement circuits, Hamiltonian-loss removal, observable-noise removal, ZZ-only observables, qubit-count sweeps, MPS bond-dimension sweeps, and single-image versus multi-image generalization. The results show that the observable channel is load-bearing: shuffling or zeroing observables sharply degrades reconstruction. However, the same ablations do not support a claim of quantum advantage in the current implementation: fixed quantum features, non-entangling circuits, and parameter-matched classical replacements reconstruct at or above the trained VQC baseline, while removing the Hamiltonian energy term slightly improves PSNR. We also find that the current evaluation is primarily a per-image or small-set fitting study rather than a validated train/test generalization benchmark. HVK is therefore best characterized as an experimentally transparent observable-latent reconstruction platform, with the Hamiltonian currently serving as an interpretable diagnostic rather than the dominant source of reconstruction accuracy.
+We present the Hamiltonian Vision Kernel (HVK), a hybrid image reconstruction framework that combines matrix-product-state (MPS) patch features, positional encodings, parameterized variational quantum circuits, Pauli-observable latent vectors, and Hamiltonian energy diagnostics. The architecture was designed to test whether a quantum-observable bottleneck can provide useful patch-specific structure beyond a classical decoder alone. We report a controlled ablation study on the \textit{Monalisa} benchmark covering frozen classical/quantum parameters, random and classical VQC replacements, no-entanglement circuits, Hamiltonian-loss removal, observable-noise removal, ZZ-only observables, qubit-count sweeps, MPS bond-dimension sweeps, and single-image versus multi-image generalization. The results show that the observable channel is load-bearing: shuffling or zeroing observables sharply degrades reconstruction. However, the same ablations do not support a claim of quantum advantage in the current implementation: fixed quantum features, non-entangling circuits, and parameter-matched classical replacements reconstruct at or above the trained VQC baseline, while removing the Hamiltonian energy term slightly improves PSNR. We therefore add a second-generation newHVK validation layer. On a restricted pair-correlation diagnostic, entangling observables strongly outperform no-entanglement, random-latent, freeze-classical, and parameter-matched controls. On real held-out CIFAR-10 splits, however, local/raw controls remain stronger than the current newHVK image feature map. HVK is therefore best characterized as an experimentally transparent observable-latent reconstruction platform and a candidate entanglement-sensitive diagnostic, not as a proven hardware or dataset-level quantum advantage.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -451,12 +451,86 @@ The generalization controls clarify scope. A model optimized on \textit{Monalisa
 \label{fig:bottleneck_generalization_recons}
 \end{figure*}
 
+\subsection{Second-Generation newHVK Validation}
+\label{sec:newhvk_validation}
+The original HVK ablations show that the observable bottleneck is useful, but they do not isolate quantum advantage. To sharpen this point, we added a second-generation validation layer, denoted newHVK, with two distinct purposes. First, a restricted pair-correlation diagnostic tests whether an entangling observable feature map can represent targets that explicitly depend on pair products. Second, a real held-out CIFAR-10 validation tests whether the same idea survives natural-image generalization against strict same-width classical controls. The reproducibility commands are:
+\begin{center}
+\scriptsize
+\texttt{./main2/newHVK/scripts/run\_full\_newhvk\_ablation\_suite.sh}\\
+\texttt{./main2/newHVK/scripts/run\_q1\_validation\_suite.sh}
+\end{center}
+
+\begin{table*}[t]
+\centering
+\caption{newHVK restricted pair-correlation diagnostic across five seeds. This experiment is deliberately designed to reward pair-observable structure; it is evidence for an entanglement-sensitive representation, not by itself a hardware quantum-advantage proof.}
+\label{tab:newhvk_pair_diagnostic}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Model & Mean MSE & Mean PSNR (dB) & Mean $R^2$ \\
+\midrule
+newHVK entangling observables & $8.5969\times10^{-4}$ & 32.77 & 0.9735 \\
+Freeze quantum & $4.7904\times10^{-3}$ & 27.34 & 0.8533 \\
+No entanglement & $3.1461\times10^{-2}$ & 15.03 & 0.0191 \\
+Raw-linear classical & $3.1654\times10^{-2}$ & 15.00 & 0.0133 \\
+Parameter-matched classical & $3.3033\times10^{-2}$ & 14.82 & $-0.0297$ \\
+Random VQC & $3.7616\times10^{-2}$ & 14.25 & $-0.1732$ \\
+Freeze classical & $6.0973\times10^{-2}$ & 12.17 & $-0.9025$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.78\textwidth]{../../main2/newHVK/results/full_ablation_suite/full_ablation_metric_comparison.png}
+\caption{newHVK restricted diagnostic summary. The entangling observable feature map dominates the restricted pair-correlation task under the tested readout.}
+\label{fig:newhvk_pair_diagnostic}
+\end{figure*}
+
+\begin{table*}[t]
+\centering
+\caption{Q1-validation layer on real held-out CIFAR-10 splits. Each row aggregates 20 held-out reconstructions from five random image splits. Lower MSE and higher PSNR/SSIM are better.}
+\label{tab:newhvk_real_cifar}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Model & Mean MSE & Mean PSNR (dB) & Mean SSIM \\
+\midrule
+Local observables only & $9.0607\times10^{-3}$ & 20.66 & 0.8621 \\
+Raw-linear classical & $9.0607\times10^{-3}$ & 20.66 & 0.8621 \\
+ZZ-only observables & $9.3723\times10^{-3}$ & 20.52 & 0.8580 \\
+No entanglement & $9.9469\times10^{-3}$ & 20.24 & 0.8508 \\
+Shuffled pair observables & $1.0092\times10^{-2}$ & 20.17 & 0.8484 \\
+newHVK real-CIFAR map & $1.0403\times10^{-2}$ & 20.07 & 0.8460 \\
+Strict classical random features & $2.0862\times10^{-2}$ & 17.06 & 0.7055 \\
+Random VQC & $8.5735\times10^{-2}$ & 10.99 & 0.0165 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.60\textwidth]{../../main2/newHVK/results/q1_validation/real_cifar_holdout_summary.png}
+\includegraphics[width=0.37\textwidth]{../../main2/newHVK/results/q1_validation/real_cifar_shot_noise.png}
+\caption{Real held-out CIFAR validation and shot-noise robustness. The real-image result is the strongest corrective control: the current newHVK image feature map does not beat local/raw controls, although it remains far above the random-VQC control.}
+\label{fig:newhvk_real_cifar}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{../../main2/newHVK/results/q1_validation/real_cifar_reconstruction_panel.png}
+\caption{Representative held-out CIFAR reconstruction panel from the Q1-validation suite. The panel compares target, prediction, and absolute error for newHVK and major controls.}
+\label{fig:newhvk_real_cifar_recons}
+\end{figure*}
+
+The newHVK results sharpen the claim boundary. On the restricted diagnostic, entangling observables improve mean PSNR by approximately $17.74$ dB over the no-entanglement control and by $18.52$ dB over random VQC latents. This is the strongest evidence that the pair-observable channel can be useful when the target depends explicitly on pair correlations. However, the real held-out CIFAR-10 validation does not support a broad quantum-advantage claim: the local-observable and raw-linear controls reach $20.66$ dB, while the current newHVK real-CIFAR map reaches $20.07$ dB. Thus, the honest interpretation is that newHVK provides a candidate entanglement-sensitive diagnostic and a stronger ablation harness, while natural-image quantum advantage remains unresolved.
+
 \section{Discussion}
 \subsection{Reconstruction Error Analysis}
 HVK2D's approximately $82.4\%$ MSE reduction over the tested CIFAR GAN configuration shows that the observable-latent reconstruction route is competitive against adversarial and autoencoder-style baselines in the completed subset. The stronger MLP and CNN results, however, show that classical capacity remains a major confounder. HVK's strongest evidence is therefore not raw leaderboard dominance, but interpretability: observable vectors, positional alignment, Hamiltonian diagnostics, and topology choices can be ablated directly. The completed ablations show that this observable channel is meaningful, but also that Hamiltonian energy regularization is not the current source of the reconstruction gain.
 
 \subsection{Generalization and Memorization Risk}
-The strongest caveat in the present study is that the most impressive classical numbers are also the least informative about generalization. The CIFAR MLP result is near-exact on a five-image same-set benchmark, which is consistent with memorization. The zero-shot second-image result for HVK is also weak, reaching only $7.78$ dB PSNR before multi-image training. Together these observations indicate that the current experiments validate representation behavior under controlled reconstruction fits, not broad image-distribution generalization. A fair next benchmark must separate training and held-out images, report multiple random seeds, and use capacity-matched classical baselines.
+The strongest caveat in the present study is that the most impressive classical numbers are also the least informative about generalization. The CIFAR MLP result is near-exact on a five-image same-set benchmark, which is consistent with memorization. The zero-shot second-image result for HVK is also weak, reaching only $7.78$ dB PSNR before multi-image training. The newHVK Q1-validation suite addresses this weakness by adding five random held-out CIFAR-10 image splits, strict same-width classical controls, observable-sector ablations, shuffled pair observables, and shot-noise simulations. The result is scientifically useful but corrective: the restricted pair-correlation diagnostic strongly favors entangling observables, whereas real held-out CIFAR reconstruction is still better explained by local/raw image statistics. Consequently, the paper supports a candidate entanglement-sensitive representation, not a broad image-distribution quantum advantage.
 
 \subsection{Architectural Differentiation Matrix}
 Table~\ref{tab:differentiation} contrasts the structural properties of HVK against current reference frameworks.
@@ -496,16 +570,20 @@ We explicitly acknowledge the following bounds on our empirical claims:
     \item Internal reports cited here are provenance references for implementation choices; all externally relevant experimental claims should be reproducible from the reported tables and repository outputs.
     \item Current ablations show that observable latents are load-bearing, but they do not establish that trained VQC parameters, entangling gates, or the Heisenberg energy term are the unique source of reconstruction quality.
     \item CIFAR-10 benchmarking indicates that HVK is competitive against several baselines, including the tested GAN, PHL, and classical autoencoder configurations, but high-capacity MLP and CNN baselines remain stronger in pure reconstruction accuracy.
+    \item The second-generation newHVK restricted pair-correlation task shows a strong entangling-observable advantage over no-entanglement, random-latent, and parameter-matched controls, but this task is intentionally favorable to pair observables.
+    \item The real held-out CIFAR-10 Q1-validation layer does not yet establish quantum advantage: local-observable and raw-linear controls outperform the current newHVK image feature map.
 \end{itemize}
 
 \section{Conclusion}
 We introduced HVK, a tensor-network and quantum-observable framework for spatially aware image reconstruction. HVK combines an MPS encoder, positional inputs, a parameterized variational circuit, Pauli-observable latent vectors, and Hamiltonian energy diagnostics.
 
-On CIFAR-10, HVK2D achieves $34.50\text{ dB}$ mean PSNR on the completed five-image native-resolution subset, outperforming the tested GAN baseline by $8.47\text{ dB}$ and reducing mean squared error by approximately $82.4\%$. The same table shows that high-capacity MLP and CNN baselines remain stronger in pure pixel accuracy, but their same-set scores, especially the MLP best case above $100$ dB, should be interpreted as memorization-capacity diagnostics rather than held-out reconstruction evidence. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$. These results indicate that the observable-latent reconstruction pipeline is competitive with several non-convolutional reconstruction baselines under per-image or small-set fitting, while not yet establishing dataset-level generalization or quantum advantage.
+On CIFAR-10, HVK2D achieves $34.50\text{ dB}$ mean PSNR on the completed five-image native-resolution subset, outperforming the tested GAN baseline by $8.47\text{ dB}$ and reducing mean squared error by approximately $82.4\%$. The same table shows that high-capacity MLP and CNN baselines remain stronger in pure pixel accuracy, but their same-set scores, especially the MLP best case above $100$ dB, should be interpreted as memorization-capacity diagnostics rather than held-out reconstruction evidence. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$.
 
-However, the quantum-contribution ablation study imposes an important qualification. The observable channel is load-bearing, but the current experiments do not demonstrate that the trained VQC, entangling gates, or Hamiltonian energy loss are the decisive source of performance. Freeze-quantum, no-entanglement, no-energy-loss, and parameter-matched classical replacement controls all reconstruct at or above the shared VQC baseline. HVK should therefore be framed as a hybrid observable-latent reconstruction architecture and experimental platform, rather than as evidence of quantum advantage in its current form.
+The second-generation newHVK experiments provide a more precise claim. On the restricted pair-correlation diagnostic, entangling observables achieve $32.77\text{ dB}$ mean PSNR and $R^2=0.9735$, compared with $15.03\text{ dB}$ for the no-entanglement control and $14.25\text{ dB}$ for random VQC latents. This is strong evidence that the pair-observable channel can provide a useful representational advantage when the task explicitly depends on nonlocal correlations. The Q1-validation layer also prevents overclaiming: on real held-out CIFAR-10 splits, the current newHVK image feature map reaches $20.07\text{ dB}$, while local-observable and raw-linear controls reach $20.66\text{ dB}$. Thus, the present evidence supports a candidate entanglement-sensitive diagnostic and a robust ablation protocol, but not a broad natural-image or hardware quantum-advantage claim.
 
-Future efforts will focus on full dataset-level train/test splits, multiple random seeds, stricter parameter-matched classical controls, reduced-capacity decoders, and tasks where Hamiltonian structure, entanglement, or observable dynamics can be isolated as a genuine source of generalization or regularization.
+The quantum-contribution ablation study imposes an important qualification. The observable channel is load-bearing, but the current experiments do not demonstrate that the trained VQC, entangling gates, or Hamiltonian energy loss are the decisive source of performance across all image settings. Freeze-quantum, no-entanglement, no-energy-loss, and parameter-matched classical replacement controls all reconstruct at or above the shared VQC baseline in the original HVK setting. HVK should therefore be framed as a hybrid observable-latent reconstruction architecture and experimental platform, while newHVK should be framed as a controlled candidate diagnostic for entanglement-sensitive representation.
+
+Future efforts will focus on improving the real-image newHVK feature map, reducing decoder capacity further, running larger held-out CIFAR and natural-image splits, executing finite-shot hardware pipelines, and identifying tasks where Hamiltonian structure, entanglement, or observable dynamics remain beneficial after strict local/raw and parameter-matched classical controls.
 
 \begin{thebibliography}{10}
 \bibitem{Cerezo2021} M. Cerezo et al., ``Variational quantum algorithms,'' \textit{Nature Reviews Physics}, vol. 3, no. 9, pp. 625--644, 2021.
