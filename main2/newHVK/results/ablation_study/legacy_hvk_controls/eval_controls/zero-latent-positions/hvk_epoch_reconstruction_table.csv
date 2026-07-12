@@ -1,0 +1,1 @@
+image,epoch,step,reconstructed_image,total_loss,reconstruction_mse,mean_energy,mean_order_parameter,mean_abs_order_parameter,mean_transverse_order_parameter,mean_total_lattice_correlation,order_parameter_susceptibility

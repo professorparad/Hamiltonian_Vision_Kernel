@@ -1,0 +1,1 @@
+image,epoch,step,patch_index,patch_row,patch_col,total_loss,reconstruction_mse,energy,order_parameter,abs_order_parameter,transverse_order_parameter,total_lattice_correlation,corr_ZZ_0,corr_ZZ_1,corr_ZZ_2,corr_ZZ_3,corr_ZZ_4,corr_XX_0,corr_XX_1,corr_XX_2,corr_XX_3,corr_XX_4,corr_YY_0,corr_YY_1,corr_YY_2,corr_YY_3,corr_YY_4

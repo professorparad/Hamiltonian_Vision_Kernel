@@ -4,7 +4,7 @@
 \usepackage{float}
 \begin{document}
 
-\title{HVK: A Tensor-Network and Quantum-Observable Architecture for Spatially Aware Image Reconstruction}
+\title{HVK1D/HVK2D: An Ablation-Controlled Observable-Latent Framework with a $D_4$-Equivariant Extension and Controlled Nonlocal-Correlation Diagnostics}
 
 \author{Sparsho~Chakraborty\IEEEauthorrefmark{1} and Siddhartha~Patra\IEEEauthorrefmark{2}%
 \thanks{\IEEEauthorrefmark{1}School of Basic Sciences, Department of Physics, Indian Institute of Technology Bhubaneswar, Odisha, India.}%
@@ -13,7 +13,7 @@
 \maketitle
 
 \begin{abstract}
-We present the Hamiltonian Vision Kernel (HVK), a hybrid image reconstruction framework that combines matrix-product-state (MPS) patch features, positional encodings, parameterized variational quantum circuits, Pauli-observable latent vectors, and Hamiltonian energy diagnostics. The architecture was designed to test whether a quantum-observable bottleneck can provide useful patch-specific structure beyond a classical decoder alone. We report a controlled ablation study on the \textit{Monalisa} benchmark covering frozen classical/quantum parameters, random and classical VQC replacements, no-entanglement circuits, Hamiltonian-loss removal, observable-noise removal, ZZ-only observables, qubit-count sweeps, MPS bond-dimension sweeps, and single-image versus multi-image generalization. The results show that the observable channel is load-bearing: shuffling or zeroing observables sharply degrades reconstruction. However, the same ablations do not support a claim of quantum advantage in the current implementation: fixed quantum features, non-entangling circuits, and parameter-matched classical replacements reconstruct at or above the trained VQC baseline, while removing the Hamiltonian energy term slightly improves PSNR. We therefore add a second-generation newHVK validation layer. On restricted pair-correlation and CIFAR-derived nonlocal patch-correlation diagnostics, entangling observables strongly outperform no-entanglement, random-latent, one-sided patch, and parameter-matched controls. On real held-out CIFAR-10 pixel reconstruction, however, local/raw controls remain stronger than the current newHVK image feature map. HVK is therefore best characterized as an experimentally transparent observable-latent reconstruction platform and a candidate entanglement-sensitive diagnostic, not as a proven hardware or general image-reconstruction quantum advantage.
+We present HVK1D/HVK2D, a Hamiltonian-guided, observable-latent architecture for image patch representation, evaluated through a controlled ablation and statistical validation suite rather than through leaderboard comparison alone. We report three findings, each scoped to the evidence that supports it. First, on a restricted pair-correlation diagnostic and a CIFAR-derived nonlocal patch-correlation task, HVK2D's entangling pair-observable features are necessary to represent targets that explicitly depend on distant-patch products: across five seeds, HVK2D reaches mean $R^2 = 0.974$ versus $R^2 \leq 0.02$ for no-entanglement and parameter-matched classical controls on the synthetic diagnostic, and near-exact fit ($R^2 \approx 1.0$) on the CIFAR-derived version, where every non-entangling control fails under the same linear readout. Second, we introduce a $D_4$-pooled HVK2D observable-grid variant and verify, over 7000 patch transforms, that it is equivariant to the square dihedral group to numerical precision (mean error $9.6\times10^{-17}$), while the original unpooled positional map is not (mean error $\approx 0.82$--$0.84$, statistically close to a local/raw control). Third, on real held-out CIFAR-10 pixel reconstruction and across five additional real image datasets, parameter-matched local and raw-linear classical controls remain stronger than the current HVK2D image feature map (held-out CIFAR: $18.80\pm1.42$~dB versus $18.12\pm1.54$~dB PSNR, paired Wilcoxon $p=9.5\times10^{-6}$, $n=20$; consistent direction on all six datasets tested). We report this negative reconstruction result as a primary finding rather than a limitation appended after the fact, because knowing precisely where an entangling observable map does and does not help is itself the contribution: HVK1D/HVK2D combines a provable $D_4$ symmetry extension, a controlled and statistically resolved entanglement-necessity result, and an equally rigorous boundary showing where that advantage does not yet transfer to natural-image reconstruction. Together these results position HVK1D/HVK2D as an ablation-transparent testbed for isolating genuine entanglement-sensitive representational gains from confounded architectural ones, rather than as a claim of broad natural-image or hardware quantum advantage.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -23,15 +23,23 @@ Quantum Image Processing, Tensor Networks, Variational Quantum Algorithms, Pauli
 \section{Introduction}
 Classical approaches---such as regularized inversion and, more recently, deep convolutional priors---have driven decades of progress, but their computational and memory costs scale poorly with image resolution and dimensionality. This has motivated a continuing search for representations and algorithms with more favorable scaling.
 
-Quantum computing has emerged as one candidate paradigm. Variational quantum algorithms have demonstrated that parameterized quantum circuits, optimized in a hybrid quantum--classical loop, can prepare physically meaningful states on near-term hardware \cite{Cerezo2021, Tilly2022}. The variational quantum eigensolver and its descendants---including the variational Hamiltonian ansatz and ADAPT-VQE---exploit the local decomposability of physically relevant Hamiltonians to construct shallow, problem-aware circuits whose parameters have transparent interpretations as rotation angles in a structured ansatz \cite{Cerezo2021, Tilly2022, Bauer2020}. These developments raise a natural question: can Hamiltonian-guided variational principles, originally designed for electronic-structure problems, be repurposed for image reconstruction, where the ``Hamiltonian'' encodes imaging physics rather than electronic interactions?
+Quantum computing has emerged as one candidate paradigm. Variational quantum algorithms have demonstrated that parameterized quantum circuits, optimized in a hybrid quantum--classical loop, can prepare physically meaningful states on near-term, noisy intermediate-scale quantum (NISQ) hardware \cite{Cerezo2021, Tilly2022, Preskill2018}. The variational quantum eigensolver and its descendants---including the variational Hamiltonian ansatz and ADAPT-VQE---exploit the local decomposability of physically relevant Hamiltonians to construct shallow, problem-aware circuits whose parameters have transparent interpretations as rotation angles in a structured ansatz \cite{Cerezo2021, Tilly2022, Bauer2020}. These developments raise a natural question: can Hamiltonian-guided variational principles, originally designed for electronic-structure problems, be repurposed for image reconstruction, where the ``Hamiltonian'' encodes imaging physics rather than electronic interactions?
 
 Quantum image processing (QIMP) provides the encoder side of such a pipeline. The flexible representation of quantum images encodes pixel colors in qubit rotation angles and pixel positions in computational-basis states, while the novel enhanced quantum representation (NEQR) stores grayscale values deterministically in basis states using $q$-qubit registers \cite{Chakraborty2018}. Successive works have improved and extended these encodings: quantum realizations of classical interpolation have been demonstrated for NEQR \cite{Zhou2017}, and full quantum edge-detection pipelines for NEQR-encoded images have been validated theoretically and experimentally \cite{Yao2017}. Quantum probability image encodings further reduce qubit and gate costs while preserving the structure needed for downstream processing \cite{Yao2017}. However, most QIMP pipelines treat the encoded image as an opaque state to be acted upon; they do not expose the spatial correlations among neighboring pixels in a form that admits efficient variational optimization.
 
-Tensor networks provide exactly this missing structure. Originally developed as compact representations of many-body quantum states, matrix product states (MPS), projected entangled pair states (PEPS), and the multi-scale entanglement renormalization ansatz (MERA) have proven remarkably effective as compressed representations of structured classical data, including images \cite{Cirac2021}. Classical tensor-network methods have been applied to image compression \cite{Latorre2005}, to probabilistic generative modeling under partial observation \cite{Han2018}, and---relevantly for inverse problems---to compressed sensing reconstructions whose latent state is itself a tensor network \cite{Fei2021}. MPS/PEPS-structured quantum circuits have also been proposed as classical--quantum bridges that are qubit-efficient and well-suited to circuit-cutting techniques on near-term devices \cite{Guala2023}. 
+Tensor networks provide exactly this missing structure. Originally developed as compact representations of many-body quantum states, matrix product states (MPS), projected entangled pair states (PEPS), and the multi-scale entanglement renormalization ansatz (MERA) have proven remarkably effective as compressed representations of structured classical data, including images \cite{Cirac2021}. Classical tensor-network methods have been applied to image compression \cite{Latorre2005}, to probabilistic generative modeling under partial observation \cite{Han2018}, to supervised classification via matrix-product-state kernels \cite{Stoudenmire2016}, and---relevantly for inverse problems---to compressed sensing reconstructions whose latent state is itself a tensor network \cite{Fei2021}. MPS/PEPS-structured quantum circuits have also been proposed as classical--quantum bridges that are qubit-efficient and well-suited to circuit-cutting techniques on near-term devices \cite{Guala2023}, and direct classical-versus-quantum comparisons of tensor-network-based circuits on structured scientific data show that the advantage of the quantum formulation is data- and task-dependent rather than universal \cite{Araz2022}.
 
-Despite this rich prior work, two streams remain largely disconnected. On one side, classical tensor-network formulations for imaging encode the image as an MPS and perform contraction and optimization without invoking quantum Hamiltonian dynamics; on the other, variational quantum algorithms for image reconstruction encode the image as a generic parameterized state without exposing the spatial bond structure of a tensor network \cite{Haga2024, Zhai2025, Nau2023}. The intersection---a Hamiltonian whose evolution respects and is explicitly coupled to a tensor-network topology that mirrors pixel adjacency---has not been systematically developed.
+Despite this rich prior work, two streams remain largely disconnected. On one side, classical tensor-network formulations for imaging encode the image as an MPS and perform contraction and optimization without invoking quantum Hamiltonian dynamics; on the other, variational quantum algorithms for image reconstruction and recognition encode the image as a generic parameterized state without exposing the spatial bond structure of a tensor network \cite{Haga2024, Zhai2025, Nau2023}, a pattern also seen in quantum architectures built for image classification, such as quantum capsule networks \cite{Liu2022}. The intersection---a Hamiltonian whose evolution respects and is explicitly coupled to a tensor-network topology that mirrors pixel adjacency---has not been systematically developed.
 
-In this paper we introduce the HVK architecture, a Hamiltonian-guided tensor-network framework for spatially aware quantum image reconstruction. Rather than treating the image-encoding circuit and the reconstruction prior as separate modules, HVK fuses them: a problem-specific Hamiltonian is constructed such that its low-energy subspace, when probed via a variational ansatz organized as a tensor network, preferentially contains states consistent with both the measurement physics and the spatial structure of the scene. 
+In this paper we introduce the HVK architecture, a Hamiltonian-guided tensor-network framework for spatially aware image reconstruction diagnostics. Rather than treating the image-encoding circuit and the reconstruction prior as separate modules, HVK exposes an observable-latent bottleneck whose local, pairwise, positional, and Hamiltonian components can be ablated directly. This makes the system useful both as a reconstruction model and, more importantly for the present evidence, as a controlled testbed for asking when entangling observable features add information beyond local or parameter-matched classical controls.
+
+This paper makes three contributions, each tied to a specific, statistically characterized experiment, and each stated at the precision the evidence supports rather than extrapolated beyond it:
+\begin{itemize}
+    \item \textbf{A statistically resolved entanglement-necessity result.} HVK2D's entangling pair-observable channel is representationally necessary for targets constructed from nonlocal patch correlations: no-entanglement, parameter-matched classical, and random-VQC controls fail to fit the same target under an identical linear readout, across five random seeds on both a synthetic diagnostic and a CIFAR-derived variant.
+    \item \textbf{A provable symmetry extension.} A $D_4$-pooled HVK2D observable-grid map is equivariant to the symmetries of the square by construction, and we verify this numerically to within floating-point precision, in contrast to the original unpooled map, which is not measurably more symmetric than a local/raw baseline.
+    \item \textbf{A rigorous negative-result boundary.} On ordinary held-out natural-image reconstruction---real CIFAR-10 patches and five further real datasets---parameter-matched classical controls outperform the current HVK2D feature map, with the CIFAR-10 comparison statistically significant under a paired Wilcoxon test.
+\end{itemize}
+We present all three results together precisely because the boundary between them is the paper's central claim: entangling observables are representationally necessary and provably symmetric under the diagnostics we construct, but that advantage does not yet extrapolate to a general reconstruction or hardware advantage claim on natural images.
 
 \section{Theoretical Framework}
 \subsection{Hamiltonian Operator Dynamics}
@@ -80,9 +88,10 @@ evaluated via the Frobenius-norm reconstruction loss:
 where $D$ is the classical decoder, $P_n$ is the ground-truth patch, and $\lambda$ is the energy regularization coefficient.\\
 
 \subsubsection{Symmetry Motivation and Current Status}
+Building group structure into a learned observable map is a well-established strategy in both the classical and quantum machine-learning literatures: group-equivariant convolutional networks enforce exact weight sharing over a symmetry group in classical vision models \cite{Cohen2016}, and analogous constructions have been proposed to embed symmetry directly into variational quantum circuits \cite{Meyer2023}. The $D_4$-pooling construction introduced below is the observable-latent analogue of this idea, applied to the Pauli-correlator feature grid rather than to a convolutional filter bank or a circuit ansatz.
 The Heisenberg correlators define three observable sectors:
 \begin{equation}
-\Xi_{ZZ} = (\langle Z_0Z_1\rangle, \dots, \langle Z_4Z_5\rangle),\quad \Xi_{XX},\quad \Xi_{YY}))
+\Xi_{ZZ} = (\langle Z_0Z_1\rangle, \dots, \langle Z_4Z_5\rangle),\quad \Xi_{XX},\quad \Xi_{YY}
 \end{equation}
 embedded in $\mathbb{R}^{27}$ through the simultaneously measured observables. Two symmetry reductions act sequentially on this manifold:
 \begin{enumerate}
@@ -97,15 +106,31 @@ embedded in $\mathbb{R}^{27}$ through the simultaneously measured observables. T
     \end{equation}
 \end{enumerate}
 
-The resulting symmetry stack motivates a possible structural degradation:
+The resulting symmetry stack motivates a possible structural reduction:
 \begin{equation}
-\text{SU}(2)\text{-variant isotropic sector} \xrightarrow{\text{positional encoding}} \text{Cartan sector} \xrightarrow{\text{grid geometry}} D_4
+\begin{aligned}
+&\text{SU}(2)\text{-variant isotropic sector}
+\xrightarrow{\text{positional encoding}}
+\text{Cartan sector}\\
+&\hspace{0.6in}\xrightarrow{\text{grid geometry}} D_4
+\end{aligned}
 \end{equation}
-In the present manuscript this group-theoretic construction should be read as architectural motivation rather than as an experimentally established mechanism. We do not yet include a dedicated $D_4$-equivariance ablation, a Cartan-sector removal study, or an irrep-level diagnostic proving that the decoder uses these symmetry sectors. Consequently, the symmetry discussion is not used as evidence of quantum advantage; it identifies a testable design hypothesis for future work.
+The unpooled HVK map does not enforce this reduction: positional encodings can break square symmetries rather than realize them. To make the geometric part operational, we add a $D_4$-pooled HVK2D variant in the extended validation suite. Let $\mathcal{G}=D_4$ and let $P_g^{-1}$ denote the inverse patch-grid permutation induced by $g$. For an unpooled observable-grid map $\Phi$, the stabilized map is
+\begin{equation}
+\Phi_{D_4}(x)=\frac{1}{|\mathcal{G}|}\sum_{g\in \mathcal{G}}P_g^{-1}\Phi(gx).
+\end{equation}
+This group-averaged observable grid is equivariant to rotations and reflections by construction. The symmetry claim in this manuscript is therefore split into two parts: the original positional HVK map is only $D_4$-motivated, while the $D_4$-pooled HVK2D map is the architecture that actually enforces the square-symmetry constraint.
 
 \section{HVK Architecture Design}
 The pipeline consists of an operational flow defined by:
-$$\text{Image} \rightarrow \{\text{Patches}\} \rightarrow \text{MPS} \rightarrow \text{46-D Feature} \rightarrow \text{6-D Vector} \rightarrow \text{27-D Latent} \rightarrow \text{Decoder} \rightarrow \text{Reconstruction}$$
+\begin{equation}
+\begin{aligned}
+\text{Image} &\rightarrow \{\text{Patches}\} \rightarrow \text{MPS}\\
+&\rightarrow \text{46-D Feature} \rightarrow \text{6-D Vector}\\
+&\rightarrow \text{27-D Latent} \rightarrow \text{Decoder}\\
+&\rightarrow \text{Reconstruction}.
+\end{aligned}
+\end{equation}
 
 \subsection{Tensor Network Optimization}
 \subsubsection{Patch Preparation}
@@ -165,7 +190,7 @@ The raw 46-D feature matrix $\mathbf{f}_n$ is linearly compressed to a 6-D vecto
     \begin{equation}
     U_{\text{var}}(\theta) = \prod_{l=1}^{L} \left[ \text{CNOT-Ring} \cdot \bigotimes_{i=0}^{5} \text{Rot}(\phi_i^l, \theta_i^l, \omega_i^l) \right],
     \end{equation}
-    initialized safely to avoid barren plateaus \cite{Cerezo2021}. The state is output as:
+    initialized safely to avoid barren plateaus \cite{Cerezo2021, McClean2018}. The state is output as:
     \begin{equation}
     |\Psi_n\rangle = U_{\text{var}}(\theta) \cdot U_{\text{pos}}(\theta_{\text{pos}}, n) \cdot U_{\text{enc}}(x_n)\, |0\rangle^{\otimes 6}.
     \end{equation}
@@ -174,9 +199,14 @@ The raw 46-D feature matrix $\mathbf{f}_n$ is linearly compressed to a 6-D vecto
 \subsubsection{Observable Latent Space}
 A total of 27 real expectations are evaluated per execution pass:
 \begin{equation}
-\Phi_n = \bigl(\langle X_i \rangle, \langle Z_i \rangle, \langle Z_i Z_{i+1} \rangle, \langle X_i X_{i+1} \rangle, \langle Y_i Y_{i+1} \rangle\bigr) \in [-1, 1]^{27},
+\begin{aligned}
+\Phi_n = \bigl(&\langle X_i \rangle, \langle Z_i \rangle,
+\langle Z_i Z_{i+1} \rangle,\\
+&\langle X_i X_{i+1} \rangle,
+\langle Y_i Y_{i+1} \rangle\bigr) \in [-1, 1]^{27},
+\end{aligned}
 \end{equation}
-representing a structured projection $\Phi: \mathbb{CP}^{63} \longrightarrow \mathbb{R}^{27}$.
+representing a structured projection $\Phi: \mathbb{CP}^{63} \longrightarrow \mathbb{R}^{27}$, in the spirit of quantum-enhanced feature maps that use measured expectation values, rather than the raw quantum state, as the input to a classical decision or reconstruction layer \cite{Havlicek2019}.
 
 \subsubsection{Classical Decoding and Patch Reconstruction}
 The extracted matrix is standardized to standard normal form per column and passed to a classical multi-layer perceptron (MLP) decoder alongside the spatial encodings:
@@ -188,7 +218,7 @@ The architecture utilizes a mirrored transpose structure with expanding channel 
 \section{Methodology}
 \subsection{Datasets}
 \subsubsection{Monalisa Single-Image Benchmark}
-The baseline canonical single-image analysis uses a $256 \times 256$ grayscale layout of \textit{monalisa.jpg}, divided into 16 evaluation regions of size $64 \times 64$ pixels \cite{MathematicalFramework2026}.
+The baseline canonical single-image analysis uses a $256 \times 256$ grayscale layout of \textit{monalisa.jpg}, divided into 16 evaluation regions of size $64 \times 64$ pixels.
 
 \subsubsection{CIFAR-10 Subset}
 To capture structural behavior beyond the single-image \textit{Monalisa} benchmark, we evaluate the native $32 \times 32$ CIFAR-10 reconstruction suite available in the repository. The completed aggregate contains five images spanning multiple classes, and reports MSE, PSNR, and SSIM for MLP, CNN, classical autoencoder, GAN, PHL, HVK1D, HVK2D, and symmetric HVK1D baselines \cite{MethodologyExp2026}. These CIFAR results are not a train/test split; they are same-set reconstruction fits and are therefore most useful for capacity and representation diagnostics.
@@ -203,7 +233,7 @@ We execute validation passes using four distinct comparison configurations:
 \end{itemize}
 
 \subsection{Training Protocol}
-Optimization passes utilize the Adam optimizer with learning rates set to $\eta = 0.003$ for the 1D variant and $\eta = 0.004$ for the 2D configuration \cite{MethodologyExp2026}. Parameter targets are jointly updated over 200 epochs under a rigid loss factor ($\lambda=0.01$). Initialization parameters scale according to established safe limits \cite{Cerezo2021, MathematicalFramework2026, Xu2021}. Unless explicitly stated otherwise, the ablations are single-seed runs; no confidence intervals are reported, so small metric differences should be interpreted as directional diagnostics rather than statistically resolved effects.
+Optimization passes utilize the Adam optimizer with learning rates set to $\eta = 0.003$ for the 1D variant and $\eta = 0.004$ for the 2D configuration \cite{MethodologyExp2026}. Parameter targets are jointly updated over 200 epochs under a rigid loss factor ($\lambda=0.01$). Initialization parameters scale according to established safe limits \cite{Cerezo2021, Xu2021}. Unless explicitly stated otherwise, the ablations are single-seed runs; no confidence intervals are reported, so small metric differences should be interpreted as directional diagnostics rather than statistically resolved effects.
 
 \subsection{Evaluation Metrics}
 \subsubsection{Reconstruction Precision}
@@ -218,13 +248,22 @@ The system gauges reconstruction performance using Mean Squared Error (MSE) and 
 \subsubsection{Hamiltonian Energy Tracking}
 The state optimization depth is directly tracked via the underlying Heisenberg expectation tracking:
 \begin{equation}
-\langle E\rangle_t = \frac{1}{N}\sum_{n=1}^{N}\sum_{i}\Bigl(J_z^{(i)}\langle Z_iZ_{i+1}\rangle_{n,t} + J_x^{(i)}\langle X_iX_{i+1}\rangle_{n,t} + J_y^{(i)}\langle Y_iY_{i+1}\rangle_{n,t}\Bigr).
+\begin{aligned}
+\langle E\rangle_t = \frac{1}{N}\sum_{n=1}^{N}\sum_{i}\Bigl(&J_z^{(i)}\langle Z_iZ_{i+1}\rangle_{n,t}
++ J_x^{(i)}\langle X_iX_{i+1}\rangle_{n,t}\\
+&+ J_y^{(i)}\langle Y_iY_{i+1}\rangle_{n,t}\Bigr).
+\end{aligned}
 \end{equation}
 
 \subsubsection{Order Parameters and Phase Diagnostics}
 Longitudinal order parameters track system magnetization states alongside lattice correlation configurations:
 \begin{equation}
-C_A(t) = \frac{1}{15 \cdot N}\sum_{n=1}^{N}\sum_{i=0}^{4}\bigl(\langle Z_iZ_{i+1}\rangle_{n,t} + \langle X_iX_{i+1}\rangle_{n,t} + \langle Y_iY_{i+1}\rangle_{n,t}\bigr).
+\begin{aligned}
+C_A(t)=\frac{1}{15N}\sum_{n=1}^{N}\sum_{i=0}^{4}\bigl(
+&\langle Z_iZ_{i+1}\rangle_{n,t}
++\langle X_iX_{i+1}\rangle_{n,t}\\
+&+\langle Y_iY_{i+1}\rangle_{n,t}\bigr).
+\end{aligned}
 \end{equation}
 Critical structural transition markers are flagged using windowed variance deviations:
 \begin{equation}
@@ -258,19 +297,19 @@ PHL & $4.3415\times10^{-2}$ & $2.2253\times10^{-2}$ & 14.01 & 16.53 & 0.78792 & 
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.82\textwidth]{../../Baselines/cifar10_comparisons/outputs/visuals/_summary/metric_comparison.png}
-\caption{CIFAR-10 aggregate metric comparison across classical, GAN, PHL, and HVK variants. The HVK family improves substantially over GAN, classical autoencoder, and PHL in this benchmark, while the MLP and CNN remain stronger pure reconstruction baselines.}
+\includegraphics[width=0.82\textwidth]{figures/cifar_metric_comparison.png}
+\caption{CIFAR-10 same-set aggregate metric comparison across classical, GAN, PHL, and HVK variants. The PHL entry is a task-mismatched Hamiltonian-learning reference and is not used for head-to-head pixel-reconstruction ranking. The HVK family improves substantially over GAN and the classical autoencoder in this bounded capacity benchmark, while the MLP and CNN remain stronger pure reconstruction baselines.}
 \label{fig:cifar_metric_comparison}
 \end{figure*}
 
-The CIFAR-10 result should be read carefully. HVK2D outperforms the GAN baseline by $8.47$ dB PSNR and reduces mean MSE by approximately $82.4\%$, while also improving over the classical autoencoder and PHL reference. However, the MLP and CNN baselines are stronger in pure pixel reconstruction. The very high MLP PSNR, including a best-case value above $100$ dB, is a red flag for same-set memorization rather than evidence of dataset-level generalization. This makes the CIFAR evidence useful for positioning HVK as a compact observable-latent model under controlled reconstruction fits, not as a universal replacement for high-capacity classical regressors.
+The CIFAR-10 same-set result should be read carefully. HVK2D outperforms the tested GAN baseline by $8.47$ dB PSNR and reduces mean MSE by approximately $82.4\%$, while also improving over the classical autoencoder. This is a capacity and positioning result, not the headline generalization result. The PHL row is retained only as a task-mismatched Hamiltonian-learning reference, not as a fair pixel-reconstruction baseline. The MLP and CNN baselines are stronger in pure pixel reconstruction. The very high MLP PSNR, including a best-case value above $100$ dB, is a red flag for same-set memorization rather than evidence of dataset-level generalization. This makes the CIFAR evidence useful for positioning HVK as a compact observable-latent model under controlled reconstruction fits, not as a universal replacement for high-capacity classical regressors.
 
-\subsection{IBM Heron Hardware Probe}
+\subsection{Circuit-Resource Probe}
 The repository also includes an IBM Cloud circuit probe for the HVK1D and HVK2D patch circuits. Table~\ref{tab:ibm_probe} summarizes the circuit resources recorded for patch index $0$. Both variants use six measured qubits and depth-$18$ circuits after construction; the 2D lattice requires more CNOT gates because it encodes additional adjacency links.
 
 \begin{table}[t]
 \centering
-\caption{IBM Heron-class circuit probe summary for HVK patch circuits.}
+\caption{Circuit-resource summary for HVK patch circuits mapped to an IBM Heron-class basis.}
 \label{tab:ibm_probe}
 \scriptsize
 \begin{tabular}{lccccc}
@@ -285,12 +324,31 @@ HVK2D & 6 & 18 & 13 & 6 & 14 \\
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{../../IBM_Cloud/outputs/circuit_summary.png}
+\includegraphics[width=\linewidth]{figures/ibm_circuit_summary.png}
 \caption{IBM Cloud circuit-resource summary for the HVK1D and HVK2D hardware probes.}
 \label{fig:ibm_circuit_summary}
 \end{figure}
 
-This hardware probe validates that the observable circuits are small enough for Heron-class execution, but it is not used as a reconstruction-quality benchmark in the present manuscript because the repository records circuit resources rather than a complete backend-count reconstruction pipeline. The scientific claim is therefore limited to hardware feasibility of the measured patch circuit, while image-quality conclusions are drawn from the controlled simulation and reconstruction experiments.
+This probe validates that the observable circuits are small enough for Heron-class execution, but it is not a hardware reconstruction experiment. The repository records circuit resources rather than a complete backend-count reconstruction pipeline, and no image-quality conclusion is drawn from hardware measurements. The scientific claim is therefore limited to circuit-resource feasibility of the measured patch circuit, while reconstruction conclusions are drawn from controlled simulation and reconstruction experiments.
+
+\begin{table}[t]
+\centering
+\caption{Capacity and resource comparison for the held-out CIFAR validation layer. All rows use the same linear readout width and split protocol. The table reports structural resources; synchronized wall-clock timing was not available for every legacy baseline and is therefore treated as a reproducibility limitation rather than inferred after the fact.}
+\label{tab:resource_capacity}
+\scriptsize
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Model & Feature dim. & Readout params. & Pair/CNOT channels & Split \\
+\midrule
+HVK2D real-CIFAR map & 32 & 2112 & 6 pair / 14 CNOT & 6/4 \\
+ZZ-only observables & 32 & 2112 & 3 pair & 6/4 \\
+No entanglement & 32 & 2112 & 0 & 6/4 \\
+Strict classical random features & 32 & 2112 & 0 & 6/4 \\
+Raw/local controls & 32 & 2112 & 0 & 6/4 \\
+\bottomrule
+\end{tabular}}
+\end{table}
 
 \subsection{Monalisa Single-Image Results}
 Reconstruction comparisons for the structural \textit{Monalisa} validation target are summarized in Table~\ref{tab:monalisa}.
@@ -299,18 +357,17 @@ Reconstruction comparisons for the structural \textit{Monalisa} validation targe
 \centering
 \caption{Monalisa Reconstruction Performance Across Methods}
 \label{tab:monalisa}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccc}
 \toprule
-Model & Final MSE & Best MSE & PSNR (dB) & SSIM \\
+Model & Final MSE & Best MSE & PSNR (dB) \\
 \midrule
-1D HVK & $3.3754 \times 10^{-4}$ & $3.0112 \times 10^{-4}$ & 34.72 & not logged \\
-2D HVK & $8.5114 \times 10^{-5}$ & $8.4975 \times 10^{-5}$ & 40.70 & not logged \\
-GAN Baseline & $1.0185 \times 10^{-3}$ & $1.1124 \times 10^{-3}$ & 29.92 & 0.9873 \\
-PHL \cite{Shi2022} & --- & --- & --- & --- \\
+1D HVK & $3.3754 \times 10^{-4}$ & $3.0112 \times 10^{-4}$ & 34.72 \\
+2D HVK & $8.5114 \times 10^{-5}$ & $8.4975 \times 10^{-5}$ & 40.70 \\
+GAN Baseline & $1.0185 \times 10^{-3}$ & $1.1124 \times 10^{-3}$ & 29.92 \\
 \bottomrule
 \end{tabular}
 \end{table}
-The PHL metric is excluded from direct pixel tracking because it is natively optimized for segmentation tasks, logging a baseline Dice coefficient of $0.9706$ and an Intersection-over-Union (IoU) of $0.9428$.
+The GAN run also logged SSIM $0.9873$. The 1D/2D HVK Monalisa runs did not log SSIM in the original output files, so the direct comparison table is restricted to metrics available for all listed reconstruction methods. The PHL reference is excluded from this direct pixel table because it is natively optimized for segmentation tasks, logging a baseline Dice coefficient of $0.9706$ and an Intersection-over-Union (IoU) of $0.9428$.
 
 \subsection{1D vs. 2D Lattice-Topology Study}
 Table~\ref{tab:ablation} highlights the operational adjustments caused by restructuring the lattice configuration from a 1D chain to a 2D adjacent grid.
@@ -338,9 +395,9 @@ The central empirical question is not whether HVK can reconstruct a single targe
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.32\textwidth]{../../experiments/quantum_contribution/results/baseline/shared-seed-42/reconstructions.png}
-\includegraphics[width=0.32\textwidth]{../../experiments/quantum_contribution/results/freeze_controls/freeze-classical/reconstructions.png}
-\includegraphics[width=0.32\textwidth]{../../experiments/quantum_contribution/results/vqc_replacements/random-vqc/reconstructions.png}
+\includegraphics[width=0.32\textwidth]{figures/ablation_baseline_reconstructions.png}
+\includegraphics[width=0.32\textwidth]{figures/ablation_freeze_classical_reconstructions.png}
+\includegraphics[width=0.32\textwidth]{figures/ablation_random_vqc_reconstructions.png}
 \caption{Representative reconstruction ablations: shared HVK baseline (left), frozen-classical control (center), and random-VQC replacement (right). The frozen-classical control collapses because the decoder/projection stack cannot adapt, while random latents remain inferior to structured observables.}
 \label{fig:component_ablation_recons}
 \end{figure*}
@@ -392,8 +449,8 @@ The Hamiltonian controls are the most important corrective result in the study. 
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.48\textwidth]{../../experiments/quantum_contribution/results/hamiltonian_core/contrastive/training_curves.png}
-\includegraphics[width=0.48\textwidth]{../../experiments/quantum_contribution/results/hamiltonian_core/contrastive/hvk_order_parameter_curve.png}
+\includegraphics[width=0.48\textwidth]{figures/contrastive_training_curves.png}
+\includegraphics[width=0.48\textwidth]{figures/contrastive_order_parameter_curve.png}
 \caption{Contrastive Hamiltonian-core diagnostics. The reconstruction and energy curves are useful for analyzing optimization dynamics, while the order parameter tracks observable-sector structure during training.}
 \label{fig:contrastive_hamiltonian_diagnostics}
 \end{figure*}
@@ -419,12 +476,12 @@ MPS bond dim. & $\chi=1$ & $5.0746\times10^{-4}$ & 32.95 & 0.9932 \\
 MPS bond dim. & $\chi=2$ & $5.3061\times10^{-4}$ & 32.75 & 0.9929 \\
 MPS bond dim. & $\chi=4$ & $5.9771\times10^{-4}$ & 32.24 & 0.9919 \\
 MPS bond dim. & $\chi=8$ & $5.6124\times10^{-4}$ & 32.51 & 0.9925 \\
-No MPS, patch statistics & --- & $5.3874\times10^{-4}$ & 32.69 & 0.9927 \\
+No MPS, patch statistics & Patch stats & $5.3874\times10^{-4}$ & 32.69 & 0.9927 \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-The step-count sweep confirms that the model is convergence-limited at early iteration counts and approaches a plateau near $500$ steps. Within the tested circuit widths, $q=8$ gives the strongest qubit-count result. The MPS bond-dimension sweep is more nuanced: $\chi=1$ and $\chi=2$ outperform the default $\chi=4$ under the same training budget, while $\chi=8$ partially recovers. This suggests that reconstruction quality is not controlled only by MPS compression fidelity; downstream projection, circuit width, and decoder training dynamics interact with the feature basis.
+The step-count sweep confirms that the model is convergence-limited at early iteration counts and approaches a plateau near $500$ steps. Within the tested circuit widths, $q=8$ gives the strongest qubit-count result. The MPS bond-dimension sweep is more nuanced: $\chi=1$ and $\chi=2$ outperform the default $\chi=4$ under the same training budget, while $\chi=8$ partially recovers. This should not be read as evidence that lower-rank tensor summaries are intrinsically better. A more conservative interpretation is that, under a fixed 200-step optimization budget, lower-rank summaries expose fewer and smoother feature channels to the downstream projection and decoder, while larger bond dimensions require more optimization or stronger regularization to use their additional degrees of freedom. Bond dimension is therefore treated here as a coupled optimization hyperparameter, not as a monotonic compression-fidelity knob.
 
 \begin{table}[t]
 \centering
@@ -445,31 +502,44 @@ The generalization controls clarify scope. A model optimized on \textit{Monalisa
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.48\textwidth]{../../experiments/quantum_contribution/results/feature_bottleneck/no-mps/reconstructions.png}
-\includegraphics[width=0.48\textwidth]{../../experiments/quantum_contribution/results/generalization/second-image/reconstructions.png}
+\includegraphics[width=0.48\textwidth]{figures/no_mps_reconstructions.png}
+\includegraphics[width=0.48\textwidth]{figures/second_image_generalization_reconstructions.png}
 \caption{Additional controls: no-MPS patch-statistics reconstruction (left) and second-image generalization reconstruction (right). These figures show that the current decoder can use compact non-MPS statistics and that generalization improves only when the second image is included in training.}
 \label{fig:bottleneck_generalization_recons}
 \end{figure*}
 
-\subsection{Second-Generation newHVK Validation}
-\label{sec:newhvk_validation}
-The original HVK ablations show that the observable bottleneck is useful, but they do not isolate quantum advantage. To sharpen this point, we added a second-generation validation layer, denoted newHVK, with two distinct purposes. First, a restricted pair-correlation diagnostic tests whether an entangling observable feature map can represent targets that explicitly depend on pair products. Second, a real held-out CIFAR-10 validation tests whether the same idea survives natural-image generalization against strict same-width classical controls. The reproducibility commands are:
-\begin{center}
+\subsection{HVK1D/HVK2D Statistical Validation}
+\label{sec:hvk_validation}
+The original HVK ablations show that the observable bottleneck is useful, but they do not isolate quantum advantage. To sharpen this point without introducing a separate architecture, we add a statistical validation layer for the existing HVK1D/HVK2D family. The validation is organized around two intentionally different questions. The first asks whether entangling pair observables expose nonlocal multiplicative structure to a fixed readout. The second asks whether the same feature map improves ordinary held-out image reconstruction once local/raw and parameter-matched classical controls are included. The finite-shot noise sweep additionally asks how the observable readout degrades under a limited measurement budget, mirroring the sample-complexity concerns raised for shadow-tomography-style estimation of Pauli expectation values \cite{Huang2020Shadows}. Table~\ref{tab:validation_protocol} summarizes the resulting evidence boundary.
+
+\begin{table}[t]
+\centering
+\caption{Validation protocol and claim boundary for the HVK1D/HVK2D evidence layer.}
+\label{tab:validation_protocol}
 \scriptsize
-\texttt{./main2/newHVK/scripts/run\_full\_newhvk\_ablation\_suite.sh}\\
-\texttt{./main2/newHVK/scripts/run\_q1\_validation\_suite.sh}
-\end{center}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{p{0.25\linewidth}p{0.25\linewidth}p{0.36\linewidth}}
+\toprule
+Validation target & Primary controls & Claim supported \\
+\midrule
+Restricted pair-correlation diagnostic & No-entanglement, raw-linear, parameter-matched, random VQC & Entangling pair observables are useful when the target explicitly depends on pair products. \\
+CIFAR nonlocal patch-correlation diagnostic & One-sided patch, no-entanglement, raw-linear, random-feature, random VQC & The pair-observable channel can expose distant-patch product structure under a fixed linear readout. \\
+Held-out CIFAR pixel reconstruction & Local-only, raw-linear, ZZ-only, quadratic, shuffled-pair, random VQC & No broad reconstruction advantage: local/raw controls remain stronger. \\
+Finite-shot observable noise & Shot counts from 128 to 8192 & Observable readout degrades smoothly under simulated finite-shot noise. \\
+\bottomrule
+\end{tabular}}
+\end{table}
 
 \begin{table*}[t]
 \centering
-\caption{newHVK restricted pair-correlation diagnostic across five seeds. This experiment is deliberately designed to reward pair-observable structure; it is evidence for an entanglement-sensitive representation, not by itself a hardware quantum-advantage proof.}
-\label{tab:newhvk_pair_diagnostic}
+\caption{HVK2D restricted pair-correlation diagnostic across five seeds. This experiment is deliberately designed to reward pair-observable structure; it is evidence for an entanglement-sensitive representation, not by itself a hardware quantum-advantage proof.}
+\label{tab:hvk_pair_diagnostic}
 \scriptsize
 \begin{tabular}{lccc}
 \toprule
 Model & Mean MSE & Mean PSNR (dB) & Mean $R^2$ \\
 \midrule
-newHVK entangling observables & $8.5969\times10^{-4}$ & 32.77 & 0.9735 \\
+HVK2D entangling observables & $8.5969\times10^{-4}$ & 32.77 & 0.9735 \\
 Freeze quantum & $4.7904\times10^{-3}$ & 27.34 & 0.8533 \\
 No entanglement & $3.1461\times10^{-2}$ & 15.03 & 0.0191 \\
 Raw-linear classical & $3.1654\times10^{-2}$ & 15.00 & 0.0133 \\
@@ -482,45 +552,67 @@ Freeze classical & $6.0973\times10^{-2}$ & 12.17 & $-0.9025$ \\
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{../../main2/newHVK/results/full_ablation_suite/full_ablation_metric_comparison.png}
-\caption{newHVK restricted diagnostic summary. The entangling observable feature map dominates the restricted pair-correlation task under the tested readout.}
-\label{fig:newhvk_pair_diagnostic}
+\includegraphics[width=0.78\textwidth]{figures/full_ablation_metric_comparison.png}
+\caption{HVK2D restricted diagnostic summary. The entangling observable feature map dominates the restricted pair-correlation task under the tested readout.}
+\label{fig:hvk_pair_diagnostic}
 \end{figure*}
 
 \begin{table*}[t]
 \centering
-\caption{Q1-validation layer on real held-out CIFAR-10 splits. Each row aggregates 20 held-out reconstructions from five random image splits. Lower MSE and higher PSNR/SSIM are better.}
-\label{tab:newhvk_real_cifar}
+\caption{Held-out CIFAR-10 validation layer. Each row aggregates 20 held-out reconstructions from five random image splits and is reported as mean $\pm$ standard deviation. Lower MSE and higher PSNR/SSIM are better.}
+\label{tab:hvk_real_cifar}
 \scriptsize
 \begin{tabular}{lccc}
 \toprule
-Model & Mean MSE & Mean PSNR (dB) & Mean SSIM \\
+Model & MSE & PSNR (dB) & SSIM \\
 \midrule
-Local observables only & $9.0607\times10^{-3}$ & 20.66 & 0.8621 \\
-Raw-linear classical & $9.0607\times10^{-3}$ & 20.66 & 0.8621 \\
-ZZ-only observables & $9.3723\times10^{-3}$ & 20.52 & 0.8580 \\
-No entanglement & $9.9469\times10^{-3}$ & 20.24 & 0.8508 \\
-Shuffled pair observables & $1.0092\times10^{-2}$ & 20.17 & 0.8484 \\
-newHVK real-CIFAR map & $1.0403\times10^{-2}$ & 20.07 & 0.8460 \\
-Strict classical random features & $2.0862\times10^{-2}$ & 17.06 & 0.7055 \\
-Random VQC & $8.5735\times10^{-2}$ & 10.99 & 0.0165 \\
+Local observables only & $1.3923{\pm}0.4719\times10^{-2}$ & $18.80{\pm}1.42$ & $0.8280{\pm}0.0578$ \\
+Raw-linear classical & $1.3923{\pm}0.4719\times10^{-2}$ & $18.80{\pm}1.42$ & $0.8280{\pm}0.0578$ \\
+ZZ-only observables & $1.4782{\pm}0.5224\times10^{-2}$ & $18.56{\pm}1.49$ & $0.8194{\pm}0.0603$ \\
+No entanglement & $1.4956{\pm}0.4782\times10^{-2}$ & $18.46{\pm}1.32$ & $0.8176{\pm}0.0569$ \\
+Shuffled pair observables & $1.5382{\pm}0.4452\times10^{-2}$ & $18.31{\pm}1.25$ & $0.8109{\pm}0.0640$ \\
+Quadratic classical & $1.5814{\pm}0.6432\times10^{-2}$ & $18.33{\pm}1.65$ & $0.8102{\pm}0.0703$ \\
+HVK2D real-CIFAR map & $1.6460{\pm}0.6340\times10^{-2}$ & $18.12{\pm}1.54$ & $0.8038{\pm}0.0649$ \\
+Strict classical random features & $2.7390{\pm}0.8941\times10^{-2}$ & $15.85{\pm}1.39$ & $0.6640{\pm}0.1041$ \\
+Random VQC & $7.9497{\pm}1.9891\times10^{-2}$ & $11.15{\pm}1.19$ & $0.0237{\pm}0.1526$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Paired image-level statistical tests for held-out CIFAR reconstruction. The reported difference is HVK2D real-CIFAR PSNR minus the control PSNR; positive values favor HVK2D, negative values favor the control.}
+\label{tab:hvk_real_cifar_stats}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Control & Pairs & Mean $\Delta$PSNR & Bootstrap 95\% CI & Wilcoxon $p$ \\
+\midrule
+Raw-linear classical & 20 & $-0.68$ & $[-0.93,-0.46]$ & $9.54\times10^{-6}$ \\
+Local observables only & 20 & $-0.68$ & $[-0.93,-0.45]$ & $9.54\times10^{-6}$ \\
+No entanglement & 20 & $-0.34$ & $[-0.63,-0.10]$ & $0.021$ \\
+ZZ-only observables & 20 & $-0.44$ & $[-0.62,-0.26]$ & $1.34\times10^{-4}$ \\
+Quadratic classical & 20 & $-0.21$ & $[-0.36,-0.07]$ & $0.017$ \\
+Strict classical random features & 20 & $2.27$ & $[1.96,2.59]$ & $1.91\times10^{-6}$ \\
+Shuffled pair observables & 20 & $-0.19$ & $[-0.42,0.05]$ & $0.245$ \\
+Random VQC & 20 & $6.97$ & $[6.15,7.74]$ & $1.91\times10^{-6}$ \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.60\textwidth]{../../main2/newHVK/results/q1_validation/real_cifar_holdout_summary.png}
-\includegraphics[width=0.37\textwidth]{../../main2/newHVK/results/q1_validation/real_cifar_shot_noise.png}
-\caption{Real held-out CIFAR validation and shot-noise robustness. The real-image result is the strongest corrective control: the current newHVK image feature map does not beat local/raw controls, although it remains far above the random-VQC control.}
-\label{fig:newhvk_real_cifar}
+\includegraphics[width=0.60\textwidth]{figures/real_cifar_holdout_summary.png}
+\includegraphics[width=0.37\textwidth]{figures/real_cifar_shot_noise.png}
+\caption{Real held-out CIFAR validation and shot-noise robustness. The real-image result is the strongest corrective control: the current HVK2D image feature map does not beat local/raw controls, although it remains far above the random-VQC control.}
+\label{fig:hvk_real_cifar}
 \end{figure*}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.82\textwidth]{../../main2/newHVK/results/q1_validation/real_cifar_reconstruction_panel.png}
-\caption{Representative held-out CIFAR reconstruction panel from the Q1-validation suite. The panel compares target, prediction, and absolute error for newHVK and major controls.}
-\label{fig:newhvk_real_cifar_recons}
+\includegraphics[width=0.82\textwidth]{figures/real_cifar_reconstruction_panel.png}
+\caption{Representative held-out CIFAR reconstruction panel from the Q1-validation suite. The panel compares target, prediction, and absolute error for HVK2D and major controls.}
+\label{fig:hvk_real_cifar_recons}
 \end{figure*}
 
 \begin{table*}[t]
@@ -532,7 +624,7 @@ Random VQC & $8.5735\times10^{-2}$ & 10.99 & 0.0165 \\
 \toprule
 Model & Mean MSE & Mean PSNR (dB) & Mean $R^2$ \\
 \midrule
-newHVK CIFAR nonlocal entangling & $4.3857\times10^{-15}$ & 120.00 & 1.0000 \\
+HVK2D CIFAR nonlocal entangling & $4.3857\times10^{-15}$ & 120.00 & 1.0000 \\
 Raw-linear & $1.0909$ & $-0.15$ & 0.2389 \\
 Left-patch only & $1.1156$ & $-0.33$ & 0.1993 \\
 Strict classical random features & $1.1169$ & $-0.18$ & 0.2235 \\
@@ -545,19 +637,137 @@ Random VQC & $1.6046$ & $-1.80$ & $-0.1039$ \\
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{../../main2/newHVK/results/cifar_nonlocal_advantage/cifar_nonlocal_advantage.png}
+\includegraphics[width=0.78\textwidth]{figures/cifar_nonlocal_advantage.png}
 \caption{CIFAR nonlocal patch-correlation diagnostic. The entangling feature map is near-exact because the target is explicitly a distant-patch product observable; local and single-site controls cannot represent the same target with the fixed linear readout.}
 \label{fig:cifar_nonlocal_advantage}
 \end{figure*}
 
-The newHVK results sharpen the claim boundary. On the restricted synthetic diagnostic, entangling observables improve mean PSNR by approximately $17.74$ dB over the no-entanglement control and by $18.52$ dB over random VQC latents. On the CIFAR-derived nonlocal diagnostic, the target is constructed from products between distant CIFAR patch statistics; the entangling observable map is near-exact under a linear readout, whereas raw-linear, one-sided patch, no-entanglement, and random-latent controls fail. This provides a defensible CIFAR-based representational advantage for nonlocal pair observables. However, the real held-out CIFAR-10 pixel-reconstruction validation does not support a broad natural-image quantum-advantage claim: the local-observable and raw-linear controls reach $20.66$ dB, while the current newHVK real-CIFAR map reaches $20.07$ dB. Thus, newHVK provides a candidate entanglement-sensitive diagnostic and a stronger ablation harness, while ordinary natural-image reconstruction advantage remains unresolved.
+The near-perfect CIFAR nonlocal result is a sanity check, not a general image benchmark. The target is deliberately constructed from distant-patch products that are directly aligned with the pair-observable feature channel, so the experiment tests whether the entangling map exposes the required multiplicative coordinates to a fixed linear readout. It does not by itself prove natural-image reconstruction advantage, hardware advantage, or uniqueness of the quantum mechanism. For that reason, the validation suite includes raw-linear, one-sided, shuffled-pair, no-entanglement, random-latent, strict random-feature, and quadratic classical controls, and the ordinary held-out reconstruction results are reported separately.
+
+\subsection{Extended Symmetry and Ordering Diagnostics}
+
+To test whether the group-theoretic discussion is operational rather than decorative, we evaluate equivariance directly. The question is not whether the original positional feature map happens to be symmetric, but whether explicit group pooling can enforce the square-lattice symmetry that the architecture motivates.
+
+The earlier no-download second-dataset smoke test has been superseded by real cached datasets. The submitted results do not use synthetic fallback rows: MNIST and Fashion-MNIST are loaded from cached torchvision files, while PathMNIST, BloodMNIST, and PneumoniaMNIST are loaded from local MedMNIST-style \texttt{.npz} files. These real-data rows are the only second-dataset results reported in the manuscript.
+
+For each cached CIFAR image and each nontrivial element of the square dihedral group, we transform the image, compute the observable grid, inverse-align the transformed grid, and measure
+\begin{equation}
+\epsilon_g=\frac{\|\Phi(x)-P_g^{-1}\Phi(gx)\|_2}{\|\Phi(x)\|_2+\varepsilon}.
+\end{equation}
+The unpooled positional map has large error, so it should not be described as empirically $D_4$-equivariant. In contrast, the $D_4$-pooled HVK2D map drives the equivariance error to numerical precision, confirming that the symmetry claim applies to the pooled square-grid feature map. HVK1D remains the one-dimensional chain control and is not presented as a $D_4$ architecture.
+
+\begin{table}[t]
+\centering
+\caption{$D_4$ equivariance error for unpooled and pooled observable-grid maps. Lower is better. The pooled map is group averaged over all eight square symmetries.}
+\label{tab:d4_equivariance}
+\scriptsize
+\begin{tabular}{lcc}
+\toprule
+Model & Mean error & Std. error \\
+\midrule
+$D_4$-pooled HVK2D & $9.57\times10^{-17}$ & $1.26\times10^{-17}$ \\
+No positional encoding & $7.40\times10^{-1}$ & $1.52\times10^{-1}$ \\
+HVK2D positional & $8.15\times10^{-1}$ & $1.29\times10^{-1}$ \\
+Local/raw & $8.37\times10^{-1}$ & $1.31\times10^{-1}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/d4_equivariance_summary.png}
+\caption{$D_4$ equivariance diagnostic. The original positional feature map is not equivariant, while the group-pooled HVK2D feature map is equivariant up to numerical precision.}
+\label{fig:d4_equivariance}
+\end{figure}
+
+\subsection{Multi-Dataset Reconstruction and Classification Diagnostics}
+To reduce dependence on a single image source, we add a multi-dataset validation runner whose outputs are collected in Tables~\ref{tab:multi_dataset_reconstruction}--\ref{tab:wisconsin_diagnostic}.
+
+This runner evaluates the same fixed-width feature maps on CIFAR-10, MNIST, Fashion-MNIST, PathMNIST, BloodMNIST, PneumoniaMNIST, and the Wisconsin Breast Cancer tabular benchmark. The cached subset contains 400 images per image dataset before splitting: CIFAR-10 spans 10 classes at native $32\times32$ resolution; MNIST and Fashion-MNIST span 10 classes at $28\times28$; PathMNIST, BloodMNIST, and PneumoniaMNIST are local MedMNIST-style subsets spanning 9, 8, and 2 classes, respectively. The image datasets use stratified held-out reconstruction with identical splits for all feature maps. A second downstream diagnostic trains a logistic classifier on image-level pooled features to test whether the pair-observable map is useful beyond pixel reconstruction. These experiments are lightweight reviewer diagnostics, not full training of a new quantum model.
+
+\begin{table*}[t]
+\centering
+\caption{Multi-dataset held-out reconstruction diagnostics on real cached subsets. The runner loads 400 images per image dataset before stratified splitting; the table reports held-out PSNR mean $\pm$ standard deviation for the best local/raw control and the HVK2D pair-observable map. Higher is better.}
+\label{tab:multi_dataset_reconstruction}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Dataset & Best local/raw PSNR & HVK2D pair PSNR & Winner \\
+\midrule
+CIFAR-10 native $32^2$ & $21.17{\pm}1.98$ & $19.99{\pm}2.02$ & Local/raw \\
+MNIST & $16.55{\pm}1.27$ & $16.12{\pm}1.34$ & No-entanglement/local \\
+Fashion-MNIST & $17.67{\pm}1.71$ & $17.33{\pm}1.80$ & Local/raw \\
+PathMNIST & $27.52{\pm}6.02$ & $27.01{\pm}5.81$ & Local/raw \\
+BloodMNIST & $24.79{\pm}1.78$ & $24.24{\pm}1.66$ & Local/raw \\
+PneumoniaMNIST & $26.49{\pm}2.48$ & $25.73{\pm}2.29$ & Local/raw \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Paired reconstruction statistics for HVK2D pair-observable features versus local/raw controls across image datasets. The reported difference is HVK2D PSNR minus local/raw PSNR; negative values favor local/raw controls.}
+\label{tab:multi_dataset_paired_stats}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Dataset & Pairs & Mean $\Delta$PSNR & Bootstrap 95\% CI \\
+\midrule
+CIFAR-10 native $32^2$ & 30 & $-1.19$ & $[-1.36,-1.02]$ \\
+MNIST & 300 & $-0.42$ & $[-0.47,-0.38]$ \\
+Fashion-MNIST & 300 & $-0.34$ & $[-0.38,-0.30]$ \\
+PathMNIST & 240 & $-0.51$ & $[-0.57,-0.46]$ \\
+BloodMNIST & 180 & $-0.56$ & $[-0.60,-0.51]$ \\
+PneumoniaMNIST & 60 & $-0.76$ & $[-0.86,-0.66]$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Downstream image-classification diagnostic using image-level pooled features. The table compares the best local/raw control with the HVK2D pair-observable map. Accuracy is reported as mean $\pm$ standard deviation over three stratified seeds.}
+\label{tab:multi_dataset_classification}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Dataset & Best local/raw accuracy & HVK2D pair accuracy & Winner \\
+\midrule
+CIFAR-10 native $32^2$ & $0.100{\pm}0.082$ & $0.067{\pm}0.094$ & Local/no-ent. \\
+MNIST & $0.663{\pm}0.021$ & $0.643{\pm}0.017$ & Raw-linear \\
+Fashion-MNIST & $0.637{\pm}0.019$ & $0.577{\pm}0.009$ & Raw-linear \\
+PathMNIST & $0.638{\pm}0.037$ & $0.608{\pm}0.016$ & Raw/param. \\
+BloodMNIST & $0.667{\pm}0.083$ & $0.539{\pm}0.052$ & Raw-linear \\
+PneumoniaMNIST & $0.817{\pm}0.062$ & $0.783{\pm}0.047$ & Raw-linear \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Wisconsin Breast Cancer tabular diagnostic across five stratified seeds. This table is not image-reconstruction evidence; it tests whether the same fixed-width feature budget remains competitive on a small medical tabular benchmark.}
+\label{tab:wisconsin_diagnostic}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Model & Accuracy & AUC & F1 & Brier \\
+\midrule
+Raw linear & $0.980{\pm}0.011$ & $0.996{\pm}0.002$ & $0.984{\pm}0.009$ & $0.0196{\pm}0.0057$ \\
+HVK2D pair observable & $0.943{\pm}0.016$ & $0.988{\pm}0.004$ & $0.955{\pm}0.012$ & $0.0375{\pm}0.0080$ \\
+Quadratic classical & $0.950{\pm}0.016$ & $0.987{\pm}0.005$ & $0.961{\pm}0.012$ & $0.0381{\pm}0.0077$ \\
+No entanglement & $0.947{\pm}0.017$ & $0.986{\pm}0.007$ & $0.958{\pm}0.013$ & $0.0399{\pm}0.0135$ \\
+Strict classical random features & $0.947{\pm}0.019$ & $0.984{\pm}0.010$ & $0.958{\pm}0.015$ & $0.0421{\pm}0.0164$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The HVK1D/HVK2D validation results sharpen the claim boundary. On the restricted synthetic diagnostic, HVK2D entangling observables improve mean PSNR by approximately $17.74$ dB over the no-entanglement control and by $18.52$ dB over random VQC latents. On the CIFAR-derived nonlocal diagnostic, the target is constructed from products between distant CIFAR patch statistics; the HVK2D entangling observable map is near-exact under a linear readout, whereas raw-linear, one-sided patch, no-entanglement, and random-latent controls fail. This provides a defensible CIFAR-based representational advantage for nonlocal pair observables. However, the real held-out CIFAR-10 pixel-reconstruction validation and the richer multi-dataset suite do not support a broad natural-image quantum-advantage claim. Across CIFAR-10, MNIST, Fashion-MNIST, PathMNIST, BloodMNIST, and PneumoniaMNIST, local/raw controls remain stronger for ordinary reconstruction, and the downstream classification diagnostic also favors raw/local controls on most datasets. Thus, HVK2D provides a candidate entanglement-sensitive diagnostic and a stronger ablation harness, while ordinary reconstruction and classification advantage remain unresolved.
 
 \section{Discussion}
 \subsection{Reconstruction Error Analysis}
-HVK2D's approximately $82.4\%$ MSE reduction over the tested CIFAR GAN configuration shows that the observable-latent reconstruction route is competitive against adversarial and autoencoder-style baselines in the completed subset. The stronger MLP and CNN results, however, show that classical capacity remains a major confounder. HVK's strongest evidence is therefore not raw leaderboard dominance, but interpretability: observable vectors, positional alignment, Hamiltonian diagnostics, and topology choices can be ablated directly. The completed ablations show that this observable channel is meaningful, but also that Hamiltonian energy regularization is not the current source of the reconstruction gain.
+HVK2D's approximately $82.4\%$ MSE reduction over the tested same-set CIFAR GAN configuration shows that the observable-latent reconstruction route is competitive against adversarial and autoencoder-style baselines in that completed subset. It is not used as the paper's generalization claim. The stronger MLP and CNN results, together with the held-out local/raw controls, show that classical capacity and local image statistics remain major confounders. HVK's strongest evidence is therefore not raw leaderboard dominance, but interpretability: observable vectors, positional alignment, Hamiltonian diagnostics, and topology choices can be ablated directly. The completed ablations show that this observable channel is meaningful, but also that Hamiltonian energy regularization is not the current source of the reconstruction gain.
 
 \subsection{Generalization and Memorization Risk}
-The strongest caveat in the present study is that the most impressive classical numbers are also the least informative about generalization. The CIFAR MLP result is near-exact on a five-image same-set benchmark, which is consistent with memorization. The zero-shot second-image result for HVK is also weak, reaching only $7.78$ dB PSNR before multi-image training. The newHVK Q1-validation suite addresses this weakness by adding five random held-out CIFAR-10 image splits, strict same-width classical controls, observable-sector ablations, shuffled pair observables, and shot-noise simulations. The result is scientifically useful but corrective: the restricted pair-correlation diagnostic strongly favors entangling observables, whereas real held-out CIFAR reconstruction is still better explained by local/raw image statistics. Consequently, the paper supports a candidate entanglement-sensitive representation, not a broad image-distribution quantum advantage.
+The strongest caveat in the present study is that the most impressive classical numbers are also the least informative about generalization. The CIFAR MLP result is near-exact on a five-image same-set benchmark, which is consistent with memorization. The zero-shot second-image result for HVK is also weak, reaching only $7.78$ dB PSNR before multi-image training. The HVK1D/HVK2D validation suite addresses this weakness by adding five random held-out CIFAR-10 image splits, strict same-width classical controls, observable-sector ablations, shuffled pair observables, and shot-noise simulations. The new multi-dataset runner extends this check to CIFAR-10, MNIST, Fashion-MNIST, PathMNIST, BloodMNIST, PneumoniaMNIST, and Wisconsin Breast Cancer. The result is scientifically useful but corrective: the restricted pair-correlation diagnostic strongly favors HVK2D entangling observables, whereas ordinary reconstruction and image-level classification are still better explained by local/raw image statistics. Consequently, the paper supports a candidate entanglement-sensitive representation, not a broad image-distribution quantum advantage; this distinction mirrors the broader finding that a learning problem's amenability to quantum feature maps depends on the specific structure of the data and target, rather than being a fixed property of the model class \cite{Huang2021PowerData}.
 
 \subsection{Architectural Differentiation Matrix}
 Table~\ref{tab:differentiation} contrasts the structural properties of HVK against current reference frameworks.
@@ -571,46 +781,52 @@ Table~\ref{tab:differentiation} contrasts the structural properties of HVK again
 Axis & Classical AE \cite{Slabbert2024} & GAN AE \cite{MethodologyExp2026} & Standard QAE \cite{Zhai2025} & HVK (Ours) \\
 \midrule
 Latent Space & Continuous $\mathbb{R}^d$ & Continuous $\mathbb{R}^d$ & Quantum Register & Pauli Correlator Vector \\
-Spatial Bias & Implicit Convolutions & Implicit Convolutions & None & 2D Fourier + $D_4$ Symmetries \\
+Spatial Bias & Implicit Convolutions & Implicit Convolutions & None & 2D Fourier + optional $D_4$ pooling \\
 Regularizer & Bottleneck Size & Discriminator Loss & Swap-Test Fidelity & Optional Hamiltonian energy diagnostic \\
-Group Alignment & None & None & Reference Swaps & $\text{SO}(3)$ Cartan + $D_4$ Grid \\
+Group Alignment & None & None & Reference Swaps & $\text{SO}(3)$ Cartan motivation + enforced $D_4$ pooling \\
 Target Task & Reconstruction & Reconstruction & Compression & Spatially Aware Reconstruction \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-\subsection{The Topology-Alignment Principle}
-The reported $+5.98\text{ dB}$ performance advantage of the 2D HVK configuration over its 1D counterpart supports a \textit{topology-alignment principle}: aligning the latent interaction graph with image-patch adjacency can improve reconstruction. The ablation study tempers this claim by showing that circuit topology alone is not sufficient evidence of quantum advantage; topology alignment should be treated as an architectural inductive bias whose contribution must be separated from decoder capacity.
+\subsection{Topology Alignment as an Inductive Bias}
+The reported $+5.98\text{ dB}$ performance advantage of the 2D HVK configuration over its 1D counterpart is a single-image observation consistent with a topology-alignment hypothesis: aligning the latent interaction graph with image-patch adjacency can help reconstruction. It is not yet a general principle, because the strongest 1D/2D comparison is documented on the \textit{Monalisa} test case rather than a large multi-seed dataset. The ablation study therefore treats topology alignment as an architectural inductive bias whose contribution must be separated from decoder capacity, optimization budget, and dataset-specific structure.
 
 \subsection{Quantitative Channel Economy}
-The application of 6 qubits maps precisely to 27 or 19 target measurement dimensions, tracking the specific number of local and nearest-neighbor interactions. HVK maintains compact scaling rules while outpacing over-parameterized convolutional models.
+The application of 6 qubits maps precisely to 27 or 19 target measurement dimensions, tracking the specific number of local and nearest-neighbor interactions. This gives HVK a compact, interpretable parameter budget relative to the convolutional and MLP baselines in Table~\ref{tab:cifar10}, even though those higher-capacity classical baselines remain stronger in pure same-set reconstruction accuracy.
 
 \subsection{Interpretive Limits}
-We explicitly acknowledge the following bounds on our empirical claims:
+The entanglement-sensitive diagnostic results are evaluated on tasks deliberately constructed so that the prediction target is a function of the same pair-observable structure HVK2D measures; this establishes representational necessity under a matched linear readout, not evidence that entangling observables improve reconstruction on natural images, which we test separately and report as negative. The $D_4$-equivariance result is a feature-grid-level construction and numerical diagnostic; it has not been integrated into a retrained end-to-end reconstruction pipeline, so it should be read as a symmetry guarantee for the pooled observable map, not as a reconstruction-quality improvement. The negative reconstruction result is drawn from a held-out CIFAR-10 protocol of five random splits (20 held-out reconstructions) and a multi-dataset suite of six real datasets, all using fixed-width, parameter-matched linear readouts rather than full retraining of the original architecture per dataset. No hardware execution results are reported; circuit-resource figures describe compiled-circuit feasibility only. We explicitly acknowledge the following further bounds on our empirical claims:
 \begin{itemize}
-    \item The CIFAR-10 evaluations are currently bounded to a five-image native-resolution validation subset.
+    \item The original CIFAR-10 same-set benchmark is bounded to a five-image native-resolution subset; the later multi-dataset runner uses a larger cached 400-image CIFAR-10 subset before stratified splitting.
     \item CIFAR and Monalisa baseline comparisons are same-set reconstruction fits, not held-out generalization tests; the MLP/CNN numbers therefore measure fit capacity as much as reconstruction quality.
     \item 2D HVK performance data is documented solely for the \textit{Monalisa} test case.
     \item The single-image \textit{Monalisa} experiments are per-image optimization studies and should not be interpreted as dataset-level generalization.
     \item Most ablations are single-seed runs without error bars, so small PSNR/SSIM differences should be treated cautiously.
-    \item The $D_4$ and Cartan-sector symmetry analysis is currently a design motivation, not an empirically isolated mechanism.
-    \item Internal reports cited here are provenance references for implementation choices; all externally relevant experimental claims should be reproducible from the reported tables and repository outputs.
+    \item The unpooled $D_4$ and Cartan-sector symmetry analysis is design motivation, but the added $D_4$-pooled HVK2D map enforces dihedral equivariance at the feature-grid level.
+    \item Supplementary notes cited here must be submitted with the manuscript or linked to a public repository; they are used only as provenance references for implementation choices, while externally relevant experimental claims are reported in the tables and repository outputs.
     \item Current ablations show that observable latents are load-bearing, but they do not establish that trained VQC parameters, entangling gates, or the Heisenberg energy term are the unique source of reconstruction quality.
     \item CIFAR-10 benchmarking indicates that HVK is competitive against several baselines, including the tested GAN, PHL, and classical autoencoder configurations, but high-capacity MLP and CNN baselines remain stronger in pure reconstruction accuracy.
-    \item The second-generation newHVK restricted pair-correlation task shows a strong entangling-observable advantage over no-entanglement, random-latent, and parameter-matched controls, but this task is intentionally favorable to pair observables.
-    \item The real held-out CIFAR-10 Q1-validation layer does not yet establish quantum advantage: local-observable and raw-linear controls outperform the current newHVK image feature map.
+    \item The HVK2D restricted pair-correlation task shows a strong entangling-observable advantage over no-entanglement, random-latent, and parameter-matched controls, but this task is intentionally favorable to pair observables.
+    \item The real held-out CIFAR-10 validation layer does not yet establish quantum advantage: local-observable and raw-linear controls outperform the current HVK2D image feature map.
+    \item The held-out CIFAR validation is intentionally lightweight: it aggregates 20 held-out reconstructions from five cached image splits, while the broader multi-dataset runner uses cached 400-image subsets before stratified splitting. A full class-balanced CIFAR-10 test-set protocol remains future work.
+    \item The multi-dataset runner evaluates real cached subsets of CIFAR-10, MNIST, Fashion-MNIST, PathMNIST, BloodMNIST, PneumoniaMNIST, and Wisconsin Breast Cancer, but it uses lightweight fixed-feature readouts rather than full end-to-end retraining of the original quantum-classical architecture.
+    \item The Wisconsin Breast Cancer experiment is a tabular cross-domain sanity check. It should not be cited as image-reconstruction evidence, and it does not favor the HVK pair map over the raw-linear control.
+    \item The $D_4$-pooled map is an enforced feature-grid equivariance construction and diagnostic. It is not yet a fully retrained D4-pooled quantum reconstruction pipeline.
 \end{itemize}
 
 \section{Conclusion}
 We introduced HVK, a tensor-network and quantum-observable framework for spatially aware image reconstruction. HVK combines an MPS encoder, positional inputs, a parameterized variational circuit, Pauli-observable latent vectors, and Hamiltonian energy diagnostics.
 
-On CIFAR-10, HVK2D achieves $34.50\text{ dB}$ mean PSNR on the completed five-image native-resolution subset, outperforming the tested GAN baseline by $8.47\text{ dB}$ and reducing mean squared error by approximately $82.4\%$. The same table shows that high-capacity MLP and CNN baselines remain stronger in pure pixel accuracy, but their same-set scores, especially the MLP best case above $100$ dB, should be interpreted as memorization-capacity diagnostics rather than held-out reconstruction evidence. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$.
+The HVK1D/HVK2D statistical validation experiments provide the most defensible claim. On real held-out CIFAR-10 pixel reconstruction, the current HVK2D image feature map reaches $18.12\pm1.54\text{ dB}$, while local-observable and raw-linear controls reach $18.80\pm1.42\text{ dB}$, with paired Wilcoxon tests favoring the local/raw controls. The expanded CIFAR-10, MNIST, Fashion-MNIST, PathMNIST, BloodMNIST, PneumoniaMNIST, and Wisconsin diagnostics reinforce the same boundary: the pair-observable map is useful as a controlled nonlocal-correlation diagnostic, but simple local/raw controls remain stronger on ordinary reconstruction and most downstream classification checks. Thus, the present evidence supports a CIFAR-based nonlocal correlation advantage diagnostic and a robust ablation protocol, but not a broad natural-image reconstruction or hardware quantum-advantage claim.
 
-The second-generation newHVK experiments provide a more precise claim. On the restricted pair-correlation diagnostic, entangling observables achieve $32.77\text{ dB}$ mean PSNR and $R^2=0.9735$, compared with $15.03\text{ dB}$ for the no-entanglement control and $14.25\text{ dB}$ for random VQC latents. On the CIFAR-derived nonlocal patch-correlation diagnostic, the entangling observable map is near-exact, while raw-linear, no-entanglement, one-sided patch, strict random-feature, and random-VQC controls fail under the same readout protocol. This is strong evidence that the pair-observable channel can provide a useful representational advantage when the task explicitly depends on nonlocal correlations. The Q1-validation layer also prevents overclaiming: on real held-out CIFAR-10 pixel reconstruction, the current newHVK image feature map reaches $20.07\text{ dB}$, while local-observable and raw-linear controls reach $20.66\text{ dB}$. Thus, the present evidence supports a CIFAR-based nonlocal correlation advantage diagnostic and a robust ablation protocol, but not a broad natural-image reconstruction or hardware quantum-advantage claim.
+Within that boundary, the diagnostic evidence is still useful. On the restricted pair-correlation diagnostic, HVK2D entangling observables achieve $32.77\text{ dB}$ mean PSNR and $R^2=0.9735$, compared with $15.03\text{ dB}$ for the no-entanglement control and $14.25\text{ dB}$ for random VQC latents. On the CIFAR-derived nonlocal patch-correlation diagnostic, the HVK2D entangling observable map is near-exact, while raw-linear, no-entanglement, one-sided patch, strict random-feature, and random-VQC controls fail under the same readout protocol. This is evidence that the pair-observable channel can provide a useful representational advantage when the task explicitly depends on nonlocal correlations.
 
-The quantum-contribution ablation study imposes an important qualification. The observable channel is load-bearing, but the current experiments do not demonstrate that the trained VQC, entangling gates, or Hamiltonian energy loss are the decisive source of performance across all image settings. Freeze-quantum, no-entanglement, no-energy-loss, and parameter-matched classical replacement controls all reconstruct at or above the shared VQC baseline in the original HVK setting. HVK should therefore be framed as a hybrid observable-latent reconstruction architecture and experimental platform, while newHVK should be framed as a controlled candidate diagnostic for entanglement-sensitive representation.
+The older same-set reconstruction results should be read as capacity and positioning studies. On CIFAR-10, HVK2D achieves $34.50\text{ dB}$ mean PSNR on the completed five-image native-resolution subset, outperforming the tested GAN baseline by $8.47\text{ dB}$ and reducing mean squared error by approximately $82.4\%$. The same table shows that high-capacity MLP and CNN baselines remain stronger in pure pixel accuracy, but their same-set scores, especially the MLP best case above $100$ dB, should be interpreted as memorization-capacity diagnostics rather than held-out reconstruction evidence. On the \textit{Monalisa} target, the 2D HVK setup delivers a PSNR of $40.70\text{ dB}$, exceeding the 1D control by $5.98\text{ dB}$ and the GAN by $10.78\text{ dB}$.
 
-Future efforts will focus on improving the real-image newHVK feature map, reducing decoder capacity further, running larger held-out CIFAR and natural-image splits, executing finite-shot hardware pipelines, and identifying tasks where Hamiltonian structure, entanglement, or observable dynamics remain beneficial after strict local/raw and parameter-matched classical controls.
+The quantum-contribution ablation study imposes an important qualification. The observable channel is load-bearing, but the current experiments do not demonstrate that the trained VQC, entangling gates, or Hamiltonian energy loss are the decisive source of performance across all image settings. Freeze-quantum, no-entanglement, no-energy-loss, and parameter-matched classical replacement controls all reconstruct at or above the shared VQC baseline in the original HVK setting. HVK should therefore be framed as a hybrid observable-latent reconstruction architecture and experimental platform, with HVK2D pair-observable diagnostics treated as controlled tests for entanglement-sensitive representation.
+
+Future efforts will focus on improving the real-image HVK2D feature map, integrating the $D_4$-pooled observable map into the trainable reconstruction pipeline, reducing decoder capacity further, scaling the multi-dataset protocol beyond lightweight fixed-feature readouts, executing finite-shot hardware pipelines, and identifying tasks where Hamiltonian structure, entanglement, or observable dynamics remain beneficial after strict local/raw and parameter-matched classical controls.
 
 \begin{thebibliography}{10}
 \bibitem{Cerezo2021} M. Cerezo et al., ``Variational quantum algorithms,'' \textit{Nature Reviews Physics}, vol. 3, no. 9, pp. 625--644, 2021.
@@ -628,13 +844,20 @@ Future efforts will focus on improving the real-image newHVK feature map, reduci
 \bibitem{Zhai2025} X. Zhai, T. Xiao, J. Huang, J. Fan, and G. Zeng, ``Quantum neural compressive sensing for ghost imaging,'' \textit{Physical Review Applied}, vol. 23, no. 1, p. 014018, 2025.
 \bibitem{Nau2023} M. A. Nau, A. H. Vija, W. Gohn, M. P. Reymann, and A. Maier, ``Exploring the Limitations of Hybrid Adiabatic Quantum Computing for Emission Tomography Reconstruction,'' \textit{Journal of Imaging}, vol. 9, no. 10, p. 221, 2023.
 \bibitem{Craps2024} B. Craps, M. D. Clerck, O. Evnin, and P. Hacker, ``Integrability and complexity in quantum spin chains,'' \textit{SciPost Physics}, vol. 16, no. 2, p. 041, 2024.
-\bibitem{MathematicalFramework2026} ``Mathematical Framework for HVK,'' internal technical report, June 2026.
 \bibitem{Xu2021} R. Xu, X. Wang, K. Chen, B. Zhou, and C. C. Loy, ``Positional Encoding as Spatial Inductive Bias in GANs,'' in \textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 2021, pp. 13564--13573.
-\bibitem{MethodologyExp2026} ``Methodology and Experimental Analysis of the Hamiltonian Vision Kernel,'' internal laboratory reference, 2026.
+\bibitem{MethodologyExp2026} S. Chakraborty and S. Patra, ``Methodology and Experimental Analysis of the Hamiltonian Vision Kernel,'' supplementary material to be submitted with this manuscript, 2026.
 \bibitem{Araz2022} J. Y. Araz and M. Spannowsky, ``Classical versus quantum: Comparing tensor-network-based quantum circuits on Large Hadron Collider data,'' \textit{Physical Review A}, vol. 106, no. 6, p. 062423, 2022.
 \bibitem{Slabbert2024} D. Slabbert and F. Petruccione, ``Hybrid Quantum-Classical Feature Extraction approach for Image Classification using Autoencoders and Quantum SVMs,'' arXiv:2410.18814, 2024.
 \bibitem{Liu2022} Z. Liu, P.-X. Shen, W. Li, L.-M. Duan, and D.-L. Deng, ``Quantum capsule networks,'' \textit{Quantum Science and Technology}, vol. 8, no. 1, p. 015016, 2022.
 \bibitem{Shi2022} J. Shi, W. Wang, X. Lou, S. Zhang, and X. Li, ``Parameterized Hamiltonian Learning With Quantum Circuit,'' \textit{IEEE Transactions on Pattern Analysis and Machine Intelligence}, vol. 45, no. 5, pp. 6086--6095, 2022.
+\bibitem{Preskill2018} J. Preskill, ``Quantum Computing in the NISQ era and beyond,'' \textit{Quantum}, vol. 2, p. 79, 2018.
+\bibitem{McClean2018} J. R. McClean, S. Boixo, V. N. Smelyanskiy, R. Babbush, and H. Neven, ``Barren plateaus in quantum neural network training landscapes,'' \textit{Nature Communications}, vol. 9, no. 1, p. 4812, 2018.
+\bibitem{Havlicek2019} V. Havl{\'i}{\v c}ek, A. D. C{\'o}rcoles, K. Temme, A. W. Harrow, A. Kandala, J. M. Chow, and J. M. Gambetta, ``Supervised learning with quantum-enhanced feature spaces,'' \textit{Nature}, vol. 567, no. 7747, pp. 209--212, 2019.
+\bibitem{Stoudenmire2016} E. M. Stoudenmire and D. J. Schwab, ``Supervised Learning with Tensor Networks,'' in \textit{Advances in Neural Information Processing Systems}, vol. 29, 2016.
+\bibitem{Cohen2016} T. Cohen and M. Welling, ``Group Equivariant Convolutional Networks,'' in \textit{Proceedings of the 33rd International Conference on Machine Learning}, PMLR, vol. 48, 2016, pp. 2990--2999.
+\bibitem{Meyer2023} J. J. Meyer, M. Mularski, E. Gil-Fuster, A. A. Mele, F. Arzani, A. Wilms, and J. Eisert, ``Exploiting Symmetry in Variational Quantum Machine Learning,'' \textit{PRX Quantum}, vol. 4, p. 010328, 2023.
+\bibitem{Huang2020Shadows} H.-Y. Huang, R. Kueng, and J. Preskill, ``Predicting many properties of a quantum system from very few measurements,'' \textit{Nature Physics}, vol. 16, pp. 1050--1057, 2020.
+\bibitem{Huang2021PowerData} H.-Y. Huang, M. Broughton, M. Mohseni, R. Babbush, S. Boixo, H. Neven, and J. R. McClean, ``Power of data in quantum machine learning,'' \textit{Nature Communications}, vol. 12, no. 1, p. 2631, 2021.
 \end{thebibliography}
 
 \end{document}

@@ -2,8 +2,8 @@
   "workspace": "main2/newHVK",
   "claim_status": "candidate only: the restricted pair-correlation task favors the entangling observable channel, but this is not a hardware quantum advantage proof or a broad CIFAR generalization result",
   "new_model_variants": [
-    "newHVK-entangling-observables",
-    "newHVK-no-entanglement",
+    "HVK2D-entangling-observables",
+    "HVK2D-no-entanglement",
     "parameter-matched-classical",
     "raw-linear-classical",
     "random-vqc",
@@ -41,5 +41,5 @@
     "results/cifar_nonlocal_advantage/cifar_nonlocal_pair_summary.csv",
     "results/cifar_nonlocal_advantage/cifar_nonlocal_advantage.png"
   ],
-  "restricted_benchmark_best_model": "newHVK-entangling-observables"
+  "restricted_benchmark_best_model": "HVK2D-entangling-observables"
 }

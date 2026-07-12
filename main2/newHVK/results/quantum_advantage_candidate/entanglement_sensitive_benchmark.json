@@ -1,13 +1,13 @@
 [
   {
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "mse": 0.0019386712705805088,
     "psnr": 27.124958255144843,
     "r2": 0.9421463496967364,
     "notes": "Pairwise observable channel includes entanglement-sensitive correlations."
   },
   {
-    "model": "newHVK-no-entanglement",
+    "model": "HVK2D-no-entanglement",
     "mse": 0.032118306547965166,
     "psnr": 14.93247361159932,
     "r2": 0.04152844086733798,

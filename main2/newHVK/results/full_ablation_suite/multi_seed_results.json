@@ -1,7 +1,7 @@
 [
   {
     "experiment": "baseline",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 0,
     "mse": 0.0010404747392990176,
     "psnr": 29.827684591488627,
@@ -64,7 +64,7 @@
   },
   {
     "experiment": "baseline",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 1,
     "mse": 0.0005757545953604451,
     "psnr": 32.39762587047241,
@@ -127,7 +127,7 @@
   },
   {
     "experiment": "baseline",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 2,
     "mse": 4.68142922615586e-05,
     "psnr": 43.29621537893065,
@@ -190,7 +190,7 @@
   },
   {
     "experiment": "baseline",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 3,
     "mse": 0.0018400303264292015,
     "psnr": 27.351750191142017,
@@ -253,7 +253,7 @@
   },
   {
     "experiment": "baseline",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 4,
     "mse": 0.0007953591933171408,
     "psnr": 30.9943669468246,

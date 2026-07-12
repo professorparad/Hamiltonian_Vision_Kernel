@@ -1,6 +1,6 @@
 [
   {
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "n_seeds": 5,
     "mean_mse": 0.0008596866293334726,
     "std_mse": 0.0005897923296309452,

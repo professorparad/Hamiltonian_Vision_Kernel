@@ -1,6 +1,6 @@
 [
   {
-    "model": "newHVK-real-cifar",
+    "model": "HVK2D-real-cifar",
     "feature_dim": 32,
     "readout_parameters": 2112,
     "cnot_or_pair_channels": 6,

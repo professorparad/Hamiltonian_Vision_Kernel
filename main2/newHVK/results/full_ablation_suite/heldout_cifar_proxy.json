@@ -1,7 +1,7 @@
 [
   {
     "experiment": "heldout-cifar-proxy",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 0,
     "mse": 0.03984964124508141,
     "psnr": 13.995755840792324,
@@ -37,7 +37,7 @@
   },
   {
     "experiment": "heldout-cifar-proxy",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 1,
     "mse": 0.04772674201512302,
     "psnr": 13.212382109961446,
@@ -73,7 +73,7 @@
   },
   {
     "experiment": "heldout-cifar-proxy",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 2,
     "mse": 0.03895771768667059,
     "psnr": 14.09406493916591,
@@ -109,7 +109,7 @@
   },
   {
     "experiment": "heldout-cifar-proxy",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 3,
     "mse": 0.046166196993977636,
     "psnr": 13.35675899599947,
@@ -145,7 +145,7 @@
   },
   {
     "experiment": "heldout-cifar-proxy",
-    "model": "newHVK-entangling-observables",
+    "model": "HVK2D-entangling-observables",
     "seed": 4,
     "mse": 0.05089434026315894,
     "psnr": 12.933305109666858,

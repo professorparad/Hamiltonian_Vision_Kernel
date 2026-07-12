@@ -117,12 +117,12 @@ def run_entanglement_sensitive_benchmark() -> list[ModelResult]:
     x_train, y_train, x_test, y_test = make_pairwise_dataset()
     variants = [
         (
-            "newHVK-entangling-observables",
+            "HVK2D-entangling-observables",
             entangling_features,
             "Pairwise observable channel includes entanglement-sensitive correlations.",
         ),
         (
-            "newHVK-no-entanglement",
+            "HVK2D-no-entanglement",
             no_entanglement_features,
             "Only single-site feature functions; pair correlations are unavailable.",
         ),
@@ -291,7 +291,7 @@ def run_full_ablation_results(seeds: list[int]) -> tuple[list[ExperimentResult],
     variants: list[tuple[str, str, Callable[[int], Callable[[np.ndarray], np.ndarray]], str]] = [
         (
             "baseline",
-            "newHVK-entangling-observables",
+            "HVK2D-entangling-observables",
             lambda seed: entangling_features,
             "Pairwise observable channel contains explicit two-site correlations.",
         ),
@@ -399,7 +399,7 @@ def plot_full_ablation_summary(result_dir: Path, summary: list[dict[str, object]
     axes[0].bar(labels, mse, yerr=mse_std, color=palette[: len(labels)], capsize=3)
     axes[0].set_yscale("log")
     axes[0].set_ylabel("MSE, log scale")
-    axes[0].set_title("Full newHVK Ablation Suite")
+    axes[0].set_title("Full HVK1D/HVK2D Ablation Suite")
     axes[1].bar(labels, psnr, yerr=psnr_std, color=palette[: len(labels)], capsize=3)
     axes[1].set_ylabel("PSNR (dB)")
     axes[1].set_title("Multi-Seed Mean +/- Std")
@@ -418,7 +418,7 @@ def run_noise_probe(seeds: list[int]) -> list[dict[str, object]]:
         for seed in seeds:
             result, _, _ = evaluate_feature_variant(
                 experiment="noise-hardware-probe",
-                model=f"newHVK-noise-{noise:.2f}",
+                model=f"HVK2D-noise-{noise:.2f}",
                 seed=seed,
                 feature_fn=lambda x, seed=seed, noise=noise: noisy_entangling_features(x, seed, noise),
                 notes="Gaussian observable noise proxy for finite-shot and hardware readout degradation.",
@@ -445,7 +445,7 @@ def plot_noise_probe(result_dir: Path, rows: list[dict[str, object]]) -> None:
     axis.errorbar(x, psnr, yerr=psnr_std, marker="o", color="#1f77b4", capsize=3)
     axis.set_xlabel("Observable noise sigma")
     axis.set_ylabel("PSNR (dB)")
-    axis.set_title("newHVK Noise / Hardware Proxy")
+    axis.set_title("HVK2D Noise / Hardware Proxy")
     axis.grid(alpha=0.25)
     fig.tight_layout()
     fig.savefig(result_dir / "noise_robustness.png", dpi=190)
@@ -455,7 +455,7 @@ def plot_noise_probe(result_dir: Path, rows: list[dict[str, object]]) -> None:
 def run_heldout_proxy(seeds: list[int]) -> list[ExperimentResult]:
     rows: list[ExperimentResult] = []
     variants = [
-        ("newHVK-entangling-observables", entangling_features, "Held-out distribution proxy with pair observables."),
+        ("HVK2D-entangling-observables", entangling_features, "Held-out distribution proxy with pair observables."),
         ("no-entanglement", no_entanglement_features, "Held-out distribution proxy without pair observables."),
         ("parameter-matched-classical", classical_parameter_matched_features, "Held-out distribution proxy for small classical control."),
         ("raw-linear-classical", lambda x: x, "Held-out distribution proxy for linear classical readout."),
@@ -490,7 +490,7 @@ def plot_heldout_proxy(result_dir: Path, summary: list[dict[str, object]]) -> No
 def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
     final_by_model = {str(row["model"]): float(row["mean_mse"]) for row in summary}
     selected = [
-        "newHVK-entangling-observables",
+        "HVK2D-entangling-observables",
         "no-entanglement",
         "parameter-matched-classical",
         "random-vqc",
@@ -501,7 +501,7 @@ def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, objec
     epochs = list(range(0, 201, 10))
     for model in selected:
         final_mse = final_by_model.get(model, 0.01)
-        if model == "newHVK-entangling-observables":
+        if model == "HVK2D-entangling-observables":
             order_target = 0.92
             corr_target = 0.86
             start_mse = 0.09
@@ -585,7 +585,7 @@ def plot_epoch_diagnostics(result_dir: Path, reconstruction_rows: list[dict[str,
 
 def plot_reconstruction_panels(result_dir: Path, prediction_cache: dict[str, tuple[np.ndarray, np.ndarray]]) -> None:
     selected = [
-        "newHVK-entangling-observables",
+        "HVK2D-entangling-observables",
         "no-entanglement",
         "parameter-matched-classical",
         "random-vqc",
@@ -754,17 +754,18 @@ def write_full_ablation_suite() -> None:
     plot_observable_maps(result_dir)
     write_media(result_dir, reconstruction_rows, order_rows)
 
-    readme = """# newHVK full ablation suite
+    readme = """# HVK1D/HVK2D full ablation suite
 
 This folder is generated by `main2/newHVK/run_newhvk_suite.py --full-suite`.
+The directory name is historical; the reported model family is HVK1D/HVK2D.
 
 The suite contains component ablations, multi-seed summaries, a held-out
 CIFAR-style proxy, an observable-noise hardware proxy, epoch reconstruction
 tables, correlation tables, order-parameter curves, reconstruction panels,
 observable heatmaps, GIF media, and MP4 media when OpenCV is available.
 
-Claim boundary: these files are diagnostic evidence for the newHVK candidate
-architecture. They are not, by themselves, a hardware quantum advantage proof.
+Claim boundary: these files are diagnostic evidence for the HVK1D/HVK2D
+architecture family. They are not, by themselves, a hardware quantum advantage proof.
 """
     (result_dir / "README.md").write_text(readme, encoding="utf-8")
 
@@ -942,6 +943,26 @@ def real_parameter_matched_classical_features(base: np.ndarray, seed: int) -> np
     return np.sin(base @ weights + bias)
 
 
+def real_quadratic_classical_features(base: np.ndarray) -> np.ndarray:
+    local = base[:, :18]
+    pos = base[:, 18:26]
+    quadratic = np.stack(
+        [
+            local[:, 0] * local[:, 1],
+            local[:, 2] * local[:, 3],
+            local[:, 4] * local[:, 5],
+            local[:, 6] * local[:, 7],
+            local[:, 8] * local[:, 9],
+            local[:, 10] * local[:, 11],
+            local[:, 12] * local[:, 13],
+            local[:, 14] * local[:, 15],
+            local[:, 16] * local[:, 17],
+        ],
+        axis=1,
+    )
+    return select_same_width(np.concatenate([local, quadratic, np.sin(np.pi * quadratic), pos], axis=1), 32)
+
+
 def real_raw_linear_features(base: np.ndarray) -> np.ndarray:
     return select_same_width(base, 32)
 
@@ -1024,6 +1045,89 @@ def aggregate_metric_rows(rows: list[dict[str, object]]) -> list[dict[str, objec
     return sorted(summary, key=lambda row: float(row["mean_mse"]))
 
 
+def bootstrap_ci(values: np.ndarray, seed: int = 1234, n_bootstrap: int = 5000) -> tuple[float, float]:
+    if values.size == 0:
+        return float("nan"), float("nan")
+    rng = np.random.default_rng(seed)
+    means = np.empty(n_bootstrap, dtype=np.float64)
+    for index in range(n_bootstrap):
+        sample = rng.choice(values, size=values.size, replace=True)
+        means[index] = float(sample.mean())
+    low, high = np.quantile(means, [0.025, 0.975])
+    return float(low), float(high)
+
+
+def paired_wilcoxon_pvalue(values: np.ndarray) -> float:
+    if values.size == 0 or np.allclose(values, 0.0):
+        return 1.0
+    try:
+        from scipy.stats import wilcoxon
+
+        return float(wilcoxon(values, zero_method="wilcox", alternative="two-sided").pvalue)
+    except Exception:
+        signs = int(np.sum(values > 0.0))
+        nonzero = int(np.sum(np.abs(values) > 1e-12))
+        if nonzero == 0:
+            return 1.0
+        tail = min(signs, nonzero - signs)
+        probability = sum(math.comb(nonzero, k) for k in range(tail + 1)) / (2**nonzero)
+        return float(min(1.0, 2.0 * probability))
+
+
+def write_q1_statistical_tests(result_dir: Path, rows: list[dict[str, object]]) -> list[dict[str, object]]:
+    hvk_rows = {
+        (int(row["seed"]), str(row["image"])): row
+        for row in rows
+        if row["model"] == "HVK2D-real-cifar"
+    }
+    comparisons = [
+        "raw-linear-classical",
+        "local-observables-only",
+        "no-entanglement",
+        "zz-only",
+        "quadratic-classical",
+        "strict-classical-rff",
+        "shuffled-pair-observables",
+        "random-vqc",
+    ]
+    stats_rows: list[dict[str, object]] = []
+    for model in comparisons:
+        model_rows = {
+            (int(row["seed"]), str(row["image"])): row
+            for row in rows
+            if row["model"] == model
+        }
+        keys = sorted(set(hvk_rows).intersection(model_rows))
+        if not keys:
+            continue
+        psnr_diff = np.asarray(
+            [float(hvk_rows[key]["psnr"]) - float(model_rows[key]["psnr"]) for key in keys],
+            dtype=np.float64,
+        )
+        mse_diff = np.asarray(
+            [float(hvk_rows[key]["mse"]) - float(model_rows[key]["mse"]) for key in keys],
+            dtype=np.float64,
+        )
+        low, high = bootstrap_ci(psnr_diff, seed=40_000 + len(stats_rows))
+        stats_rows.append(
+            {
+                "comparison": f"HVK2D-real-cifar minus {model}",
+                "n_pairs": len(keys),
+                "mean_psnr_difference_db": float(psnr_diff.mean()),
+                "bootstrap95_low_db": low,
+                "bootstrap95_high_db": high,
+                "wilcoxon_p_psnr": paired_wilcoxon_pvalue(psnr_diff),
+                "mean_mse_difference": float(mse_diff.mean()),
+                "interpretation": (
+                    "positive PSNR difference favors HVK2D; negative favors the control"
+                ),
+            }
+        )
+    write_dict_csv(result_dir / "paired_statistical_tests.csv", stats_rows)
+    (result_dir / "paired_statistical_tests.json").write_text(json.dumps(stats_rows, indent=2), encoding="utf-8")
+    return stats_rows
+
+
 def plot_q1_summary(result_dir: Path, summary: list[dict[str, object]], name: str, title: str) -> None:
     labels = [str(row["model"]) for row in summary]
     mse = [float(row["mean_mse"]) for row in summary]
@@ -1047,7 +1151,7 @@ def plot_q1_summary(result_dir: Path, summary: list[dict[str, object]], name: st
 
 
 def save_q1_reconstruction_panel(result_dir: Path, panels_by_model: dict[str, dict[str, tuple[np.ndarray, np.ndarray]]]) -> None:
-    models = [model for model in ["newHVK-real-cifar", "strict-classical-rff", "no-entanglement"] if model in panels_by_model]
+    models = [model for model in ["HVK2D-real-cifar", "strict-classical-rff", "no-entanglement"] if model in panels_by_model]
     if not models:
         return
     image_name = sorted(next(iter(panels_by_model.values())).keys())[0]
@@ -1076,9 +1180,10 @@ def save_q1_reconstruction_panel(result_dir: Path, panels_by_model: dict[str, di
 def run_q1_real_cifar_suite() -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, dict[str, tuple[np.ndarray, np.ndarray]]]]:
     seeds = [0, 1, 2, 3, 4]
     variants: list[tuple[str, Callable[[np.ndarray, int], np.ndarray]]] = [
-        ("newHVK-real-cifar", lambda base, seed: real_newhvk_features(base)),
+        ("HVK2D-real-cifar", lambda base, seed: real_newhvk_features(base)),
         ("no-entanglement", lambda base, seed: real_no_entanglement_features(base)),
         ("strict-classical-rff", real_parameter_matched_classical_features),
+        ("quadratic-classical", lambda base, seed: real_quadratic_classical_features(base)),
         ("raw-linear-classical", lambda base, seed: real_raw_linear_features(base)),
         ("zz-only", lambda base, seed: real_zz_only_features(base)),
         ("local-observables-only", lambda base, seed: real_local_observables_only(base)),
@@ -1103,7 +1208,7 @@ def run_q1_shot_noise_suite() -> tuple[list[dict[str, object]], list[dict[str, o
         for seed in seeds:
             rows_for_seed, _ = run_real_cifar_holdout(
                 seed,
-                f"newHVK-shot-{shots}",
+                f"HVK2D-shot-{shots}",
                 lambda base, seed, shots=shots: add_shot_noise(real_newhvk_features(base), shots, seed),
             )
             for row in rows_for_seed:
@@ -1144,7 +1249,7 @@ def plot_shot_noise(result_dir: Path, rows: list[dict[str, object]]) -> None:
 def write_resource_table(result_dir: Path) -> None:
     rows = [
         {
-            "model": "newHVK-real-cifar",
+            "model": "HVK2D-real-cifar",
             "feature_dim": 32,
             "readout_parameters": 2112,
             "cnot_or_pair_channels": 6,
@@ -1184,27 +1289,41 @@ def write_resource_table(result_dir: Path) -> None:
     (result_dir / "resource_comparison.json").write_text(json.dumps(rows, indent=2), encoding="utf-8")
 
 
-def write_q1_report(result_dir: Path, real_summary: list[dict[str, object]], shot_summary: list[dict[str, object]]) -> None:
+def write_q1_report(
+    result_dir: Path,
+    real_summary: list[dict[str, object]],
+    shot_summary: list[dict[str, object]],
+    stats_rows: list[dict[str, object]],
+) -> None:
     PAPER_DIR.mkdir(parents=True, exist_ok=True)
     best_real = real_summary[0]
-    newhvk_real = next(row for row in real_summary if row["model"] == "newHVK-real-cifar")
+    hvk2d_real = next(row for row in real_summary if row["model"] == "HVK2D-real-cifar")
     real_rows = "\n".join(
-        f"{row['model']} & ${float(row['mean_mse']):.4e}$ & {float(row['mean_psnr']):.2f} & {float(row['mean_ssim']):.4f} \\\\"
+        f"{row['model']} & ${float(row['mean_mse']):.4e}\\pm{float(row['std_mse']):.1e}$ & "
+        f"${float(row['mean_psnr']):.2f}\\pm{float(row['std_psnr']):.2f}$ & "
+        f"${float(row['mean_ssim']):.4f}\\pm{float(row['std_ssim']):.4f}$ \\\\"
         for row in real_summary
     )
     shot_rows = "\n".join(
         f"{int(row['shots'])} & ${float(row['mean_mse']):.4e}$ & {float(row['mean_psnr']):.2f} & {float(row['mean_ssim']):.4f} \\\\"
         for row in shot_summary
     )
+    stat_rows = "\n".join(
+        f"{row['comparison'].replace('HVK2D-real-cifar minus ', '')} & {int(row['n_pairs'])} & "
+        f"${float(row['mean_psnr_difference_db']):.2f}$ & "
+        f"$[{float(row['bootstrap95_low_db']):.2f},{float(row['bootstrap95_high_db']):.2f}]$ & "
+        f"{float(row['wilcoxon_p_psnr']):.3g} \\\\"
+        for row in stats_rows
+    )
     tex = rf"""\documentclass[journal]{{IEEEtran}}
 \usepackage{{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm}}
 \usepackage[hypertexnames=false]{{hyperref}}
 \begin{{document}}
-\title{{newHVK Q1-Validation Addendum: Held-Out CIFAR Baselines, Observable Ablations, and Shot-Noise Robustness}}
+\title{{HVK1D/HVK2D Q1-Validation Addendum: Held-Out CIFAR Baselines, Observable Ablations, and Shot-Noise Robustness}}
 \author{{Sparsho~Chakraborty and Siddhartha~Patra}}
 \maketitle
 \begin{{abstract}}
-This addendum strengthens the newHVK evidence package by separating diagnostic pair-correlation performance from held-out natural-image reconstruction. We report multi-seed real CIFAR-10 image splits, strict same-width classical controls, observable-sector ablations, shuffled-pair controls, random-latent controls, resource matching, and finite-shot observable noise. Unlike the restricted pair-correlation diagnostic, the real held-out CIFAR test does not establish quantum advantage: the best real-image result is obtained by {best_real['model']}, while newHVK-real-cifar reaches {float(newhvk_real['mean_psnr']):.2f} dB mean PSNR. The correct conclusion is therefore narrower: newHVK has a useful entanglement-sensitive diagnostic, but the current real-image validation still requires architectural improvement before a Q1-level quantum-advantage claim is defensible.
+This addendum strengthens the HVK1D/HVK2D evidence package by separating diagnostic pair-correlation performance from held-out natural-image reconstruction. We report multi-seed real CIFAR-10 image splits, strict same-width classical controls, observable-sector ablations, shuffled-pair controls, random-latent controls, resource matching, and finite-shot observable noise. Unlike the restricted pair-correlation diagnostic, the real held-out CIFAR test does not establish quantum advantage: the best real-image result is obtained by {best_real['model']}, while HVK2D-real-cifar reaches {float(hvk2d_real['mean_psnr']):.2f} dB mean PSNR. The correct conclusion is therefore narrower: HVK2D has a useful entanglement-sensitive diagnostic, but the current real-image validation still requires architectural improvement before a Q1-level quantum-advantage claim is defensible.
 \end{{abstract}}
 
 \begin{{IEEEkeywords}}
@@ -1212,7 +1331,10 @@ Hamiltonian vision kernel, CIFAR-10 reconstruction, ablation study, quantum obse
 \end{{IEEEkeywords}}
 
 \section{{Validation Protocol}}
-Ten cached CIFAR-10 grayscale images are split across five random seeds. For each seed, six images are used to fit a single shared linear readout from a 32-dimensional latent feature vector to $8\times 8$ patch pixels, and four held-out images are reconstructed without per-image retraining. All principal controls use the same latent width and the same readout parameter count, so the comparison isolates feature structure rather than decoder capacity.
+Ten cached CIFAR-10 grayscale images are split across five random seeds. For each seed, six images are used to fit a single shared linear readout from a 32-dimensional latent feature vector to $8\times 8$ patch pixels, and four held-out images are reconstructed without per-image retraining. All principal controls use the same latent width and the same readout parameter count, so the comparison isolates feature structure rather than decoder capacity. This cached-image protocol is a reproducible smoke test, not a substitute for the recommended class-balanced CIFAR-10 subset protocol with mutually exclusive training, validation, and test images.
+
+\section{{Classical Pair-Feature Controls}}
+Because the nonlocal target is constructed from pair products, a raw-linear baseline is not by itself a sufficient classical control. We therefore include explicit quadratic-feature controls in the CIFAR reconstruction suite and in the CIFAR-derived nonlocal diagnostic. These controls test whether performance arises from access to multiplicative pair features generally, rather than from a uniquely quantum mechanism.
 
 \section{{Held-Out CIFAR Results}}
 \begin{{table*}}[t]
@@ -1222,7 +1344,7 @@ Ten cached CIFAR-10 grayscale images are split across five random seeds. For eac
 \scriptsize
 \begin{{tabular}}{{lccc}}
 \toprule
-Model & Mean MSE & Mean PSNR & Mean SSIM \\
+Model & MSE & PSNR & SSIM \\
 \midrule
 {real_rows}
 \bottomrule
@@ -1232,7 +1354,7 @@ Model & Mean MSE & Mean PSNR & Mean SSIM \\
 \begin{{figure*}}[t]
 \centering
 \includegraphics[width=0.72\textwidth]{{../results/q1_validation/real_cifar_holdout_summary.png}}
-\caption{{Held-out CIFAR metric summary for newHVK and same-width controls.}}
+\caption{{Held-out CIFAR metric summary for HVK2D and same-width controls.}}
 \label{{fig:real_cifar_summary}}
 \end{{figure*}}
 
@@ -1242,6 +1364,28 @@ Model & Mean MSE & Mean PSNR & Mean SSIM \\
 \caption{{Representative held-out CIFAR reconstruction panel. The target, prediction, and absolute-error images are shown for the candidate observable model and major controls.}}
 \label{{fig:real_cifar_recons}}
 \end{{figure*}}
+
+\section{{Statistical Analysis}}
+All principal image-level comparisons are paired by seed and held-out image.
+For each pair, we compute the PSNR difference between HVK2D-real-cifar and the
+corresponding control. Because the sample size is small and normality should
+not be assumed, we report a Wilcoxon signed-rank $p$ value and a bootstrap
+$95\%$ confidence interval for the mean paired PSNR difference. Positive values
+favor HVK2D; negative values favor the control.
+
+\begin{{table*}}[t]
+\centering
+\caption{{Paired statistical tests for held-out CIFAR reconstruction.}}
+\label{{tab:paired_stats_q1}}
+\scriptsize
+\begin{{tabular}}{{lcccc}}
+\toprule
+Control & Pairs & Mean $\Delta$PSNR & Bootstrap 95\% CI & Wilcoxon $p$ \\
+\midrule
+{stat_rows}
+\bottomrule
+\end{{tabular}}
+\end{{table*}}
 
 \section{{Shot-Noise Robustness}}
 \begin{{table}}[t]
@@ -1261,12 +1405,12 @@ Shots & Mean MSE & Mean PSNR & Mean SSIM \\
 \begin{{figure}}[t]
 \centering
 \includegraphics[width=\linewidth]{{../results/q1_validation/real_cifar_shot_noise.png}}
-\caption{{Shot-noise robustness of the newHVK observable feature vector on real held-out CIFAR splits.}}
+\caption{{Shot-noise robustness of the HVK2D observable feature vector on real held-out CIFAR splits.}}
 \label{{fig:shot_noise_q1}}
 \end{{figure}}
 
 \section{{Interpretation}}
-The key baseline is the strict same-width classical random-feature control, but the strongest warning comes from the local and raw-linear controls. In the real held-out CIFAR table, {best_real['model']} obtains the best mean MSE (${float(best_real['mean_mse']):.4e}$), while newHVK-real-cifar is weaker (${float(newhvk_real['mean_mse']):.4e}$). This means the current newHVK evidence is strong only for the restricted pair-correlation diagnostic and for rejecting random-latent controls. It does not yet support a broad natural-image quantum-advantage claim. The Q1-ready path is therefore to keep these negative controls in the paper, redesign the image feature map or decoder-capacity match, and rerun this exact validation suite.
+The key baseline is the strict same-width classical random-feature control, but the strongest warning comes from the local and raw-linear controls. In the real held-out CIFAR table, {best_real['model']} obtains the best mean MSE (${float(best_real['mean_mse']):.4e}$), while HVK2D-real-cifar is weaker (${float(hvk2d_real['mean_mse']):.4e}$). This means the current HVK2D evidence is strong only for the restricted pair-correlation diagnostic and for rejecting random-latent controls. It does not yet support a broad natural-image quantum-advantage claim. The Q1-ready path is therefore to keep these negative controls in the paper, redesign the image feature map or decoder-capacity match, and rerun this exact validation suite.
 
 \section{{Reproducibility}}
 The full tables, plots, resource comparison, and CSV files are generated under \texttt{{main2/newHVK/results/q1\_validation/}} by running \texttt{{main2/newHVK/run\_newhvk\_suite.py --q1-validation --write-q1-report}}.
@@ -1291,7 +1435,7 @@ def write_q1_validation_suite(write_report: bool = False) -> None:
         for row in real_rows
         if row["model"]
         in {
-            "newHVK-real-cifar",
+            "HVK2D-real-cifar",
             "no-entanglement",
             "zz-only",
             "local-observables-only",
@@ -1310,19 +1454,21 @@ def write_q1_validation_suite(write_report: bool = False) -> None:
     (result_dir / "shot_noise_real_cifar.json").write_text(json.dumps(shot_rows, indent=2), encoding="utf-8")
     plot_shot_noise(result_dir, shot_summary)
     write_resource_table(result_dir)
+    stats_rows = write_q1_statistical_tests(result_dir, real_rows)
     if write_report:
-        write_q1_report(result_dir, real_summary, shot_summary)
-    readme = """# newHVK Q1 validation suite
+        write_q1_report(result_dir, real_summary, shot_summary, stats_rows)
+    readme = """# HVK1D/HVK2D Q1 validation suite
 
-This folder contains the stronger validation layer requested for a Q1-style paper:
-real held-out CIFAR splits, multi-seed summaries, strict same-width classical
-controls, observable/gate ablations, shuffled-pair controls, random-latent
-controls, finite-shot noise simulation, reconstruction panels, plots, and a
-resource comparison.
+This folder contains a stronger validation layer requested for a Q1-style paper:
+real held-out CIFAR smoke-test splits, multi-seed summaries, strict same-width
+classical controls, explicit quadratic controls, observable/gate ablations,
+shuffled-pair controls, random-latent controls, finite-shot noise simulation,
+reconstruction panels, plots, and a resource comparison.
 
 Claim boundary: these experiments strengthen the empirical baseline and ablation
-story. They still support a controlled representational-advantage claim, not a
-formal hardware quantum-advantage proof.
+story. They are not a replacement for a class-balanced CIFAR-10 subset protocol,
+and they still support a controlled representational-diagnostic claim rather
+than a formal hardware quantum-advantage proof.
 """
     (result_dir / "README.md").write_text(readme, encoding="utf-8")
 
@@ -1436,6 +1582,41 @@ def cifar_pair_classical_matched_features(x: np.ndarray, seed: int) -> np.ndarra
     return np.tanh(x @ weights + bias)
 
 
+def cifar_pair_quadratic_features(x: np.ndarray) -> np.ndarray:
+    left = x[:, :10]
+    right = x[:, 10:20]
+    delta = x[:, 20:26]
+    explicit_products = np.stack(
+        [
+            left[:, 0] * right[:, 0],
+            left[:, 1] * right[:, 1],
+            left[:, 2] * right[:, 2],
+            left[:, 3] * right[:, 3],
+            left[:, 4] * right[:, 5],
+            left[:, 5] * right[:, 4],
+            left[:, 6] * right[:, 7],
+            left[:, 7] * right[:, 8],
+            (left[:, 2] - left[:, 3]) * (right[:, 4] - right[:, 5]),
+            delta[:, 0] * delta[:, 1],
+            delta[:, 2] * delta[:, 3],
+            delta[:, 4] * delta[:, 5],
+        ],
+        axis=1,
+    )
+    return select_same_width(np.concatenate([x, explicit_products, np.sin(np.pi * explicit_products)], axis=1), 40)
+
+
+def cifar_pair_poly2_kernel_features(x: np.ndarray) -> np.ndarray:
+    core = x[:, :20]
+    columns: list[np.ndarray] = [x]
+    for left_index in range(10):
+        columns.append((core[:, left_index] * core[:, 10 + left_index])[:, None])
+    for left_index, right_index in [(0, 11), (1, 12), (4, 15), (7, 18), (2, 14), (3, 15)]:
+        columns.append((core[:, left_index] * core[:, right_index])[:, None])
+    poly = np.concatenate(columns, axis=1)
+    return select_same_width(poly, 40)
+
+
 def cifar_pair_random_features(x: np.ndarray, seed: int) -> np.ndarray:
     rng = np.random.default_rng(91_000 + seed + x.shape[0])
     return rng.normal(0.0, 1.0, size=(x.shape[0], 40))
@@ -1459,11 +1640,13 @@ def evaluate_cifar_nonlocal_variant(seed: int, model: str, feature_fn: Callable[
 def run_cifar_nonlocal_advantage_suite() -> tuple[list[dict[str, object]], list[dict[str, object]]]:
     rows: list[dict[str, object]] = []
     variants: list[tuple[str, Callable[[np.ndarray, int], np.ndarray]]] = [
-        ("newHVK-cifar-nonlocal-entangling", lambda x, seed: cifar_pair_entangling_features(x)),
+        ("HVK2D-cifar-nonlocal-entangling", lambda x, seed: cifar_pair_entangling_features(x)),
         ("no-entanglement-single-site", lambda x, seed: cifar_pair_no_entanglement_features(x)),
         ("left-patch-only", lambda x, seed: cifar_pair_left_only_features(x)),
         ("right-patch-only", lambda x, seed: cifar_pair_right_only_features(x)),
         ("strict-classical-rff", cifar_pair_classical_matched_features),
+        ("quadratic-pair-classical", lambda x, seed: cifar_pair_quadratic_features(x)),
+        ("degree2-polynomial-kernel", lambda x, seed: cifar_pair_poly2_kernel_features(x)),
         ("random-vqc", cifar_pair_random_features),
         ("raw-linear", lambda x, seed: select_same_width(x, 40)),
     ]
@@ -1525,6 +1708,10 @@ This suite uses real CIFAR-10 images but changes the task from ordinary image
 reconstruction to nonlocal patch-correlation prediction. The target depends on
 products between distant patch statistics, so an entangling pair-observable map
 has an explicit representational route that single-site/local controls lack.
+Because this target is constructed from pair products, the suite also includes
+explicit quadratic-pair and degree-two polynomial-feature classical controls.
+If those controls match the entangling map, the result should be interpreted as
+a pair-feature inductive-bias diagnostic rather than a uniquely quantum effect.
 
 Claim boundary: this is a CIFAR-derived entanglement-sensitive representational
 advantage diagnostic. It is not ordinary CIFAR reconstruction advantage and not
@@ -1569,8 +1756,8 @@ def write_manifest(results: list[ModelResult]) -> None:
             "advantage proof or a broad CIFAR generalization result"
         ),
         "new_model_variants": [
-            "newHVK-entangling-observables",
-            "newHVK-no-entanglement",
+            "HVK2D-entangling-observables",
+            "HVK2D-no-entanglement",
             "parameter-matched-classical",
             "raw-linear-classical",
             "random-vqc",
@@ -1626,11 +1813,11 @@ def write_paper(results: list[ModelResult]) -> None:
 \usepackage{{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm}}
 \usepackage[hypertexnames=false]{{hyperref}}
 \begin{{document}}
-\title{{newHVK: A Restricted Entanglement-Sensitive Benchmark for Hamiltonian Vision Kernels}}
+\title{{HVK1D/HVK2D: Restricted Entanglement-Sensitive Benchmarks for Hamiltonian Vision Kernels}}
 \author{{Sparsho~Chakraborty and Siddhartha~Patra}}
 \maketitle
 \begin{{abstract}}
-This manuscript separates two questions that were conflated in the original HVK study: whether an observable-latent image reconstruction pipeline is useful, and whether entangling quantum observables provide a measurable advantage over non-entangling or classical controls. Prior ablations showed that the original HVK reconstruction task did not establish quantum advantage because fixed quantum features, no-entanglement circuits, and classical replacements matched or exceeded the trained VQC baseline. We therefore introduce \emph{{newHVK}}, a publication-candidate workspace that preserves the original CIFAR, Monalisa, IBM hardware-probe, and ablation evidence while adding a restricted pair-correlation benchmark where the target depends explicitly on nonlocal feature products. In this restricted setting, the entangling-observable channel is expected to outperform controls that cannot represent pair correlations with the same feature budget. We report this as a candidate quantum-advantage diagnostic, not as a hardware quantum advantage proof or a broad dataset-level generalization result.
+This manuscript separates two questions that were conflated in the original HVK study: whether an observable-latent image reconstruction pipeline is useful, and whether entangling quantum observables provide a measurable advantage over non-entangling or classical controls. Prior ablations showed that the original HVK reconstruction task did not establish quantum advantage because fixed quantum features, no-entanglement circuits, and classical replacements matched or exceeded the trained VQC baseline. We therefore extend the HVK1D/HVK2D ablation workspace with restricted pair-correlation benchmarks where the target depends explicitly on nonlocal feature products. In this restricted setting, the HVK2D entangling-observable channel is expected to outperform controls that cannot represent pair correlations with the same feature budget. We report this as a candidate quantum-advantage diagnostic, not as a hardware quantum advantage proof or a broad dataset-level generalization result.
 \end{{abstract}}
 
 \begin{{IEEEkeywords}}
@@ -1638,13 +1825,13 @@ Hybrid quantum-classical learning, Hamiltonian vision kernel, entanglement ablat
 \end{{IEEEkeywords}}
 
 \section{{Motivation}}
-The legacy HVK ablation suite showed that the observable channel is load-bearing, but it also showed that entanglement and Hamiltonian energy regularization were not decisive on the per-image reconstruction benchmark. A stronger test must reduce decoder freedom and use a task whose signal is genuinely pair-correlational. The newHVK workspace therefore keeps the old evidence intact and adds an entanglement-sensitive benchmark with explicit no-entanglement, parameter-matched classical, and raw-linear controls.
+The legacy HVK ablation suite showed that the observable channel is load-bearing, but it also showed that entanglement and Hamiltonian energy regularization were not decisive on the per-image reconstruction benchmark. A stronger test must reduce decoder freedom and use a task whose signal is genuinely pair-correlational. The HVK1D/HVK2D validation workspace therefore keeps the old evidence intact and adds an entanglement-sensitive benchmark with explicit no-entanglement, parameter-matched classical, and raw-linear controls.
 
 \section{{Architecture}}
-The publication workspace is organized as \texttt{{main2/newHVK}}. The model family contains:
+The publication workspace is organized under the historical path \texttt{{main2/newHVK}}, but the reported model family contains only HVK1D/HVK2D variants:
 \begin{{itemize}}
-\item \textbf{{newHVK-entangling-observables:}} single-site features plus pair-correlation channels analogous to measured two-qubit observables.
-\item \textbf{{newHVK-no-entanglement:}} single-site nonlinear features only.
+\item \textbf{{HVK2D-entangling-observables:}} single-site features plus pair-correlation channels analogous to measured two-qubit observables.
+\item \textbf{{HVK2D-no-entanglement:}} single-site nonlinear features only.
 \item \textbf{{parameter-matched-classical:}} a rank-limited tanh map used as a small classical control.
 \item \textbf{{raw-linear-classical:}} a linear baseline on raw coordinates.
 \end{{itemize}}
@@ -1654,7 +1841,7 @@ The benchmark samples six-dimensional inputs $x\in[-1,1]^6$ and predicts targets
 
 \begin{{table*}}[t]
 \centering
-\caption{{newHVK restricted pair-correlation benchmark. Lower MSE and higher PSNR/$R^2$ are better.}}
+\caption{{HVK2D restricted pair-correlation benchmark. Lower MSE and higher PSNR/$R^2$ are better.}}
 \label{{tab:newhvk_restricted}}
 \scriptsize
 \begin{{tabular}}{{lcccp{{0.38\textwidth}}}}
@@ -1677,17 +1864,17 @@ Model & MSE & PSNR (dB) & $R^2$ & Notes \\
 The folder also includes copied evidence from the completed HVK study: CIFAR baselines, Monalisa baselines, legacy ablation controls, and IBM Cloud circuit-resource outputs. These files are retained for reproducibility and to make the new paper self-contained. They do not by themselves establish quantum advantage; the original ablation conclusion remains that the legacy reconstruction task is dominated by observable-latent usefulness and decoder capacity rather than by trained quantum entanglement.
 
 \section{{Caveats}}
-The restricted benchmark is deliberately favorable to pair-correlation observables, so it should be presented as a diagnostic experiment. To make a Q1-level claim, the next stage must run the same restricted-capacity design on held-out CIFAR images, multiple random seeds, hardware-noise simulation, and a parameter-matched classical baseline with the same observable budget. The paper should not state that newHVK proves hardware quantum advantage unless those tests remain positive.
+The restricted benchmark is deliberately favorable to pair-correlation observables, so it should be presented as a diagnostic experiment. To make a Q1-level claim, the next stage must run the same restricted-capacity design on held-out CIFAR images, multiple random seeds, hardware-noise simulation, and a parameter-matched classical baseline with the same observable budget. The paper should not state that HVK2D proves hardware quantum advantage unless those tests remain positive.
 
 \section{{Conclusion}}
-newHVK provides a clean route toward testing quantum advantage: reduce decoder capacity, make the target correlation-sensitive, and compare entangling observables against no-entanglement and classical controls. The current results support a candidate advantage on a restricted diagnostic task, while preserving the negative and cautionary findings from the original HVK ablation study.
+HVK2D provides a clean route toward testing quantum advantage: reduce decoder capacity, make the target correlation-sensitive, and compare entangling observables against no-entanglement and classical controls. The current results support a candidate advantage on a restricted diagnostic task, while preserving the negative and cautionary findings from the original HVK ablation study.
 \end{{document}}
 """
     (PAPER_DIR / "newhvk_paper.tex").write_text(tex, encoding="utf-8")
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the isolated newHVK evidence suite.")
+    parser = argparse.ArgumentParser(description="Run the HVK1D/HVK2D evidence suite.")
     parser.add_argument(
         "--skip-copy-existing",
         action="store_true",
@@ -1737,7 +1924,7 @@ def main() -> None:
     write_manifest(results)
     if args.write_paper:
         write_paper(results)
-    print("newHVK suite complete")
+    print("HVK1D/HVK2D suite complete")
     print(f"Workspace: {WORKSPACE}")
     for result in results:
         print(f"{result.model}: mse={result.mse:.6e}, psnr={result.psnr:.2f}, r2={result.r2:.4f}")

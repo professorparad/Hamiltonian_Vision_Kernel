@@ -1,5 +1,5 @@
 model,feature_dim,readout_parameters,cnot_or_pair_channels,train_images_per_seed,test_images_per_seed,claim_role
-newHVK-real-cifar,32,2112,6,6,4,candidate entangling observable model
+HVK2D-real-cifar,32,2112,6,6,4,candidate entangling observable model
 strict-classical-rff,32,2112,0,6,4,same-width classical nonlinear control
 no-entanglement,32,2112,0,6,4,single-site observable ablation
 zz-only,32,2112,3,6,4,reduced observable-sector ablation

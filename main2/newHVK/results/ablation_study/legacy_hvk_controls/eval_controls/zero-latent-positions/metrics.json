@@ -1,0 +1,60 @@
+{
+  "final_total_loss": null,
+  "final_reconstruction_loss": null,
+  "final_energy_loss": null,
+  "reconstruction_metrics": {
+    "mse": 0.0005977100227028131,
+    "psnr": 32.23509461636571,
+    "ssim": 0.9919415774538071
+  },
+  "comparison_metrics": {
+    "quantum_reconstruction": {
+      "mse": 0.0005977100227028131,
+      "psnr": 32.23509461636571,
+      "ssim": 0.9919415774538071
+    },
+    "mps_baseline": {
+      "mse": 0.002155316760763526,
+      "psnr": 26.664888937899136,
+      "ssim": 0.9703435390081457
+    },
+    "random_latent": {
+      "mse": 0.06112026795744896,
+      "psnr": 12.138147504371705,
+      "ssim": 0.36133734784550203
+    },
+    "zero_latent": {
+      "mse": 0.03275406360626221,
+      "psnr": 14.847348119379255,
+      "ssim": 0.643100260302401
+    }
+  },
+  "mse": 0.0005977100227028131,
+  "psnr": 32.23509461636571,
+  "ssim": 0.9919415774538071,
+  "mean_energy": -6.182435035705566,
+  "std_energy": 0.003099632216617465,
+  "phase_transition": {
+    "detected": false,
+    "critical_epoch": -1,
+    "max_susceptibility": 0.0,
+    "order_parameter_jump": 0.0,
+    "susceptibility_baseline": 0.0,
+    "susceptibility_spread": 0.0,
+    "susceptibility_threshold": 0.0,
+    "proof": "No epoch order-parameter rows were available."
+  },
+  "media": {},
+  "model_variant": "standard",
+  "ablation_mode": "baseline",
+  "feature_mode": "mps",
+  "mps_bond_dim": 4,
+  "qubit_count": 6,
+  "observable_set": "full",
+  "energy_loss_mode": "linear",
+  "energy_weight": 0.01,
+  "energy_margin": 0.25,
+  "seed": 42,
+  "eval_only_image": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Main/data/monalisa.jpg",
+  "train_image_paths": null
+}

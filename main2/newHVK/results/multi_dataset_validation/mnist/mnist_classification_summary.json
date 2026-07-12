@@ -1,0 +1,50 @@
+[
+  {
+    "model": "raw-linear",
+    "n": 3,
+    "mean_accuracy": 0.6633333333333334,
+    "std_accuracy": 0.020548046676563226,
+    "mean_macro_f1": 0.6555526251366876,
+    "std_macro_f1": 0.02097338488813935
+  },
+  {
+    "model": "no-entanglement",
+    "n": 3,
+    "mean_accuracy": 0.6566666666666667,
+    "std_accuracy": 0.0329983164553722,
+    "mean_macro_f1": 0.6504666986319295,
+    "std_macro_f1": 0.034418157358417856
+  },
+  {
+    "model": "local-only",
+    "n": 3,
+    "mean_accuracy": 0.65,
+    "std_accuracy": 0.02828427124746193,
+    "mean_macro_f1": 0.64367201927809,
+    "std_macro_f1": 0.028584614916810053
+  },
+  {
+    "model": "HVK2D-pair-observable",
+    "n": 3,
+    "mean_accuracy": 0.6433333333333334,
+    "std_accuracy": 0.016996731711975962,
+    "mean_macro_f1": 0.637292224459407,
+    "std_macro_f1": 0.01776760012918859
+  },
+  {
+    "model": "quadratic-classical",
+    "n": 3,
+    "mean_accuracy": 0.6433333333333334,
+    "std_accuracy": 0.004714045207910321,
+    "mean_macro_f1": 0.6351416091573582,
+    "std_macro_f1": 0.0075058835176392835
+  },
+  {
+    "model": "parameter-matched",
+    "n": 3,
+    "mean_accuracy": 0.6266666666666666,
+    "std_accuracy": 0.04027681991198195,
+    "mean_macro_f1": 0.62138267029531,
+    "std_macro_f1": 0.04846758142279977
+  }
+]
