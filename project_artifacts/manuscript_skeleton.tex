@@ -1,0 +1,171 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{authblk}
+
+% =====================================================================
+% REVISED SKELETON — honest ablation / methodology framing.
+% Design principle: the CONTRIBUTION is the evaluation protocol and the
+% clean negative result, NOT the architecture. Structure follows the
+% finding. Every section earns its space by advancing the central claim:
+% "no quantum component is load-bearing on real held-out images, and
+%  here is a reusable protocol that establishes this rigorously."
+% =====================================================================
+
+\title{Do the Quantum Parts Help?\\
+A Component-Wise Ablation of Physics-Informed Hybrid\\
+Quantum--Classical Image Autoencoders}
+
+\author[1]{First Author}
+\author[1]{Second Author}
+\affil[1]{Institution, Department}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% Lead with the finding, not the architecture. State the protocol as the
+% contribution. Name the leakage post-mortem as a transferable lesson.
+We study whether the quantum components of a physics-informed hybrid
+quantum--classical image autoencoder (Hamiltonian Vision Kernel, HVK ---
+MPS features $\to$ variational quantum circuit $\to$ learnable Heisenberg
+energy $\to$ classical decoder) contribute measurably to performance. Using a
+resource-matched, multi-seed ablation protocol on held-out CIFAR-10, we find
+that freezing the circuit, removing entanglement, dropping the MPS encoder,
+disabling the Hamiltonian term, and replacing the circuit with a trivial
+classical map all match or exceed the full model. A plain local-linear
+classical control ties or beats the entangling model on real images. We further
+present a worked post-mortem of a circular ``nonlocal advantage'' benchmark that
+manufactured a spurious $R^2\!\approx\!1$ through target--feature leakage, and
+distill the diagnostic that exposed it. Our contribution is the evaluation
+protocol and a clean, reproducible negative result --- a template for
+evidence-grade claims in hybrid quantum machine learning.
+\end{abstract}
+
+\section{Introduction}
+% Motivation is the CREDIBILITY GAP in hybrid QML, not vision.
+Motivate the problem as evaluation, not architecture: hybrid quantum vision
+models routinely report advantage without isolating which component is
+responsible or matching classical resources. State the gap: component-wise,
+resource-matched, leakage-audited evaluation is rare. Preview the three
+contributions: (i) an ablation/control protocol; (ii) a clean negative result on
+held-out CIFAR; (iii) a reusable leakage diagnostic. State up front that this is
+a negative result and why that is valuable.
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item A resource-matched, multi-seed, freeze-based ablation protocol that
+        isolates the marginal value of each quantum component.
+  \item Evidence that, under this protocol, no quantum component of HVK is
+        load-bearing on held-out CIFAR-10; matched classical controls tie or win.
+  \item A leakage-detection diagnostic, demonstrated on a benchmark of our own
+        that it invalidates --- a transferable cautionary methodology.
+\end{itemize}
+
+\section{Hamiltonian Vision Kernel: Architecture (Compact)}
+% ONE section, not six. Enough to make ablations legible; no more.
+% Full circuit definitions go to the appendix.
+Give the minimal description needed to read the ablations: patch decomposition +
+positional encoding; MPS features; a 6-qubit VQC producing Pauli observables; a
+learnable Heisenberg energy regularizer; a classical MLP decoder that is the main
+trainable component. Present the variants (HVK1D chain, HVK2D grid, U(1)-symmetric,
+IBM probe) in a single comparison table. Defer exact gate sequences to
+Appendix~\ref{app:circuits}. Explicitly flag that the decoder carries the trainable
+capacity --- this foreshadows the result.
+
+\section{Evaluation Protocol}
+% THIS is the paper's methodological core — give it prominence.
+\subsection{Ablation and Control Design}
+Define the freeze-quantum / freeze-classical isolation, no-entanglement,
+no-MPS, no-energy, and classical-replacement ablations, and --- critically --- the
+\emph{resource matching} (equal feature width, equal readout parameter count) that
+makes quantum-vs-classical comparison fair.
+\subsection{Statistical Protocol}
+Multi-seed (5+) runs with mean~$\pm$~std; matched-convergence training budget;
+report that sub-dB gaps within seed noise are not claims.
+\subsection{Leakage Auditing}
+State the discipline: audit that regression targets are not linear functions of
+features handed to only one model. Present it as a general check, motivated by
+\S\ref{sec:leakage}.
+\subsection{Datasets and Metrics}
+Single-image, multi-image, and held-out CIFAR-10 settings; MSE / PSNR / SSIM.
+Emphasize held-out CIFAR as the setting that tests a \emph{learned representation}
+rather than per-image memorization.
+
+\section{Results}
+\subsection{The Decoder Is the Model: Freeze Isolation}
+% Strongest, cleanest result first.
+Freeze-classical collapses to noise ($\sim$11 dB); freeze-quantum is as good as or
+better than the full model. Conclude: the trainable classical decoder is necessary
+and sufficient; trained quantum parameters are not.
+\subsection{Every Quantum Ablation Ties or Wins (Held-Out CIFAR-10)}
+% The core negative result on the trustworthy setting.
+Multi-seed held-out table: entangling model ties/trails local-linear classical;
+no-entanglement, zz-only, shuffled-pair all indistinguishable. This is the
+headline negative result --- report it with error bars.
+\subsection{No Generalization from Single Images}
+Zero-shot transfer to a new image ($\sim$7.8 dB, below noise floor) shows
+single-image runs measure per-image optimization, not representation learning ---
+justifying the held-out CIFAR focus.
+\subsection{Scaling and Non-Monotonicity}
+Bond-dim / qubit / step sweeps are non-monotonic and within noise; HVK is
+competitive at 32$\times$32 but degrades to $\sim$19 dB at 256$\times$256 ---
+the small observable bottleneck does not scale.
+
+\section{A Circular Benchmark, and How to Catch It}
+\label{sec:leakage}
+% PROMOTED from supplement to main text — this is genuinely novel and useful.
+Present the ``nonlocal advantage'' diagnostic that reported $R^2\!\approx\!1$,
+PSNR~$=120$ dB. Show that its regression target is constructed from the exact
+pair-product features handed only to the entangling model, so any model given
+those columns achieves numerically perfect fit --- entanglement is incidental.
+Generalize to a reusable rule: verify no model receives, as a precomputed feature,
+a quantity from which the target is linearly recoverable. Frame as a service to
+the field, using our own retracted result as the worked example.
+
+\section{Discussion}
+\subsection{Why the Physics-Informed Regularizer Was Inert}
+Interpret the null Heisenberg-term effect; connect to when physics priors help vs.
+when the reconstruction loss already dominates.
+\subsection{Dequantization Context}
+Relate the tie-with-classical outcome to dequantization theory and the low-entanglement
+data regime; explain why entanglement bought nothing here.
+\subsection{Design and Evaluation Guidelines}
+Concrete bullet-point guidance: resource-match, freeze-isolate, audit leakage,
+test on held-out data, report seeds. Position these as the paper's take-home value.
+\subsection{Limitations and Scope}
+Small circuits, single dataset family, reconstruction (not classification); the
+negative result is scoped to this regime and does not preclude advantage elsewhere.
+
+\section{Conclusion}
+Restate: a rigorous protocol, a clean negative result, and a transferable leakage
+diagnostic advance evaluation methodology in hybrid QML even without a positive
+advantage.
+
+\section*{Reproducibility Statement}
+% Cheap credibility for a negative-results paper — reviewers weight this heavily.
+Point to released code, seeds, resource-matching config, and the exact scripts for
+every table. Note the resolved Exp-1 shuffle discrepancy and the retracted circular
+benchmark as part of an auditable record.
+
+\section*{Acknowledgements}
+Funding, collaborators, student contributions.
+
+\appendix
+\section{Exact Circuit Definitions}\label{app:circuits}
+Gate sequences for HVK1D / HVK2D / symmetric / IBM-probe; observable lists; the
+explicit Heisenberg energy expression from measured observables.
+\section{Implementation Details}
+Optimizers, learning rates, initializations, training schedules, matched budgets.
+\section{Full Ablation Tables}
+Complete single-image and multi-image tables with all seeds and error bars.
+\section{Extended Leakage Analysis}
+Full code excerpt and derivation showing target linear-recoverability from the
+leaked features; the corrected task design.
+\section{Additional Hardware Results}
+IBM depth / CX accounting; shot-noise sweep; transpiler settings.
+
+\end{document}
