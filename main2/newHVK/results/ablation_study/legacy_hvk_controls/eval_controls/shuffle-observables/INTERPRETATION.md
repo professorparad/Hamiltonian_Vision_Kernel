@@ -3,35 +3,26 @@
 ## What Was Tested
 
 The model was trained normally. At evaluation time, the observable vectors were
-shuffled across patches while the positional encodings stayed in the correct
+permuted across patches while the positional encodings stayed in their original
 patch locations.
 
-This tests whether the decoder is using the quantum observable vector for
-patch-specific content, or whether it is mostly reconstructing from position.
+## Verified Result
 
-## Result
+The current saved `shuffle_eval_summary.json` supports only a small degradation:
 
-| Reconstruction | MSE vs Original | PSNR vs Original |
-|---|---:|---:|
-| Normal HVK reconstruction | 0.0006018857 | 32.20 dB |
-| Shuffled-observable reconstruction | 0.0107267685 | 19.70 dB |
+| Reconstruction | MSE vs Original | PSNR vs Original | SSIM vs Original |
+|---|---:|---:|---:|
+| Normal HVK reconstruction | 0.0005977100 | 32.24 dB | 0.9919 |
+| Shuffled-observable reconstruction | 0.0006248252 | 32.04 dB | 0.9916 |
 
-Additional comparison:
+The single-run PSNR drop is 0.19 dB, with `MSE(shuffled, normal) =
+2.2958744e-05`.
 
-```text
-MSE(shuffled, normal) = 0.0099088643
-```
-
-## Meaning
-
-The shuffled reconstruction is much worse than the normal reconstruction.
-
-That means the decoder is not reconstructing the image from position alone. The
-observable vectors carry patch-specific information, and disrupting the mapping
-between observables and patch positions strongly degrades reconstruction.
+A repeated post-training verification over five non-identity permutations gives
+a mean PSNR drop of `0.301 +/- 0.054 dB` with range `0.236` to `0.366` dB.
 
 ## Conclusion
 
-For this run, HVK observables are load-bearing. The quantum latent features are
-contributing useful patch-specific content to the reconstruction pipeline.
-
+This legacy Exp-1 result should be treated as weak or negative evidence for
+observable-position load-bearing behavior. It must not be cited as a 12.5 dB
+shuffle degradation.

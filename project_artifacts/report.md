@@ -10,7 +10,7 @@
 
 | # | Experiment | Status | Result |
 |---|---|---|---|
-| 1 | Shuffle observables at eval | Done | Observables are load-bearing |
+| 1 | Shuffle observables at eval | Done | Weak/negative load-bearing evidence after verification |
 | 2 | Zero latent + real positions | Done | Position memorization ruled out |
 | 3 | Freeze classical, train quantum only | Not run — code not written | — |
 | 4 | Freeze quantum, train classical only | Not run — code not written | — |
@@ -28,21 +28,22 @@
 
 | Reconstruction | MSE | PSNR |
 |---|---:|---:|
-| Normal HVK | 0.000602 | 32.20 dB |
-| Shuffled observables | 0.010727 | 19.70 dB |
-| Degradation | ×17.8 worse | −12.5 dB |
+| Normal HVK | 0.000598 | 32.24 dB |
+| Shuffled observables | 0.000625 | 32.04 dB |
+| Single-run degradation | ×1.05 worse | −0.19 dB |
+| Five-permutation verification | — | −0.301 ± 0.054 dB |
 
 ### Interpretation
 
-A −12.5 dB PSNR drop is a large, clean signal. The decoder cannot reconstruct the correct patch content when the wrong observable vector is fed for a given position. Observables carry patch-specific information; the decoder is using them.
+The original −12.5 dB table was stale and contradicted the saved `shuffle_eval_summary.json`. The verified code path feeds `observables[perm]` into the decoder while keeping positions fixed, and five non-identity post-training permutations give only a small PSNR drop. This means Exp 1 does not show strong observable-position load-bearing behavior.
 
 ### Conclusion
 
-**Observables are load-bearing.** Proceed to Exp 2.
+**Exp 1 is weak or negative evidence for observable-position load-bearing.** Do not cite it as a large shuffle degradation.
 
 ### What to improve
 
-- The shuffle is a single random permutation over 16 elements. With 16 patches there is a small probability some patches land in their original position by chance. Report the number of fixed points in the permutation, or average results over 5–10 different permutations and report mean ± std PSNR. This strengthens the claim statistically.
+- The shuffle verification now reports five non-identity permutations and fixed-point counts in `experiments/quantum_contribution/results/eval_controls/shuffle-observables/shuffle_permutation_verification.csv`.
 - SSIM was not reported. Add SSIM alongside MSE and PSNR for all eval experiments — image quality metrics that agree across multiple measures are more convincing in a paper.
 
 ---

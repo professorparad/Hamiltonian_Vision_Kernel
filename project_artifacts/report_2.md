@@ -33,10 +33,9 @@ shuffle) were largely addressed. This is good experimental hygiene.
 
 ---
 
-## 2. CRITICAL — Exp 1 (shuffle observables) is internally contradictory
+## 2. RESOLVED CRITICAL — Exp 1 (shuffle observables) was internally contradictory
 
-This is the most important finding of the review and must be resolved before any
-of Exp 1's conclusion is used.
+This was the most important finding of the review and has now been resolved.
 
 Two files in the **same experiment folder** report incompatible numbers:
 
@@ -51,17 +50,16 @@ A −0.19 dB drop and a 2.3e-5 MSE delta mean the shuffle **did almost nothing**
 which is the *opposite* of the −12.5 dB "load-bearing observables" conclusion
 written up in `report.md` and `INTERPRETATION.md`.
 
-**Only one of these can be true.** Likely explanations to check:
-- The shuffle permutation was applied to a copy that was not actually fed to the
-  decoder (no-op shuffle), so the JSON (−0.19 dB) is the real behavior and the
-  −12.5 dB table is stale/hand-entered from an earlier run.
-- Or the JSON is from a broken run and the −12.5 dB is correct.
+The shuffle path was checked end-to-end: the decoder receives
+`observables[perm]` while positions remain fixed. A verifier then loaded the
+saved decoder and observable tensor and evaluated five non-identity permutations.
+The verified mean PSNR drop is **0.301 ± 0.054 dB**, with range **0.236 to
+0.366 dB**. Therefore the JSON was the correct behavior and the −12.5 dB table
+was stale.
 
-**Action required:** Do not cite Exp 1 until the shuffle path is verified end-to-end
-(assert the permutation is non-identity, log fixed points, confirm the permuted
-tensor reaches the decoder). If the true drop is ~0.2 dB, then **Exp 1 actually
-shows observables are NOT load-bearing at eval** — a much weaker and very different
-result. This flips the paper's opening sanity check.
+**Required interpretation:** Exp 1 is weak or negative evidence for
+observable-position load-bearing behavior. It must not be cited as a large
+shuffle degradation.
 
 *(Note: Exp 2's zero-latent JSON is self-consistent — 32.24 → 14.85 dB, −17.4 dB —
 so the position-memorization ruling-out still stands. Exp 1 is the broken one.)*

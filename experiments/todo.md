@@ -7,6 +7,13 @@ until these are done. Do them in order.
 
 ## Task 1 — Resolve the Exp-1 shuffle contradiction
 
+**Status:** resolved. The decoder path was verified to use
+`observables[perm]` with fixed positions. A repeated post-training verifier was
+added at `experiments/quantum_contribution/verify_shuffle_permutations.py`.
+Five non-identity permutations give a mean PSNR drop of `0.301 +/- 0.054 dB`,
+so the `32.04 dB / -0.19 dB` JSON behavior was the correct result and the old
+`19.70 dB / -12.5 dB` write-up was stale.
+
 **Problem.** The same experiment reports two incompatible numbers:
 
 | Source | Shuffled PSNR | Drop |
@@ -37,6 +44,22 @@ the fixed-point count, and which of the two old numbers was correct.
 ---
 
 ## Task 2 — Multi-seed at matched convergence for the core comparisons
+
+**Status:** complete. The full 45-run batch finished:
+9 variants x 5 seeds, all at 240 steps. The summary table marks gaps smaller
+than one pooled baseline/control PSNR standard deviation as not significant.
+
+Re-run/resume command:
+
+```bash
+.venv/bin/python experiments/quantum_contribution/run_core_multiseed_240.py --skip-existing
+```
+
+Outputs:
+
+- `experiments/quantum_contribution/results/core_multiseed_240/core_multiseed_240_runs.csv`
+- `experiments/quantum_contribution/results/core_multiseed_240/core_multiseed_240_summary.csv`
+- `experiments/quantum_contribution/results/core_multiseed_240/core_multiseed_240_summary.json`
 
 **Problem.** The core ablation table is **single-seed** and trained for only
 **120 steps**, which is underfit (120→240 steps: 28.75 → 32.55 dB). Sub-dB

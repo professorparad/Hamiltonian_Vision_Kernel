@@ -52,7 +52,7 @@ Source: `experiments/quantum_contribution/results/`. Baseline = full HVK1D, 32.2
 |---|---:|---|
 | Zero observables + real positions | 14.85 | position alone insufficient ✅ |
 | Random latent + real positions | 12.14 | noise floor |
-| **Shuffle observables (JSON, actual)** | **32.04** | ⚠️ only −0.19 dB — contradicts the −12.5 dB write-up; **Exp 1 must be re-verified** (see report_2 §2) |
+| **Shuffle observables, verified** | **32.04** | five non-identity permutations give only −0.301 ± 0.054 dB; weak/negative load-bearing evidence |
 
 ### Bond-dim / qubit sweeps (all ≈ baseline, non-monotonic → within noise)
 
@@ -185,7 +185,7 @@ Any model given those columns scores R²=1.0. **Do not cite as advantage.**
 
 ## 7. Required actions before publication
 
-1. **Re-verify Exp 1 shuffle** — JSON (−0.19 dB) vs write-up (−12.5 dB) contradict; assert the permutation reaches the decoder.
+1. **Resolved:** Exp 1 shuffle was re-verified; the true effect is small, so do not claim a large shuffle degradation.
 2. **Re-run core ablations at ≥240 steps** (120 is underfit) with 5 seeds + error bars.
 3. **Delete or redesign the nonlocal-advantage diagnostic** (remove target–feature leakage; give all models equal access to nonlocal terms).
 4. **Adopt the honest framing:** ablation/negative-result paper built on the real held-out CIFAR result, or pivot to a leakage-free nonlocal task.

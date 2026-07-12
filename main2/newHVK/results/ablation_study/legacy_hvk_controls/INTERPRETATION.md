@@ -9,12 +9,13 @@ interpretation here after it is run.
 Experiments 1, 2, 3, 4, and 7 are complete. Together, they give a more nuanced
 picture than the initial sanity checks alone:
 
-- Shuffling observables across patch positions causes a large reconstruction
-  drop.
+- Shuffling observables across patch positions causes only a small
+  reconstruction drop in the verified Exp-1 run.
 - Replacing observables with zeros while keeping real positions also causes a
   large reconstruction drop.
-- Therefore, the decoder is not reconstructing from position alone. The
-  observable vector carries patch-specific information.
+- Therefore, the decoder is not reconstructing from position alone, but the
+  current shuffle control does not prove strong observable-position
+  load-bearing behavior.
 - Freezing the classical decoder/projections makes reconstruction fail, so the
   classical trainable stack is necessary.
 - Freezing the quantum parameters still reconstructs well, so trained quantum
@@ -79,23 +80,26 @@ vectors across patches while keeping positional encodings fixed.
 
 | Reconstruction | MSE vs Original | PSNR vs Original | SSIM vs Original |
 |---|---:|---:|---:|
-| Normal HVK | 0.0006018857 | 32.20 dB | 0.9928 |
-| Shuffled observables | 0.0107267685 | 19.70 dB | 0.8423 |
+| Normal HVK | 0.0005977100 | 32.24 dB | 0.9919 |
+| Shuffled observables | 0.0006248252 | 32.04 dB | 0.9916 |
 
 | Comparison | Value |
 |---|---:|
-| MSE(shuffled, normal) | 0.0099088643 |
-| MSE degradation vs normal | 17.82x worse |
-| PSNR drop | 12.51 dB |
+| MSE(shuffled, normal) | 2.2958744e-05 |
+| Single-run PSNR drop | 0.19 dB |
+| Five-permutation mean PSNR drop | 0.301 +/- 0.054 dB |
 
-**Interpretation:** Shuffling observable vectors destroys the correct
-observable-position pairing. The reconstruction gets much worse, so the decoder
-is not ignoring observables. The observables encode patch-specific content.
+**Interpretation:** The shuffle code path does feed `observables[perm]` to the
+decoder while keeping positions fixed, and a post-training verification confirms
+five non-identity permutations. However, the reconstruction changes only
+slightly. Exp 1 therefore does not support the older large-degradation
+interpretation.
 
 **Metric note:** SSIM was backfilled from the saved reconstruction arrays for
 this completed run. Future reruns will write SSIM directly into `metrics.json`.
 
-**Conclusion:** Exp 1 supports the claim that HVK observables are load-bearing.
+**Conclusion:** Exp 1 is weak or negative evidence for observable-position
+load-bearing behavior. Do not cite it as a 12.5 dB shuffle degradation.
 
 ### Exp 2 — Zero Observables with Real Positions
 
@@ -149,7 +153,7 @@ checkpoint.
 
 | Experiment | Normal MSE | Perturbed MSE | MSE Ratio | Normal PSNR | Perturbed PSNR | PSNR Drop | Perturbed SSIM | Meaning |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
-| Exp 1: shuffled observables | 0.0006018857 | 0.0107267685 | 17.82x | 32.20 dB | 19.70 dB | 12.51 dB | 0.8423 | Observable-position pairing matters |
+| Exp 1: shuffled observables | 0.0005977100 | 0.0006248252 | 1.05x | 32.24 dB | 32.04 dB | 0.19 dB | 0.9916 | Observable-position pairing only weakly affects this run |
 | Exp 2: zero observables | 0.0006213221 | 0.0294627398 | 47.42x | 32.07 dB | 15.31 dB | 16.76 dB | 0.8337 | Positions alone are insufficient |
 | Exp 2: random latent | 0.0006213221 | 0.0715787932 | 115.20x | 32.07 dB | 11.45 dB | 20.61 dB | 0.1217 | Decoder output is near noise floor without real observables |
 
@@ -157,10 +161,9 @@ checkpoint.
 
 ### Supported So Far
 
-- The decoder uses observable values.
-- The observable vector contains patch-specific information.
-- Correct observable-to-position assignment matters.
+- The zero-latent control shows that a nonzero latent channel matters.
 - Real positions alone are not enough for high-quality reconstruction.
+- The current shuffle control shows only a small observable-position sensitivity.
 
 ### Not Yet Proven
 

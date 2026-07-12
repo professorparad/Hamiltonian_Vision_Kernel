@@ -404,8 +404,18 @@ def train(
         pred = decoder(observables, positions).cpu().numpy()
 
         shuffled_pred = None
+        shuffle_metadata = None
         if shuffle_observables_at_eval:
             perm = torch.randperm(observables.shape[0], device=observables.device)
+            identity = torch.arange(observables.shape[0], device=observables.device)
+            fixed_points = int(torch.sum(perm == identity).item())
+            shuffle_metadata = {
+                "permutation": perm.detach().cpu().tolist(),
+                "num_observables": int(observables.shape[0]),
+                "fixed_points": fixed_points,
+                "changed_points": int(observables.shape[0] - fixed_points),
+                "is_identity": bool(fixed_points == observables.shape[0]),
+            }
             shuffled_pred = decoder(observables[perm], positions).cpu().numpy()
 
         zero_positions = (
@@ -496,6 +506,7 @@ def train(
             [str(path) for path in train_image_paths] if train_image_paths else None
         ),
         "zero_latent_uses_positions": zero_latent_uses_positions,
+        "shuffle_metadata": shuffle_metadata,
     }
 
     if save_outputs and output_dir is not None:
@@ -731,6 +742,7 @@ def save_analysis_outputs(
             ),
             "normal_shape": list(outputs["quantum_reconstruction"].shape),
             "shuffled_shape": list(outputs["shuffled_observables"].shape),
+            "shuffle_metadata": outputs.get("shuffle_metadata"),
         }
         (output_dir / "shuffle_eval_summary.json").write_text(
             json.dumps(shuffled_summary, indent=2), encoding="utf-8"
