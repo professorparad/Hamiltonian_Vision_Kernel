@@ -60,15 +60,35 @@ replaces the old single-seed table everywhere it appears.
 
 ---
 
----
+## Task 3 — Flag the "quantum advantage" result (do NOT claim it)
 
-## Task 3 — Redesign or delete the "nonlocal advantage" benchmark
+> This is the `cifar_nonlocal_advantage` result (commit `c4c2e2c`) — the
+> R²≈1.0 / PSNR=120 dB number. **It is not a quantum advantage. Do not report
+> it as one.** Read this before building any claim on it.
+>
+> **We are NOT claiming quantum advantage in the paper.** Don't delete the
+> result yet — just leave it flagged as circular/invalid so nobody mistakes it
+> for a real finding. It stays out of the results and out of any claim.
 
-**Problem.** The CIFAR nonlocal diagnostic reports R²≈1.0 / PSNR=120 dB, but it
-is **circular**. The regression target (`run_newhvk_suite.py:1374-1385`) is built
-from the exact pair-product features handed only to the entangling model
-(`run_newhvk_suite.py:1396-1413`). Any model given those columns scores R²=1.0.
-This is label leakage, not entanglement advantage.
+**Why it's circular.** You changed the *task*, not the architecture. The target
+(`run_newhvk_suite.py:1374-1385`) is built from the exact pair-product features
+handed **only** to the entangling model (`run_newhvk_suite.py:1396-1413`). So the
+target is a linear function of columns the classical controls never get. A linear
+fit then inverts it to zero error → R²=1.0, MSE≈4e-15. **Any** model given those
+columns (classical included) would score 1.0. The tell: R²=0.9999999999999 /
+120 dB is machine precision — real advantages never look like that; that's a
+label leak.
+
+**The real result is already in your suite.** On the honest held-out CIFAR test,
+the entangling model gets **20.07 dB vs 20.66 dB** for a plain local-linear
+classical — **tied/slightly behind. No advantage.** That is the trustworthy one
+(→ Task 4).
+
+**Do this (pick one):**
+- **Delete it** from all results and claims, **or**
+- **Redesign it** so (a) the target depends on the raw patch pixels through a
+  process the model does NOT receive as a precomputed feature, and (b) **every**
+  model (including classical controls) gets equal access to the nonlocal basis.
 
 **Do this (pick one):**
 - **Delete it** from all results and claims, **or**
