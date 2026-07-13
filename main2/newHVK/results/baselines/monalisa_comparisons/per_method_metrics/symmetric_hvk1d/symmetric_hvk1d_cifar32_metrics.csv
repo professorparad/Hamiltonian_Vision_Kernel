@@ -1,0 +1,2 @@
+model,image,image_size,patch_size,epochs,mse,psnr,ssim
+SymmetricHVK1D,monalisa.png,32,8,200,0.01145339198410511,19.410658756104006,0.7795254570701746

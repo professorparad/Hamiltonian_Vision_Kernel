@@ -1,0 +1,227 @@
+{
+  "claim_boundary": "Lightweight diagnostics; not full retraining evidence.",
+  "second_dataset_subset": [
+    {
+      "model": "local-only",
+      "n": 270,
+      "mean_mse": 0.0035351386872765488,
+      "std_mse": 0.0027546697067963332,
+      "mean_psnr": 26.85230791828342,
+      "std_psnr": 6.027109176623402,
+      "mean_ssim": 0.719191240774877,
+      "std_ssim": 0.1391643905038935
+    },
+    {
+      "model": "raw-linear",
+      "n": 270,
+      "mean_mse": 0.0035351386872765488,
+      "std_mse": 0.0027546697067963332,
+      "mean_psnr": 26.85230791828342,
+      "std_psnr": 6.027109176623402,
+      "mean_ssim": 0.719191240774877,
+      "std_ssim": 0.1391643905038935
+    },
+    {
+      "model": "no-entanglement",
+      "n": 270,
+      "mean_mse": 0.0035405538699238084,
+      "std_mse": 0.0027529251645200307,
+      "mean_psnr": 26.783195552840752,
+      "std_psnr": 5.871520723470732,
+      "mean_ssim": 0.7182794255296362,
+      "std_ssim": 0.1379329476679823
+    },
+    {
+      "model": "quadratic-classical",
+      "n": 270,
+      "mean_mse": 0.003945824873933697,
+      "std_mse": 0.0030630947884139614,
+      "mean_psnr": 26.27319404266387,
+      "std_psnr": 5.774375000805917,
+      "mean_ssim": 0.6790561176809592,
+      "std_ssim": 0.15190161603186902
+    },
+    {
+      "model": "HVK2D-pair-observable",
+      "n": 270,
+      "mean_mse": 0.003945835816372267,
+      "std_mse": 0.0030652158826543568,
+      "mean_psnr": 26.2533342818367,
+      "std_psnr": 5.70490926450789,
+      "mean_ssim": 0.6786945567103099,
+      "std_ssim": 0.1513789756085319
+    },
+    {
+      "model": "parameter-matched",
+      "n": 270,
+      "mean_mse": 0.005593894769225518,
+      "std_mse": 0.0038120553715705824,
+      "mean_psnr": 23.5423646594547,
+      "std_psnr": 3.113742558563849,
+      "mean_ssim": 0.5180148272124693,
+      "std_ssim": 0.13173519702388312
+    }
+  ],
+  "wisconsin_breast_cancer": [
+    {
+      "model": "raw-linear",
+      "n": 5,
+      "mean_accuracy": 0.9802325581395348,
+      "std_accuracy": 0.011392975547828716,
+      "mean_auc": 0.9956886574074074,
+      "std_auc": 0.0024762838999230034,
+      "mean_f1": 0.984386986309417,
+      "std_f1": 0.008864841262807772,
+      "mean_recall": 0.9907407407407407,
+      "std_recall": 0.014344382763731196,
+      "mean_specificity": 0.9625,
+      "std_specificity": 0.03061862178478973,
+      "mean_brier": 0.01956117782057594,
+      "std_brier": 0.005707647863719702
+    },
+    {
+      "model": "HVK2D-pair-observable",
+      "n": 5,
+      "mean_accuracy": 0.9430232558139535,
+      "std_accuracy": 0.016195800322307143,
+      "mean_auc": 0.9881365740740741,
+      "std_auc": 0.004157010415756463,
+      "mean_f1": 0.9550781195942486,
+      "std_f1": 0.01244833634231702,
+      "mean_recall": 0.962962962962963,
+      "std_recall": 0.010143010324169748,
+      "mean_specificity": 0.909375,
+      "std_specificity": 0.03479852726768764,
+      "mean_brier": 0.03749422524333028,
+      "std_brier": 0.007987849951398979
+    },
+    {
+      "model": "quadratic-classical",
+      "n": 5,
+      "mean_accuracy": 0.95,
+      "std_accuracy": 0.01585835081044867,
+      "mean_auc": 0.986574074074074,
+      "std_auc": 0.005403524784516046,
+      "mean_f1": 0.9607242700130746,
+      "std_f1": 0.011981720950332292,
+      "mean_recall": 0.9703703703703704,
+      "std_recall": 0.0037037037037037203,
+      "mean_specificity": 0.915625,
+      "std_specificity": 0.041457809879442496,
+      "mean_brier": 0.03812851840791926,
+      "std_brier": 0.007704687929328972
+    },
+    {
+      "model": "no-entanglement",
+      "n": 5,
+      "mean_accuracy": 0.9465116279069768,
+      "std_accuracy": 0.017403057612902083,
+      "mean_auc": 0.9861400462962964,
+      "std_auc": 0.00693382675960656,
+      "mean_f1": 0.9580751050825868,
+      "std_f1": 0.013116369430697942,
+      "mean_recall": 0.9703703703703704,
+      "std_recall": 0.00907218423253033,
+      "mean_specificity": 0.90625,
+      "std_specificity": 0.04192627457812106,
+      "mean_brier": 0.039907839772128015,
+      "std_brier": 0.013470077658249157
+    },
+    {
+      "model": "strict-classical-rff",
+      "n": 5,
+      "mean_accuracy": 0.9465116279069768,
+      "std_accuracy": 0.0192476108805196,
+      "mean_auc": 0.984201388888889,
+      "std_auc": 0.010024026857171678,
+      "mean_f1": 0.9575122375845669,
+      "std_f1": 0.01494270092384743,
+      "mean_recall": 0.9574074074074075,
+      "std_recall": 0.01255987033912088,
+      "mean_specificity": 0.928125,
+      "std_specificity": 0.041457809879442496,
+      "mean_brier": 0.04207201387231417,
+      "std_brier": 0.016361066568854644
+    }
+  ],
+  "topology_matched_1d2d": [
+    {
+      "model": "hvk2d-grid-matched",
+      "n": 3,
+      "mean_mse": 0.018021571231305288,
+      "std_mse": 0.002212733571345074,
+      "mean_psnr": 17.4750146529252,
+      "std_psnr": 0.5357421435247979,
+      "mean_r2": 0.6730233732580571,
+      "std_r2": 0.07936841990535622
+    },
+    {
+      "model": "hvk1d-chain-matched",
+      "n": 3,
+      "mean_mse": 0.018307487148191665,
+      "std_mse": 0.002668659931692118,
+      "mean_psnr": 17.41804399748364,
+      "std_psnr": 0.614057933823101,
+      "mean_r2": 0.6659494909284349,
+      "std_r2": 0.09274403779754795
+    }
+  ],
+  "d4_equivariance": [
+    {
+      "model": "D4-pooled-HVK2D",
+      "n": 7000,
+      "mean_equivariance_error": 9.573879468686641e-17,
+      "std_equivariance_error": 1.2594232983952715e-17
+    },
+    {
+      "model": "no-positional",
+      "n": 7000,
+      "mean_equivariance_error": 0.7400693211869104,
+      "std_equivariance_error": 0.15198944262994848
+    },
+    {
+      "model": "HVK2D-positional",
+      "n": 7000,
+      "mean_equivariance_error": 0.8152661515657417,
+      "std_equivariance_error": 0.12887450585275365
+    },
+    {
+      "model": "local-raw",
+      "n": 7000,
+      "mean_equivariance_error": 0.8366394034685322,
+      "std_equivariance_error": 0.13135806410156628
+    }
+  ],
+  "mps_ordering_ablation": [
+    {
+      "model": "hilbert",
+      "n": 3,
+      "mean_mse": 0.0060193754279787475,
+      "std_mse": 0.0006682923863552291,
+      "mean_psnr": 22.23021161355452,
+      "std_psnr": 0.46785961696276895,
+      "mean_r2": 0.890503956915048,
+      "std_r2": 0.026844873432784504
+    },
+    {
+      "model": "snake",
+      "n": 3,
+      "mean_mse": 0.013358532622728127,
+      "std_mse": 0.002678019528683881,
+      "mean_psnr": 18.83154095307839,
+      "std_psnr": 0.8845301395633407,
+      "mean_r2": 0.756055870499603,
+      "std_r2": 0.07763096282026322
+    },
+    {
+      "model": "raster",
+      "n": 3,
+      "mean_mse": 0.013358533698976861,
+      "std_mse": 0.002678019857646152,
+      "mean_psnr": 18.831540617224146,
+      "std_psnr": 0.8845302253693058,
+      "mean_r2": 0.7560558519420715,
+      "std_r2": 0.07763096668421424
+    }
+  ]
+}

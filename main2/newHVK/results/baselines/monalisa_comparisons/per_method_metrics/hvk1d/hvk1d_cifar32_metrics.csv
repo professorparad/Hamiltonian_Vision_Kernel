@@ -1,0 +1,2 @@
+model,image,image_size,patch_size,epochs,mse,psnr,ssim
+HVK1D,monalisa.png,32,8,200,0.011629764921963215,19.34429063786256,0.7784824490025698

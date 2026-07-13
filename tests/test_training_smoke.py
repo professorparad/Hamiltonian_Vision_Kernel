@@ -26,7 +26,7 @@ class TrainingSmokeTests(unittest.TestCase):
             mock.patch.object(
                 training,
                 "extract_mps_features",
-                lambda patch: np.array([patch.mean(), patch.std()], dtype=np.float32),
+                lambda patch, bond_dim=4: np.array([patch.mean(), patch.std()], dtype=np.float32),
             ),
             mock.patch.object(training, "extract_patches", extract_small_patches),
         ]

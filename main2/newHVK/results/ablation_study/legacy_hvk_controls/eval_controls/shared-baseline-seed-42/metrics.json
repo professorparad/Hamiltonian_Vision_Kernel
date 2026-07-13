@@ -1,0 +1,66 @@
+{
+  "final_total_loss": -0.06128036975860596,
+  "final_reconstruction_loss": 0.0001911958388518542,
+  "final_energy_loss": -6.147156715393066,
+  "reconstruction_metrics": {
+    "mse": 0.0005977100227028131,
+    "psnr": 32.23509461636571,
+    "ssim": 0.9919415774538071
+  },
+  "comparison_metrics": {
+    "quantum_reconstruction": {
+      "mse": 0.0005977100227028131,
+      "psnr": 32.23509461636571,
+      "ssim": 0.9919415774538071
+    },
+    "mps_baseline": {
+      "mse": 0.002155316760763526,
+      "psnr": 26.664888937899136,
+      "ssim": 0.9703435390081457
+    },
+    "random_latent": {
+      "mse": 0.05631965398788452,
+      "psnr": 12.493400220409095,
+      "ssim": 0.5102851078459001
+    },
+    "zero_latent": {
+      "mse": 0.056883104145526886,
+      "psnr": 12.450167119180755,
+      "ssim": 0.030215913577488276
+    }
+  },
+  "mse": 0.0005977100227028131,
+  "psnr": 32.23509461636571,
+  "ssim": 0.9919415774538071,
+  "mean_energy": -6.182435035705566,
+  "std_energy": 0.003099632216617465,
+  "phase_transition": {
+    "detected": true,
+    "critical_epoch": 10,
+    "max_susceptibility": 0.008926838636398315,
+    "order_parameter_jump": 0.008926838636398315,
+    "susceptibility_baseline": 0.001900501549243927,
+    "susceptibility_spread": 0.0013878722675144672,
+    "susceptibility_threshold": 0.0046762460842728615,
+    "proof": "Phase transition at epoch 10: susceptibility peak 0.008927 exceeds threshold 0.004676 (median 0.001901 + 2*std 0.001388); order-parameter jump 0.008927."
+  },
+  "media": {
+    "order_parameter_curve": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_order_parameter_curve.png",
+    "phase_transition_epoch_vs_order_parameter_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/phase_transition_epoch_vs_order_parameter.gif",
+    "phase_transition_order_parameter_reconstruction_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/phase_transition_order_parameter_reconstruction.gif",
+    "order_parameter_phase_transition_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_order_parameter_phase_transition.gif",
+    "reconstruction_phase_transition_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_reconstruction_phase_transition.gif"
+  },
+  "model_variant": "standard",
+  "ablation_mode": "baseline",
+  "feature_mode": "mps",
+  "mps_bond_dim": 4,
+  "qubit_count": 6,
+  "observable_set": "full",
+  "energy_loss_mode": "linear",
+  "energy_weight": 0.01,
+  "energy_margin": 0.25,
+  "seed": 42,
+  "eval_only_image": null,
+  "train_image_paths": null
+}

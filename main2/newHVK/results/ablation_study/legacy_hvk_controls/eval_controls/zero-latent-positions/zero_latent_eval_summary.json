@@ -1,0 +1,20 @@
+{
+  "normal_mse_vs_original": 0.0005977100227028131,
+  "normal_psnr_vs_original": 32.23509461636571,
+  "normal_ssim_vs_original": 0.9919415774538071,
+  "zero_latent_mse_vs_original": 0.03275406360626221,
+  "zero_latent_psnr_vs_original": 14.847348119379255,
+  "zero_latent_ssim_vs_original": 0.643100260302401,
+  "zero_latent_mse_vs_normal": 0.03208041191101074,
+  "random_latent_mse_vs_original": 0.06112026795744896,
+  "random_latent_psnr_vs_original": 12.138147504371705,
+  "random_latent_ssim_vs_original": 0.36133734784550203,
+  "normal_shape": [
+    256,
+    256
+  ],
+  "zero_latent_shape": [
+    256,
+    256
+  ]
+}

@@ -1,0 +1,407 @@
+[
+  {
+    "seed": 0,
+    "model": "HVK2D-cifar-nonlocal-entangling",
+    "mse": 8.551983599545731e-16,
+    "psnr": 120.0,
+    "r2": 0.9999999999999993,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 0,
+    "model": "no-entanglement-single-site",
+    "mse": 0.9484379808773168,
+    "psnr": 0.22991062712451996,
+    "r2": 0.21962518171634948,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 0,
+    "model": "left-patch-only",
+    "mse": 1.2230380058689496,
+    "psnr": -0.8743995293383608,
+    "r2": -0.006315732633484394,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 0,
+    "model": "right-patch-only",
+    "mse": 1.2616575260624001,
+    "psnr": -1.009414827002805,
+    "r2": -0.03809187578760831,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 0,
+    "model": "strict-classical-rff",
+    "mse": 0.8285662400563489,
+    "psnr": 0.8167276601229634,
+    "r2": 0.31825565608218787,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 0,
+    "model": "quadratic-pair-classical",
+    "mse": 0.14772243767479704,
+    "psnr": 8.305535343545408,
+    "r2": 0.8784539708645438,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 0,
+    "model": "degree2-polynomial-kernel",
+    "mse": 0.25197514791517517,
+    "psnr": 5.986422911848996,
+    "r2": 0.7926748356445923,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 0,
+    "model": "random-vqc",
+    "mse": 1.420490273858354,
+    "psnr": -1.5243826444113835,
+    "r2": -0.16877946864856264,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 0,
+    "model": "raw-linear",
+    "mse": 0.8855085283824906,
+    "psnr": 0.5280725173915859,
+    "r2": 0.2714035383885629,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "HVK2D-cifar-nonlocal-entangling",
+    "mse": 8.850277683653929e-16,
+    "psnr": 120.0,
+    "r2": 0.9999999999999996,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "no-entanglement-single-site",
+    "mse": 2.0671286683532557,
+    "psnr": -3.153675101138172,
+    "r2": -0.03464852591163803,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "left-patch-only",
+    "mse": 2.041153934428058,
+    "psnr": -3.098757584405924,
+    "r2": -0.021647535417871788,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "right-patch-only",
+    "mse": 2.099329380738097,
+    "psnr": -3.220805838965582,
+    "r2": -0.05076577110896863,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "strict-classical-rff",
+    "mse": 1.5690608851062646,
+    "psnr": -1.9563979607428619,
+    "r2": 0.2146465981074691,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "quadratic-pair-classical",
+    "mse": 0.3452716841972955,
+    "psnr": 4.618390367710424,
+    "r2": 0.8271830657845088,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "degree2-polynomial-kernel",
+    "mse": 0.5429524950476243,
+    "psnr": 2.6523816680378913,
+    "r2": 0.7282389784238292,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "random-vqc",
+    "mse": 2.2427693171316525,
+    "psnr": -3.507846059731115,
+    "r2": -0.12256097235528474,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 1,
+    "model": "raw-linear",
+    "mse": 1.9496578167974852,
+    "psnr": -2.899583953025378,
+    "r2": 0.024148512347517137,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "HVK2D-cifar-nonlocal-entangling",
+    "mse": 3.258128433112599e-16,
+    "psnr": 120.0,
+    "r2": 0.9999999999999998,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "no-entanglement-single-site",
+    "mse": 1.0062919290509518,
+    "psnr": -0.02723989451539062,
+    "r2": 0.30181831605189047,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "left-patch-only",
+    "mse": 1.0826412757592507,
+    "psnr": -0.3448458057211521,
+    "r2": 0.24884589928669631,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "right-patch-only",
+    "mse": 1.1188830493987767,
+    "psnr": -0.48784694521983696,
+    "r2": 0.22370076811906947,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "strict-classical-rff",
+    "mse": 0.8178604072773256,
+    "psnr": 0.873208155494233,
+    "r2": 0.4325551662469337,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "quadratic-pair-classical",
+    "mse": 0.14093816303037288,
+    "psnr": 8.509713933394712,
+    "r2": 0.902214813458852,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "degree2-polynomial-kernel",
+    "mse": 0.38190497546796853,
+    "psnr": 4.1804468359000255,
+    "r2": 0.735028125355374,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "random-vqc",
+    "mse": 1.572604795882687,
+    "psnr": -1.9661959577524648,
+    "r2": -0.09109874866009582,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 2,
+    "model": "raw-linear",
+    "mse": 0.9439985813917606,
+    "psnr": 0.25028658344084825,
+    "r2": 0.3450384523879507,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "HVK2D-cifar-nonlocal-entangling",
+    "mse": 7.120241162853566e-17,
+    "psnr": 120.0,
+    "r2": 0.9999999999999999,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "no-entanglement-single-site",
+    "mse": 1.000320143063409,
+    "psnr": -0.0013901411484296736,
+    "r2": -0.6791210618452286,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "left-patch-only",
+    "mse": 1.0923621929363416,
+    "psnr": -0.3836666063351288,
+    "r2": -0.8336213441685985,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "right-patch-only",
+    "mse": 0.8424220257484922,
+    "psnr": 0.7447028672288059,
+    "r2": -0.4140758598189618,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "strict-classical-rff",
+    "mse": 0.6843120521713962,
+    "psnr": 1.6474581109905726,
+    "r2": -0.14867503932956994,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "quadratic-pair-classical",
+    "mse": 0.29772640949377044,
+    "psnr": 5.261826400301153,
+    "r2": 0.5002413094296172,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "degree2-polynomial-kernel",
+    "mse": 0.34948468728177307,
+    "psnr": 4.565718481721397,
+    "r2": 0.41336070929242474,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "random-vqc",
+    "mse": 0.685338685019498,
+    "psnr": 1.6409475305591532,
+    "r2": -0.15039832846853574,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 3,
+    "model": "raw-linear",
+    "mse": 0.893943099887211,
+    "psnr": 0.48690123476382635,
+    "r2": -0.5005582937828337,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "HVK2D-cifar-nonlocal-entangling",
+    "mse": 1.554339621524035e-16,
+    "psnr": 120.0,
+    "r2": 0.9999999999999999,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "no-entanglement-single-site",
+    "mse": 1.5430669300569066,
+    "psnr": -1.883847638622313,
+    "r2": -0.03309216562811135,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "left-patch-only",
+    "mse": 2.0604839848678416,
+    "psnr": -3.139692433155679,
+    "r2": -0.3795058533790596,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "right-patch-only",
+    "mse": 2.173580309252003,
+    "psnr": -3.371756910972035,
+    "r2": -0.4552244916356025,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "strict-classical-rff",
+    "mse": 0.9823801617950857,
+    "psnr": 0.07720416265933383,
+    "r2": 0.3422908436113322,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "quadratic-pair-classical",
+    "mse": 0.2132554063546792,
+    "psnr": 6.710999499834543,
+    "r2": 0.8572242815321475,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "degree2-polynomial-kernel",
+    "mse": 0.4207187854052869,
+    "psnr": 3.760080959798792,
+    "r2": 0.7183263585859186,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "random-vqc",
+    "mse": 1.5622028602298368,
+    "psnr": -1.9373742861808994,
+    "r2": -0.04590378070363599,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  },
+  {
+    "seed": 4,
+    "model": "raw-linear",
+    "mse": 1.5681988728624756,
+    "psnr": -1.9540113737267193,
+    "r2": -0.049918145573446315,
+    "n_train_pairs": 576,
+    "n_test_pairs": 384
+  }
+]

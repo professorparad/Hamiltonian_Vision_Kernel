@@ -1,0 +1,182 @@
+[
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 0,
+    "model": "HVK2D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.66,
+    "macro_f1": 0.6589656686473215
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 0,
+    "model": "no-entanglement",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.7,
+    "macro_f1": 0.6977555277016846
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 0,
+    "model": "local-only",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.67,
+    "macro_f1": 0.6714564903695338
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 0,
+    "model": "raw-linear",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.69,
+    "macro_f1": 0.6847412008281573
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 0,
+    "model": "quadratic-classical",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.64,
+    "macro_f1": 0.6371790409527655
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 0,
+    "model": "parameter-matched",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.65,
+    "macro_f1": 0.6451730115803342
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 1,
+    "model": "HVK2D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.65,
+    "macro_f1": 0.6374658513290898
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 1,
+    "model": "no-entanglement",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.65,
+    "macro_f1": 0.6368092414831545
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 1,
+    "model": "local-only",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.67,
+    "macro_f1": 0.6552088554720135
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 1,
+    "model": "raw-linear",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.66,
+    "macro_f1": 0.6455239256787244
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 1,
+    "model": "quadratic-classical",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.64,
+    "macro_f1": 0.625101026222846
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 1,
+    "model": "parameter-matched",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.57,
+    "macro_f1": 0.5538172704488495
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 2,
+    "model": "HVK2D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.62,
+    "macro_f1": 0.6154451534018097
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 2,
+    "model": "no-entanglement",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.62,
+    "macro_f1": 0.6168353267109492
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 2,
+    "model": "local-only",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.61,
+    "macro_f1": 0.6043507119927229
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 2,
+    "model": "raw-linear",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.64,
+    "macro_f1": 0.636392748903181
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 2,
+    "model": "quadratic-classical",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.65,
+    "macro_f1": 0.643144760296463
+  },
+  {
+    "dataset": "mnist",
+    "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+    "seed": 2,
+    "model": "parameter-matched",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.66,
+    "macro_f1": 0.6651577288567462
+  }
+]

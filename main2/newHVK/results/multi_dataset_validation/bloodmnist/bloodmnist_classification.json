@@ -1,0 +1,182 @@
+[
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 0,
+    "model": "HVK2D-pair-observable",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.4666666666666667,
+    "macro_f1": 0.4804678362573099
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 0,
+    "model": "no-entanglement",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.45,
+    "macro_f1": 0.46522556390977443
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 0,
+    "model": "local-only",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.5166666666666667,
+    "macro_f1": 0.5207602339181286
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 0,
+    "model": "raw-linear",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.6,
+    "macro_f1": 0.6099073441178704
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 0,
+    "model": "quadratic-classical",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.45,
+    "macro_f1": 0.46306739069896957
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 0,
+    "model": "parameter-matched",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.65,
+    "macro_f1": 0.6468040467232822
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 1,
+    "model": "HVK2D-pair-observable",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.5833333333333334,
+    "macro_f1": 0.5854775828460039
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 1,
+    "model": "no-entanglement",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.5,
+    "macro_f1": 0.5014924352654869
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 1,
+    "model": "local-only",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.6166666666666667,
+    "macro_f1": 0.6207147593336851
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 1,
+    "model": "raw-linear",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.7833333333333333,
+    "macro_f1": 0.7825624667729931
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 1,
+    "model": "quadratic-classical",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.5,
+    "macro_f1": 0.4989766081871345
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 1,
+    "model": "parameter-matched",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.65,
+    "macro_f1": 0.6351780967570441
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 2,
+    "model": "HVK2D-pair-observable",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.5666666666666667,
+    "macro_f1": 0.5461490550499838
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 2,
+    "model": "no-entanglement",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.55,
+    "macro_f1": 0.5521645021645022
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 2,
+    "model": "local-only",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.5833333333333334,
+    "macro_f1": 0.5746654217242452
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 2,
+    "model": "raw-linear",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.6166666666666667,
+    "macro_f1": 0.6121411483253588
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 2,
+    "model": "quadratic-classical",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.55,
+    "macro_f1": 0.5419095123429488
+  },
+  {
+    "dataset": "bloodmnist",
+    "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+    "seed": 2,
+    "model": "parameter-matched",
+    "n_train": 120,
+    "n_test": 60,
+    "accuracy": 0.5833333333333334,
+    "macro_f1": 0.5804922935357718
+  }
+]

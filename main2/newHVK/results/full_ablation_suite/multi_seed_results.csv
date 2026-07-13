@@ -1,0 +1,36 @@
+experiment,model,seed,mse,psnr,r2,notes
+baseline,HVK2D-entangling-observables,0,0.0010404747392990176,29.827684591488627,0.9662534951800962,Pairwise observable channel contains explicit two-site correlations.
+component-ablation,no-entanglement,0,0.03174849071395563,14.98276915732027,-0.02972283173832002,Only single-site nonlinear channels are available.
+component-ablation,parameter-matched-classical,0,0.03213876323134888,14.929708398357494,-0.04238083571654272,Small rank-limited tanh control with restricted nonlinear budget.
+component-ablation,raw-linear-classical,0,0.031992859622689614,14.949469395704886,-0.037648633533356346,Linear readout from raw coordinates.
+component-ablation,random-vqc,0,0.037266900182159224,14.28676729858736,-0.20870558324884603,Random latent vectors with no stable input-observable alignment.
+component-ablation,freeze-quantum,0,0.0010404747200361015,29.827684671892097,0.966253495804865,Frozen pair-correlator basis with random channel scaling and masking.
+component-ablation,freeze-classical,0,0.05517578425343986,12.582514851799774,-0.7895579766839214,Quantum-like features are present but the classical readout is frozen.
+baseline,HVK2D-entangling-observables,1,0.0005757545953604451,32.39762587047241,0.9820037153125385,Pairwise observable channel contains explicit two-site correlations.
+component-ablation,no-entanglement,1,0.02982707917123087,15.253892730182312,0.06769895978879448,Only single-site nonlinear channels are available.
+component-ablation,parameter-matched-classical,1,0.03245745934614674,14.886854781984056,-0.014518482929844811,Small rank-limited tanh control with restricted nonlinear budget.
+component-ablation,raw-linear-classical,1,0.03050150369976529,15.15678749754432,0.04661856214452709,Linear readout from raw coordinates.
+component-ablation,random-vqc,1,0.035445356196851234,14.504406549855373,-0.10791077675667049,Random latent vectors with no stable input-observable alignment.
+component-ablation,freeze-quantum,1,0.006977917801295617,21.562741507741208,0.781892152855149,Frozen pair-correlator basis with random channel scaling and masking.
+component-ablation,freeze-classical,1,0.06813946484958204,11.66601281595646,-1.1298261755369414,Quantum-like features are present but the classical readout is frozen.
+baseline,HVK2D-entangling-observables,2,4.68142922615586e-05,43.29621537893065,0.998505109773699,Pairwise observable channel contains explicit two-site correlations.
+component-ablation,no-entanglement,2,0.029248313464020875,15.338991714411671,0.06603270452393595,Only single-site nonlinear channels are available.
+component-ablation,parameter-matched-classical,2,0.031132543433740726,15.067853973349514,0.0058648192529106025,Small rank-limited tanh control with restricted nonlinear budget.
+component-ablation,raw-linear-classical,2,0.02902130410129755,15.372830760033104,0.07328164627270584,Linear readout from raw coordinates.
+component-ablation,random-vqc,2,0.03627183825329299,14.404304338590153,-0.15824492639707022,Random latent vectors with no stable input-observable alignment.
+component-ablation,freeze-quantum,2,4.681431291709155e-05,43.296213462724815,0.9985051091141193,Frozen pair-correlator basis with random channel scaling and masking.
+component-ablation,freeze-classical,2,0.06547497945631212,11.839246291686592,-1.09076976555885,Quantum-like features are present but the classical readout is frozen.
+baseline,HVK2D-entangling-observables,3,0.0018400303264292015,27.351750191142017,0.9452634763270533,Pairwise observable channel contains explicit two-site correlations.
+component-ablation,no-entanglement,3,0.03374156487966435,14.718347793982565,-0.003731263702666743,Only single-site nonlinear channels are available.
+component-ablation,parameter-matched-classical,3,0.03588254518809165,14.45116759553797,-0.06742033319912677,Small rank-limited tanh control with restricted nonlinear budget.
+component-ablation,raw-linear-classical,3,0.03489629190865944,14.572207188621832,-0.03808164502547884,Linear readout from raw coordinates.
+component-ablation,random-vqc,3,0.03892000350520545,14.098271292903426,-0.15777749019388954,Random latent vectors with no stable input-observable alignment.
+component-ablation,freeze-quantum,3,0.007913256786480112,21.016447411166858,0.7645994409973436,Frozen pair-correlator basis with random channel scaling and masking.
+component-ablation,freeze-classical,3,0.06387003522380547,11.947028443320711,-0.8999815626975101,Quantum-like features are present but the classical readout is frozen.
+baseline,HVK2D-entangling-observables,4,0.0007953591933171408,30.9943669468246,0.9755866956745709,Pairwise observable channel contains explicit two-site correlations.
+component-ablation,no-entanglement,4,0.032741731965436886,14.848983510958146,-0.0049973311808009235,Only single-site nonlinear channels are available.
+component-ablation,parameter-matched-classical,4,0.033555644750327705,14.742344120758402,-0.029980132258419223,Small rank-limited tanh control with restricted nonlinear budget.
+component-ablation,raw-linear-classical,4,0.03185946204731014,14.967615616126388,0.022083670949278433,Linear readout from raw coordinates.
+component-ablation,random-vqc,4,0.040177168509215176,13.960206734651726,-0.23322575509403998,Random latent vectors with no stable input-observable alignment.
+component-ablation,freeze-quantum,4,0.007973456072626292,20.983533940453416,0.7552572331318378,Frozen pair-correlator basis with random channel scaling and masking.
+component-ablation,freeze-classical,4,0.05220370754429112,12.822986520006474,-0.6023766493213842,Quantum-like features are present but the classical readout is frozen.

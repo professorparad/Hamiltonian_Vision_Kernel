@@ -44,3 +44,28 @@ def extract_mps_features(patch: np.ndarray, n_sites: int = 12, bond_dim: int = 4
         entropy = -np.sum(probabilities * np.log(probabilities + 1e-8))
         features.append(float(entropy))
     return np.array(features, dtype=np.float32)
+
+
+def extract_patch_statistics_features(
+    patch: np.ndarray,
+    feature_dim: int = 46,
+) -> np.ndarray:
+    flat = patch.astype(np.float32).reshape(-1)
+    percentiles = np.percentile(flat, [5, 10, 25, 50, 75, 90, 95])
+    hist_bins = max(feature_dim - 11, 1)
+    hist, _ = np.histogram(flat, bins=hist_bins, range=(0.0, 1.0))
+    hist = hist.astype(np.float32) / (hist.sum() + 1e-8)
+    stats = np.array(
+        [
+            flat.mean(),
+            flat.std(),
+            flat.min(),
+            flat.max(),
+            *percentiles,
+        ],
+        dtype=np.float32,
+    )
+    features = np.concatenate([stats, hist]).astype(np.float32)
+    if features.size < feature_dim:
+        features = np.pad(features, (0, feature_dim - features.size))
+    return features[:feature_dim]

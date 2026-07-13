@@ -1,0 +1,30 @@
+[
+  {
+    "model": "HVK2D-entangling-observables",
+    "mse": 0.0019386712705805088,
+    "psnr": 27.124958255144843,
+    "r2": 0.9421463496967364,
+    "notes": "Pairwise observable channel includes entanglement-sensitive correlations."
+  },
+  {
+    "model": "HVK2D-no-entanglement",
+    "mse": 0.032118306547965166,
+    "psnr": 14.93247361159932,
+    "r2": 0.04152844086733798,
+    "notes": "Only single-site feature functions; pair correlations are unavailable."
+  },
+  {
+    "model": "parameter-matched-classical",
+    "mse": 0.03465453738779275,
+    "psnr": 14.602398942853585,
+    "r2": -0.03415752731219812,
+    "notes": "Tiny rank-limited tanh control with fewer nonlinear channels."
+  },
+  {
+    "model": "raw-linear-classical",
+    "mse": 0.033344914806577794,
+    "psnr": 14.769703878293864,
+    "r2": 0.004924109679399713,
+    "notes": "Linear classical baseline on raw coordinates."
+  }
+]

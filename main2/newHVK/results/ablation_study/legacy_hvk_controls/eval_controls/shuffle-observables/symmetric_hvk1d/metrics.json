@@ -1,0 +1,62 @@
+{
+  "final_total_loss": -0.054515112191438675,
+  "final_reconstruction_loss": 0.00010626277071423829,
+  "final_energy_loss": -5.462137699127197,
+  "mean_energy": -5.490649223327637,
+  "std_energy": 0.934569776058197,
+  "phase_transition": {
+    "detected": true,
+    "critical_epoch": 6,
+    "max_susceptibility": 0.0047491248697042465,
+    "order_parameter_jump": 0.0047491248697042465,
+    "susceptibility_baseline": 0.00027355318889021873,
+    "susceptibility_spread": 0.0007768971263431013,
+    "susceptibility_threshold": 0.0018273474415764213,
+    "proof": "Phase transition at epoch 6: susceptibility peak 0.004749 exceeds threshold 0.001827 (median 0.000274 + 2*std 0.000777); order-parameter jump 0.004749."
+  },
+  "media": {
+    "order_parameter_curve": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shuffle-observables/symmetric_hvk1d/hvk_order_parameter_curve.png",
+    "phase_transition_epoch_vs_order_parameter_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shuffle-observables/symmetric_hvk1d/phase_transition_epoch_vs_order_parameter.gif",
+    "phase_transition_order_parameter_reconstruction_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shuffle-observables/symmetric_hvk1d/phase_transition_order_parameter_reconstruction.gif",
+    "order_parameter_phase_transition_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shuffle-observables/symmetric_hvk1d/hvk_order_parameter_phase_transition.gif",
+    "reconstruction_phase_transition_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shuffle-observables/symmetric_hvk1d/hvk_reconstruction_phase_transition.gif"
+  },
+  "model_variant": "symmetric",
+  "ablation_mode": "baseline",
+  "comparison_metrics": {
+    "quantum_reconstruction": {
+      "mse": 0.0005269577377475798,
+      "psnr": 32.78224214007585,
+      "ssim": 0.9928916371716643
+    },
+    "mps_baseline": {
+      "mse": 0.002155316760763526,
+      "psnr": 26.664888937899136,
+      "ssim": 0.9703435390081457
+    },
+    "random_latent": {
+      "mse": 0.08187621831893921,
+      "psnr": 10.8684222464589,
+      "ssim": 0.1195971085196362
+    },
+    "zero_latent": {
+      "mse": 0.038109198212623596,
+      "psnr": 14.18970188343977,
+      "ssim": 0.07991085223019853
+    },
+    "shuffled_observables": {
+      "mse": 0.01228603906929493,
+      "psnr": 19.10588107968741,
+      "ssim": 0.8180105723836874
+    }
+  },
+  "reconstruction_metrics": {
+    "mse": 0.0005269577377475798,
+    "psnr": 32.78224214007585,
+    "ssim": 0.9928916371716643
+  },
+  "mse": 0.0005269577377475798,
+  "psnr": 32.78224214007585,
+  "ssim": 0.9928916371716643,
+  "metric_note": "MSE, PSNR, and SSIM are computed against Main/data/monalisa.jpg."
+}

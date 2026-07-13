@@ -1,0 +1,56 @@
+[
+  {
+    "seed": 0,
+    "model": "hvk1d-chain-matched",
+    "mse": 0.017193689733264753,
+    "psnr": 17.646309145377895,
+    "r2": 0.7401202391819652,
+    "feature_dim": 32,
+    "pair_channels": 6
+  },
+  {
+    "seed": 0,
+    "model": "hvk2d-grid-matched",
+    "mse": 0.017929582481391322,
+    "psnr": 17.464298235520978,
+    "r2": 0.7289973426811136,
+    "feature_dim": 32,
+    "pair_channels": 6
+  },
+  {
+    "seed": 1,
+    "model": "hvk1d-chain-matched",
+    "mse": 0.021987238755713824,
+    "psnr": 16.57829307631171,
+    "r2": 0.5351826890898598,
+    "feature_dim": 32,
+    "pair_channels": 6
+  },
+  {
+    "seed": 1,
+    "model": "hvk2d-grid-matched",
+    "mse": 0.02077642852989891,
+    "psnr": 16.82429105626968,
+    "r2": 0.5607796073495268,
+    "feature_dim": 32,
+    "pair_channels": 6
+  },
+  {
+    "seed": 2,
+    "model": "hvk1d-chain-matched",
+    "mse": 0.015741532955596414,
+    "psnr": 18.029529770761314,
+    "r2": 0.7225455445134796,
+    "feature_dim": 32,
+    "pair_channels": 6
+  },
+  {
+    "seed": 2,
+    "model": "hvk2d-grid-matched",
+    "mse": 0.015358702682625631,
+    "psnr": 18.136454666984946,
+    "r2": 0.7292931697435308,
+    "feature_dim": 32,
+    "pair_channels": 6
+  }
+]

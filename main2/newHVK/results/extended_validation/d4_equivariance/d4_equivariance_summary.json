@@ -1,0 +1,26 @@
+[
+  {
+    "model": "D4-pooled-HVK2D",
+    "n": 7000,
+    "mean_equivariance_error": 9.573879468686641e-17,
+    "std_equivariance_error": 1.2594232983952715e-17
+  },
+  {
+    "model": "no-positional",
+    "n": 7000,
+    "mean_equivariance_error": 0.7400693211869104,
+    "std_equivariance_error": 0.15198944262994848
+  },
+  {
+    "model": "HVK2D-positional",
+    "n": 7000,
+    "mean_equivariance_error": 0.8152661515657417,
+    "std_equivariance_error": 0.12887450585275365
+  },
+  {
+    "model": "local-raw",
+    "n": 7000,
+    "mean_equivariance_error": 0.8366394034685322,
+    "std_equivariance_error": 0.13135806410156628
+  }
+]

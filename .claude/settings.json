@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat eval_controls/shuffle-observables/shuffle_eval_summary.json)",
+      "Bash(cat eval_controls/zero-latent-positions/zero_latent_eval_summary.json)",
+      "Bash(cat eval_controls/shuffle-observables/hvk1d_standard_vs_symmetric_metrics.json)",
+      "Bash(cat freeze_controls/freeze-quantum/INTERPRETATION.md)",
+      "Bash(cat vqc_replacements/classical-replacement/INTERPRETATION.md)",
+      "Bash(git commit -m ' *)",
+      "Bash(git commit --amend -m ' *)"
+    ]
+  }
+}

@@ -1,6 +1,8 @@
 import argparse
+import math
 import json
 import os
+import random
 import shutil
 import sys
 from pathlib import Path
@@ -17,8 +19,8 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pennylane as qml
 import torch
+import torch.nn.functional as F
 import torch.optim as optim
 
 from src.decoder.patch_decoder import PatchDecoder
@@ -30,10 +32,14 @@ from src.quantum.quantum_model import QuantumModel
 from src.quantum.symmetric_model import SymmetricQuantumModel
 from src.reconstruction.patch_stitching import stictch_patches
 from src.reconstruction.seam_bleading import blend_seams
-from src.tensornetworks.mps_features import extract_mps_features
+from src.tensornetworks.mps_features import (
+    extract_mps_features,
+    extract_patch_statistics_features,
+)
 from src.tensornetworks.mps_reconstruction import mps_reconstruct
 from src.training.data_generator import TrainingDataGenerator
 from src.training.order_parameters import detect_phase_transition
+from src.training.order_parameters import observable_slices
 from src.training.phase_media import (
     save_epoch_frame,
     save_frames_as_gif,
@@ -52,29 +58,17 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "outputs" / "training_analysis"
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "src" / "config" / "training_config.json"
 
 
-def quantum_cuda_available() -> bool:
-    if not torch.cuda.is_available():
-        return False
-    try:
-        qml.device("lightning.gpu", wires=1)
-    except Exception:
-        return False
-    return True
+def seed_everything(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
 
-def resolve_device(device_name: str = "auto", *, requires_quantum: bool = False) -> torch.device:
+def resolve_device(device_name: str = "auto") -> torch.device:
     if device_name == "auto":
-        if requires_quantum and not quantum_cuda_available():
-            return torch.device("cpu")
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    if device_name == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("CUDA was requested, but torch.cuda.is_available() is False.")
-    if device_name == "cuda" and requires_quantum and not quantum_cuda_available():
-        raise RuntimeError(
-            "CUDA was requested for an HVK quantum model, but pennylane-lightning-gpu "
-            "is not installed. Install that backend to run PennyLane quantum circuits on CUDA, "
-            "or use --device auto/--device cpu for this method."
-        )
     return torch.device(device_name)
 
 
@@ -84,6 +78,8 @@ def build_dataset(
     patch_size: int = 64,
     positional_dim: int = 8,
     device: torch.device | str = "auto",
+    feature_mode: str = "mps",
+    mps_bond_dim: int = 4,
 ):
     device = resolve_device(device) if isinstance(device, str) else device
     image = load_image_grayscale(str(image_path), size=(image_size, image_size))
@@ -91,7 +87,14 @@ def build_dataset(
     patches, positions = extract_patches(image, patch_size=patch_size)
     raw_positions = positions.copy()
 
-    features = np.array([extract_mps_features(p) for p in patches])
+    if feature_mode == "mps":
+        features = np.array(
+            [extract_mps_features(p, bond_dim=mps_bond_dim) for p in patches]
+        )
+    elif feature_mode == "patch-statistics":
+        features = np.array([extract_patch_statistics_features(p) for p in patches])
+    else:
+        raise ValueError("feature_mode must be 'mps' or 'patch-statistics'")
 
     features = torch.tensor(features, dtype=torch.float32)
 
@@ -115,6 +118,7 @@ def build_dataset(
 
 def train(
     image_path: str | Path = DEFAULT_IMAGE_PATH,
+    train_image_paths: list[str | Path] | None = None,
     image_size: int = 256,
     patch_size: int = 64,
     positional_dim: int = 8,
@@ -128,18 +132,54 @@ def train(
     save_epoch_media: bool = True,
     epoch_frame_interval: int = 1,
     zero_latent_uses_positions: bool = False,
+    shuffle_observables_at_eval: bool = False,
     model_variant: str = "standard",
+    ablation_mode: str = "baseline",
+    seed: int = 42,
+    checkpoint_dir: str | Path | None = None,
+    eval_only_image: str | Path | None = None,
+    mps_bond_dim: int = 4,
+    qubit_count: int = 6,
+    observable_set: str = "full",
+    energy_loss_mode: str = "linear",
+    energy_weight: float = 0.01,
+    energy_margin: float = 0.25,
     log_prefix: str = "",
 ):
-    device = resolve_device(device, requires_quantum=True) if isinstance(device, str) else device
+    device = resolve_device(device) if isinstance(device, str) else device
+    seed_everything(seed)
+    feature_mode = "patch-statistics" if ablation_mode == "no-mps" else "mps"
+    dataset_image_path = eval_only_image if eval_only_image is not None else image_path
 
     (image, patches, raw_positions, features, positions, targets) = build_dataset(
-        image_path=image_path,
+        image_path=dataset_image_path,
         image_size=image_size,
         patch_size=patch_size,
         positional_dim=positional_dim,
         device=device,
+        feature_mode=feature_mode,
+        mps_bond_dim=mps_bond_dim,
     )
+    if train_image_paths:
+        train_datasets = [
+            build_dataset(
+                image_path=path,
+                image_size=image_size,
+                patch_size=patch_size,
+                positional_dim=positional_dim,
+                device=device,
+                feature_mode=feature_mode,
+                mps_bond_dim=mps_bond_dim,
+            )
+            for path in train_image_paths
+        ]
+        train_features = torch.cat([dataset[3] for dataset in train_datasets], dim=0)
+        train_positions = torch.cat([dataset[4] for dataset in train_datasets], dim=0)
+        train_targets = torch.cat([dataset[5] for dataset in train_datasets], dim=0)
+    else:
+        train_features = features
+        train_positions = positions
+        train_targets = targets
 
     model_classes = {
         "standard": QuantumModel,
@@ -149,17 +189,96 @@ def train(
         raise ValueError(
             f"Unknown model_variant '{model_variant}'. Use one of: {sorted(model_classes)}"
         )
-    model = model_classes[model_variant](
-        feature_dim=features.shape[1], positional_dim=positions.shape[1]
-    ).to(device)
+    valid_ablation_modes = {
+        "baseline",
+        "freeze-classical",
+        "freeze-quantum",
+        "classical-replacement",
+        "classical-matched",
+        "random-vqc",
+        "no-entanglement",
+        "no-energy-loss",
+        "no-obs-noise",
+        "no-mps",
+        "zz-only",
+    }
+    if ablation_mode not in valid_ablation_modes:
+        raise ValueError(
+            f"Unknown ablation_mode '{ablation_mode}'. "
+            f"Use one of: {sorted(valid_ablation_modes)}"
+        )
+    valid_energy_loss_modes = {"linear", "positive", "contrastive"}
+    if energy_loss_mode not in valid_energy_loss_modes:
+        raise ValueError(
+            f"Unknown energy_loss_mode '{energy_loss_mode}'. "
+            f"Use one of: {sorted(valid_energy_loss_modes)}"
+        )
+    if (
+        ablation_mode in {"classical-replacement", "classical-matched"}
+        and model_variant != "standard"
+    ):
+        raise ValueError(
+            f"{ablation_mode} is only available for the standard model."
+        )
+
+    model_kwargs = {
+        "feature_dim": train_features.shape[1],
+        "positional_dim": train_positions.shape[1],
+    }
+    if model_variant == "standard":
+        model_kwargs["qubit_count"] = qubit_count
+        model_kwargs["observable_set"] = (
+            "zz-only" if ablation_mode == "zz-only" else observable_set
+        )
+        model_kwargs["use_classical_replacement"] = (
+            ablation_mode == "classical-replacement"
+        )
+        model_kwargs["use_parameter_matched_classical"] = (
+            ablation_mode == "classical-matched"
+        )
+        model_kwargs["vqc_mode"] = {
+            "random-vqc": "random",
+            "no-entanglement": "no-entanglement",
+        }.get(ablation_mode, "standard")
+        model_kwargs["observable_noise"] = ablation_mode != "no-obs-noise"
+    model = model_classes[model_variant](**model_kwargs).to(device)
 
     decoder = PatchDecoder(
-        observable_dim=observable_dim,
+        observable_dim=model.observable_dim,
         positional_dim=positions.shape[1],
         patch_size=patch_size,
     ).to(device)
 
-    optimizer = optim.Adam(list(model.parameters()) + list(decoder.parameters()), lr=lr)
+    if ablation_mode == "freeze-classical":
+        for param in decoder.parameters():
+            param.requires_grad_(False)
+        model.feature_projection.requires_grad_(False)
+        model.position_projection.requires_grad_(False)
+    elif ablation_mode == "freeze-quantum":
+        for parameter_name in ("weights", "Jx", "Jy", "Jz"):
+            parameter = getattr(model, parameter_name, None)
+            if parameter is not None:
+                parameter.requires_grad_(False)
+
+    trainable_parameters = [
+        p
+        for p in list(model.parameters()) + list(decoder.parameters())
+        if p.requires_grad
+    ]
+    if not trainable_parameters:
+        raise ValueError(f"Ablation mode '{ablation_mode}' left no trainable parameters.")
+    optimizer = optim.Adam(trainable_parameters, lr=lr)
+    checkpoint_dir = Path(checkpoint_dir) if checkpoint_dir is not None else None
+    if eval_only_image is not None:
+        if checkpoint_dir is None:
+            raise ValueError("--eval-only-image requires --checkpoint-dir")
+        model.load_state_dict(
+            torch.load(checkpoint_dir / "model.pt", map_location=device)
+        )
+        decoder.load_state_dict(
+            torch.load(checkpoint_dir / "decoder.pt", map_location=device)
+        )
+        steps = 0
 
     total_losses = []
     reconstruction_losses = []
@@ -181,15 +300,29 @@ def train(
 
         optimizer.zero_grad()
 
-        observables, energies = model(features, positions)
+        observables, energies = model(train_features, train_positions)
 
-        output = decoder(observables, positions)
+        output = decoder(observables, train_positions)
 
-        reconstruction_loss = torch.mean((output - targets) ** 2)
+        reconstruction_loss = torch.mean((output - train_targets) ** 2)
 
-        energy_loss = torch.mean(energies)
+        if energy_loss_mode == "linear":
+            energy_loss = torch.mean(energies)
+        elif energy_loss_mode == "positive":
+            energy_loss = torch.mean(energies.square())
+        else:
+            permutation = torch.randperm(
+                train_positions.shape[0], device=train_positions.device
+            )
+            _, negative_energies = model(train_features, train_positions[permutation])
+            energy_loss = F.softplus(
+                energies - negative_energies + energy_margin
+            ).mean()
 
-        loss = reconstruction_loss + 0.01 * energy_loss
+        if ablation_mode == "no-energy-loss":
+            loss = reconstruction_loss
+        else:
+            loss = reconstruction_loss + energy_weight * energy_loss
 
         loss.backward()
 
@@ -270,6 +403,21 @@ def train(
 
         pred = decoder(observables, positions).cpu().numpy()
 
+        shuffled_pred = None
+        shuffle_metadata = None
+        if shuffle_observables_at_eval:
+            perm = torch.randperm(observables.shape[0], device=observables.device)
+            identity = torch.arange(observables.shape[0], device=observables.device)
+            fixed_points = int(torch.sum(perm == identity).item())
+            shuffle_metadata = {
+                "permutation": perm.detach().cpu().tolist(),
+                "num_observables": int(observables.shape[0]),
+                "fixed_points": fixed_points,
+                "changed_points": int(observables.shape[0] - fixed_points),
+                "is_identity": bool(fixed_points == observables.shape[0]),
+            }
+            shuffled_pred = decoder(observables[perm], positions).cpu().numpy()
+
         zero_positions = (
             positions if zero_latent_uses_positions else torch.zeros_like(positions)
         )
@@ -300,11 +448,28 @@ def train(
         patch_size=patch_size,
     )
 
+    img_shuffled = None
+    if shuffled_pred is not None:
+        img_shuffled = blend_seams(
+            stictch_patches(shuffled_pred, image_size=image_size, patch_size=patch_size),
+            patch_size=patch_size,
+        )
+
     history = {
         "total_loss": total_losses,
         "reconstruction_loss": reconstruction_losses,
         "energy_loss": energy_losses,
     }
+    comparison_metrics = {
+        "quantum_reconstruction": compute_image_metrics(img_rec, image),
+        "mps_baseline": compute_image_metrics(img_mps, image),
+        "random_latent": compute_image_metrics(img_random, image),
+        "zero_latent": compute_image_metrics(img_zero, image),
+    }
+    if img_shuffled is not None:
+        comparison_metrics["shuffled_observables"] = compute_image_metrics(
+            img_shuffled, image
+        )
 
     outputs = {
         "original": image,
@@ -312,10 +477,13 @@ def train(
         "mps_baseline": img_mps,
         "random_latent": img_random,
         "zero_latent": img_zero,
+        "shuffled_observables": img_shuffled,
         "observables": observables.cpu().numpy(),
         "energies": energies.cpu().numpy(),
         "positions": raw_positions,
         "history": history,
+        "comparison_metrics": comparison_metrics,
+        "reconstruction_metrics": comparison_metrics["quantum_reconstruction"],
         "media": {},
         "epoch_order_parameters": data_generator.epoch_rows if data_generator else [],
         "phase_transition": (
@@ -324,6 +492,21 @@ def train(
             else detect_phase_transition([])
         ),
         "model_variant": model_variant,
+        "ablation_mode": ablation_mode,
+        "seed": seed,
+        "feature_mode": feature_mode,
+        "mps_bond_dim": mps_bond_dim,
+        "qubit_count": qubit_count,
+        "observable_set": getattr(model, "observable_set", "full"),
+        "energy_loss_mode": energy_loss_mode,
+        "energy_weight": energy_weight,
+        "energy_margin": energy_margin,
+        "eval_only_image": str(eval_only_image) if eval_only_image is not None else None,
+        "train_image_paths": (
+            [str(path) for path in train_image_paths] if train_image_paths else None
+        ),
+        "zero_latent_uses_positions": zero_latent_uses_positions,
+        "shuffle_metadata": shuffle_metadata,
     }
 
     if save_outputs and output_dir is not None:
@@ -336,6 +519,10 @@ def train(
             data_generator=data_generator,
             epoch_frame_paths=epoch_frame_paths,
             save_epoch_media=save_epoch_media,
+            model=model,
+            decoder=decoder,
+            seed=seed,
+            eval_target=image,
         )
 
     if show_plots:
@@ -368,6 +555,37 @@ def get_entropy_features(features: torch.Tensor) -> np.ndarray:
     return feature_array
 
 
+def mse(prediction: np.ndarray, target: np.ndarray) -> float:
+    return float(np.mean((prediction - target) ** 2))
+
+
+def psnr_from_mse(value: float) -> float:
+    if value <= 1e-12:
+        return float("inf")
+    return 20.0 * math.log10(1.0 / math.sqrt(value))
+
+
+def simple_ssim(prediction: np.ndarray, target: np.ndarray) -> float:
+    x = prediction.astype(np.float64)
+    y = target.astype(np.float64)
+    c1, c2 = 0.01**2, 0.03**2
+    mu_x, mu_y = float(x.mean()), float(y.mean())
+    var_x, var_y = float(x.var()), float(y.var())
+    cov = float(((x - mu_x) * (y - mu_y)).mean())
+    numerator = (2.0 * mu_x * mu_y + c1) * (2.0 * cov + c2)
+    denominator = (mu_x**2 + mu_y**2 + c1) * (var_x + var_y + c2)
+    return float(numerator / denominator)
+
+
+def compute_image_metrics(prediction: np.ndarray, target: np.ndarray) -> dict:
+    value = mse(prediction, target)
+    return {
+        "mse": value,
+        "psnr": psnr_from_mse(value),
+        "ssim": simple_ssim(prediction, target),
+    }
+
+
 def save_analysis_outputs(
     outputs: dict,
     features: torch.Tensor,
@@ -377,6 +595,10 @@ def save_analysis_outputs(
     data_generator: TrainingDataGenerator | None = None,
     epoch_frame_paths: list[Path] | None = None,
     save_epoch_media: bool = True,
+    model: torch.nn.Module | None = None,
+    decoder: torch.nn.Module | None = None,
+    seed: int | None = None,
+    eval_target: np.ndarray | None = None,
 ):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -440,21 +662,133 @@ def save_analysis_outputs(
         output_dir / "quantum_reconstruction.npy", outputs["quantum_reconstruction"]
     )
     np.save(output_dir / "mps_baseline.npy", outputs["mps_baseline"])
+    np.save(output_dir / "random_latent.npy", outputs["random_latent"])
+    np.save(output_dir / "zero_latent.npy", outputs["zero_latent"])
     np.save(output_dir / "observables.npy", outputs["observables"])
+    if outputs.get("shuffled_observables") is not None:
+        np.save(output_dir / "shuffled_observables.npy", outputs["shuffled_observables"])
 
+    target = outputs["original"] if eval_target is None else eval_target
+    reconstruction_metrics = compute_image_metrics(
+        outputs["quantum_reconstruction"], target
+    )
+    comparison_metrics = {
+        "quantum_reconstruction": reconstruction_metrics,
+        "mps_baseline": compute_image_metrics(outputs["mps_baseline"], target),
+        "random_latent": compute_image_metrics(outputs["random_latent"], target),
+        "zero_latent": compute_image_metrics(outputs["zero_latent"], target),
+    }
+    if outputs.get("shuffled_observables") is not None:
+        comparison_metrics["shuffled_observables"] = compute_image_metrics(
+            outputs["shuffled_observables"], target
+        )
+    total_history = outputs["history"]["total_loss"]
+    reconstruction_history = outputs["history"]["reconstruction_loss"]
+    energy_history = outputs["history"]["energy_loss"]
     metrics = {
-        "final_total_loss": outputs["history"]["total_loss"][-1],
-        "final_reconstruction_loss": outputs["history"]["reconstruction_loss"][-1],
-        "final_energy_loss": outputs["history"]["energy_loss"][-1],
+        "final_total_loss": total_history[-1] if total_history else None,
+        "final_reconstruction_loss": (
+            reconstruction_history[-1] if reconstruction_history else None
+        ),
+        "final_energy_loss": energy_history[-1] if energy_history else None,
+        "reconstruction_metrics": reconstruction_metrics,
+        "comparison_metrics": comparison_metrics,
+        "mse": reconstruction_metrics["mse"],
+        "psnr": reconstruction_metrics["psnr"],
+        "ssim": reconstruction_metrics["ssim"],
         "mean_energy": float(np.mean(outputs["energies"])),
         "std_energy": float(np.std(outputs["energies"])),
         "phase_transition": outputs["phase_transition"],
         "media": outputs.get("media", {}),
         "model_variant": outputs.get("model_variant", "standard"),
+        "ablation_mode": outputs.get("ablation_mode", "baseline"),
+        "feature_mode": outputs.get("feature_mode", "mps"),
+        "mps_bond_dim": outputs.get("mps_bond_dim"),
+        "qubit_count": outputs.get("qubit_count"),
+        "observable_set": outputs.get("observable_set"),
+        "energy_loss_mode": outputs.get("energy_loss_mode", "linear"),
+        "energy_weight": outputs.get("energy_weight"),
+        "energy_margin": outputs.get("energy_margin"),
+        "seed": outputs.get("seed", seed),
+        "eval_only_image": outputs.get("eval_only_image"),
+        "train_image_paths": outputs.get("train_image_paths"),
     }
     (output_dir / "metrics.json").write_text(
         json.dumps(metrics, indent=2), encoding="utf-8"
     )
+    if outputs.get("shuffled_observables") is not None:
+        shuffled_summary = {
+            "normal_mse_vs_original": comparison_metrics[
+                "quantum_reconstruction"
+            ]["mse"],
+            "normal_psnr_vs_original": comparison_metrics[
+                "quantum_reconstruction"
+            ]["psnr"],
+            "normal_ssim_vs_original": comparison_metrics[
+                "quantum_reconstruction"
+            ]["ssim"],
+            "shuffled_mse_vs_original": comparison_metrics[
+                "shuffled_observables"
+            ]["mse"],
+            "shuffled_psnr_vs_original": comparison_metrics[
+                "shuffled_observables"
+            ]["psnr"],
+            "shuffled_ssim_vs_original": comparison_metrics[
+                "shuffled_observables"
+            ]["ssim"],
+            "shuffled_mse_vs_normal": mse(
+                outputs["shuffled_observables"],
+                outputs["quantum_reconstruction"],
+            ),
+            "normal_shape": list(outputs["quantum_reconstruction"].shape),
+            "shuffled_shape": list(outputs["shuffled_observables"].shape),
+            "shuffle_metadata": outputs.get("shuffle_metadata"),
+        }
+        (output_dir / "shuffle_eval_summary.json").write_text(
+            json.dumps(shuffled_summary, indent=2), encoding="utf-8"
+        )
+    if outputs.get("zero_latent_uses_positions"):
+        zero_summary = {
+            "normal_mse_vs_original": comparison_metrics[
+                "quantum_reconstruction"
+            ]["mse"],
+            "normal_psnr_vs_original": comparison_metrics[
+                "quantum_reconstruction"
+            ]["psnr"],
+            "normal_ssim_vs_original": comparison_metrics[
+                "quantum_reconstruction"
+            ]["ssim"],
+            "zero_latent_mse_vs_original": comparison_metrics["zero_latent"][
+                "mse"
+            ],
+            "zero_latent_psnr_vs_original": comparison_metrics["zero_latent"][
+                "psnr"
+            ],
+            "zero_latent_ssim_vs_original": comparison_metrics["zero_latent"][
+                "ssim"
+            ],
+            "zero_latent_mse_vs_normal": mse(
+                outputs["zero_latent"],
+                outputs["quantum_reconstruction"],
+            ),
+            "random_latent_mse_vs_original": comparison_metrics[
+                "random_latent"
+            ]["mse"],
+            "random_latent_psnr_vs_original": comparison_metrics[
+                "random_latent"
+            ]["psnr"],
+            "random_latent_ssim_vs_original": comparison_metrics[
+                "random_latent"
+            ]["ssim"],
+            "normal_shape": list(outputs["quantum_reconstruction"].shape),
+            "zero_latent_shape": list(outputs["zero_latent"].shape),
+        }
+        (output_dir / "zero_latent_eval_summary.json").write_text(
+            json.dumps(zero_summary, indent=2), encoding="utf-8"
+        )
+    if model is not None and decoder is not None:
+        torch.save(model.state_dict(), output_dir / "model.pt")
+        torch.save(decoder.state_dict(), output_dir / "decoder.pt")
 
     return metrics
 
@@ -467,6 +801,8 @@ def save_reconstruction_plot(outputs: dict, output_path: Path):
         ("Random Latent", outputs["random_latent"]),
         ("Zero Latent", outputs["zero_latent"]),
     ]
+    if outputs.get("shuffled_observables") is not None:
+        panels.append(("Shuffled Observables", outputs["shuffled_observables"]))
 
     fig, axes = plt.subplots(1, len(panels), figsize=(22, 5))
     for ax, (title, image) in zip(axes, panels):
@@ -497,19 +833,20 @@ def save_training_curve(history: dict, output_path: Path):
 
 
 def save_observable_plot(observables: np.ndarray, output_path: Path):
-    z_obs = observables[:, :6]
-    x_obs = observables[:, 6:12]
-    zz_corr = observables[:, 12:17]
-    xx_corr = observables[:, 17:22]
-    yy_corr = observables[:, 22:]
+    parts = observable_slices(observables)
 
     panels = [
-        ("Local Z", z_obs),
-        ("Local X", x_obs),
-        ("ZZ Correlations", zz_corr),
-        ("XX Correlations", xx_corr),
-        ("YY Correlations", yy_corr),
+        ("Local Z", parts["z"]),
+        ("Local X", parts["x"]),
+        ("ZZ Correlations", parts["zz"]),
     ]
+    if np.any(parts["xx"]) or np.any(parts["yy"]):
+        panels.extend(
+            [
+                ("XX Correlations", parts["xx"]),
+                ("YY Correlations", parts["yy"]),
+            ]
+        )
 
     fig, axes = plt.subplots(1, len(panels), figsize=(20, 4))
     for ax, (title, data) in zip(axes, panels):
@@ -565,6 +902,7 @@ def parse_args():
     )
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
     parser.add_argument("--image-path", type=Path)
+    parser.add_argument("--train-image-paths", type=Path, nargs="+")
     parser.add_argument("--image-size", type=int)
     parser.add_argument("--patch-size", type=int)
     parser.add_argument("--positional-dim", type=int)
@@ -578,9 +916,40 @@ def parse_args():
     parser.add_argument("--no-epoch-media", action="store_true")
     parser.add_argument("--epoch-frame-interval", type=int)
     parser.add_argument("--zero-latent-uses-positions", action="store_true")
+    parser.add_argument("--shuffle-observables-at-eval", action="store_true")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--checkpoint-dir", type=Path)
+    parser.add_argument("--eval-only-image", type=Path)
+    parser.add_argument("--mps-bond-dim", type=int)
+    parser.add_argument("--qubit-count", type=int)
+    parser.add_argument("--observable-set", choices=["full", "zz-only"])
+    parser.add_argument(
+        "--energy-loss-mode",
+        choices=["linear", "positive", "contrastive"],
+        default=None,
+    )
+    parser.add_argument("--energy-weight", type=float)
+    parser.add_argument("--energy-margin", type=float)
     parser.add_argument(
         "--model-variant",
         choices=["standard", "symmetric"],
+        default=None,
+    )
+    parser.add_argument(
+        "--ablation-mode",
+        choices=[
+            "baseline",
+            "freeze-classical",
+            "freeze-quantum",
+            "classical-replacement",
+            "classical-matched",
+            "random-vqc",
+            "no-entanglement",
+            "no-energy-loss",
+            "no-obs-noise",
+            "no-mps",
+            "zz-only",
+        ],
         default=None,
     )
     return parser.parse_args()
@@ -590,6 +959,7 @@ def main():
     args = parse_args()
     config = {
         "image_path": str(DEFAULT_IMAGE_PATH),
+        "train_image_paths": None,
         "image_size": 256,
         "patch_size": 64,
         "positional_dim": 8,
@@ -603,12 +973,24 @@ def main():
         "save_epoch_media": True,
         "epoch_frame_interval": 1,
         "zero_latent_uses_positions": False,
+        "shuffle_observables_at_eval": False,
         "model_variant": "standard",
+        "ablation_mode": "baseline",
+        "seed": 42,
+        "checkpoint_dir": None,
+        "eval_only_image": None,
+        "mps_bond_dim": 4,
+        "qubit_count": 6,
+        "observable_set": "full",
+        "energy_loss_mode": "linear",
+        "energy_weight": 0.01,
+        "energy_margin": 0.25,
     }
     config.update(load_config(args.config))
 
     for key in [
         "image_path",
+        "train_image_paths",
         "image_size",
         "patch_size",
         "positional_dim",
@@ -616,12 +998,25 @@ def main():
         "lr",
         "device",
         "output_dir",
+        "seed",
+        "checkpoint_dir",
+        "eval_only_image",
+        "mps_bond_dim",
+        "qubit_count",
+        "observable_set",
+        "energy_loss_mode",
+        "energy_weight",
+        "energy_margin",
     ]:
         value = getattr(args, key, None)
         if value is not None:
             config[key] = value
 
     config["image_path"] = resolve_path(config["image_path"])
+    if config.get("train_image_paths") is not None:
+        config["train_image_paths"] = [
+            resolve_path(path) for path in config["train_image_paths"]
+        ]
     config["output_dir"] = resolve_path(config["output_dir"])
 
     if args.no_save:
@@ -636,8 +1031,12 @@ def main():
         config["epoch_frame_interval"] = args.epoch_frame_interval
     if args.zero_latent_uses_positions:
         config["zero_latent_uses_positions"] = True
+    if args.shuffle_observables_at_eval:
+        config["shuffle_observables_at_eval"] = True
     if args.model_variant is not None:
         config["model_variant"] = args.model_variant
+    if args.ablation_mode is not None:
+        config["ablation_mode"] = args.ablation_mode
 
     print("Running HVK analysis with config:")
     print(json.dumps({k: str(v) for k, v in config.items()}, indent=2))
@@ -646,7 +1045,12 @@ def main():
 
     if config["save_outputs"]:
         print(f"Results saved to: {config['output_dir']}")
-    print("Final loss:", outputs["history"]["total_loss"][-1])
+    final_loss = (
+        outputs["history"]["total_loss"][-1]
+        if outputs["history"]["total_loss"]
+        else None
+    )
+    print("Final loss:", final_loss)
 
 
 if __name__ == "__main__":

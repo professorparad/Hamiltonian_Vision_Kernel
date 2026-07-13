@@ -1,0 +1,9 @@
+comparison,n_pairs,mean_psnr_difference_db,bootstrap95_low_db,bootstrap95_high_db,wilcoxon_p_psnr,mean_mse_difference,interpretation
+HVK2D-real-cifar minus raw-linear-classical,20,-0.6759369581077737,-0.9251907764206586,-0.4567419024149658,9.5367431640625e-06,0.0025368631132762667,positive PSNR difference favors HVK2D; negative favors the control
+HVK2D-real-cifar minus local-observables-only,20,-0.6759369581077737,-0.9278566644270905,-0.4539481758538529,9.5367431640625e-06,0.0025368631132762667,positive PSNR difference favors HVK2D; negative favors the control
+HVK2D-real-cifar minus no-entanglement,20,-0.33624179024920603,-0.6279513507712894,-0.10153731709918766,0.021484375,0.001503862664998414,positive PSNR difference favors HVK2D; negative favors the control
+HVK2D-real-cifar minus zz-only,20,-0.44010279443987976,-0.6230947315130125,-0.2606915475319316,0.000133514404296875,0.0016781571399871395,positive PSNR difference favors HVK2D; negative favors the control
+HVK2D-real-cifar minus quadratic-classical,20,-0.21260060555461563,-0.3550980385622098,-0.0721044781505915,0.017181396484375,0.0006454393324113505,positive PSNR difference favors HVK2D; negative favors the control
+HVK2D-real-cifar minus strict-classical-rff,20,2.2739611111787754,1.9561642227280331,2.588649333600488,1.9073486328125e-06,-0.010930120088523065,positive PSNR difference favors HVK2D; negative favors the control
+HVK2D-real-cifar minus shuffled-pair-observables,20,-0.18661170538741273,-0.4200030057447994,0.045252955061891566,0.24548721313476562,0.0010777857361749432,positive PSNR difference favors HVK2D; negative favors the control
+HVK2D-real-cifar minus random-vqc,20,6.973346835184772,6.148642745469097,7.73684395799824,1.9073486328125e-06,-0.06303732721026122,positive PSNR difference favors HVK2D; negative favors the control
