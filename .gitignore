@@ -68,3 +68,8 @@ CFIR10Dataset/
 *.out
 
 main2/newHVK/datasets/
+
+experiments/quantum_contribution/
+Main/outputs/
+Main/experiments/
+Main2/outputs/
