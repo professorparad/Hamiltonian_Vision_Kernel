@@ -314,6 +314,33 @@ Raw/local controls & 32 & 2112 & 0 & 6/4 \\
 \end{tabular}}
 \end{table}
 
+\subsection{Order-Parameter Tracking and Critical Epochs}
+\label{sec:order_parameter_tracking}
+In addition to pixel metrics, we track a spin-order diagnostic during training to ask whether the observable channel undergoes a coherent representational transition. Let $z_{n,i}^{(e)}=\langle Z_i\rangle$ and $x_{n,i}^{(e)}=\langle X_i\rangle$ denote the measured local Pauli expectations for patch $n$ and qubit/site $i$ at epoch $e$, with $N$ patches and $q$ measured sites. We define the longitudinal order parameter, absolute longitudinal order, and transverse order as
+\begin{align}
+m_Z(e) &= \frac{1}{Nq}\sum_{n=1}^{N}\sum_{i=1}^{q} z_{n,i}^{(e)},\\
+|m_Z|(e) &= \frac{1}{Nq}\sum_{n=1}^{N}\sum_{i=1}^{q} \left|z_{n,i}^{(e)}\right|,\\
+m_X(e) &= \frac{1}{Nq}\sum_{n=1}^{N}\sum_{i=1}^{q} x_{n,i}^{(e)}.
+\end{align}
+The discrete susceptibility is the epoch-to-epoch change in longitudinal order,
+\begin{equation}
+\chi_m(e)=\left|m_Z(e)-m_Z(e-1)\right|,\qquad \chi_m(0)=0,
+\end{equation}
+and the critical epoch is estimated by
+\begin{equation}
+e_c=\arg\max_e \chi_m(e).
+\end{equation}
+This is not a thermodynamic phase transition in the infinite-system sense: the system is a finite six-qubit observable map coupled to a classical decoder. We use ``critical epoch'' in the finite-size learning-dynamics sense, as the training point where the measured latent order changes most sharply.
+
+Figure~\ref{fig:order_parameter_phase_transition} shows the clean order-parameter evidence after removing the less relevant energy panel from the diagnostic plots. The behavior is visually strong: \textit{Monalisa} HVK2D develops a sharp longitudinal ordering ramp with $e_c=138$; a CIFAR cat example transitions later, at $e_c=152$; and a CIFAR frog example transitions earlier, at $e_c=75$, with a sign reversal in $m_Z$ while $|m_Z|$ increases. These trajectories show that the observable channel is not random noise: the measured Pauli latents reorganize during training in a reproducible, image-dependent manner. The important scope boundary is that this is an interpretability and optimization diagnostic, not evidence that the quantum component improves held-out reconstruction; Section~\ref{sec:holdout_headline} shows that matched local/raw controls still tie or win on real held-out images.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/order_parameter_phase_transition_panel.png}
+\caption{Order-parameter tracking and finite-size critical-epoch detection. Left column: longitudinal order $m_Z$, absolute order $|m_Z|$, and transverse order $m_X$. Right column: susceptibility $\chi_m(e)=|m_Z(e)-m_Z(e-1)|$; dashed vertical lines mark $e_c=\arg\max_e\chi_m(e)$. The examples show coherent order formation on \textit{Monalisa} and two CIFAR images, while leaving the reconstruction-advantage claim bounded by the held-out controls.}
+\label{fig:order_parameter_phase_transition}
+\end{figure*}
+
 The same-set CIFAR-10 and \textit{Monalisa} results (Table~\ref{tab:cifar10}, Figure~\ref{fig:cifar_metric_comparison}) are, by the logic of Section~\ref{sec:protocol}.D, capacity and positioning diagnostics rather than generalization evidence: HVK2D reaches $34.50$~dB mean PSNR on the five-image native-resolution CIFAR-10 subset (an $8.47$~dB improvement over the tested GAN baseline, an $82.4\%$ MSE reduction), and $40.70$~dB on the $256\times256$ \textit{Monalisa} target, exceeding a 1D control by $5.98$~dB. The high-capacity MLP and CNN baselines remain stronger in pure same-set pixel accuracy (MLP best-case PSNR exceeds $100$~dB, a memorization signature rather than a quality signal), and neither same-set result should be read against the held-out finding in Section~\ref{sec:holdout_headline}.
 
 \begin{table*}[t]
@@ -448,13 +475,7 @@ ZZ-only observables & $5.1503\times10^{-4}$ & 32.88 & 0.9930 & Nearest-neighbor 
 \end{tabular}
 \end{table*}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.48\textwidth]{figures/contrastive_training_curves.pdf}
-\includegraphics[width=0.48\textwidth]{figures/contrastive_order_parameter_curve.pdf}
-\caption{Contrastive Hamiltonian-core diagnostics: reconstruction/energy curves (left) and order-parameter trajectory (right), useful for analyzing optimization dynamics rather than for a reconstruction-quality claim.}
-\label{fig:contrastive_hamiltonian_diagnostics}
-\end{figure*}
+The order-parameter panel in Figure~\ref{fig:order_parameter_phase_transition} is therefore the cleaner diagnostic for latent ordering: critical epochs are detected from the susceptibility peak, not from the signed-energy curve.
 
 \subsection{Dequantization Context}
 \label{sec:dequant}
