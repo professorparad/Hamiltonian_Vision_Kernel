@@ -7,6 +7,7 @@ The HVK2D grid circuit (Main2/src/model.py) only measures Z, X, and ZZ
 observables (no XX/YY), so each patch needs only two measurement bases
 (Z-basis gives Z singles + ZZ pairs; X-basis gives X singles).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -68,7 +69,9 @@ class PatchDecoder2D(nn.Module):
         return self.net(combined).view(-1, 1, PATCH_SIZE, PATCH_SIZE)
 
 
-def state_prep_gates(qc: QuantumCircuit, inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray) -> None:
+def state_prep_gates(
+    qc: QuantumCircuit, inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray
+) -> None:
     """Matches quantum_grid_circuit exactly: AngleEmbedding(rotation='X' default) +
     RY(positional) + N_LAYERS x [CNOT over EDGES_H+EDGES_V, then Rot(phi,theta,omega) per qubit]."""
     for q in range(N_QUBITS):
@@ -85,7 +88,9 @@ def state_prep_gates(qc: QuantumCircuit, inputs: np.ndarray, positional_angles: 
             qc.rz(omega, q)
 
 
-def build_measurement_circuits(inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray) -> dict[str, QuantumCircuit]:
+def build_measurement_circuits(
+    inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray
+) -> dict[str, QuantumCircuit]:
     circuits = {}
     for basis in ("Z", "X"):
         qc = QuantumCircuit(N_QUBITS, N_QUBITS)
@@ -223,7 +228,9 @@ def run_image(stem: str, args, backend=None) -> dict:
     mse_hw = float(torch.mean((recon_hw - target) ** 2))
     psnr_hw = 20 * np.log10(1.0 / np.sqrt(mse_hw)) if mse_hw > 0 else float("inf")
 
-    result.update({"backend": backend.name, "job_id": job.job_id(), "psnr_hardware_db": psnr_hw, "mse_hardware": mse_hw})
+    result.update(
+        {"backend": backend.name, "job_id": job.job_id(), "psnr_hardware_db": psnr_hw, "mse_hardware": mse_hw}
+    )
     np.save(OUTPUT_DIR / f"{stem}_hw_observables.npy", hw_observables)
     return result
 

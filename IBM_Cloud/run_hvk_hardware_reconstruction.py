@@ -19,6 +19,7 @@ Main2/newHVK/results/ablation_study/legacy_hvk_controls/eval_controls/shared-bas
 
 Without --submit this is entirely free (simulator-only validation + circuit-count report).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -30,9 +31,9 @@ from pathlib import Path
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 
 import numpy as np
+import pennylane as qml
 import torch
 import torch.nn as nn
-import pennylane as qml
 from qiskit import QuantumCircuit, transpile
 from qiskit.quantum_info import Statevector
 
@@ -116,7 +117,9 @@ def build_pennylane_circuit():
     return circuit
 
 
-def state_prep_gates(qc: QuantumCircuit, inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray) -> None:
+def state_prep_gates(
+    qc: QuantumCircuit, inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray
+) -> None:
     """Reproduce AngleEmbedding(rotation='X') + RY(positional) + StronglyEntanglingLayers
     directly in Qiskit, matching PennyLane's documented default construction:
     AngleEmbedding default rotation is 'X'; StronglyEntanglingLayers applies Rot(phi,theta,omega)
@@ -137,7 +140,9 @@ def state_prep_gates(qc: QuantumCircuit, inputs: np.ndarray, positional_angles: 
             qc.cx(q, (q + ring_range) % N_QUBITS)
 
 
-def build_measurement_circuits(inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray) -> dict[str, QuantumCircuit]:
+def build_measurement_circuits(
+    inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray
+) -> dict[str, QuantumCircuit]:
     circuits = {}
     for basis in ("Z", "X", "Y"):
         qc = QuantumCircuit(N_QUBITS, N_QUBITS)
@@ -195,7 +200,9 @@ def load_patch_inputs():
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--max-patches", type=int, default=16)
-    parser.add_argument("--submit", action="store_true", help="Submit to real IBM hardware. Default: local validation only.")
+    parser.add_argument(
+        "--submit", action="store_true", help="Submit to real IBM hardware. Default: local validation only."
+    )
     parser.add_argument("--backend")
     parser.add_argument("--shots", type=int, default=256)
     parser.add_argument("--allow-large-job", action="store_true")
@@ -205,7 +212,9 @@ def main() -> None:
     model = QuantumModelWeights()
     model.load_state_dict(torch.load(CHECKPOINT_DIR / "model.pt", map_location="cpu"))
     model.eval()
-    decoder = PatchDecoder(observable_dim=2 * N_QUBITS + 3 * N_BONDS, positional_dim=POSITIONAL_DIM, patch_size=PATCH_SIZE)
+    decoder = PatchDecoder(
+        observable_dim=2 * N_QUBITS + 3 * N_BONDS, positional_dim=POSITIONAL_DIM, patch_size=PATCH_SIZE
+    )
     decoder.load_state_dict(torch.load(CHECKPOINT_DIR / "decoder.pt", map_location="cpu"))
     decoder.eval()
 
@@ -224,9 +233,7 @@ def main() -> None:
     sim_observables = []
     for i in range(n_patches):
         with torch.no_grad():
-            out = torch.stack(
-                pennylane_circuit(projected_features[i], projected_positions[i], model.weights)
-            ).numpy()
+            out = torch.stack(pennylane_circuit(projected_features[i], projected_positions[i], model.weights)).numpy()
         sim_observables.append(out)
         err = float(np.max(np.abs(out - cached_observables[i])))
         max_err = max(max_err, err)
@@ -245,7 +252,9 @@ def main() -> None:
         err = float(np.max(np.abs(qk_out - cached_observables[i])))
         qk_err = max(qk_err, err)
     qk_observables = np.array(qk_observables)
-    print(f"[validate] Qiskit statevector vs cached observables.npy, max abs error over {n_patches} patches: {qk_err:.2e}")
+    print(
+        f"[validate] Qiskit statevector vs cached observables.npy, max abs error over {n_patches} patches: {qk_err:.2e}"
+    )
 
     n_circuits = 3 * n_patches
     print(f"[plan] {n_patches} patches x 3 measurement bases (Z/X/Y) = {n_circuits} circuits, {args.shots} shots each.")
@@ -256,7 +265,9 @@ def main() -> None:
         print("[dry-run] No hardware job submitted. Pass --submit to run on real IBM hardware.")
         with torch.no_grad():
             recon_sim = decoder(torch.tensor(qk_observables, dtype=torch.float32), positional_encoding[:n_patches])
-        mse = float(torch.mean((recon_sim.view(n_patches, PATCH_SIZE, PATCH_SIZE) - torch.tensor(patches[:n_patches])) ** 2))
+        mse = float(
+            torch.mean((recon_sim.view(n_patches, PATCH_SIZE, PATCH_SIZE) - torch.tensor(patches[:n_patches])) ** 2)
+        )
         psnr = 20 * np.log10(1.0 / np.sqrt(mse)) if mse > 0 else float("inf")
         print(f"[dry-run] Simulator-replay decode PSNR over {n_patches} patches: {psnr:.2f} dB (mse={mse:.3e})")
         return
@@ -268,12 +279,15 @@ def main() -> None:
             "or reduce --max-patches."
         )
     from qiskit_ibm_runtime import QiskitRuntimeService
+
     try:
         from qiskit_ibm_runtime import SamplerV2 as Sampler
     except ImportError:
         from qiskit_ibm_runtime import Sampler
 
-    service = QiskitRuntimeService(channel="ibm_quantum_platform", token=args.token) if args.token else QiskitRuntimeService()
+    service = (
+        QiskitRuntimeService(channel="ibm_quantum_platform", token=args.token) if args.token else QiskitRuntimeService()
+    )
     if args.backend:
         backend = service.backend(args.backend)
     else:
