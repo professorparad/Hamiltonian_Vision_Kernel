@@ -7,7 +7,7 @@
 \usepackage{float}
 
 \title{Supplementary Material for the Hamiltonian Vision Kernel:\\ Resource-Matched Ablations, Validation, and Reproducibility}
-\author{Sparsho~Chakraborty and Siddhartha~Patra}
+\author{Sparsho~Chakraborty and Dr.~Siddhartha~Patra}
 \date{}
 
 \begin{document}
@@ -416,14 +416,6 @@ Total: 176 circuits across 5 jobs. Quota consumption, read from \texttt{QiskitRu
 \subsection{Reconstruction Decode}
 Hardware counts were converted to observable expectation values by the standard parity estimator, $\langle Z_i\rangle = \frac{1}{S}\sum_{\text{shots}} (-1)^{b_i}$ (identically for $X$, $Y$ after basis rotation), with pairwise correlators computed as the shot-weighted mean of $(-1)^{b_i+b_j}$ within the same measurement basis. The resulting observable vector, concatenated with the training-time positional encoding, was passed through the \emph{unmodified} trained decoder. No hardware-specific fine-tuning, error mitigation, or post-hoc calibration was applied.
 
-\subsection{Reproducibility}
-Both pilot scripts default to a dry run (simulator-only validation, no network calls, no credentials) and require an explicit \texttt{--submit} flag plus a circuit-count safety check before touching real hardware:
-\begin{itemize}
-    \item \texttt{IBM\_Cloud/run\_hvk\_hardware\_reconstruction.py} --- Monalisa/HVK1D pilot.
-    \item \texttt{IBM\_Cloud/run\_hvk2d\_cifar\_hardware\_reconstruction.py} --- CIFAR-10/HVK2D pilot.
-    \item \texttt{Baselines/cifar10\_comparisons/hvk2d/train\_and\_save\_hvk2d\_checkpoints.py} --- trains and saves the four CIFAR checkpoints reused above.
-\end{itemize}
-
 \section{Discussion}
 
 \subsection{Task-Dependent Representational Scope}
@@ -433,9 +425,6 @@ The tie-with-classical outcome in Section~\ref{sec:holdout_headline} is consiste
 We distill this ablation study into concrete guidance for evaluating hybrid quantum--classical vision models: (1) \emph{resource-match} every classical control to the quantum model's feature width and readout parameter count; (2) \emph{freeze-isolate} each trainable component independently before crediting any one of them with an observed gain; (3) \emph{audit every favorable diagnostic for target--feature leakage} by tracing target- and feature-construction code for shared subexpressions; (4) \emph{report held-out, not same-set, performance} as the primary evidence for a representation-learning claim; (5) \emph{report multiple seeds with error bars} on any comparison intended to support a quantitative claim.
 
 \section{Conclusion}
-The resource-matched, freeze-based, multi-seed study provides a precise attribution map for HVK. The trainable classical decoder supplies the dominant contribution to ordinary held-out reconstruction, while the entangling and symmetry-aware channels become informative on tasks whose structure explicitly calls for nonlocal correlations or equivariance. On held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB compared with HVK2D's $18.12\pm1.54$~dB (Wilcoxon $p=9.5\times10^{-6}$, $n=20$), with the same direction on five further real datasets. These results refine the operating regime of the framework and motivate task-aligned HVK variants rather than weakening the framework itself. The leakage audit further contributes a transferable validation protocol, and Section~\ref{sec:hardware_methodology} provides the complete hardware-pilot methodology needed for reproduction.
-
-\section*{Reproducibility Statement}
-All ablation configurations correspond to named, versioned experiment scripts in the project repository (component, Hamiltonian, and capacity sweeps under a common training entry point with an explicit \texttt{--ablation-mode} flag; the held-out CIFAR-10 and multi-dataset suites under a separate validation runner with fixed seeds). Random seeds, resource-matching configurations, and the exact scripts invoking every table in this document are released alongside the main manuscript.
+The resource-matched, freeze-based, multi-seed study provides a precise attribution map for HVK. The trainable classical decoder supplies the dominant contribution to ordinary held-out reconstruction, while the entangling and symmetry-aware channels become informative on tasks whose structure explicitly calls for nonlocal correlations or equivariance. On held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB compared with HVK2D's $18.12\pm1.54$~dB (Wilcoxon $p=9.5\times10^{-6}$, $n=20$), with the same direction on five further real datasets. These results refine the operating regime of the framework and motivate task-aligned HVK variants rather than weakening the framework itself. The leakage audit further contributes a transferable validation protocol, and Section~\ref{sec:hardware_methodology} provides the complete hardware-pilot methodology.
 
 \end{document}
