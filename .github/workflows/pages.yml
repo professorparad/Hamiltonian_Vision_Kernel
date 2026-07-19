@@ -28,6 +28,9 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v6
 
+      - name: Stage canonical paper
+        run: cp paper_hvk.pdf docs/assets/papers/paper_hvk.pdf
+
       - name: Validate static site files
         run: |
           test -f docs/index.html

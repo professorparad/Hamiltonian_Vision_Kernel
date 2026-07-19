@@ -68,6 +68,7 @@ CFIR10Dataset/
 *.out
 *.synctex.gz
 *.toc
+/latex_outputs/paper_latex/paper_hvk.pdf
 
 main2/newHVK/datasets/
 

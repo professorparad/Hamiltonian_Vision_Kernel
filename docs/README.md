@@ -12,10 +12,13 @@ docs/index.html
 
 ## Public Assets
 
-The site links only to files committed under `docs/assets`:
+The site links only to files staged under `docs/assets` for deployment:
 
 - `assets/papers/paper_hvk.pdf`
-- `assets/papers/hvk_methodology_outputs.pdf`
+
+The paper PDF is sourced from the repository-root `paper_hvk.pdf` and copied to
+this deployment path by `.github/workflows/pages.yml`; it is not stored twice in
+the repository.
 - `assets/data/cifar32_aggregate_metrics.csv`
 - `assets/data/cifar32_per_image_metrics.csv`
 - `assets/data/cifar32_aggregate_metrics.json`
