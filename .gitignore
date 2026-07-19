@@ -66,6 +66,8 @@ CFIR10Dataset/
 *.fls
 *.log
 *.out
+*.synctex.gz
+*.toc
 
 main2/newHVK/datasets/
 
