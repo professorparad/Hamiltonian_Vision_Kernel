@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,bm}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage{float}
+
+\title{HVK IBM Hardware Pilot: Supplementary Methodology}
+\author{Sparsho~Chakraborty and Siddhartha~Patra}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This is a companion methodology document to the main manuscript, \textit{Do the Quantum Parts Help? A Component-Wise Ablation of a Physics-Informed Hybrid Quantum--Classical Image Autoencoder}. It documents, in full, the real-hardware reconstruction pilot summarized there in Section~V.F: exact circuit construction, local validation against the training-time simulator, IBM Quantum job identifiers, shot budgets, and quota accounting. We separate this material from the main text so that the paper stays focused on the result, while every implementation detail needed to reproduce or audit the hardware run is preserved here.
+\end{abstract}
+
+\section{Why a Separate Document}
+The main manuscript already carries a compiled-circuit feasibility appendix (transpiled depth and gate counts on a Heron-class basis, no finite-shot execution). This pilot is a distinct, additional contribution --- an actual finite-shot hardware execution, decoded end-to-end into reconstructed pixels using an already-trained checkpoint's exact parameters, with no retraining. Because the methodology here is API/infrastructure detail (account setup, backend selection, job submission, quota bookkeeping) rather than a scientific claim in its own right, we keep it out of the main text and report it here in full for reproducibility and audit.
+
+\section{Reused Checkpoints}
+No model was retrained for this pilot. Two pre-existing artifacts were reused directly:
+\begin{itemize}
+    \item \textbf{Monalisa (HVK1D).} The ``shared VQC baseline'' checkpoint (\texttt{Main2/newHVK/results/ablation\_study/legacy\_hvk\_controls/eval\_controls/shared-baseline-seed-42/}), the same run underlying the ``Legacy baseline, signed energy'' row of the main paper's Hamiltonian-controls table ($32.24$~dB simulator PSNR). Its \texttt{model.pt} holds \texttt{feature\_projection} ($\mathbb{R}^{46\to6}$), \texttt{position\_projection} ($\mathbb{R}^{8\to6}$), the StronglyEntanglingLayers weight tensor ($2\times6\times3$), and the Heisenberg couplings $J_x,J_y,J_z$; \texttt{decoder.pt} holds a three-layer MLP decoder ($35\to128\to256\to4096$, ReLU/ReLU/Sigmoid).
+    \item \textbf{CIFAR-10 (HVK2D).} Four fresh checkpoints were trained (200 steps, Adam, $\eta=0.004$, on an NVIDIA GTX~1050) for four held-out CIFAR-10 images at native $32\times32$ resolution, using non-overlapping $8\times8$ patches (16 patches/image, chosen to match the Monalisa pilot's patch count and keep the real-hardware circuit budget predictable) rather than the main paper's overlapping-stride same-set protocol. This is a deliberate simplification for the hardware pilot and is \emph{not} the paper's held-out CIFAR-10 statistical suite (Section~V.B of the main text); it is a separate, smaller-scale demonstration.
+\end{itemize}
+
+\section{Circuit Reconstruction}
+\subsection{HVK1D (Monalisa)}
+The trained forward pass (\texttt{Main/src/quantum/quantum\_model.py}) applies, per patch: \texttt{AngleEmbedding(inputs)} (PennyLane default rotation, $R_X$ per wire), $R_Y(\text{positional\_angles})$ per wire, then two \texttt{StronglyEntanglingLayers} (per-wire \texttt{Rot}$(\phi,\theta,\omega)$ decomposed as $R_Z R_Y R_Z$, followed by a CNOT ring whose range increments by layer). We rebuilt this gate-for-gate in Qiskit rather than trusting a hand derivation: the script author's manual translation was checked against PennyLane's own tape output before use.
+
+Because the trained circuit measures $Z$, $X$, $ZZ$, $XX$, and $YY$ (27 observables total: 6+6+5+5+5), and $ZZ_{i,i+1}$/$XX_{i,i+1}$/$YY_{i,i+1}$ are recoverable as joint parities of the \emph{same} all-$Z$, all-$X$, and all-$Y$ basis measurements that already give the single-qubit marginals, only \textbf{three} measurement circuits per patch are needed (not 27): an all-$Z$-basis circuit, an all-$X$-basis circuit (Hadamard before measurement), and an all-$Y$-basis circuit ($S^\dagger$ then Hadamard before measurement). For 16 Monalisa patches this is $16\times3=48$ circuits.
+
+\subsection{HVK2D (CIFAR-10)}
+The HVK2D grid circuit (\texttt{Main2/src/model.py}) is simpler: two layers of (CNOT over the fixed grid edge set $\{(0,1),(1,2),(3,4),(4,5),(0,3),(1,4),(2,5)\}$, then per-qubit \texttt{Rot}), and it measures only $Z$, $X$, and $ZZ$ (19 observables: 6+6+7) --- no $XX$/$YY$ terms. This means only \textbf{two} measurement circuits per patch are needed (all-$Z$, all-$X$). For four CIFAR images at 16 patches each, this is $4\times16\times2=128$ circuits.
+
+\section{Local Validation Before Any Hardware Submission}
+Every circuit was validated against the cached, training-time observable vectors (\texttt{observables.npy}, produced by the original PennyLane run) via an exact Qiskit statevector simulation (\texttt{Statevector.from\_instruction}), \emph{before} any job was submitted to real hardware. Maximum absolute error per patch, across all measured observables:
+
+\begin{table}[H]
+\centering
+\caption{Local validation: Qiskit statevector reconstruction vs.\ cached PennyLane training-time observables.}
+\begin{tabular}{lcc}
+\toprule
+Checkpoint & Patches validated & Max abs.\ error \\
+\midrule
+Monalisa (HVK1D) & 16 & $7.89\times10^{-4}$ \\
+CIFAR cat (HVK2D) & 16 & $9.42\times10^{-6}$ \\
+CIFAR ship, hydrofoil (HVK2D) & 16 & $7.76\times10^{-6}$ \\
+CIFAR ship, sea boat (HVK2D) & 16 & $7.89\times10^{-6}$ \\
+CIFAR airplane (HVK2D) & 16 & $7.14\times10^{-6}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Monalisa error ($7.89\times10^{-4}$) is an order of magnitude larger than the CIFAR errors ($\sim\!10^{-5}$--$10^{-6}$); both are far below anything that would explain the hardware-vs-simulator PSNR gap reported in the main text, so the gap in the real-hardware results is attributable to genuine device noise, not a circuit-translation error. A dry-run mode in the pilot scripts (\texttt{IBM\_Cloud/run\_hvk\_hardware\_reconstruction.py} and \texttt{IBM\_Cloud/run\_hvk2d\_cifar\_hardware\_reconstruction.py}) reruns this check and reports simulator-only decode PSNR without touching the network or any account credentials, so the validation step costs nothing and requires no IBM account.
+
+\section{IBM Quantum Account and Backend}
+Jobs were submitted via \texttt{qiskit-ibm-runtime} (channel \texttt{ibm\_quantum\_platform}) under a free/open-plan instance. Backend selection preferred the operational 6+-qubit backend with the fewest pending jobs at submission time; both pilots ran on \texttt{ibm\_fez}, a 156-qubit Heron-class processor, which had zero queued jobs ahead of ours at submission time for the Monalisa job and remained uncongested for the CIFAR job. Transpilation used \texttt{optimization\_level=1}. Each job used \texttt{SamplerV2} with 256 shots per circuit.
+
+\section{Job Identifiers and Quota Accounting}
+\begin{table}[H]
+\centering
+\caption{IBM Quantum job identifiers for the hardware pilot (backend: \texttt{ibm\_fez}, 256 shots/circuit).}
+\begin{tabular}{llcc}
+\toprule
+Image & Job ID & Circuits & Bases \\
+\midrule
+Monalisa & \texttt{d9ecu34inv1c73aq3qt0} & 48 & Z, X, Y \\
+CIFAR cat & \texttt{d9edfo2neu4c739ob2ig} & 32 & Z, X \\
+CIFAR ship (hydrofoil) & \texttt{d9edg5cjeosc73filhng} & 32 & Z, X \\
+CIFAR ship (sea boat) & \texttt{d9edgakjeosc73filhug} & 32 & Z, X \\
+CIFAR airplane & \texttt{d9edgdphtsac739e4kdg} & 32 & Z, X \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Total: 176 circuits across 5 jobs. Quota consumption, read directly from the account's \texttt{QiskitRuntimeService.usage()} endpoint immediately before and after the pilot: $19\rightarrow35$ seconds consumed against a $600$-second monthly free-plan allowance --- i.e., the entire five-image, 176-circuit pilot cost $16$ seconds of billed quantum-processor time, with $565$ seconds remaining afterward. This is reported so future extensions of this pilot (more images, more shots, or the full held-out suite) can be budgeted realistically: at the observed rate ($\approx\!0.09$--$0.13$~s/circuit), even a substantially larger pilot remains inexpensive on a free-plan account.
+
+\section{Reconstruction Decode}
+Hardware counts were converted to observable expectation values by the standard parity estimator, $\langle Z_i\rangle = \frac{1}{S}\sum_{\text{shots}} (-1)^{b_i}$ (and identically for $X$, $Y$ after basis rotation), with pairwise correlators $\langle P_iP_j\rangle$ computed as the shot-weighted mean of $(-1)^{b_i+b_j}$ within the same measurement basis --- no additional circuits were needed for the pairwise terms. The resulting 27-D (HVK1D) or 19-D (HVK2D) hardware observable vector, concatenated with the same sinusoidal positional encoding used at training time, was passed through the \emph{unmodified} trained decoder to produce the hardware reconstruction reported in the main text. No hardware-specific fine-tuning, error mitigation, or post-hoc calibration was applied; the PSNR gap between simulator and hardware in the main text is therefore a raw, unmitigated noise signature, and a natural target for future error-mitigation follow-up work.
+
+\section{Reproducibility}
+Both pilot scripts default to a dry run (simulator-only validation, no network calls, no credentials) and require an explicit \texttt{--submit} flag plus a circuit-count safety check (raising an error above 20 circuits unless \texttt{--allow-large-job} is passed) before touching real hardware, so the validation and the hardware-submission steps cannot be conflated by accident:
+\begin{itemize}
+    \item \texttt{IBM\_Cloud/run\_hvk\_hardware\_reconstruction.py} --- Monalisa/HVK1D pilot.
+    \item \texttt{IBM\_Cloud/run\_hvk2d\_cifar\_hardware\_reconstruction.py} --- CIFAR-10/HVK2D pilot.
+    \item \texttt{Baselines/cifar10\_comparisons/hvk2d/train\_and\_save\_hvk2d\_checkpoints.py} --- trains and saves the four CIFAR checkpoints reused above.
+\end{itemize}
+
+\end{document}

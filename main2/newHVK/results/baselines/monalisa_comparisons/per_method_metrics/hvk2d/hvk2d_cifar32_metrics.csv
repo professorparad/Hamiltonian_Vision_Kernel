@@ -1,2 +1,2 @@
-model,image,image_size,patch_size,epochs,mse,psnr,ssim
-HVK2D,monalisa.png,32,8,200,0.011855831369757652,19.26067986465334,0.7756752714736228
+model,image,image_size,patch_size,patch_stride,epochs,mse,psnr,ssim
+HVK2D,monalisa.png,32,8,4,200,0.0005197281716391444,32.84223741795901,0.9922147960393222

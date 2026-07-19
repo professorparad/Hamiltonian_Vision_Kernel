@@ -1,0 +1,22 @@
+[
+  {
+    "provider": "statevector",
+    "backend": "qiskit_statevector",
+    "variant": "hvk1d",
+    "patch_index": 0,
+    "mean_order_parameter": 0.8721042357194343,
+    "mean_abs_order_parameter": 0.8721146057059938,
+    "mean_zz_correlation": 0.7393060243474943,
+    "hardware_proxy_loss": 0.2582323821202591
+  },
+  {
+    "provider": "statevector",
+    "backend": "qiskit_statevector",
+    "variant": "hvk2d",
+    "patch_index": 0,
+    "mean_order_parameter": 0.84640893235279,
+    "mean_abs_order_parameter": 0.8464167783282927,
+    "mean_zz_correlation": 0.6940548221621183,
+    "hardware_proxy_loss": 0.3065558105906482
+  }
+]

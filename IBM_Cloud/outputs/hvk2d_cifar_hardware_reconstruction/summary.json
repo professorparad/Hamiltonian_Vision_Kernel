@@ -1,0 +1,42 @@
+[
+  {
+    "stem": "0000_cat_domestic_cat_s_000907",
+    "n_patches": 16,
+    "psnr_simulator_db": 44.84734447653095,
+    "mse_simulator": 3.275409108027816e-05,
+    "backend": "ibm_fez",
+    "job_id": "d9edfo2neu4c739ob2ig",
+    "psnr_hardware_db": 31.5209513556915,
+    "mse_hardware": 0.0007045387174002826
+  },
+  {
+    "stem": "0001_ship_hydrofoil_s_000078",
+    "n_patches": 16,
+    "psnr_simulator_db": 36.560550152042225,
+    "mse_simulator": 0.00022077250469010323,
+    "backend": "ibm_fez",
+    "job_id": "d9edg5cjeosc73filhng",
+    "psnr_hardware_db": 26.439595217001965,
+    "mse_hardware": 0.002270076423883438
+  },
+  {
+    "stem": "0002_ship_sea_boat_s_001456",
+    "n_patches": 16,
+    "psnr_simulator_db": 42.56608606640449,
+    "mse_simulator": 5.538490222534165e-05,
+    "backend": "ibm_fez",
+    "job_id": "d9edgakjeosc73filhug",
+    "psnr_hardware_db": 31.195764349801557,
+    "mse_hardware": 0.0007593177724629641
+  },
+  {
+    "stem": "0003_airplane_jetliner_s_001705",
+    "n_patches": 16,
+    "psnr_simulator_db": 46.794963494804946,
+    "mse_simulator": 2.0917204892612062e-05,
+    "backend": "ibm_fez",
+    "job_id": "d9edgdphtsac739e4kdg",
+    "psnr_hardware_db": 29.09931715790431,
+    "mse_hardware": 0.001230462221428752
+  }
+]
