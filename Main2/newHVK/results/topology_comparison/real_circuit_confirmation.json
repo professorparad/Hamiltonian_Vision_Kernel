@@ -1,0 +1,60 @@
+{
+  "runs": [
+    {
+      "topology": "HVK1D",
+      "seed": 0,
+      "n_params": 53787,
+      "wall_time_s": 83.58126300000004,
+      "steps": 2,
+      "train_images": [
+        "0000_cat_domestic_cat_s_000907.png",
+        "0001_ship_hydrofoil_s_000078.png"
+      ],
+      "held_out_metrics": {
+        "0003_airplane_jetliner_s_001705.png": {
+          "mse": 0.049873460084199905,
+          "psnr": 13.021305005735504,
+          "ssim": 0.07845132526054235
+        },
+        "0005_frog_crapaud_s_002124.png": {
+          "mse": 0.031721994280815125,
+          "psnr": 14.986395175105532,
+          "ssim": 0.07317823344733336
+        },
+        "0006_automobile_shooting_brake_s_000973.png": {
+          "mse": 0.08680010586977005,
+          "psnr": 10.614797451158019,
+          "ssim": 0.022921993284153327
+        }
+      }
+    },
+    {
+      "topology": "HVK2D",
+      "seed": 0,
+      "n_params": 52755,
+      "wall_time_s": 68.99213220000092,
+      "steps": 2,
+      "train_images": [
+        "0000_cat_domestic_cat_s_000907.png",
+        "0001_ship_hydrofoil_s_000078.png"
+      ],
+      "held_out_metrics": {
+        "0003_airplane_jetliner_s_001705.png": {
+          "mse": 0.04762387275695801,
+          "psnr": 13.221752908171467,
+          "ssim": 0.12709422007398613
+        },
+        "0005_frog_crapaud_s_002124.png": {
+          "mse": 0.03198587894439697,
+          "psnr": 14.95041710744237,
+          "ssim": 0.08680506310295363
+        },
+        "0006_automobile_shooting_brake_s_000973.png": {
+          "mse": 0.08739165961742401,
+          "psnr": 10.585300130746242,
+          "ssim": 0.028845472723151983
+        }
+      }
+    }
+  ]
+}
