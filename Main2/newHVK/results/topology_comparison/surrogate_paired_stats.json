@@ -1,0 +1,164 @@
+[
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus HVK2D-pair-observable",
+    "n_pairs": 50,
+    "mean_psnr_difference_db": -0.07041119285861264,
+    "bootstrap95_low_db": -0.1457633064682561,
+    "bootstrap95_high_db": 0.0005226234471942343,
+    "wilcoxon_p_psnr": 0.10953049393459402
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus local-only",
+    "n_pairs": 50,
+    "mean_psnr_difference_db": -1.269652962323647,
+    "bootstrap95_low_db": -1.4066817667599332,
+    "bootstrap95_high_db": -1.1257567406568856,
+    "wilcoxon_p_psnr": 1.7763568394002505e-15
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus raw-linear",
+    "n_pairs": 50,
+    "mean_psnr_difference_db": -1.269652962323647,
+    "bootstrap95_low_db": -1.4099729497479505,
+    "bootstrap95_high_db": -1.136454330062345,
+    "wilcoxon_p_psnr": 1.7763568394002505e-15
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus no-entanglement",
+    "n_pairs": 50,
+    "mean_psnr_difference_db": -1.0658110181453997,
+    "bootstrap95_low_db": -1.2133382181803956,
+    "bootstrap95_high_db": -0.9237545224494783,
+    "wilcoxon_p_psnr": 8.881784197001252e-15
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus quadratic-classical",
+    "n_pairs": 50,
+    "mean_psnr_difference_db": -0.07137471320417955,
+    "bootstrap95_low_db": -0.16826154905277454,
+    "bootstrap95_high_db": 0.023351706551121194,
+    "wilcoxon_p_psnr": 0.20447619481721802
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus parameter-matched",
+    "n_pairs": 50,
+    "mean_psnr_difference_db": 2.3240469920604783,
+    "bootstrap95_low_db": 2.041956674836084,
+    "bootstrap95_high_db": 2.6062200088572247,
+    "wilcoxon_p_psnr": 1.7763568394002505e-15
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus HVK2D-pair-observable",
+    "n_pairs": 500,
+    "mean_psnr_difference_db": -0.021279102154647414,
+    "bootstrap95_low_db": -0.03572439970539906,
+    "bootstrap95_high_db": -0.0072399769689603585,
+    "wilcoxon_p_psnr": 0.000975064939722121
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus local-only",
+    "n_pairs": 500,
+    "mean_psnr_difference_db": -0.3415525269604698,
+    "bootstrap95_low_db": -0.371768454537529,
+    "bootstrap95_high_db": -0.3097815320435732,
+    "wilcoxon_p_psnr": 2.412272854818803e-66
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus raw-linear",
+    "n_pairs": 500,
+    "mean_psnr_difference_db": -0.3415525269604698,
+    "bootstrap95_low_db": -0.37228058662067104,
+    "bootstrap95_high_db": -0.3114936829768503,
+    "wilcoxon_p_psnr": 2.412272854818803e-66
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus no-entanglement",
+    "n_pairs": 500,
+    "mean_psnr_difference_db": -0.34590636475944286,
+    "bootstrap95_low_db": -0.3772938854959788,
+    "bootstrap95_high_db": -0.3151660862255509,
+    "wilcoxon_p_psnr": 5.1054239527791717e-67
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus quadratic-classical",
+    "n_pairs": 500,
+    "mean_psnr_difference_db": -0.0942336898600717,
+    "bootstrap95_low_db": -0.12168520118599743,
+    "bootstrap95_high_db": -0.06519512147974173,
+    "wilcoxon_p_psnr": 1.548591412021295e-13
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus parameter-matched",
+    "n_pairs": 500,
+    "mean_psnr_difference_db": 1.3455031338820205,
+    "bootstrap95_low_db": 1.2878321336400187,
+    "bootstrap95_high_db": 1.400222994192483,
+    "wilcoxon_p_psnr": 2.3758663529381113e-83
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus HVK2D-pair-observable",
+    "n_pairs": 450,
+    "mean_psnr_difference_db": 0.0034420100016659756,
+    "bootstrap95_low_db": -0.012301480982167632,
+    "bootstrap95_high_db": 0.019848147578607655,
+    "wilcoxon_p_psnr": 0.6997552217696879
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus local-only",
+    "n_pairs": 450,
+    "mean_psnr_difference_db": -0.5210143655440045,
+    "bootstrap95_low_db": -0.5658559244180353,
+    "bootstrap95_high_db": -0.48201823152911116,
+    "wilcoxon_p_psnr": 9.47746385145701e-75
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus raw-linear",
+    "n_pairs": 450,
+    "mean_psnr_difference_db": -0.5210143655440045,
+    "bootstrap95_low_db": -0.5649916099975181,
+    "bootstrap95_high_db": -0.4802705509829229,
+    "wilcoxon_p_psnr": 9.47746385145701e-75
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus no-entanglement",
+    "n_pairs": 450,
+    "mean_psnr_difference_db": -0.46535857797329,
+    "bootstrap95_low_db": -0.4967783208574527,
+    "bootstrap95_high_db": -0.4340530185971497,
+    "wilcoxon_p_psnr": 2.2167673448056023e-74
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus quadratic-classical",
+    "n_pairs": 450,
+    "mean_psnr_difference_db": -0.0021669698044208415,
+    "bootstrap95_low_db": -0.022351294862097658,
+    "bootstrap95_high_db": 0.016546868271031343,
+    "wilcoxon_p_psnr": 0.05829468526097425
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus parameter-matched",
+    "n_pairs": 450,
+    "mean_psnr_difference_db": 2.772090649885752,
+    "bootstrap95_low_db": 2.471658165374674,
+    "bootstrap95_high_db": 3.091828762014734,
+    "wilcoxon_p_psnr": 1.8524762278349491e-75
+  }
+]

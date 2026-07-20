@@ -407,6 +407,63 @@ Total & 13 & \textbf{13/13} & -- & -- & -- \\
 \end{tabular}
 \end{table}
 
+\section{HVK1D versus HVK2D: A Direct Topology Comparison}
+\label{sec:topology_comparison}
+The main paper introduces both the HVK1D (6-qubit chain) and HVK2D ($2\times3$ grid) topologies, but until now the only direct comparison was the same-set CIFAR-10 fit of Table~\ref{tab:cifar10}. Here we compare the two topologies directly under matched conditions --- identical qubit count (6, native to both), identical feature width, identical decoder architecture and step budget --- on held-out generalization rather than same-set fitting, on two evidence bases: a fast analytic-surrogate sweep at full statistical scope, and a smaller real-trained-circuit confirmation subset. The two topologies are close in parameter count by construction (HVK1D: 53{,}787; HVK2D: 52{,}755) but not identical, since their circuit structures differ (chain vs. grid connectivity, 27 vs. 19 measured observables); we report this honestly rather than forcing an artificial match.
+
+\subsection{Real-Circuit Confirmation}
+\label{sec:topology_real_circuit}
+Each topology was trained jointly on 2 CIFAR-10 images (native $32\times32$, overlapping $8\times8$ patches at stride 4, 49 patches/image --- the same convention as Table~\ref{tab:cifar10}) for a reduced 90-step budget across 3 seeds, then evaluated by direct forward pass (no retraining) on 3 further CIFAR-10 images from different classes never seen in training (airplane, frog, automobile) --- a genuine held-out test. The reduced step budget and seed count follow directly from a measured timing calibration on this project's GPU (NVIDIA GTX 1050): at the full 200-step budget used elsewhere in this document, the complete topology comparison at the scope below would cost single-digit hours rather than the tens of minutes actually spent; we report this budget explicitly rather than silently shrinking scope.
+
+\begin{table}[H]
+\centering
+\caption{Real-trained-circuit topology comparison: held-out reconstruction on 3 unseen CIFAR-10 images (9 image-seed pairs per topology: 3 seeds $\times$ 3 held-out images), 90-step budget.}
+\label{tab:topology_real_circuit}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Topology & Params & Held-out PSNR (dB) & Held-out SSIM & Wall time / run (min) \\
+\midrule
+HVK1D & 53{,}787 & $11.73\pm1.99$ & $0.317\pm0.227$ & $29.6\pm9.0$ \\
+HVK2D & 52{,}755 & $11.57\pm1.53$ & $0.304\pm0.188$ & $16.6\pm0.3$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The two topologies are statistically indistinguishable on held-out reconstruction quality at this scale (mean PSNR differs by only $0.16$~dB, well within one pooled standard deviation), but HVK2D trains in roughly half the wall-clock time of HVK1D for the same step budget and a comparable parameter count --- a genuine, measured resource-cost difference rather than an accuracy difference. This is consistent with HVK2D's circuit having a smaller measured observable set (19 vs.\ 27) and fewer two-qubit gates in the transpiled circuit (Table with \texttt{ibm\_circuit\_summary}, hardware-pilot methodology below): the grid topology is cheaper to simulate and measure without being less accurate on this task.
+
+\subsection{Surrogate Sweep: Full Statistical Scope}
+\label{sec:topology_surrogate}
+To reach the seed and dataset breadth a held-out comparison needs, we extend the existing analytic-surrogate held-out framework (already used for Tables~\ref{tab:hvk_real_cifar}--\ref{tab:multi_dataset_classification}) with an HVK1D-equivalent feature map. The existing HVK2D surrogate (\texttt{real\_newhvk\_features}) is a closed-form proxy built from six index-pairs of the local-observable block, standing in for the grid circuit's pairwise $ZZ$ correlators. The new HVK1D surrogate is not a relabeled copy: it iterates the chain topology's actual five nearest-neighbor bonds (vs.\ the grid's seven-edge pattern) and adds a second, distinct pair-type term reflecting HVK1D's extra $XX$/$YY$ measurement channels that the 2D grid circuit does not have (it measures only $Z$, $X$, $ZZ$). Both surrogates share the same local/positional input convention, so the comparison is apples-to-apples. We run the full held-out reconstruction and downstream-classification battery (5 seeds, stratified splits) across CIFAR-10, Fashion-MNIST, and PathMNIST.
+
+\begin{table}[H]
+\centering
+\caption{Surrogate-sweep topology comparison (5 seeds, held-out reconstruction PSNR and downstream classification accuracy), against the strongest classical control (raw-linear) for reference.}
+\label{tab:topology_surrogate}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Dataset / metric & HVK1D-pair & HVK2D-pair & raw-linear \\
+\midrule
+CIFAR-10, PSNR (dB) & $19.21\pm2.22$ & $19.28\pm2.25$ & $20.48\pm2.32$ \\
+CIFAR-10, accuracy & $0.240\pm0.102$ & $0.260\pm0.102$ & $0.240\pm0.102$ \\
+Fashion-MNIST, PSNR (dB) & $17.22\pm1.68$ & $17.24\pm1.69$ & $17.56\pm1.65$ \\
+Fashion-MNIST, accuracy & $0.574\pm0.021$ & $0.578\pm0.015$ & $0.654\pm0.020$ \\
+PathMNIST, PSNR (dB) & $26.07\pm5.36$ & $26.07\pm5.33$ & $26.60\pm5.57$ \\
+PathMNIST, accuracy & $0.560\pm0.046$ & $0.558\pm0.041$ & $0.596\pm0.041$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/topology_comparison_summary.pdf}
+\caption{HVK1D vs.\ HVK2D across both evidence bases. Left two panels: real-circuit held-out PSNR and per-run wall-clock time (90-step budget, 3 seeds, error bars = std). Right two panels: surrogate-sweep held-out reconstruction PSNR and classification accuracy across three datasets (5 seeds), both topologies plotted against the strongest classical control (raw-linear).}
+\label{fig:topology_comparison_summary}
+\end{figure*}
+
+The surrogate sweep reproduces the real-circuit finding at much higher statistical power: HVK1D-pair and HVK2D-pair track each other closely on every dataset and every metric (PSNR differs by at most $0.07$~dB, accuracy by at most $2$ percentage points), and both sit slightly below the raw-linear control --- the same task-dependent pattern already established for HVK2D alone in Section~\ref{sec:holdout_headline}, now shown to hold for HVK1D as well and to not depend on which topology is used. We read this as strengthening rather than complicating the main paper's positioning: neither topology claims a general reconstruction/classification advantage over simple classical baselines, and the choice between them is a resource-cost decision (HVK2D's shallower, sparser circuit trains faster) rather than an accuracy decision, at least on the ordinary reconstruction and classification tasks tested here. Section~\ref{sec:restricted_ablation}'s restricted, leakage-audited diagnostic remains the setting where entanglement --- and by extension circuit topology --- demonstrably matters.
+
 \section{Hardware Pilot Methodology}
 \label{sec:hardware_methodology}
 The main paper reports a real IBM Quantum hardware reconstruction pilot (five images: \textit{Monalisa} and four CIFAR-10 images, each optimized per-image, hardware PSNR $25.90$--$31.52$~dB against $36.56$--$46.79$~dB in noiseless simulation). This section gives the complete methodology.

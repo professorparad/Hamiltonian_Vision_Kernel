@@ -1,0 +1,44 @@
+[
+  {
+    "model": "raw-linear",
+    "n": 5,
+    "mean_accuracy": 0.654,
+    "std_accuracy": 0.01959591794226544
+  },
+  {
+    "model": "local-only",
+    "n": 5,
+    "mean_accuracy": 0.616,
+    "std_accuracy": 0.033823069050575555
+  },
+  {
+    "model": "no-entanglement",
+    "n": 5,
+    "mean_accuracy": 0.61,
+    "std_accuracy": 0.010954451150103333
+  },
+  {
+    "model": "quadratic-classical",
+    "n": 5,
+    "mean_accuracy": 0.5780000000000001,
+    "std_accuracy": 0.03544009029333867
+  },
+  {
+    "model": "HVK2D-pair-observable",
+    "n": 5,
+    "mean_accuracy": 0.578,
+    "std_accuracy": 0.014696938456699053
+  },
+  {
+    "model": "HVK1D-pair-observable",
+    "n": 5,
+    "mean_accuracy": 0.5740000000000001,
+    "std_accuracy": 0.020591260281973965
+  },
+  {
+    "model": "parameter-matched",
+    "n": 5,
+    "mean_accuracy": 0.548,
+    "std_accuracy": 0.03059411708155669
+  }
+]
