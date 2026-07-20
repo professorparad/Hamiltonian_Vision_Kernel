@@ -51,6 +51,13 @@ Table~\ref{tab:component_ablation} and Figure~\ref{fig:component_ablation_recons
 \label{fig:component_ablation_recons}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/component_ablation_summary.pdf}
+\caption{PSNR summary for all nine variants of Table~\ref{tab:component_ablation}, sorted descending, mean $\pm$ std over five seeds. The dotted line marks the shared trained-VQC baseline. Every quantum-side ablation (blue/gray) sits within a narrow band around baseline; only removing the trainable classical decoder (bottom two rows, orange) produces a large, unambiguous drop.}
+\label{fig:component_ablation_summary}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \caption{Matched core component ablations on the \textit{Monalisa} benchmark (five seeds, 240 training steps for every variant). Gaps smaller than one pooled baseline/control PSNR standard deviation are marked not significant.}
@@ -149,6 +156,13 @@ PneumoniaMNIST & $26.49{\pm}2.48$ & $25.73{\pm}2.29$ & Local/raw \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/multi_dataset_holdout_summary.pdf}
+\caption{Held-out reconstruction PSNR from Table~\ref{tab:multi_dataset_reconstruction}, best local/raw control vs.\ the HVK2D pair-observable map, across all six real datasets. The local/raw control is at or above the HVK2D map on every dataset, with error bars (std over the held-out split) overlapping in most cases --- the same task-dependent pattern established on CIFAR-10 in Figure~\ref{fig:hvk_real_cifar} holds outside CIFAR-10 as well.}
+\label{fig:multi_dataset_holdout_summary}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \caption{Downstream image-classification diagnostic using image-level pooled features. Accuracy mean $\pm$ std over three stratified seeds.}
@@ -207,6 +221,13 @@ Second image, multi-image training & $1.4740\times10^{-3}$ & 28.31 & 0.9862 \\
 \subsection{Scaling and Non-Monotonicity}
 Table~\ref{tab:capacity_ablation} sweeps training steps, qubit count, and MPS bond dimension on \textit{Monalisa} (single-seed). The step sweep confirms the model is convergence-limited early and plateaus near 500 steps. Within the tested range $q=8$ gives the strongest qubit-count result, but the bond-dimension sweep is non-monotonic: $\chi=1$ and $\chi=2$ \emph{outperform} the default $\chi=4$ under the same 200-step budget, while $\chi=8$ partially recovers. Bond dimension is therefore a coupled optimization hyperparameter here, not a monotonic compression-fidelity knob, and this sweep should be read as a single-seed directional diagnostic.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/capacity_scaling_sweeps.pdf}
+\caption{Capacity and scaling sweeps from Table~\ref{tab:capacity_ablation} (single-seed, \textit{Monalisa}). Left: PSNR vs.\ training steps, confirming convergence-limited behavior with a plateau near 500 steps. Center: qubit-count sweep, $q=8$ strongest in the tested range. Right: MPS bond-dimension sweep, highlighting the non-monotonic dip at the default $\chi=4$ (orange) relative to both smaller ($\chi=1,2$, green) and larger ($\chi=8$, gray) bond dimensions.}
+\label{fig:capacity_scaling_sweeps}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \caption{Capacity and feature-bottleneck sweeps (single-seed; directional, not statistically resolved).}
@@ -253,6 +274,13 @@ Raw/local controls & 32 & 2112 & 0 & 6/4 \\
 
 The same-set CIFAR-10 and \textit{Monalisa} results (Table~\ref{tab:cifar10}) are capacity and positioning diagnostics rather than generalization evidence: HVK2D reaches $34.50$~dB mean PSNR on the five-image native-resolution CIFAR-10 subset, and $40.70$~dB on the $256\times256$ \textit{Monalisa} target, exceeding a 1D control by $5.98$~dB. The high-capacity MLP and CNN baselines remain stronger in pure same-set pixel accuracy (MLP best-case PSNR exceeds $100$~dB, a memorization signature), and neither same-set result should be read against the held-out finding above.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/cifar_metric_comparison.pdf}
+\caption{Same-set CIFAR-10 comparison across all eight methods of Table~\ref{tab:cifar10}: MSE (log scale, left), PSNR with the memorization framing made explicit (center), and mean SSIM over the five images (right). HVK2D is competitive with CNN and clearly ahead of the GAN/autoencoder/PHL baselines, while the MLP's near-$100$~dB PSNR reflects capacity-driven memorization of this small same-set fit rather than representation quality.}
+\label{fig:cifar_metric_comparison}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \caption{CIFAR-10 native $32\times32$ same-set reconstruction over five images (not a held-out test).}
@@ -276,6 +304,20 @@ PHL & $4.3415\times10^{-2}$ & $2.2253\times10^{-2}$ & 14.01 & 16.53 & 0.78792 & 
 
 \subsection{The Physics-Informed Regularizer's Conditional Value}
 Table~\ref{tab:hamiltonian_controls} shows the Hamiltonian energy term is, if anything, a mild drag on reconstruction quality in the present system. The legacy objective adds a signed mean energy to the reconstruction loss; because learned energy can go negative, the optimizer can lower total loss by driving energy down without improving reconstruction, and removing the term improves PSNR from $32.24$ to $33.30$~dB. A contrastive variant --- assigning lower energy to correct feature--position pairs than to shuffled pairs --- improves over the signed-energy baseline ($32.84$~dB) but remains below its own no-energy-loss counterpart ($33.33$~dB). We read this as a case where the reconstruction loss already dominates the optimization signal at this model scale: a physically motivated regularizer has room to help when it resolves an otherwise underdetermined objective, and here the pixel-fidelity loss alone is sufficiently informative that the extra term mostly adds noise to the gradient. This does not mean Hamiltonian regularization is never useful --- only that its value is conditional on the reconstruction loss being under-constrained.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/contrastive_training_curves.pdf}
+\caption{Training dynamics for the contrastive Hamiltonian-core run of Table~\ref{tab:hamiltonian_controls}: total loss (left) and reconstruction MSE on a log scale (right) over 200 epochs. Both converge smoothly with no instability introduced by the contrastive energy term.}
+\label{fig:contrastive_training_curves}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/contrastive_order_parameter_curve.pdf}
+\caption{Order parameter and mean Hamiltonian energy (left) and order-parameter susceptibility (right) for the same contrastive Hamiltonian-core run. The energy diagnostic drifts steadily negative as training proceeds while the order parameter stays comparatively flat after an early transition near epoch 10 --- consistent with the energy term being informative as a diagnostic signal without being the quantity that most improves reconstruction, matching the conditional-value reading of Table~\ref{tab:hamiltonian_controls}.}
+\label{fig:contrastive_order_parameter}
+\end{figure}
 
 \begin{table}[H]
 \centering
@@ -308,6 +350,13 @@ Before the held-out result above became this document's central claim, we had a 
 \label{sec:restricted_ablation}
 The main paper's restricted pair-correlation diagnostic (entangling observables representationally necessary for a nonlocal-structure target, mean $R^2=0.9735$ vs.\ $R^2\leq0.02$ for non-entangling controls) has a training-dynamics signature behind it. Table~\ref{tab:phase_transition_ablation} gives the full per-variant breakdown: critical epoch $t_c$, peak susceptibility $\mathcal{X}_{\max}$, and final order parameter $M_z(200)$, for the same four variants and training run underlying that diagnostic. The pattern is consistent: every variant reorganizes at the same early critical epoch, but the entangling channel does so with a $2.1$--$6.7\times$ larger susceptibility peak than any resource-matched classical control, and settles at a final order parameter roughly double the strongest control's.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/full_ablation_metric_comparison.pdf}
+\caption{The restricted pair-correlation diagnostic underlying the entanglement-necessity result (mean $R^2=0.9735$ vs.\ $R^2\leq0.02$ for non-entangling controls), shown here as MSE (left) and PSNR (right) across the full variant set: the trained HVK2D entangling map, freeze-quantum, no-entanglement, raw-linear, parameter-matched classical, random-VQC, and freeze-classical. The entangling channel (blue) separates clearly from every non-entangling control on this target, in direct contrast to the ordinary held-out reconstruction result of Section~\ref{sec:holdout_headline} where the same entangling channel does not separate from local/raw controls --- the two figures together are the visual form of this document's central task-dependence argument.}
+\label{fig:restricted_diagnostic_summary}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \caption{Phase-transition ablation on the restricted pair-correlation diagnostic.}
@@ -326,7 +375,16 @@ Random VQC & 10 & 0.0305 & 0.1096 \\
 
 \subsection{Extended Order-Parameter Ablation Across Real Datasets}
 \label{sec:multi_dataset_ablation}
-We extend the same order-parameter/critical-epoch diagnostic to a small representative sample of images from CIFAR-10 and five further real datasets, training a fresh HVK2D model per image (non-overlapping $8\times8$ patches, 16 patches/image) and tracking $M_z(t)$ and $\mathcal{X}(t)=|M_z(t)-M_z(t-\Delta t)|$ at every step, applying the same median-plus-two-standard-deviation detection threshold used throughout this project. Table~\ref{tab:multi_dataset_phase_transition} reports the result: \textbf{every single sampled image across all six datasets shows a detected phase-transition-like reorganization} --- 13 of 13, with no exceptions. Figure~\ref{fig:multi_dataset_trajectories} plots one representative order-parameter trajectory per dataset. This is a small-sample (2--3 images/dataset), single-seed diagnostic, reported at that scope; it indicates the training-dynamics signature is not an artifact of the synthetic restricted diagnostic, but a consistent property of HVK training on real image data.
+We extend the same order-parameter/critical-epoch diagnostic to a small representative sample of images from CIFAR-10 and five further real datasets, training a fresh HVK2D model per image (non-overlapping $8\times8$ patches, 16 patches/image) and tracking $M_z(t)$ and $\mathcal{X}(t)=|M_z(t)-M_z(t-\Delta t)|$ at every step, applying the same median-plus-two-standard-deviation detection threshold used throughout this project. Table~\ref{tab:multi_dataset_phase_transition} reports the result: every single sampled image across all six datasets shows a detected phase-transition-like reorganization --- \textbf{13 of 13, with no exceptions}. This is a small-sample (2--3 images/dataset), single-seed diagnostic, reported at that scope; it indicates the training-dynamics signature is not an artifact of the synthetic restricted diagnostic, but a consistent property of HVK training on real image data.
+
+Rather than a single combined trajectory plot, Figure~\ref{fig:multi_dataset_gallery} shows the full order-parameter/susceptibility display, in the same dual-axis style as the main paper's headline examples, individually for \emph{every one of the 13 sampled images}, each named by its real class or content label (CIFAR-10 class name, MNIST/Fashion-MNIST digit or garment class, medmnist tissue/cell/diagnosis label) rather than a bare index. Each panel marks its own detected critical epoch $t_c$ and peak susceptibility $\mathcal{X}_{\max}$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/multi_dataset_phase_transition_gallery.pdf}
+\caption{Order-parameter phase-transition display for every one of the 13 sampled images underlying Table~\ref{tab:multi_dataset_phase_transition}, three from CIFAR-10 (cat, ship/hydrofoil, ship/sea boat) and two each from MNIST (digits 5 and 0), Fashion-MNIST (ankle boot, T-shirt/top), PathMNIST (adipose tissue, mucus), BloodMNIST (platelet, immature granulocyte), and PneumoniaMNIST (two pneumonia-positive radiographs). Each panel plots that image's own order parameter $M_z(t)$ (solid, left axis) and susceptibility $\mathcal{X}(t)$ (dashed, right axis) across its full training run, with the detected critical epoch $t_c$ and peak susceptibility $\mathcal{X}_{\max}$ annotated; all 13 panels show a clear, individually-detected reorganization event.}
+\label{fig:multi_dataset_gallery}
+\end{figure}
 
 \begin{table}[H]
 \centering
@@ -349,13 +407,6 @@ Total & 13 & \textbf{13/13} & -- & -- & -- \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/multi_dataset_order_parameter_trajectories.pdf}
-\caption{Order-parameter trajectory $M_z(t)$ during training, one representative sampled image per dataset. Every trajectory moves substantially from its initial value.}
-\label{fig:multi_dataset_trajectories}
-\end{figure}
-
 \section{Hardware Pilot Methodology}
 \label{sec:hardware_methodology}
 The main paper reports a real IBM Quantum hardware reconstruction pilot (five images: \textit{Monalisa} and four CIFAR-10 images, each optimized per-image, hardware PSNR $25.90$--$31.52$~dB against $36.56$--$46.79$~dB in noiseless simulation). This section gives the complete methodology.
@@ -369,6 +420,13 @@ This is the run underlying the ``Legacy baseline, signed energy'' row of Table~\
 
 \subsection{Circuit Reconstruction}
 The trained HVK1D forward pass applies, per patch: $R_X$ angle embedding, $R_Y$ positional modulation, then two \texttt{StronglyEntanglingLayers} (per-wire $R_Z$-$R_Y$-$R_Z$ rotations with a CNOT ring whose range increments by layer). We rebuilt this gate-for-gate in Qiskit. Because the trained circuit measures $Z$, $X$, $ZZ$, $XX$, and $YY$ (27 observables), and pairwise correlators are recoverable as joint parities of the \emph{same} all-$Z$/all-$X$/all-$Y$ basis measurements that already give the single-qubit marginals, only three measurement circuits per patch are needed. For 16 Monalisa patches this is $16\times3=48$ circuits. The HVK2D grid circuit is simpler (two layers of fixed grid-edge CNOTs then per-qubit rotations) and measures only $Z$, $X$, $ZZ$ (19 observables, no $XX$/$YY$), so only two measurement circuits per patch are needed: for four CIFAR images at 16 patches each, $4\times16\times2=128$ circuits.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{figures/ibm_circuit_summary.pdf}
+\caption{Transpiled circuit resource comparison between the HVK1D (\textit{Monalisa}) and HVK2D (CIFAR) per-patch circuits at \texttt{optimization\_level=1} on \texttt{ibm\_fez}: circuit depth (left) and CX-gate count (right). Both circuits are shallow (depth 18) and use few entangling gates (10--14 CX), consistent with the small hardware-vs-simulator PSNR gap reported in the main paper rather than a circuit heavy enough to accumulate substantial device noise.}
+\label{fig:ibm_circuit_summary}
+\end{figure}
 
 \subsection{Local Validation Before Any Hardware Submission}
 Every circuit was validated against the cached, training-time observable vectors via an exact Qiskit statevector simulation, \emph{before} any job was submitted to real hardware.
