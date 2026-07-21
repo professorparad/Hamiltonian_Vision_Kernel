@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import random
 import sys
 import time
@@ -228,7 +229,9 @@ def run_isolated(config: dict) -> dict:
                 "error": f"exceeded {RUN_TIMEOUT_S}s hard timeout, killed"}
 
 
-MAX_WORKERS = 2  # leave headroom for monitoring, LaTeX builds, and OS I/O while the CPU-bound sweep runs
+MAX_WORKERS = max(1, min(2, int(os.environ.get("HVK_SCALING_WORKERS", "2"))))
+# Default to two workers, but permit a thermally conservative single-worker
+# launch without editing the scientific configuration or queue state.
 
 # --- File-based work queue -------------------------------------------------
 # A second, unrelated process on this machine has repeatedly (and, as far as
