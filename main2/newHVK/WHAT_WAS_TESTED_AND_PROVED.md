@@ -1,4 +1,4 @@
-# What Was Added, Tested, and Proved
+# What Was Added, Tested, and Verified
 
 This note summarizes the new validation work added for the HVK paper. It is
 written to keep the claim boundary clear for journal submission.
@@ -7,9 +7,12 @@ written to keep the claim boundary clear for journal submission.
 
 The current evidence does **not** prove quantum advantage.
 
-What it does prove is narrower and more defensible:
+What it verifies is narrower and more defensible. The manuscript and its
+machine-readable artifact map are authoritative if values in older exploratory
+notes differ from the retained seed-level analyses summarized here.
 
-- The HVK observable channel is load-bearing in the reconstruction pipeline.
+- The HVK observable channel is informative, while its necessity is established
+  only for the restricted nonlocal target and tested fixed-readout feature class.
 - A deliberately constructed pair-observable feature map can solve restricted
   nonlocal correlation diagnostics that local/single-site controls cannot solve
   under the same readout protocol.
@@ -55,8 +58,8 @@ What was found:
 
 Main result:
 
-- Local/raw PSNR: about `20.66 ± 1.46 dB`
-- HVK2D real-CIFAR PSNR: about `20.07 ± 1.45 dB`
+- Local/raw PSNR: `18.80 ± 1.42 dB`
+- HVK2D real-CIFAR PSNR: `18.12 ± 1.54 dB`
 
 Claim:
 
@@ -78,10 +81,13 @@ What was tested:
 
 What was found:
 
-- HVK2D is significantly worse than raw-linear/local controls on held-out CIFAR.
-- HVK2D is significantly better than random VQC and strict random features.
-- HVK2D is statistically similar to no-entanglement, shuffled-pair, and
-  quadratic controls in this small held-out CIFAR setup.
+- Seed-aggregated HVK2D-minus-local/raw PSNR is `-0.68 dB` with bootstrap
+  95% CI `[-0.91, -0.46] dB`; the two-sided Wilcoxon result is `p=0.0625`
+  at `n=5` seeds and therefore does not cross a conventional 0.05 threshold.
+- Comparisons are interpreted at the seed level, not by treating images that
+  share one fitted readout as independent replicates.
+- The numerical ordering supports a scoped negative result for ordinary
+  reconstruction, not a claim of statistically established superiority.
 
 Claim:
 
