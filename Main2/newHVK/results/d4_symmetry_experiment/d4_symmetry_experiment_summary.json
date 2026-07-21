@@ -1,0 +1,52 @@
+[
+  {
+    "mode": "D4-pooled-HVK2D",
+    "n_seeds": 5,
+    "mean_equivariance_error": 9.466634606004402e-17,
+    "std_equivariance_error": 2.4698082954088285e-18,
+    "mean_output_consistency_mse": 3.186486752649694e-21,
+    "std_output_consistency_mse": 1.6576109306926444e-21,
+    "mean_accuracy_psnr": 14.967365340679569,
+    "std_accuracy_psnr": 0.5298900387998569
+  },
+  {
+    "mode": "D4-pooled-classical",
+    "n_seeds": 5,
+    "mean_equivariance_error": 8.94080332351943e-17,
+    "std_equivariance_error": 2.194786820276898e-18,
+    "mean_output_consistency_mse": 1.369895649819869e-23,
+    "std_output_consistency_mse": 9.5805603578432e-24,
+    "mean_accuracy_psnr": 15.118750235800201,
+    "std_accuracy_psnr": 0.5178643761652028
+  },
+  {
+    "mode": "HVK2D-positional",
+    "n_seeds": 5,
+    "mean_equivariance_error": 0.8162926655424639,
+    "std_equivariance_error": 0.0070422131819184415,
+    "mean_output_consistency_mse": 0.011492441765735252,
+    "std_output_consistency_mse": 0.0021272080853263955,
+    "mean_accuracy_psnr": 15.120370814461248,
+    "std_accuracy_psnr": 0.5920038665583544
+  },
+  {
+    "mode": "HVK2D-augmented",
+    "n_seeds": 5,
+    "mean_equivariance_error": 0.8162926655424639,
+    "std_equivariance_error": 0.0070422131819184415,
+    "mean_output_consistency_mse": 0.010552741726342699,
+    "std_output_consistency_mse": 0.002255748213703271,
+    "mean_accuracy_psnr": 15.303141558080924,
+    "std_accuracy_psnr": 0.5621028817763891
+  },
+  {
+    "mode": "local-raw",
+    "n_seeds": 5,
+    "mean_equivariance_error": 0.8380048050729169,
+    "std_equivariance_error": 0.006678767773821597,
+    "mean_output_consistency_mse": 0.012019002873762948,
+    "std_output_consistency_mse": 0.0024498334341868052,
+    "mean_accuracy_psnr": 15.159728658955377,
+    "std_accuracy_psnr": 0.682005774098292
+  }
+]

@@ -165,11 +165,23 @@ def paired_stats(rows, dataset_names):
             keys = sorted(set(hvk1d) & set(ctrl))
             if not keys:
                 continue
-            diff = np.asarray([hvk1d[k]["psnr"] - ctrl[k]["psnr"] for k in keys])
+            image_diffs = {
+                key: float(hvk1d[key]["psnr"] - ctrl[key]["psnr"])
+                for key in keys
+            }
+            # Images sharing a split seed are not independent replicates. Use
+            # the within-seed mean as the inferential unit.
+            seeds = sorted({seed for seed, _ in keys})
+            diff = np.asarray([
+                np.mean([value for (row_seed, _), value in image_diffs.items() if row_seed == seed])
+                for seed in seeds
+            ])
             low, high = bootstrap_ci(diff, seed=200_000 + len(stats))
             stats.append({
                 "dataset": dataset, "comparison": f"HVK1D-pair-observable minus {control}",
-                "n_pairs": len(keys), "mean_psnr_difference_db": float(diff.mean()),
+                "n_seeds": len(seeds), "n_image_seed_pairs": len(keys),
+                "inference_unit": "seed mean over held-out images",
+                "mean_psnr_difference_db": float(diff.mean()),
                 "bootstrap95_low_db": low, "bootstrap95_high_db": high,
                 "wilcoxon_p_psnr": paired_wilcoxon_pvalue(diff),
             })

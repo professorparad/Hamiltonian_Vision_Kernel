@@ -2,20 +2,20 @@
 % belong in supplementary_study.tex and should not be duplicated here.
 \documentclass[journal]{IEEEtran}
 \usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm}
-\usepackage[hypertexnames=false]{hyperref}
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
 \usepackage{float}
 \begin{document}
 
 \title{Hamiltonian Vision Kernel: A Physics-Informed Hybrid Quantum--Classical Autoencoder with Provable Symmetry and Real Hardware Validation}
 
-\author{Sparsho~Chakraborty\IEEEauthorrefmark{1} and Dr.~Siddhartha~Patra\IEEEauthorrefmark{2}%
+\author{Sparsho~Chakraborty\IEEEauthorrefmark{1} and Siddhartha~Patra\IEEEauthorrefmark{2}%
 \thanks{\IEEEauthorrefmark{1}School of Basic Sciences, Department of Physics, Indian Institute of Technology Bhubaneswar, Odisha, India.}%
-\thanks{\IEEEauthorrefmark{2} Assistant Professor , Centre for Quantum Engineering, Research and Education (CQUERE), TCG CREST, Kolkata, India.}}
+\thanks{\IEEEauthorrefmark{2}Centre for Quantum Engineering, Research and Education (CQUERE), TCG CREST, Kolkata, India.}}
 
 \maketitle
 
 \begin{abstract}
-We introduce the Hamiltonian Vision Kernel (HVK), a new physics-informed framework for hybrid quantum--classical visual representation and reconstruction. HVK combines matrix-product-state patch features, a variational quantum circuit that exposes a Pauli-correlator latent space, two-dimensional Fourier positional encoding, a learnable Heisenberg energy diagnostic, and a classical decoder. HVK1D and HVK2D instantiate the framework on chain and grid interaction graphs, while an observable-pooling extension provides $D_4$ equivariance by construction. Across six real image datasets, the same framework supports high-fidelity per-image reconstruction and a consistent order-parameter reorganization during training. Three complementary results establish its structural value. First, the pooled HVK2D map achieves numerical equivariance error of $9.57\times10^{-17}$. Second, on a leakage-audited task requiring distant-patch products, the entangling observable channel reaches mean $R^2=0.974$, compared with $R^2\leq0.02$ for non-entangling controls. Third, five images are reconstructed directly from observables measured on IBM Quantum hardware without retraining, reaching $25.90$--$31.52$~dB PSNR. Together, these results position HVK as a reusable framework for studying symmetry, topology, nonlocal correlations, Hamiltonian diagnostics, and hardware-executed visual models. Quantum-art and image-reconstruction outputs are applications of this framework, rather than its defining objective. A separate supplementary study provides resource-matched ablations, leakage audits, statistical controls, and complete hardware methodology.
+We introduce the Hamiltonian Vision Kernel (HVK), a physics-informed framework for hybrid quantum--classical visual representation and reconstruction. HVK combines matrix-product-state patch features, a variational quantum circuit exposing a Pauli-correlator latent space, two-dimensional Fourier positional encoding, a learnable Heisenberg energy diagnostic, and a classical decoder. HVK1D and HVK2D instantiate chain and grid interaction graphs, while observable pooling provides $D_4$ equivariance by construction. Across six real image datasets, the framework supports high-fidelity per-image reconstruction; all 13 sampled training runs meet a stated susceptibility-peak reorganization criterion. Three scoped results characterize its structure. First, the pooled HVK2D map achieves numerical equivariance error of $9.57\times10^{-17}$. Second, on a leakage-audited task requiring distant-patch products, the entangling observable channel reaches mean $R^2=0.974$, compared with $R^2\leq0.02$ for non-entangling controls. Third, five images are reconstructed from observables measured on IBM Quantum hardware without retraining, reaching $25.90$--$31.52$~dB PSNR. These results motivate HVK as a framework for studying symmetry, topology, nonlocal correlations, Hamiltonian diagnostics, and hardware-executed visual models. A companion supplementary study provides resource-matched ablations, leakage audits, statistical controls, and complete hardware methodology.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -23,16 +23,16 @@ Quantum Image Processing, Tensor Networks, Variational Quantum Algorithms, Pauli
 \end{IEEEkeywords}
 
 \section{Introduction}
-Hybrid quantum--classical models for vision tasks are increasingly proposed as a route to representations with favorable inductive bias, exploiting entanglement, physically motivated regularizers, or tensor-network structure that classical convolutional pipelines do not natively expose \cite{Cerezo2021, Tilly2022, Preskill2018}. The variational quantum eigensolver and its descendants exploit the local decomposability of physically relevant Hamiltonians to construct shallow, problem-aware circuits \cite{Cerezo2021, Tilly2022, Bauer2020}, and quantum image processing provides encodings that place pixel information directly into qubit registers \cite{Chakraborty2018, Zhou2017, Yao2017}. Tensor-network methods, in parallel, have proven effective as compressed representations of structured classical data, including images \cite{Cirac2021, Latorre2005, Han2018, Stoudenmire2016, Fei2021, Guala2023}, and more broadly other structured data such as particle-physics events \cite{Araz2022}. Related hybrid quantum architectures target adjacent imaging tasks, including quantum annealing-based tomographic reconstruction \cite{Haga2024}, adiabatic quantum computing for emission tomography \cite{Nau2023}, quantum neural compressive sensing for ghost imaging \cite{Zhai2025}, hybrid autoencoder-plus-quantum-SVM feature extraction for image classification \cite{Slabbert2024}, and quantum capsule networks \cite{Liu2022}; none of these combines a Pauli-correlator latent space with an enforced group-equivariant symmetry construction and a physically motivated energy diagnostic, the combination HVK introduces.
+Hybrid quantum--classical models for vision tasks are increasingly proposed as a route to representations with favorable inductive bias, exploiting entanglement, physically motivated regularizers, or tensor-network structure that classical convolutional pipelines do not natively expose \cite{Cerezo2021, Tilly2022, Preskill2018}. The variational quantum eigensolver and its descendants exploit the local decomposability of physically relevant Hamiltonians to construct shallow, problem-aware circuits \cite{Cerezo2021, Tilly2022, Bauer2020}, and quantum image processing provides encodings that place pixel information directly into qubit registers \cite{Chakraborty2018, Zhou2017, Yao2017}. Tensor-network methods, in parallel, have proven effective as compressed representations of structured classical data, including images \cite{Cirac2021, Latorre2005, Han2018, Stoudenmire2016, Fei2021, Guala2023}, and more broadly other structured data such as particle-physics events \cite{Araz2022}. Related hybrid quantum architectures target adjacent imaging tasks, including quantum annealing-based tomographic reconstruction \cite{Haga2024}, adiabatic quantum computing for emission tomography \cite{Nau2023}, quantum neural compressive sensing for ghost imaging \cite{Zhai2025}, hybrid autoencoder-plus-quantum-SVM feature extraction for image classification \cite{Slabbert2024}, and quantum capsule networks \cite{Liu2022}. HVK focuses on the specific combination of a Pauli-correlator latent space, enforced group-equivariant pooling, and a physically motivated energy diagnostic.
 
-We introduce the Hamiltonian Vision Kernel (HVK1D/HVK2D), which combines these ingredients into a single architecture with three properties we are not aware of jointly appearing elsewhere: a \emph{Pauli-correlator latent space} (measured VQC observables, not a raw quantum state, form the representation handed to a classical decoder, in the spirit of quantum-enhanced feature maps \cite{Havlicek2019}); an \emph{enforced, provable $D_4$ symmetry} extension, group-averaging the observable grid over the eight symmetries of the square rather than merely motivating symmetry through architecture choices, in the spirit of group-equivariant classical vision \cite{Cohen2016} and symmetry-embedding constructions for variational circuits \cite{Meyer2023}; and a \emph{learnable Heisenberg energy diagnostic} that exposes optimization dynamics --- energy descent, magnetization, and a susceptibility-based training-time reorganization signature --- that a purely classical autoencoder does not produce. Table~\ref{tab:differentiation} contrasts these properties against classical, adversarial, and standard quantum autoencoder baselines.
+We introduce the Hamiltonian Vision Kernel (HVK1D/HVK2D), which combines these ingredients into a single architecture with three properties studied jointly here: a \emph{Pauli-correlator latent space} (measured VQC observables, not a raw quantum state, form the representation handed to a classical decoder, in the spirit of quantum-enhanced feature maps \cite{Havlicek2019}); an \emph{enforced, provable $D_4$ symmetry} extension, group-averaging the observable grid over the eight symmetries of the square rather than merely motivating symmetry through architecture choices, in the spirit of group-equivariant classical vision \cite{Cohen2016} and symmetry-embedding constructions for variational circuits \cite{Meyer2023}; and a \emph{learnable Heisenberg energy diagnostic} that exposes optimization dynamics --- energy descent, magnetization, and a susceptibility-based training-time reorganization signature --- that a purely classical autoencoder does not produce. Table~\ref{tab:differentiation} contrasts these properties against classical, adversarial, and standard quantum autoencoder baselines.
 
 \paragraph{Contributions.}
 \begin{itemize}
     \item \textbf{The HVK1D/HVK2D architecture}: MPS patch features, a 6-qubit VQC producing a 19--27-D Pauli-correlator observable vector, 2D Fourier positional encoding, a learnable Heisenberg energy diagnostic, and a classical decoder, with an optional $D_4$-pooled observable-grid variant.
     \item \textbf{Reconstruction results across six real image datasets} (CIFAR-10, MNIST, Fashion-MNIST, PathMNIST, BloodMNIST, PneumoniaMNIST), each trained per-image under an identical protocol (Section~\ref{sec:sameset_results}).
     \item \textbf{A provable $D_4$ symmetry extension}: a group-pooled HVK2D observable map is equivariant to the square dihedral group by construction, verified to floating-point precision (Section~\ref{sec:d4}).
-    \item \textbf{An entanglement-necessity result and its training-dynamics signature}: a restricted, leakage-audited diagnostic shows entangling pair observables are representationally necessary when a target explicitly depends on distant-patch products, and the same task shows a consistent, detectable order-parameter phase-transition-like reorganization in every one of 13 sampled images across all six datasets (Sections~\ref{sec:entanglement_necessity}--\ref{sec:phase_transition}).
+    \item \textbf{An entanglement-necessity result and its training-dynamics signature}: within a restricted, leakage-audited feature class and fixed linear-readout protocol, entangling pair observables are necessary when the target explicitly depends on distant-patch products; related order-parameter reorganizations recur in all 13 sampled images across six datasets (Sections~\ref{sec:entanglement_necessity}--\ref{sec:phase_transition}).
     \item \textbf{A real IBM-hardware reconstruction pilot} (Section~\ref{sec:hardware_pilot}): an already-trained checkpoint's exact parameters, replayed on real quantum hardware with no retraining, reconstruct five images directly from hardware-measured observables.
 \end{itemize}
 A companion supplementary document, \textit{HVK Supplementary Study: Component-Wise Ablation, Leakage Audit, and Hardware Validation Methodology}, reports a separate, rigorous question --- under a resource-matched, freeze-based ablation protocol, which of HVK's components are strictly necessary for reconstruction quality on held-out real images --- together with full hardware-pilot methodology (circuit construction, validation, job identifiers, quota accounting). We keep that analysis in a companion document rather than this one so that the architecture-level contributions above and the component-necessity question, which are logically distinct, do not obscure each other; Section~\ref{sec:ablation_relationship} summarizes its central finding and how it relates to the results here.
@@ -65,6 +65,7 @@ Table~\ref{tab:variants} summarizes the tested variants. HVK1D uses a linear 6-q
 \caption{HVK variants tested in this paper.}
 \label{tab:variants}
 \scriptsize
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccc}
 \toprule
 Variant & Topology & Latent dim. & Symmetry \\
@@ -74,7 +75,8 @@ HVK2D & $2\times3$ grid & 19-D & $D_4$-motivated only \\
 Symmetric HVK1D & 6-qubit chain & 27-D & $\mathrm{U}(1)$ coupling \\
 $D_4$-pooled HVK2D & $2\times3$ grid, pooled & 19-D & $D_4$-equivariant (proven) \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \section{Experimental Setup}
@@ -93,6 +95,7 @@ We trained a fresh HVK2D model per image (non-overlapping $8\times8$ patches, 16
 \caption{HVK2D same-set reconstruction across six real image datasets (per-image trained, 80--100 steps, mean $\pm$ std over sampled images).}
 \label{tab:sameset_multi_dataset}
 \scriptsize
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccc}
 \toprule
 Dataset & $n$ images & PSNR (dB) & SSIM \\
@@ -104,7 +107,8 @@ PathMNIST & 3 & $34.97\pm1.11$ & $0.8907\pm0.0597$ \\
 BloodMNIST & 2 & $33.07\pm4.68$ & $0.9707\pm0.0273$ \\
 PneumoniaMNIST & 2 & $41.60\pm0.98$ & $0.9985\pm0.0006$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \subsection{Scope and Adaptation Across Images}
@@ -115,13 +119,14 @@ A model optimized on one image alone does not transfer zero-shot to a structural
 \label{sec:hardware_pilot}
 Every result above is a noiseless-simulator result, a limitation we flagged rather than left implicit. We report a first step past it: a small but complete image-reconstruction pilot executed on real IBM Quantum hardware (\texttt{ibm\_fez}, a 156-qubit Heron-class processor), rather than the compiled-circuit feasibility probe of Appendix~\ref{app:hardware} alone. For five images --- the full 16-patch \textit{Monalisa} benchmark and four native-resolution CIFAR-10 images (\textit{cat}, \textit{ship}$\times2$, \textit{airplane}), each optimized directly on its own target image following the same per-image protocol as every result in this paper --- we took an already-trained HVK1D/HVK2D checkpoint's exact learned parameters, rebuilt its measurement circuits gate-for-gate in Qiskit, verified the translation against the original PennyLane simulator to within numerical noise ($\leq 9.4\times10^{-4}$ maximum absolute error per observable across every patch; full validation numbers in the companion supplementary document), and then executed the same circuits on real hardware with 256 shots per measurement basis, a fixed per-basis shot budget rather than an adaptive shadow-tomography-style estimation scheme \cite{Huang2020Shadows}. The hardware-measured observables were decoded by the same trained classical decoder, with no retraining and no simulator involved anywhere in the reconstruction path.
 
-The headline: reconstructions from real, noisy hardware measurements remain clearly recognizable. \textit{Monalisa} reaches $25.90$~dB PSNR from hardware measurements alone, against a $37.99$~dB noiseless-simulator replay of the identical circuit (Figure~\ref{fig:hardware_reconstruction_monalisa}); the four CIFAR-10 images average $29.56\pm2.03$~dB on hardware against $42.69\pm3.84$~dB in simulation (Figure~\ref{fig:hardware_reconstruction_cifar}, Table~\ref{tab:hardware_pilot_summary}). The gap is the expected signature of NISQ-era readout and gate noise on an uncorrected, unmitigated circuit --- exactly what a first honest hardware number should show --- and every one of the five images stays well above a random-latent floor ($11$--$15$~dB in the companion supplementary study's random-VQC control), meaning the hardware-measured observable channel is carrying real, recognizable structure through real device noise. The full pilot used 176 circuits and consumed $16$ of the account's $600$ free-plan quantum-processor seconds, so this is a cheap, repeatable diagnostic rather than a rare resource commitment.
+Reconstructions from real, noisy hardware measurements retain recognizable image structure. \textit{Monalisa} reaches $25.90$~dB PSNR from hardware measurements, against a $37.99$~dB noiseless-simulator replay of the identical circuit (Figure~\ref{fig:hardware_reconstruction_monalisa}); the four CIFAR-10 images average $29.56\pm2.03$~dB on hardware against $42.69\pm3.84$~dB in simulation (Figure~\ref{fig:hardware_reconstruction_cifar}, Table~\ref{tab:hardware_pilot_summary}). The observed gap is consistent with noise in these unmitigated device executions, although the five-image pilot does not isolate individual noise sources. Every hardware reconstruction remains above the random-latent control range ($11$--$15$~dB in the companion supplementary study). The pilot used 176 circuits and consumed $16$ quantum-processor seconds under the reported account meter.
 
 \begin{table}[t]
 \centering
 \caption{Real IBM hardware reconstruction pilot (backend \texttt{ibm\_fez}, 256 shots/basis, no retraining). PSNR compares hardware-decoded and simulator-decoded reconstructions against the same ground-truth image.}
 \label{tab:hardware_pilot_summary}
 \scriptsize
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccc}
 \toprule
 Image & Patches & Sim.\ PSNR (dB) & HW PSNR (dB) \\
@@ -134,7 +139,8 @@ CIFAR airplane (HVK2D) & 16 & 46.79 & 29.10 \\
 \midrule
 CIFAR mean $\pm$ std (4 images) & -- & $42.69\pm3.84$ & $29.56\pm2.03$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \begin{figure*}[t]
@@ -151,7 +157,7 @@ CIFAR mean $\pm$ std (4 images) & -- & $42.69\pm3.84$ & $29.56\pm2.03$ \\
 \label{fig:hardware_reconstruction_cifar}
 \end{figure*}
 
-We are careful about scope here: five images is a pilot, and we make no hardware-advantage claim --- the point is narrower and, we think, valuable: the trained HVK observable channel survives real device noise well enough to remain visually and quantitatively informative, at negligible quantum-time cost. Full methodology --- exact gate sequences, per-basis measurement construction, job IDs, and the local-validation numbers that preceded hardware submission --- is documented in the companion supplementary document so the main text stays focused on the result.
+Five images constitute a pilot, and we make no hardware-advantage claim. The narrower result is that the trained HVK observable channel remains visually and quantitatively informative in these device executions under the reported circuit and shot budget. Full methodology --- exact gate sequences, per-basis measurement construction, job IDs, and pre-submission local-validation results --- is documented in the companion supplementary document.
 
 \subsection{Provable $D_4$ Symmetry}
 \label{sec:d4}
@@ -182,9 +188,9 @@ Local/raw & $8.37\times10^{-1}$ & $1.31\times10^{-1}$ \\
 \label{fig:d4_equivariance}
 \end{figure}
 
-\subsection{Entanglement Is Representationally Necessary for Nonlocal Structure}
+\subsection{Entanglement Necessity Within the Tested Nonlocal-Structure Protocol}
 \label{sec:entanglement_necessity}
-This diagnostic is deliberately constructed to reward pair-observable structure: the target is a fixed synthetic function of \emph{simulated} patch features not concatenated into any candidate's own input block (Appendix~\ref{app:leakage_summary} summarizes the leakage-audit procedure that rules out circularity), and every control receives the same raw inputs as HVK2D. Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic} report the result across five seeds: HVK2D's entangling observable channel reaches mean $R^2=0.9735$ ($32.77$~dB PSNR), a $17.74$~dB improvement over a no-entanglement control ($R^2=0.019$) and $18.52$~dB over random-VQC latents ($R^2=-0.173$); freezing the quantum circuit (features fixed, only readout trained) still reaches $R^2=0.853$, while a parameter-matched classical control ($R^2=-0.030$) and a frozen-classical control ($R^2=-0.903$) fail outright. This is evidence that an entangling pair-observable channel is \emph{representationally necessary} to fit a target that explicitly depends on distant-element products under a fixed linear readout.
+This diagnostic is deliberately constructed to reward pair-observable structure: the target is a fixed synthetic function of \emph{simulated} patch features not concatenated into any candidate's own input block (Appendix~\ref{app:leakage_summary} summarizes the leakage-audit procedure that rules out circularity), and every control receives the same raw inputs as HVK2D. Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic} report the result across five seeds: HVK2D's entangling observable channel reaches mean $R^2=0.9735$ ($32.77$~dB PSNR), a $17.74$~dB improvement over a no-entanglement control ($R^2=0.019$) and $18.52$~dB over random-VQC latents ($R^2=-0.173$); freezing the quantum circuit (features fixed, only readout trained) still reaches $R^2=0.853$, while a parameter-matched classical control ($R^2=-0.030$) and a frozen-classical control ($R^2=-0.903$) fail outright. This is evidence that an entangling pair-observable channel is \emph{representationally necessary within the tested feature class and fixed linear-readout protocol} to fit this target.
 
 \begin{table*}[t]
 \centering
@@ -213,7 +219,7 @@ Freeze classical & $6.0973\times10^{-2}$ & 12.17 & $-0.9025$ \\
 \label{fig:hvk_pair_diagnostic}
 \end{figure*}
 
-\subsection{Training-Dynamics Phase Transition Across Six Datasets}
+\subsection{Training-Dynamics Reorganization Across Six Datasets}
 \label{sec:phase_transition}
 Tracking the same four variants epoch-by-epoch during training on the diagnostic above surfaces a training-dynamics signature: the entangling channel does not merely win at convergence, it gets there through a qualitatively different trajectory. We track the mean measured $Z$ expectation over qubits and patches at training epoch $t$,
 \begin{equation}
@@ -225,35 +231,35 @@ together with its discrete susceptibility
 \mathcal{X}(t)=\lvert M_z(t)-M_z(t-\Delta t)\rvert
 \label{eq:susceptibility}
 \end{equation}
-and candidate critical (transition) epoch $t_c=\arg\max_t\mathcal{X}(t)$. We emphasize that this is a finite-size training diagnostic rather than a claim of a thermodynamic phase transition: HVK is a finite, gradient-optimized system with no thermodynamic control parameter, so ``phase transition'' denotes a statistically sharp, susceptibility-peaked reorganization of the learned observable field.
+and candidate reorganization epoch $t_c=\arg\max_t\mathcal{X}(t)$. We emphasize that this is a finite-size training diagnostic rather than a claim of a thermodynamic phase transition: HVK is a finite, gradient-optimized system with no thermodynamic control parameter.
 
-Figure~\ref{fig:phase_transition_single} gives the clearest single view of this: the HVK2D entangling baseline's order parameter and susceptibility on one shared time axis, with the detected transition point marked directly on the curve. Beyond the synthetic restricted diagnostic, the same signature is visible in the actual reconstruction-training runs behind this paper's own headline results: Figure~\ref{fig:phase_transition_monalisa} names and plots it for the \textit{Monalisa} benchmark (HVK1D), and Figure~\ref{fig:phase_transition_cifar_cat} for a specific, named CIFAR-10 image (the \textit{cat} image, HVK2D) drawn from the six-dataset reconstruction results of Section~\ref{sec:sameset_results}. Figure~\ref{fig:phase_transition_zoom} then plots $M_z(t)$ and $\mathcal{X}(t)$ for all four variants on the restricted diagnostic, with panel (c) zooming into the epoch-0--60 transition window: the entangling channel's susceptibility peak stands out clearly above every resource-matched classical control's, and its order parameter climbs to a substantially higher plateau. We then extend the same diagnostic to a representative sample of real images from all six datasets used in Section~\ref{sec:sameset_results}: every one of 13 sampled images across all six datasets shows a detected phase-transition-like reorganization --- \textbf{13 of 13, with no exceptions} --- indicating this training-dynamics signature is a general property of HVK training on real image data, not an artifact of the synthetic restricted diagnostic. Full per-variant numbers, the multi-dataset breakdown, and per-dataset order-parameter trajectories are reported in the companion supplementary document.
+Figure~\ref{fig:phase_transition_single} gives the clearest single view of this: the HVK2D entangling baseline's order parameter and susceptibility on one shared time axis, with the peak-susceptibility point marked directly on the curve. Beyond the synthetic restricted diagnostic, the same signature is visible in the reconstruction-training runs behind this paper's headline results: Figure~\ref{fig:phase_transition_monalisa} plots it for the \textit{Monalisa} benchmark (HVK1D), and Figure~\ref{fig:phase_transition_cifar_cat} for a named CIFAR-10 \textit{cat} image (HVK2D). Figure~\ref{fig:phase_transition_zoom} compares all four variants, with panel (c) zooming into epochs 0--60: the entangling channel's susceptibility peak exceeds every resource-matched classical control's, and its order parameter reaches a higher plateau. Across a representative sample from all six datasets, all 13 sampled images exhibit a susceptibility-peaked reorganization under this operational criterion. This recurrence is descriptive at the sampled scope, not evidence of a thermodynamic transition. Full per-variant and per-dataset results are in the companion supplementary document.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/phase_transition_single_display.pdf}
-\caption{Order-parameter phase transition for the HVK2D entangling baseline on the restricted pair-correlation diagnostic, plotted on a single shared training-epoch axis (x-axis) so the reorganization is visible without cross-referencing separate panels. The solid blue curve (left $y$-axis) is the order parameter $M_z(t)$, which rises from $0$ toward a plateau near $0.9$ as training proceeds. The dashed red curve (right $y$-axis) is the susceptibility $\mathcal{X}(t)=|M_z(t)-M_z(t-\Delta t)|$, the epoch-to-epoch rate of change of $M_z(t)$; it spikes sharply within the first few epochs and decays smoothly afterward. The vertical dotted gray line and annotated arrow mark the detected critical epoch $t_c=10$, where the susceptibility reaches its maximum value $\mathcal{X}_{\max}=0.204$ --- the point of most abrupt reorganization in the learned observable field, per the definitions of $M_z(t)$ and $\mathcal{X}(t)$ in Eqs.~\eqref{eq:order_parameter}--\eqref{eq:susceptibility}.}
+\caption{Order-parameter reorganization for the HVK2D entangling baseline on the restricted pair-correlation diagnostic. The solid blue curve is $M_z(t)$; the dashed red curve is $\mathcal{X}(t)=|M_z(t)-M_z(t-\Delta t)|$. The dotted line and arrow mark the candidate reorganization epoch $t_c=10$, where $\mathcal{X}_{\max}=0.204$. This is the point of fastest observed change under Eqs.~\eqref{eq:order_parameter}--\eqref{eq:susceptibility}, not a thermodynamic critical point.}
 \label{fig:phase_transition_single}
 \end{figure*}
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/phase_transition_monalisa_single.pdf}
-\caption{Order-parameter phase transition for the actual \textit{Monalisa} reconstruction run (HVK1D, the same shared-baseline checkpoint used throughout this paper), not the synthetic restricted diagnostic. Curves and axes follow the same convention as Figure~\ref{fig:phase_transition_single}: order parameter $M_z(t)$ in solid blue (left axis), susceptibility $\mathcal{X}(t)$ in dashed red (right axis). The detected critical epoch is $t_c=10$ with peak susceptibility $\mathcal{X}_{\max}=0.0089$, an order of magnitude smaller in absolute susceptibility than the synthetic diagnostic of Figure~\ref{fig:phase_transition_single} but still a statistically sharp reorganization by the same median-plus-two-standard-deviation threshold; the order parameter itself continues to climb well past $t_c$ as training proceeds toward the final $40.70$~dB reconstruction reported in Section~\ref{sec:sameset_results}.}
+\caption{Order-parameter reorganization for the actual \textit{Monalisa} reconstruction run (HVK1D, the same shared-baseline checkpoint used throughout this paper), not the synthetic restricted diagnostic. Curves and axes follow Figure~\ref{fig:phase_transition_single}. The candidate reorganization epoch is $t_c=10$ with $\mathcal{X}_{\max}=0.0089$, an order of magnitude smaller than in the synthetic diagnostic and selected by the same median-plus-two-standard-deviation rule; $M_z(t)$ continues to climb as training proceeds toward the final $40.70$~dB reconstruction.}
 \label{fig:phase_transition_monalisa}
 \end{figure*}
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/phase_transition_cifar_cat_single.pdf}
-\caption{Order-parameter phase transition for a specific, named CIFAR-10 image --- the \textit{cat} image (HVK2D) from the same-set reconstruction results of Section~\ref{sec:sameset_results} --- again using the actual reconstruction-training run rather than the synthetic restricted diagnostic. Curves and axes follow the same convention as Figure~\ref{fig:phase_transition_single}. The detected critical epoch is $t_c=63$ with peak susceptibility $\mathcal{X}_{\max}=0.0055$; the order parameter rises through the transition and continues climbing to a peak around epoch 115 before gradually declining, illustrating that the training-dynamics reorganization on a real natural image need not occur early in training or monotonically approach a plateau, unlike the synthetic diagnostic or the \textit{Monalisa} run of Figure~\ref{fig:phase_transition_monalisa}.}
+\caption{Order-parameter reorganization for a CIFAR-10 \textit{cat} image (HVK2D) from the same-set reconstruction results. The candidate reorganization epoch is $t_c=63$ with $\mathcal{X}_{\max}=0.0055$; $M_z(t)$ continues climbing to a peak around epoch 115 before gradually declining, illustrating that the diagnostic need not peak early or approach a plateau monotonically.}
 \label{fig:phase_transition_cifar_cat}
 \end{figure*}
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/phase_transition_ablation_zoom.pdf}
-\caption{Order-parameter phase-transition diagnostic on the restricted pair-correlation task. (a) Full order-parameter trajectory $M_z(t)$ and (b) full-range susceptibility $\mathcal{X}(t)$; (c) zooms into the epoch-0--60 transition window, where the entangling channel's susceptibility peak separates cleanly from every classical control.}
+\caption{Order-parameter reorganization diagnostic on the restricted pair-correlation task. (a) Full order-parameter trajectory $M_z(t)$ and (b) full-range susceptibility $\mathcal{X}(t)$; (c) zooms into epochs 0--60, where the entangling channel's susceptibility peak separates from every classical control.}
 \label{fig:phase_transition_zoom}
 \end{figure*}
 
@@ -265,28 +271,28 @@ Whether a quantum feature map or kernel offers any advantage over a classical mo
 
 \subsection{Relationship to the Component-Wise Ablation Study}
 \label{sec:ablation_relationship}
-The results above establish what HVK is and several of its provable or verified properties. A separate, equally important question --- under a resource-matched, freeze-based, multi-seed protocol, which components are strictly necessary for reconstruction quality on real, \emph{held-out} images the model was not trained on --- is answered in full in the companion supplementary document, \textit{HVK Supplementary Study: Component-Wise Ablation, Leakage Audit, and Hardware Validation Methodology}. Its central finding: the trainable classical decoder is necessary and sufficient for held-out reconstruction quality, and no individual quantum component (trained circuit, entangling gates, Hamiltonian energy term) is isolated as necessary for that specific task; on held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB against HVK2D's $18.12\pm1.54$~dB (Wilcoxon $p=9.5\times10^{-6}$, $n=20$), with the same direction on five further real datasets. We report this as a rigorous complement, not a contradiction: it precisely delineates the boundary within which the entanglement-necessity and provable-symmetry results above hold, and it caught a genuine circular-benchmark mistake of our own along the way, which the supplementary document documents as a transferable methodological lesson for this literature.
+The results above establish what HVK is and several of its provable or verified properties. A separate, equally important question --- under a resource-matched, freeze-based, multi-seed protocol, which components are strictly necessary for reconstruction quality on real, \emph{held-out} images the model was not trained on --- is answered in full in the companion supplementary document, \textit{HVK Supplementary Study: Component-Wise Ablation, Leakage Audit, and Hardware Validation Methodology}. Its central finding within the tested ablations is that the trainable classical decoder is load-bearing and sufficient to recover baseline-level held-out reconstruction quality, while no individual quantum component (trained circuit, entangling gates, Hamiltonian energy term) is isolated as necessary for that specific task; on held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB against HVK2D's $18.12\pm1.54$~dB (Wilcoxon $p=9.5\times10^{-6}$, $n=20$), with the same direction on five further real datasets. We report this as a rigorous complement, not a contradiction: it precisely delineates the boundary within which the entanglement-necessity and provable-symmetry results above hold, and it caught a genuine circular-benchmark mistake of our own along the way, which the supplementary document documents as a transferable methodological lesson for this literature.
 
 \subsection{Topology Alignment as an Inductive Bias}
 \label{sec:topology}
-Aligning the latent interaction graph with image-patch adjacency (HVK2D vs.\ HVK1D) is a plausible architectural inductive bias: on \textit{Monalisa}, 2D HVK exceeds its 1D counterpart by $5.98$~dB ($40.70$ vs.\ $34.72$~dB). This is a single-image, single-seed observation, not a general principle, since the comparison is documented on one test case; we treat topology alignment as an inductive-bias hypothesis whose contribution has not yet been separated from decoder capacity, optimization budget, and dataset-specific structure.
+Aligning the latent interaction graph with image-patch adjacency (HVK2D vs.\ HVK1D) is a plausible architectural inductive bias: on \textit{Monalisa}, 2D HVK exceeds its 1D counterpart by $5.98$~dB ($40.70$ vs.\ $34.72$~dB). The companion supplementary study tests this hypothesis more directly under matched held-out conditions. Its real-circuit subset (3 seeds, 3 held-out CIFAR-10 images) gives an HVK1D-minus-HVK2D mean PSNR difference of $0.16$~dB (paired image--seed bootstrap 95\% CI $[-0.32,0.64]$~dB; seed-level Wilcoxon $p=0.50$), while HVK2D completes the matched 90-step runs in roughly half the wall-clock time. A broader five-seed surrogate comparison across CIFAR-10, Fashion-MNIST, and PathMNIST likewise finds numerically small topology differences (at most $0.07$~dB in mean PSNR). At the tested scale, topology therefore appears to be primarily a resource-cost choice rather than a reliable accuracy advantage; these tests do not establish formal equivalence.
 
 \subsection{Architectural Differentiation Matrix}
 Table~\ref{tab:differentiation} contrasts HVK's structural properties against reference frameworks. Its distinguishing features --- a Pauli-correlator latent space, 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy diagnostic --- are exactly the components whose provable/verified properties are established in Sections~\ref{sec:d4}--\ref{sec:phase_transition}.
 
 \begin{table*}[t]
 \centering
-\caption{Architectural Differentiation Matrix}
+\caption{Architectural differentiation against representative baseline designs evaluated or discussed in this work. Entries summarize those reference designs, not every model in each broad architecture family.}
 \label{tab:differentiation}
 \begin{tabular}{lcccc}
 \toprule
-Axis & Classical AE & GAN AE & Standard QAE & HVK (Ours) \\
+Axis & Conv. AE baseline & GAN baseline & Register-based QAE & HVK (ours) \\
 \midrule
-Latent Space & Continuous $\mathbb{R}^d$ & Continuous $\mathbb{R}^d$ & Quantum Register & Pauli Correlator Vector \\
-Spatial Bias & Implicit Convolutions & Implicit Convolutions & None & 2D Fourier + enforced $D_4$ pooling \\
-Regularizer & Bottleneck Size & Discriminator Loss & Swap-Test Fidelity & Hamiltonian energy diagnostic \\
-Group Alignment & None & None & Reference Swaps & $\text{SO}(3)$ Cartan motivation + enforced $D_4$ pooling \\
-Target Task & Reconstruction & Reconstruction & Compression & Spatially Aware Reconstruction \\
+Latent representation & Continuous $\mathbb{R}^d$ & Continuous $\mathbb{R}^d$ & Quantum register & Pauli-correlator vector \\
+Spatial bias & Convolutional & Convolutional & Encoding-dependent & 2D Fourier encoding \\
+Auxiliary objective & Bottleneck/reconstruction & Adversarial loss & Fidelity/reconstruction & Hamiltonian diagnostic \\
+Enforced group symmetry & Not in baseline & Not in baseline & Not in reference design & $D_4$ observable pooling \\
+Evaluated role & Reconstruction & Reconstruction & Compression & Reconstruction + diagnostics \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -294,19 +300,19 @@ Target Task & Reconstruction & Reconstruction & Compression & Spatially Aware Re
 \subsection{Validated Scope and Next Steps}
 \label{sec:limitations}
 \begin{itemize}
-    \item Every reconstruction result in this paper (Sections~\ref{sec:sameset_results}--\ref{sec:no_generalization}) is per-image trained, not held-out generalization; the companion supplementary study's held-out protocol is the appropriate evidence for a generalization claim, and its central finding (classical decoder necessary and sufficient) should be read alongside the architecture-level results here.
+    \item Every reconstruction result in this paper (Sections~\ref{sec:sameset_results}--\ref{sec:no_generalization}) is per-image trained, not held-out generalization; the companion supplementary study's held-out protocol is the appropriate evidence for a generalization claim, and its finding that the classical decoder is load-bearing and sufficient for baseline-level performance under the tested ablations should be read alongside the architecture-level results here.
     \item The $D_4$-pooled map (Section~\ref{sec:d4}) is currently a feature-grid-level construction and numerical diagnostic, not yet integrated into the trainable end-to-end reconstruction pipeline; doing so is concrete future work (Section~\ref{sec:conclusion}).
     \item The entanglement-necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a task deliberately constructed to require nonlocal structure; it does not by itself establish an advantage on ordinary natural-image reconstruction (see Section~\ref{sec:dequant}).
     \item The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, single-trial, unmitigated pilot, not a statistically resolved hardware benchmark.
-    \item The phase-transition multi-dataset extension (Section~\ref{sec:phase_transition}) samples 2--3 images per dataset, single-seed; it is a directional diagnostic at that scope, not a statistically resolved claim.
-    \item Topology alignment (Section~\ref{sec:topology}) is documented on a single test case, not a multi-seed comparison.
+    \item The multi-dataset training-reorganization extension (Section~\ref{sec:phase_transition}) samples 2--3 images per dataset, single-seed; it is a directional diagnostic at that scope, not a statistically resolved claim.
+    \item The matched real-circuit topology comparison uses only 3 seeds and 3 held-out images per topology; the broader five-seed comparison is surrogate-based. These results support a resource-cost interpretation but do not establish formal equivalence of the topologies.
 \end{itemize}
 
 \section{Conclusion}
 \label{sec:conclusion}
-We presented the Hamiltonian Vision Kernel, a physics-informed hybrid quantum--classical image autoencoder distinguished by a Pauli-correlator latent space, an enforced and numerically verified $D_4$-equivariant observable-pooling extension, and a learnable Heisenberg energy diagnostic. Independently of reconstruction quality, we established three verified structural properties: a provable $D_4$ symmetry construction (equivariance error $9.57\times10^{-17}$), an entanglement-necessity result on a task requiring nonlocal structure ($R^2=0.9735$ vs.\ $R^2\leq0.02$ for non-entangling controls), and a training-dynamics phase-transition signature detected in every one of 13 sampled images across six real datasets. We further reported a real IBM Quantum hardware reconstruction pilot --- an already-trained checkpoint's exact parameters replayed with no retraining reach $25.90$--$31.52$~dB PSNR directly from hardware measurements, at negligible quantum-processor cost --- a first, honest hardware validation for this architecture family.
+We presented the Hamiltonian Vision Kernel, a physics-informed hybrid quantum--classical image autoencoder distinguished by a Pauli-correlator latent space, an enforced and numerically verified $D_4$-equivariant observable-pooling extension, and a learnable Heisenberg energy diagnostic. Independently of reconstruction quality, we established three structural results at the tested scope: a provable $D_4$ symmetry construction (equivariance error $9.57\times10^{-17}$), an entanglement-necessity result on a task requiring nonlocal structure ($R^2=0.9735$ vs.\ $R^2\leq0.02$ for non-entangling controls), and a susceptibility-peaked training-reorganization signature in each of 13 sampled images across six real datasets. We further reported a real IBM Quantum hardware reconstruction pilot: replaying trained checkpoints without retraining yielded $25.90$--$31.52$~dB PSNR from hardware measurements. This pilot establishes feasibility at its five-image, single-trial scope rather than a general hardware-performance claim.
 
-A companion supplementary study reports a separate, rigorous question in full: under a resource-matched, freeze-based ablation protocol, which components are necessary for reconstruction quality on held-out real images. Its finding --- the classical decoder is necessary and sufficient, and no individual quantum component is isolated as necessary for that task --- is not in tension with the results here; it delineates precisely where entanglement and symmetry structure matter (tasks requiring nonlocal structure) and where, on ordinary natural-image reconstruction, a well-matched classical readout is already close to sufficient. We consider this boundary, established rigorously rather than asserted, to be as much a contribution of this research program as the architecture itself.
+A companion supplementary study reports a separate, rigorous question in full: under a resource-matched, freeze-based ablation protocol, which components are necessary for reconstruction quality on held-out real images. Its finding within the tested protocol --- the classical decoder is load-bearing and sufficient to recover baseline-level performance, while no individual quantum component is isolated as necessary for that task --- is not in tension with the results here; it delineates precisely where entanglement and symmetry structure matter (tasks requiring nonlocal structure) and where, on ordinary natural-image reconstruction, a well-matched classical readout is already close to sufficient. We consider this boundary, established rigorously rather than asserted, to be as much a contribution of this research program as the architecture itself.
 
 Future work should integrate the $D_4$-pooled map into an end-to-end trainable pipeline (currently a feature-grid-level construction, Section~\ref{sec:limitations}); scale the hardware pilot toward a statistically resolved benchmark with error mitigation and repeated trials; search for further real-world tasks with genuine nonlocal structure where HVK's entanglement-necessity property translates into a reconstruction advantage; and extend the resource-matched, leakage-audited evaluation protocol used in the companion supplementary study to other hybrid quantum vision architectures.
 

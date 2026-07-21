@@ -137,12 +137,31 @@ def run_training(topology: str, seed: int, qubit_count: int = 6, bond_dim: int =
     model, decoder, lr = build_model(topology, data["features"].shape[1], qubit_count, device)
     if n_layers is not None:
         set_depth(model, topology, n_layers, qubit_count, device, seed)
-    optimizer = optim.Adam(list(model.parameters()) + list(decoder.parameters()), lr=lr)
 
+    # gradient_variance() reassigns model.weights to fresh tensor objects for
+    # each of its probes (needed to sample the gradient at several random
+    # inits) -- run it, then re-establish a clean training-init weight
+    # tensor, BEFORE constructing the optimizer, so Adam actually tracks the
+    # tensor object that will be used (and its .grad zeroed) during training.
+    # Constructing the optimizer first orphans model.weights the moment
+    # gradient_variance reassigns it: optimizer.step() then updates a stale
+    # tensor no longer connected to the forward pass, while the real
+    # model.weights.grad is never zeroed by optimizer.zero_grad() and
+    # accumulates without bound across the whole training loop -- this was
+    # confirmed to be the actual bug behind both the misleadingly-plausible
+    # qubit/bond-dim PSNR numbers (decoder-only training) and the depth-sweep
+    # timeouts (unbounded gradient accumulation) in the first version of this
+    # script.
     grad_stats = gradient_variance(model, decoder, data["features"], data["positions"], data["targets"], seed=seed)
-    # restore a fresh training-init weight tensor after the gradient probes perturbed it
     if n_layers is not None:
         set_depth(model, topology, n_layers, qubit_count, device, seed)
+    else:
+        # gradient_variance perturbed model.weights; re-seed a clean training-init tensor
+        g = torch.Generator(device="cpu").manual_seed(30_000 + seed)
+        model.weights = torch.nn.Parameter((torch.rand(*model.weights.shape, generator=g) * math.pi).to(device))
+
+    optimizer = optim.Adam(list(model.parameters()) + list(decoder.parameters()), lr=lr)
+    assert any(p is model.weights for p in optimizer.param_groups[0]["params"]), "model.weights not tracked by optimizer"
 
     t0 = time.perf_counter()
     for step in range(steps):
@@ -172,43 +191,112 @@ def run_training(topology: str, seed: int, qubit_count: int = 6, bond_dim: int =
     }
 
 
+RUN_TIMEOUT_S = 3600  # depth-3/4 circuits can exceed 30 min; retain a hard cap without discarding valid slow runs
+
+
+def run_single_from_cli(config: dict) -> None:
+    """Invoked as a subprocess: run exactly one config, print the JSON
+    result on its own line, flushed immediately."""
+    r = run_training(
+        config["topology"], config["seed"],
+        qubit_count=config.get("qubit_count", 6), bond_dim=config.get("bond_dim", 4),
+        n_layers=config.get("n_layers"), steps=config.get("steps", STEPS),
+    )
+    print("RESULT_JSON:" + json.dumps(r), flush=True)
+
+
+def run_isolated(config: dict) -> dict:
+    """Run one config in a subprocess with a hard timeout, so a single hung
+    config (as happened previously: HVK1D chi=8 seed=2 stuck >3h while its
+    sibling seeds finished in ~12min) gets killed and logged instead of
+    blocking the whole sweep indefinitely."""
+    import subprocess
+
+    t0 = time.perf_counter()
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(Path(__file__).resolve()), "--single-run", json.dumps(config)],
+            capture_output=True, text=True, timeout=RUN_TIMEOUT_S,
+        )
+        for line in proc.stdout.splitlines():
+            if line.startswith("RESULT_JSON:"):
+                return json.loads(line[len("RESULT_JSON:"):])
+        return {**config, "status": "failed", "error": "no RESULT_JSON in subprocess output",
+                "stderr_tail": proc.stderr[-2000:], "wall_time_s": time.perf_counter() - t0}
+    except subprocess.TimeoutExpired:
+        return {**config, "status": "timed_out", "wall_time_s": RUN_TIMEOUT_S,
+                "error": f"exceeded {RUN_TIMEOUT_S}s hard timeout, killed"}
+
+
+MAX_WORKERS = 2  # leave headroom for monitoring, LaTeX builds, and OS I/O while the CPU-bound sweep runs
+
+
 def main(smoke_test: bool = False):
-    global STEPS, SEEDS
+    global STEPS, SEEDS, RESULT_FILE
     if smoke_test:
         STEPS = 2
         SEEDS = [0]
+        RESULT_FILE = OUT_DIR / "scaling_study_SMOKE_TEST.json"  # never touch the production results file
 
-    results = {"qubit_sweep": [], "bond_dim_sweep": [], "depth_sweep": []}
+    if RESULT_FILE.exists():
+        results = json.loads(RESULT_FILE.read_text())
+    else:
+        results = {"qubit_sweep": [], "bond_dim_sweep": [], "depth_sweep": []}
 
-    print("=== Qubit-count sweep (HVK1D only) ===")
+    def already_done(bucket: str, config: dict) -> bool:
+        for r in results[bucket]:
+            if r.get("status") in ("failed", "timed_out"):
+                continue
+            if all(r.get(k) == v for k, v in config.items()):
+                return True
+        return False
+
+    pending: list[tuple[str, dict]] = []
     for q in ([4, 6, 8] if not smoke_test else [4]):
         for seed in SEEDS:
-            r = run_training("HVK1D", seed, qubit_count=q, bond_dim=4, steps=STEPS)
-            print(json.dumps(r))
-            results["qubit_sweep"].append(r)
-            RESULT_FILE.write_text(json.dumps(results, indent=2, default=str))
-
-    print("\n=== Bond-dimension sweep (both topologies) ===")
+            config = {"topology": "HVK1D", "seed": seed, "qubit_count": q, "bond_dim": 4, "steps": STEPS}
+            if not already_done("qubit_sweep", config):
+                pending.append(("qubit_sweep", config))
     for topology in ("HVK1D", "HVK2D"):
         for chi in ([1, 2, 4, 8] if not smoke_test else [1]):
             for seed in SEEDS:
-                r = run_training(topology, seed, qubit_count=6, bond_dim=chi, steps=STEPS)
-                print(json.dumps(r))
-                results["bond_dim_sweep"].append(r)
-                RESULT_FILE.write_text(json.dumps(results, indent=2, default=str))
-
-    print("\n=== Circuit-depth sweep (both topologies) ===")
+                config = {"topology": topology, "seed": seed, "qubit_count": 6, "bond_dim": chi, "steps": STEPS}
+                if not already_done("bond_dim_sweep", config):
+                    pending.append(("bond_dim_sweep", config))
     for topology in ("HVK1D", "HVK2D"):
         for depth in ([1, 2, 3, 4] if not smoke_test else [1]):
             for seed in SEEDS:
-                r = run_training(topology, seed, qubit_count=6, bond_dim=4, n_layers=depth, steps=STEPS)
-                print(json.dumps(r))
-                results["depth_sweep"].append(r)
+                config = {"topology": topology, "seed": seed, "qubit_count": 6, "bond_dim": 4, "n_layers": depth, "steps": STEPS}
+                if not already_done("depth_sweep", config):
+                    pending.append(("depth_sweep", config))
+
+    print(f"=== {len(pending)} configs remaining, running with {MAX_WORKERS} concurrent workers ===", flush=True)
+
+    import threading
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    write_lock = threading.Lock()
+
+    def do_one(bucket_config):
+        bucket, config = bucket_config
+        return bucket, run_isolated(config)
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        futures = [pool.submit(do_one, bc) for bc in pending]
+        for i, future in enumerate(as_completed(futures), start=1):
+            bucket, r = future.result()
+            print(f"[{i}/{len(pending)}] {json.dumps(r)}", flush=True)
+            with write_lock:
+                results[bucket].append(r)
                 RESULT_FILE.write_text(json.dumps(results, indent=2, default=str))
 
-    print("\nDone. Saved to", RESULT_FILE)
+    print("\nDone. Saved to", RESULT_FILE, flush=True)
 
 
 if __name__ == "__main__":
-    smoke = "--smoke-test" in sys.argv
-    main(smoke_test=smoke)
+    if "--single-run" in sys.argv:
+        idx = sys.argv.index("--single-run")
+        run_single_from_cli(json.loads(sys.argv[idx + 1]))
+    else:
+        smoke = "--smoke-test" in sys.argv
+        main(smoke_test=smoke)
