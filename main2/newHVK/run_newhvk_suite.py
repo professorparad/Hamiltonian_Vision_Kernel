@@ -371,7 +371,7 @@ def write_dict_csv(path: Path, rows: list[dict[str, object]]) -> None:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -488,6 +488,11 @@ def plot_heldout_proxy(result_dir: Path, summary: list[dict[str, object]]) -> No
 
 
 def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
+    """Create illustrative analytic interpolations, never measured epoch traces.
+
+    These rows are visualization scaffolding only and must not support training-
+    dynamics, change-point, or phase-transition claims.
+    """
     final_by_model = {str(row["model"]): float(row["mean_mse"]) for row in summary}
     selected = [
         "HVK2D-entangling-observables",
@@ -532,6 +537,7 @@ def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, objec
                 {
                     "epoch": epoch,
                     "model": model,
+                    "trace_provenance": "analytic_interpolation_not_measured",
                     "mse": mse,
                     "psnr": psnr,
                     "ssim_proxy": max(0.0, min(0.999, 1.0 - 2.2 * math.sqrt(mse))),
@@ -541,6 +547,7 @@ def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, objec
                 {
                     "epoch": epoch,
                     "model": model,
+                    "trace_provenance": "analytic_interpolation_not_measured",
                     "zz_mean": zz,
                     "xx_mean": xx,
                     "yy_mean": yy,
@@ -552,6 +559,7 @@ def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, objec
                 {
                     "epoch": epoch,
                     "model": model,
+                    "trace_provenance": "analytic_interpolation_not_measured",
                     "order_parameter": order,
                     "susceptibility": susceptibility,
                 }

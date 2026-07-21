@@ -261,6 +261,26 @@ def main() -> None:
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    validation_report = {
+        "checkpoint": "monalisa_hvk1d",
+        "n_patches": n_patches,
+        "pennylane_vs_cached_max_abs_error": max_err,
+        "qiskit_statevector_vs_cached_max_abs_error": qk_err,
+        "measurement_bases": ["Z", "X", "Y"],
+        "planned_circuits": n_circuits,
+    }
+    np.save(OUTPUT_DIR / "local_statevector_observables.npy", qk_observables)
+    hardware_observables_path = OUTPUT_DIR / "hw_observables.npy"
+    if hardware_observables_path.exists():
+        hardware_delta = np.abs(np.load(hardware_observables_path)[:n_patches] - qk_observables)
+        validation_report.update(
+            {
+                "hardware_vs_statevector_mean_abs_error": float(hardware_delta.mean()),
+                "hardware_vs_statevector_max_abs_error": float(hardware_delta.max()),
+            }
+        )
+    (OUTPUT_DIR / "local_validation.json").write_text(json.dumps(validation_report, indent=2))
+
     if not args.submit:
         print("[dry-run] No hardware job submitted. Pass --submit to run on real IBM hardware.")
         with torch.no_grad():
@@ -342,6 +362,8 @@ def main() -> None:
         "mse_hardware": mse_hw,
         "mse_simulator": mse_sim,
         "cached_baseline_psnr_db": 32.235,
+        "pennylane_vs_cached_max_abs_error": max_err,
+        "qiskit_statevector_vs_cached_max_abs_error": qk_err,
     }
     (OUTPUT_DIR / "hardware_reconstruction_report.json").write_text(json.dumps(report, indent=2))
     np.save(OUTPUT_DIR / "hw_observables.npy", hw_observables)

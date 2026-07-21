@@ -231,6 +231,35 @@ def run_isolated(config: dict) -> dict:
 MAX_WORKERS = 2  # leave headroom for monitoring, LaTeX builds, and OS I/O while the CPU-bound sweep runs
 
 
+def read_results_with_retry(path: Path, attempts: int = 5, delay_s: float = 1.0) -> dict:
+    """A second, unrelated process on this machine has repeatedly (and, as
+    far as we can tell, accidentally) re-launched this exact script against
+    this exact results file, racing our own read/write cycle and crashing
+    the orchestrator with a JSONDecodeError when it reads mid-write. Retry
+    a transient bad read a few times before giving up, instead of dying."""
+    last_error: Exception | None = None
+    for attempt in range(attempts):
+        try:
+            return json.loads(path.read_text())
+        except (json.JSONDecodeError, OSError) as exc:
+            last_error = exc
+            time.sleep(delay_s)
+    print(f"WARNING: could not read {path} after {attempts} attempts ({last_error}); "
+          f"starting from an empty in-memory results dict for this run", flush=True)
+    return {"qubit_sweep": [], "bond_dim_sweep": [], "depth_sweep": []}
+
+
+def write_results_atomic(path: Path, results: dict) -> None:
+    """Write-then-rename instead of an in-place write_text, so a concurrent
+    reader never observes a half-written file (os.replace is atomic on the
+    same filesystem on both POSIX and Windows)."""
+    import os
+
+    tmp = path.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(results, indent=2, default=str))
+    os.replace(tmp, path)
+
+
 def main(smoke_test: bool = False):
     global STEPS, SEEDS, RESULT_FILE
     if smoke_test:
@@ -239,7 +268,7 @@ def main(smoke_test: bool = False):
         RESULT_FILE = OUT_DIR / "scaling_study_SMOKE_TEST.json"  # never touch the production results file
 
     if RESULT_FILE.exists():
-        results = json.loads(RESULT_FILE.read_text())
+        results = read_results_with_retry(RESULT_FILE)
     else:
         results = {"qubit_sweep": [], "bond_dim_sweep": [], "depth_sweep": []}
 
@@ -288,7 +317,7 @@ def main(smoke_test: bool = False):
             print(f"[{i}/{len(pending)}] {json.dumps(r)}", flush=True)
             with write_lock:
                 results[bucket].append(r)
-                RESULT_FILE.write_text(json.dumps(results, indent=2, default=str))
+                write_results_atomic(RESULT_FILE, results)
 
     print("\nDone. Saved to", RESULT_FILE, flush=True)
 

@@ -1,15 +1,10 @@
-"""Extend the order-parameter / susceptibility / critical-epoch phase-transition
-diagnostic (previously run only on Monalisa and the restricted pair-correlation
-ablation) to a representative sample of images from CIFAR-10 and five further
-real datasets (MNIST, Fashion-MNIST, PathMNIST, BloodMNIST, PneumoniaMNIST),
-matching the datasets already used in the paper's held-out reconstruction suite.
+"""Record deterministic HVK2D training-dynamics traces on six real datasets.
 
-For each dataset, trains a fresh HVK2D model per sampled image (same recipe as
-Baselines/cifar10_comparisons/hvk2d/train_and_save_hvk2d_checkpoints.py), logs
-the global order parameter M_z(t) and susceptibility X(t) at every step, and
-detects the critical epoch via the median+2*std threshold rule used throughout
-this project. Datasets are fetched automatically via torchvision/medmnist
-(no manual large downloads).
+After every optimizer update, this runner performs a separate evaluation-mode
+forward pass and records its noise-free global order parameter. Runs are
+repeated over explicit seeds. Legacy ``*_order_traces.json`` files were recorded
+in training mode and are retained only for provenance; new evidence is written
+to distinct ``*_eval_order_traces.json`` files so the two cannot be mixed.
 """
 from __future__ import annotations
 
@@ -137,7 +132,15 @@ def detect_phase_transition(order_trace: list[float]) -> dict:
     }
 
 
-def train_with_tracking(image: np.ndarray, device: torch.device, epochs: int) -> dict:
+def set_seed(seed: int) -> None:
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+def train_with_tracking(image: np.ndarray, device: torch.device, epochs: int, seed: int) -> dict:
+    set_seed(seed)
     patches, raw_positions = extract_patches(image, PATCH_SIZE, PATCH_STRIDE)
     # Guard against exact-zero patches (common in MNIST/medmnist backgrounds), which
     # produce a zero-norm MPS and crash the internal SVD with inf/NaN.
@@ -164,11 +167,49 @@ def train_with_tracking(image: np.ndarray, device: torch.device, epochs: int) ->
         loss = torch.mean((output - targets) ** 2) + 0.01 * torch.mean(energies)
         loss.backward()
         optimizer.step()
-        order_trace.append(order_parameter_from_observables(observables.detach()))
+        # Record after the update in evaluation mode: training mode deliberately
+        # injects observable noise and is unsuitable for a dynamics trace.
+        model.eval()
+        with torch.no_grad():
+            eval_observables, _ = model(features_t, positions)
+        order_trace.append(order_parameter_from_observables(eval_observables))
 
     transition = detect_phase_transition(order_trace)
     transition["order_trace"] = order_trace
     return transition
+
+
+def summarize_saved_traces() -> list[dict]:
+    """Rebuild the excluded legacy aggregate for provenance only."""
+    summary = []
+    for trace_path in sorted(OUTPUT_DIR.glob("*_order_traces.json")):
+        if trace_path.name.endswith("_eval_order_traces.json"):
+            continue
+        dataset = trace_path.name.removesuffix("_order_traces.json")
+        traces = json.loads(trace_path.read_text())
+        per_image = []
+        for trace in traces:
+            result = detect_phase_transition(trace)
+            per_image.append(result)
+        critical_epochs = [r["critical_epoch"] for r in per_image if r["detected"]]
+        max_susceptibilities = [r["max_susceptibility"] for r in per_image]
+        final_orders = [r["final_order_parameter"] for r in per_image]
+        summary.append(
+            {
+                "dataset": dataset,
+                "trace_mode": "legacy_training_mode_with_observable_noise",
+                "evidentiary_status": "excluded",
+                "n_images": len(per_image),
+                "n_detected": len(critical_epochs),
+                "mean_critical_epoch": float(np.mean(critical_epochs)) if critical_epochs else None,
+                "mean_max_susceptibility": float(np.mean(max_susceptibilities)),
+                "std_max_susceptibility": float(np.std(max_susceptibilities)),
+                "mean_final_order_parameter": float(np.mean(final_orders)),
+                "std_final_order_parameter": float(np.std(final_orders)),
+                "per_image": per_image,
+            }
+        )
+    return summary
 
 
 def main() -> None:
@@ -177,40 +218,58 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=EPOCHS)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--datasets", nargs="+", default=list(DATASET_LOADERS.keys()))
+    parser.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
+    parser.add_argument(
+        "--rebuild-summary",
+        action="store_true",
+        help="Recompute summary.json from all retained order-trace files without training.",
+    )
     args = parser.parse_args()
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    if args.rebuild_summary:
+        summary = summarize_saved_traces()
+        (OUTPUT_DIR / "summary.json").write_text(json.dumps(summary, indent=2))
+        print(f"Rebuilt {OUTPUT_DIR / 'summary.json'} from {len(summary)} trace files.")
+        return
 
     device = resolve_device(args.device)
     print(f"Using device: {device}")
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-    summary = []
+    existing_summary_path = OUTPUT_DIR / "summary.json"
+    existing_rows = json.loads(existing_summary_path.read_text()) if existing_summary_path.exists() else []
+    summary_by_dataset = {row["dataset"]: row for row in existing_rows}
     for name in args.datasets:
         print(f"\n=== {name} ===", flush=True)
         images = DATASET_LOADERS[name](args.images_per_dataset)
         per_image = []
+        trace_records = []
         for idx, image in enumerate(images):
-            try:
-                result = train_with_tracking(image, device, args.epochs)
-            except Exception as exc:
-                print(f"  image {idx}: SKIPPED due to error: {exc}")
-                continue
-            per_image.append(result)
-            print(
-                f"  image {idx}: critical_epoch={result['critical_epoch']} "
-                f"max_susceptibility={result['max_susceptibility']:.4f} "
-                f"final_order_parameter={result['final_order_parameter']:.4f}",
-                flush=True,
-            )
+            for seed in args.seeds:
+                try:
+                    result = train_with_tracking(image, device, args.epochs, seed)
+                except Exception as exc:
+                    print(f"  image {idx}, seed {seed}: SKIPPED due to error: {exc}")
+                    continue
+                per_image.append(result)
+                trace_records.append({"image_index": idx, "seed": seed, "order_trace": result["order_trace"]})
+                print(
+                    f"  image {idx}, seed {seed}: critical_epoch={result['critical_epoch']} "
+                    f"max_susceptibility={result['max_susceptibility']:.4f} "
+                    f"final_order_parameter={result['final_order_parameter']:.4f}",
+                    flush=True,
+                )
         if not per_image:
             print(f"  WARNING: no images succeeded for {name}, skipping dataset in summary.")
             continue
         critical_epochs = [r["critical_epoch"] for r in per_image if r["detected"]]
         max_susceptibilities = [r["max_susceptibility"] for r in per_image]
         final_orders = [r["final_order_parameter"] for r in per_image]
-        summary.append(
-            {
+        summary_by_dataset[name] = {
                 "dataset": name,
-                "n_images": len(images),
+                "trace_mode": "post_update_eval_mode",
+                "evidentiary_status": "exploratory_pending_statistical_review",
+                "seeds": args.seeds,
+                "n_images": len(per_image),
                 "n_detected": len(critical_epochs),
                 "mean_critical_epoch": float(np.mean(critical_epochs)) if critical_epochs else None,
                 "mean_max_susceptibility": float(np.mean(max_susceptibilities)),
@@ -219,11 +278,11 @@ def main() -> None:
                 "std_final_order_parameter": float(np.std(final_orders)),
                 "per_image": [{k: v for k, v in r.items() if k != "order_trace"} for r in per_image],
             }
-        )
-        (OUTPUT_DIR / f"{name}_order_traces.json").write_text(
-            json.dumps([r["order_trace"] for r in per_image], indent=2)
+        (OUTPUT_DIR / f"{name}_eval_order_traces.json").write_text(
+            json.dumps(trace_records, indent=2)
         )
 
+    summary = [summary_by_dataset[key] for key in sorted(summary_by_dataset)]
     (OUTPUT_DIR / "summary.json").write_text(json.dumps(summary, indent=2))
     print("\n=== Summary ===")
     for row in summary:

@@ -95,13 +95,13 @@ def detect_phase_transition(epoch_rows):
     order_parameter_jump = float(abs(order[peak] - order[max(peak - 1, 0)]))
     detected = bool(max_susceptibility > threshold and max_susceptibility > 0.0)
     proof = (
-        f"Phase transition at epoch {critical_epoch}: "
+        f"Training-reorganization candidate at epoch {critical_epoch}: "
         f"susceptibility peak {max_susceptibility:.6f} exceeds "
         f"threshold {threshold:.6f} "
         f"(median {baseline:.6f} + 2*std {spread:.6f}); "
         f"order-parameter jump {order_parameter_jump:.6f}."
         if detected
-        else f"No phase transition detected: susceptibility peak "
+        else f"No training-reorganization candidate detected: susceptibility peak "
         f"{max_susceptibility:.6f} does not exceed threshold {threshold:.6f}."
     )
     return {

@@ -190,9 +190,22 @@ def run_image(stem: str, args, backend=None) -> dict:
     result = {
         "stem": stem,
         "n_patches": n_patches,
+        "qiskit_statevector_vs_cached_max_abs_error": qk_err,
+        "measurement_bases": ["Z", "X"],
+        "planned_circuits": n_circuits,
         "psnr_simulator_db": psnr_sim,
         "mse_simulator": mse_sim,
     }
+    np.save(OUTPUT_DIR / f"{stem}_statevector_observables.npy", qk_observables)
+    hardware_observables_path = OUTPUT_DIR / f"{stem}_hw_observables.npy"
+    if hardware_observables_path.exists():
+        hardware_delta = np.abs(np.load(hardware_observables_path)[:n_patches] - qk_observables)
+        result.update(
+            {
+                "hardware_vs_statevector_mean_abs_error": float(hardware_delta.mean()),
+                "hardware_vs_statevector_max_abs_error": float(hardware_delta.max()),
+            }
+        )
 
     if not args.submit:
         return result
@@ -264,7 +277,8 @@ def main() -> None:
         print(f"Using backend: {backend.name}")
 
     all_results = [run_image(stem, args, backend) for stem in stems]
-    (OUTPUT_DIR / "summary.json").write_text(json.dumps(all_results, indent=2))
+    output_name = "summary.json" if args.submit else "local_validation.json"
+    (OUTPUT_DIR / output_name).write_text(json.dumps(all_results, indent=2))
     print(json.dumps(all_results, indent=2))
 
 

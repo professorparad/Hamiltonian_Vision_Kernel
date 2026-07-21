@@ -27,6 +27,34 @@
       "mse": 0.0008332461584359407,
       "grad_norm_mean": 0.0013650741457240656,
       "grad_norm_var": 3.005091506627703e-07
+    },
+    {
+      "topology": "HVK1D",
+      "seed": 2,
+      "qubit_count": 4,
+      "bond_dim": 4,
+      "n_layers": null,
+      "steps": 90,
+      "wall_time_s": 1595.215314400004,
+      "psnr": 27.23001333461577,
+      "ssim": 0.9534294805724018,
+      "mse": 0.0018923378083854914,
+      "grad_norm_mean": 0.0020056390785612166,
+      "grad_norm_var": 1.7362112436270066e-07
+    },
+    {
+      "topology": "HVK1D",
+      "seed": 0,
+      "qubit_count": 6,
+      "bond_dim": 4,
+      "n_layers": null,
+      "steps": 90,
+      "wall_time_s": 2692.6360330000025,
+      "psnr": 29.45650064469764,
+      "ssim": 0.9732988682054967,
+      "mse": 0.0011333131697028875,
+      "grad_norm_mean": 0.000901350358617492,
+      "grad_norm_var": 2.7095734405074774e-08
     }
   ],
   "bond_dim_sweep": [],

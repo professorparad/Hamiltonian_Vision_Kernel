@@ -14,76 +14,38 @@
 \maketitle
 
 \begin{abstract}
-This supplementary material accompanies the main manuscript, \textit{Hamiltonian Vision Kernel: A Physics-Informed Hybrid Quantum--Classical Autoencoder}. The main paper introduces HVK as a new framework and establishes its provable $D_4$ symmetry, nonlocal representational capability, training-dynamics diagnostics, and real IBM Quantum hardware execution. Here we strengthen that framework through resource-matched, freeze-based, multi-seed ablations, held-out evaluation, leakage auditing, and complete hardware methodology. The experiments identify the trainable classical decoder as the principal contributor to ordinary held-out reconstruction quality, while the quantum components provide their clearest value when the task explicitly requires nonlocal correlations or symmetry-aware structure. This task-dependent result sharpens HVK's design scope without changing its architectural contribution.
+This supplementary material accompanies the main manuscript, \textit{Hamiltonian Vision Kernel: A Physics-Informed Hybrid Quantum--Classical Autoencoder with Provable Symmetry and Real Hardware Validation}. The main paper introduces HVK as a new framework and establishes its provable $D_4$ symmetry, scoped nonlocal representational capability, and real IBM Quantum hardware execution. Here we strengthen that framework through resource-matched multi-seed controls, held-out evaluation, leakage auditing, and complete hardware methodology. On ordinary held-out reconstruction, simple local/raw feature maps match or exceed the tested HVK feature map under the same fitted readout. The entangling observable channel separates only on the restricted task constructed to require nonlocal correlations, while $D_4$ pooling supplies a distinct feature-level symmetry guarantee rather than a demonstrated reconstruction advantage. We also document why two exploratory evidence blocks --- the claimed multi-seed Monalisa freeze table and the available training-dynamics traces --- are excluded pending reproducible reruns. This task-dependent result sharpens HVK's design scope without changing its architectural contribution.
 \end{abstract}
 
 \tableofcontents
 
 \section{Introduction}
-The main paper presents the Hamiltonian Vision Kernel (HVK1D/HVK2D) --- a physics-informed hybrid quantum--classical image autoencoder combining matrix-product-state (MPS) patch features, a variational quantum circuit (VQC) producing a Pauli-correlator latent space, a learnable Heisenberg energy diagnostic, 2D Fourier positional encoding, and a classical decoder --- and its positive, independently verified properties. A complete account of any hybrid architecture should also answer a narrower, harder question: \emph{which of its components are actually doing the work?} This document answers that question directly, using a resource-matched, freeze-based, multi-seed ablation protocol together with a leakage-audited statistical validation suite. We treat this as a rigorous complement to the main paper rather than a separate negative result: it defines precisely the boundary within which the main paper's positive results (entanglement-necessity, provable $D_4$ symmetry) hold, and it is the evidence base for the "dequantization context" discussed there.
+The main paper presents the Hamiltonian Vision Kernel (HVK1D/HVK2D) --- a physics-informed hybrid quantum--classical image autoencoder combining matrix-product-state (MPS) patch features, a variational quantum circuit (VQC) producing a Pauli-correlator latent space, a learnable graph-Hamiltonian energy diagnostic, 2D Fourier positional encoding, and a classical decoder --- and its positive, independently verified properties. A complete account of any hybrid architecture should also ask whether its proposed representation improves performance under held-out, resource-matched controls. This document answers that question with a leakage-audited multi-seed validation suite and records provenance limitations where an earlier exploratory result cannot be reproduced from retained artifacts. The result is a rigorous complement: it defines precisely the tested boundary of the main paper's positive entanglement and $D_4$-symmetry findings and provides the evidence base for the dequantization context discussed there.
 
 \section{Method}
 
 \subsection{Ablation and Control Design}
-We isolate each component through targeted freezes and replacements. \emph{Freeze-classical} trains only the circuit and Hamiltonian couplings while fixing the decoder and projection layers; \emph{freeze-quantum} does the reverse. \emph{No-entanglement} removes the CNOT rings, and \emph{no-energy-loss} removes the Heisenberg regularizer. \emph{Classical-replacement} and \emph{classical-matched} replace the VQC with a tanh map; the matched version is rank-limited to the circuit's parameter count. Every classical control in the held-out CIFAR-10 layer is resource-matched: identical feature width (32-D) and linear-readout parameter count (2112), so residual gaps reflect feature structure rather than decoder capacity (Table~\ref{tab:resource_capacity}).
+We isolate each component through targeted freezes and replacements. \emph{Freeze-classical} trains only the circuit and Hamiltonian couplings while fixing the decoder and projection layers; \emph{freeze-quantum} does the reverse. \emph{No-entanglement} removes the CNOT rings, and \emph{no-energy-loss} removes the Hamiltonian regularizer. \emph{Classical-replacement} and \emph{classical-matched} replace the VQC with a tanh map; the matched version is rank-limited to the circuit's parameter count. Every classical control in the held-out CIFAR-10 layer is resource-matched: identical feature width (32-D) and linear-readout parameter count (2112), so residual gaps reflect feature structure rather than decoder capacity (Table~\ref{tab:resource_capacity}).
 
 \subsection{Statistical Protocol}
-The core component ablations in Table~\ref{tab:component_ablation} are run at matched convergence: every variant uses the same 240-step budget, learning rate, architecture size, and five random seeds on the \textit{Monalisa} benchmark. We report mean $\pm$ standard deviation and describe any gap smaller than one pooled baseline/control PSNR standard deviation as small relative to observed run-to-run variation, not as evidence of statistical equivalence. Remaining capacity sweeps in Table~\ref{tab:capacity_ablation} are single-seed directional diagnostics. The held-out CIFAR-10 validation layer and the restricted pair-correlation diagnostic are also multi-seed: five random seeds for the restricted diagnostic, and five random image splits (20 held-out reconstructions total) for real CIFAR-10, each using a shared linear readout trained on a disjoint image subset. Paired statistics (bootstrap 95\% CI, Wilcoxon signed-rank) are computed image-by-image within each split.
+The retained quantitative comparisons state their own replication unit and optimization budget. Capacity sweeps in Table~\ref{tab:capacity_ablation} are single-seed directional diagnostics. The held-out CIFAR-10 validation layer and the restricted pair-correlation diagnostic are multi-seed: five random seeds for the restricted diagnostic, and five random image splits (20 held-out reconstructions total) for real CIFAR-10, each using a shared linear readout trained on a disjoint image subset. For held-out reconstruction inference, paired image differences are averaged within each split seed before bootstrap and Wilcoxon calculations, so predictions sharing one fitted readout are not treated as independent replicates. Section~\ref{sec:component_provenance} explains why an earlier five-seed Monalisa freeze-isolation table is not retained as quantitative evidence.
 
 \subsection{Leakage Auditing}
-Because several of our diagnostics are deliberately constructed so that a target depends on features only some models receive, we audit every such diagnostic for a specific failure mode: a regression target that is a (near-)linear function of a quantity handed verbatim to only one candidate model, which produces an apparent representational advantage that is actually copying rather than learning. Concretely, for a target $y$ and a candidate feature block $x$, we check whether a linear or near-linear map from $x$ to $y$ achieves near-zero residual on features the target-construction code itself used to build $y$ --- if so, the feature block and the target share provenance and the diagnostic is circular regardless of model architecture. Every diagnostic reported in this document has passed this check; none of the quantitative claims here depend on a diagnostic that failed it.
+Because several of our diagnostics are deliberately constructed so that a target depends on features only some models receive, we audit every such diagnostic for a specific failure mode: a regression target that is a (near-)linear function of a quantity handed verbatim to only one candidate model, which produces an apparent representational advantage that is actually copying rather than learning. Concretely, for a target $y$ and a candidate feature block $x$, we check whether a linear or near-linear map from $x$ to $y$ achieves near-zero residual on features the target-construction code itself used to build $y$ --- if so, the feature block and the target share provenance and the diagnostic is circular regardless of model architecture. Every constructed diagnostic retained as quantitative evidence has passed this check; no retained quantitative claim depends on a diagnostic that failed it.
 
 \subsection{Datasets and Metrics}
-We use three settings, in increasing order of evidentiary weight for a generalization claim. \textit{Single-image} (\textit{Monalisa}, $256\times256$, 16 patches of $64\times64$) tests per-image optimization only. \textit{CIFAR-10 same-set} (five native $32\times32$ images) is a same-set reconstruction fit, useful for capacity/positioning comparisons but not a generalization test --- the MLP baseline's same-set PSNR exceeds $100$~dB in the best case, a memorization red flag rather than evidence of representation quality. \textit{Held-out CIFAR-10} (five random splits, disjoint train/held-out images, 20 total held-out reconstructions) and a six-dataset multi-dataset suite (CIFAR-10, MNIST, Fashion-MNIST, PathMNIST, BloodMNIST, PneumoniaMNIST, plus a Wisconsin Breast Cancer tabular cross-domain check) are the settings that test a \emph{learned representation} rather than per-image memorization, and are therefore the basis for this document's central ablation claim. All settings report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings additionally report SSIM.
+We use three settings, in increasing order of evidentiary weight for a generalization claim. \textit{Single-image} (\textit{Monalisa}, $256\times256$, 16 patches of $64\times64$) tests per-image optimization only. \textit{CIFAR-10 same-set} (five native $32\times32$ images) is a same-set reconstruction fit, useful for capacity/positioning comparisons but not a generalization test --- the MLP baseline's same-set PSNR exceeds $100$~dB in the best case, a memorization red flag rather than evidence of representation quality. \textit{Held-out CIFAR-10} (five random splits, disjoint train/held-out images, 20 total held-out reconstructions) and a six-dataset multi-dataset suite use CIFAR-10 \cite{Krizhevsky2009}, MNIST \cite{LeCun1998}, Fashion-MNIST \cite{Xiao2017}, and PathMNIST, BloodMNIST, and PneumoniaMNIST from MedMNIST v2 \cite{Yang2023}, plus the Wisconsin Diagnostic Breast Cancer dataset \cite{Wolberg1993} as a tabular cross-domain check. These are the settings that test a \emph{learned representation} rather than per-image memorization, and are therefore the basis for this document's central ablation claim. All settings report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings additionally report SSIM.
 
 \section{Results}
 \label{sec:results}
 
-\subsection{Resource-Matched Attribution by Multi-Seed Freeze Isolation}
-Table~\ref{tab:component_ablation} and Figure~\ref{fig:component_ablation_recons} give the matched-convergence freeze-isolation result on \textit{Monalisa}: nine variants, five seeds each, all trained for 240 steps. Freezing the classical decoder and projection layers while training only the quantum circuit and Hamiltonian couplings (\emph{freeze-classical}) collapses reconstruction to $10.93\pm0.00$~dB PSNR ($\mathrm{SSIM}=0.0220\pm0.0002$) --- close to noise. Freezing the VQC and Hamiltonian couplings while training only the classical decoder (\emph{freeze-quantum}) reaches $33.26\pm0.10$~dB, above the trained-VQC baseline of $32.97\pm0.22$~dB. A classical tanh replacement of the entire VQC reaches $33.50\pm0.00$~dB, a parameter-matched classical map reaches $33.37\pm0.08$~dB, and removing the signed energy regularizer reaches $33.40\pm0.06$~dB. No-MPS and no-entanglement variants remain within one pooled baseline/control PSNR standard deviation of the baseline; this descriptive rule is not a formal equivalence test. The shuffle-control contradiction was separately resolved: the true five-permutation observable-shuffle drop is only $0.301\pm0.054$~dB, not the stale $12.5$~dB value from an older write-up. The robust conclusion: the trainable classical decoder/projection stack is load-bearing, while trained quantum parameters, entangling gates, MPS features, and the signed Hamiltonian regularizer are not isolated as necessary for this reconstruction task.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.32\linewidth]{figures/ablation_baseline_reconstructions.png}
-\includegraphics[width=0.32\linewidth]{figures/ablation_freeze_classical_reconstructions.png}
-\includegraphics[width=0.32\linewidth]{figures/ablation_random_vqc_reconstructions.png}
-\caption{Representative reconstruction ablations: shared HVK baseline (left), frozen-classical control (center), and random-VQC replacement (right). The frozen-classical control collapses because the decoder/projection stack cannot adapt, while random latents remain inferior to structured observables.}
-\label{fig:component_ablation_recons}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.95\linewidth]{figures/component_ablation_summary.pdf}
-\caption{PSNR summary for all nine variants of Table~\ref{tab:component_ablation}, sorted descending, mean $\pm$ std over five seeds. The dotted line marks the shared trained-VQC baseline. Every quantum-side ablation (blue/gray) sits within a narrow band around baseline; only removing the trainable classical decoder (bottom two rows, orange) produces a large, unambiguous drop.}
-\label{fig:component_ablation_summary}
-\end{figure}
-
-\begin{table}[H]
-\centering
-\caption{Matched core component ablations on the \textit{Monalisa} benchmark (five seeds, 240 training steps for every variant). The final column is a descriptive comparison with observed run-to-run variation, not a formal equivalence test.}
-\label{tab:component_ablation}
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{p{0.20\textwidth}ccccp{0.20\textwidth}}
-\toprule
-Experiment & MSE & PSNR (dB) & SSIM & $\Delta$PSNR & Interpretation \\
-\midrule
-Classical tanh replacement & $(4.4641\pm0.0047)\times10^{-4}$ & $33.50\pm0.00$ & $0.9940\pm0.0000$ & $+0.54$ & Classical map exceeds VQC \\
-No energy loss & $(4.5684\pm0.0620)\times10^{-4}$ & $33.40\pm0.06$ & $0.9938\pm0.0001$ & $+0.44$ & Signed energy term slightly hurts \\
-Parameter-matched classical map & $(4.6042\pm0.0816)\times10^{-4}$ & $33.37\pm0.08$ & $0.9938\pm0.0001$ & $+0.40$ & Small classical control exceeds baseline \\
-Freeze quantum, train classical only & $(4.7162\pm0.1043)\times10^{-4}$ & $33.26\pm0.10$ & $0.9936\pm0.0001$ & $+0.30$ & Fixed quantum features remain usable \\
-No MPS & $(4.9636\pm0.1727)\times10^{-4}$ & $33.04\pm0.15$ & $0.9933\pm0.0002$ & $+0.08$ & Within descriptive variability band \\
-No entanglement & $(5.0345\pm0.1797)\times10^{-4}$ & $32.98\pm0.15$ & $0.9932\pm0.0002$ & $+0.02$ & Within descriptive variability band \\
-Shared VQC baseline & $(5.0570\pm0.2606)\times10^{-4}$ & $32.97\pm0.22$ & $0.9932\pm0.0003$ & $0.00$ & Reference trained-VQC run \\
-Random VQC output & $(1.6034\pm0.1026)\times10^{-3}$ & $27.96\pm0.28$ & $0.9785\pm0.0012$ & $-5.01$ & Random latents substantially worse \\
-Freeze classical, train quantum only & $(8.0669\pm0.0056)\times10^{-2}$ & $10.93\pm0.00$ & $0.0220\pm0.0002$ & $-22.03$ & Frozen decoder/projections collapse \\
-\bottomrule
-\end{tabular}
-\end{table}
+\subsection{Component-Ablation Provenance Audit}
+\label{sec:component_provenance}
+An earlier draft presented a nine-variant, five-seed Monalisa freeze-isolation table. The repository does not contain the per-seed records or a machine-readable summary that reproduces those reported means and standard deviations. The retained legacy directory contains only three evaluation-control records, while \path{main2/newHVK/results/full_ablation_suite/full_ablation_summary.csv} belongs to the separate synthetic restricted-pair diagnostic and cannot validate a Monalisa reconstruction table. We therefore exclude the earlier table, its summary figure, and all quantitative attribution claims derived from it. The freeze and replacement implementations remain available for a fresh matched-budget rerun, but no decoder-necessity conclusion is drawn from the incomplete legacy artifacts. The retained evidence below instead asks the reproducible held-out question: under an identical fitted readout, do the tested HVK features outperform resource-matched classical or ablated feature maps?
 
 \subsection{Held-Out Reconstruction Under Resource-Matched Controls}
 \label{sec:holdout_headline}
-This is the central ablation result, and the one setting designed from the outset to test a learned representation rather than per-image memorization. Table~\ref{tab:hvk_real_cifar} reports held-out CIFAR-10 reconstruction (five random splits, 20 held-out reconstructions, all controls resource-matched per Table~\ref{tab:resource_capacity}), and Table~\ref{tab:hvk_real_cifar_stats} gives paired statistics against the HVK2D real-CIFAR map. Local-observables-only and raw-linear-classical controls (identical by construction here) reach $18.80\pm1.42$~dB, ZZ-only $18.56\pm1.49$~dB, no-entanglement $18.46\pm1.32$~dB, shuffled-pair $18.31\pm1.25$~dB, and quadratic-classical $18.33\pm1.65$~dB, against the trained HVK2D entangling map's $18.12\pm1.54$~dB. The paired tests resolve advantages for raw/local, ZZ-only, no-entanglement, and quadratic controls; the shuffled-pair difference is not resolved ($p=0.245$). The gap against the strongest control (raw-linear) is small in absolute terms ($0.68$~dB) but consistent across all 20 paired held-out images (Wilcoxon $p=9.5\times10^{-6}$). HVK2D remains far above a random-VQC control ($11.15\pm1.19$~dB), so the observable channel is informative, but no tested quantum ablation beats a plain linear readout from raw or local pixel statistics.
+This is the central ablation result, and the one setting designed from the outset to test a learned representation rather than per-image memorization. Table~\ref{tab:hvk_real_cifar} reports held-out CIFAR-10 reconstruction (five random splits, 20 held-out reconstructions, all controls resource-matched per Table~\ref{tab:resource_capacity}), and Table~\ref{tab:hvk_real_cifar_stats} gives paired statistics against the HVK2D real-CIFAR map. Local-observables-only and raw-linear-classical controls (identical by construction here) reach $18.80\pm1.42$~dB, ZZ-only $18.56\pm1.49$~dB, no-entanglement $18.46\pm1.32$~dB, shuffled-pair $18.31\pm1.25$~dB, and quadratic-classical $18.33\pm1.65$~dB, against the trained HVK2D entangling map's $18.12\pm1.54$~dB. All control means except random-VQC and strict classical random features are numerically above HVK2D. After averaging the four held-out image differences within each split seed, the raw/local gap is $-0.68$~dB (bootstrap 95\% CI $[-0.91,-0.46]$~dB; two-sided Wilcoxon $p=0.0625$, $n=5$ seeds). Thus the direction is consistent across seeds and the percentile interval excludes zero, but the discrete seed-level signed-rank test cannot resolve it below $0.05$. HVK2D remains numerically far above the random-VQC control ($11.15\pm1.19$~dB), showing that the observable channel is informative; the tested data do not establish that its mean exceeds a plain linear readout from raw or local pixel statistics.
 
 \begin{table}[H]
 \centering
@@ -109,21 +71,21 @@ Random VQC & $7.9497{\pm}1.9891\times10^{-2}$ & $11.15{\pm}1.19$ & $0.0237{\pm}0
 
 \begin{table}[H]
 \centering
-\caption{Paired image-level statistical tests for held-out CIFAR reconstruction. Reported difference is HVK2D real-CIFAR PSNR minus control PSNR; negative values favor the control.}
+\caption{Seed-level paired tests for held-out CIFAR reconstruction. Four held-out image differences are averaged within each of five split seeds before inference. Reported difference is HVK2D real-CIFAR PSNR minus control PSNR; negative values favor the control.}
 \label{tab:hvk_real_cifar_stats}
 \scriptsize
 \begin{tabular}{lcccc}
 \toprule
-Control & Pairs & Mean $\Delta$PSNR & Bootstrap 95\% CI & Wilcoxon $p$ \\
+Control & Seeds & Mean $\Delta$PSNR & Bootstrap 95\% CI & Wilcoxon $p$ \\
 \midrule
-Raw-linear classical & 20 & $-0.68$ & $[-0.93,-0.46]$ & $9.54\times10^{-6}$ \\
-Local observables only & 20 & $-0.68$ & $[-0.93,-0.45]$ & $9.54\times10^{-6}$ \\
-No entanglement & 20 & $-0.34$ & $[-0.63,-0.10]$ & $0.021$ \\
-ZZ-only observables & 20 & $-0.44$ & $[-0.62,-0.26]$ & $1.34\times10^{-4}$ \\
-Quadratic classical & 20 & $-0.21$ & $[-0.36,-0.07]$ & $0.017$ \\
-Strict classical random features & 20 & $2.27$ & $[1.96,2.59]$ & $1.91\times10^{-6}$ \\
-Shuffled pair observables & 20 & $-0.19$ & $[-0.42,0.05]$ & $0.245$ \\
-Random VQC & 20 & $6.97$ & $[6.15,7.74]$ & $1.91\times10^{-6}$ \\
+Raw-linear classical & 5 & $-0.68$ & $[-0.91,-0.46]$ & $0.0625$ \\
+Local observables only & 5 & $-0.68$ & $[-0.91,-0.46]$ & $0.0625$ \\
+No entanglement & 5 & $-0.34$ & $[-0.64,-0.07]$ & $0.0625$ \\
+ZZ-only observables & 5 & $-0.44$ & $[-0.58,-0.30]$ & $0.0625$ \\
+Quadratic classical & 5 & $-0.21$ & $[-0.41,-0.01]$ & $0.1875$ \\
+Strict classical random features & 5 & $2.27$ & $[1.97,2.58]$ & $0.0625$ \\
+Shuffled pair observables & 5 & $-0.19$ & $[-0.31,-0.05]$ & $0.125$ \\
+Random VQC & 5 & $6.97$ & $[5.76,8.06]$ & $0.0625$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -136,11 +98,11 @@ Random VQC & 20 & $6.97$ & $[6.15,7.74]$ & $1.91\times10^{-6}$ \\
 \label{fig:hvk_real_cifar}
 \end{figure}
 
-The same direction holds beyond CIFAR-10. Table~\ref{tab:multi_dataset_reconstruction} extends the held-out protocol to five further real datasets (400 cached images each, stratified splits, identical protocol for every feature map); local/raw controls win or tie on every dataset. Table~\ref{tab:multi_dataset_classification} shows the same pattern on a downstream image-classification diagnostic using image-level pooled features, and Table~\ref{tab:wisconsin_diagnostic} on a tabular cross-domain sanity check (Wisconsin Breast Cancer).
+The same numerical direction holds beyond CIFAR-10. Table~\ref{tab:multi_dataset_reconstruction} extends the held-out protocol to five further real datasets (400 cached images each, three stratified split seeds, identical protocol for every feature map); local/raw controls have equal or higher mean PSNR on every dataset. For inference, held-out differences are averaged within split seed. Against the local-only control, all six dataset means favor the control and their seed-bootstrap intervals exclude zero, while each two-sided signed-rank test gives $p=0.25$, the minimum attainable nonzero value at $n=3$ seeds. We therefore report a recurring numerical direction rather than a dataset-wise significance claim. Table~\ref{tab:multi_dataset_classification} shows the same mean-performance pattern on a downstream image-classification diagnostic using image-level pooled features, and Table~\ref{tab:wisconsin_diagnostic} on a tabular cross-domain sanity check (Wisconsin Breast Cancer).
 
 \begin{table}[H]
 \centering
-\caption{Multi-dataset held-out reconstruction on real cached subsets (400 images/dataset, stratified splits). Held-out PSNR mean $\pm$ std, best local/raw control vs.\ the HVK2D pair-observable map.}
+\caption{Multi-dataset held-out reconstruction on real cached subsets (400 images/dataset, three stratified split seeds). Held-out PSNR mean $\pm$ std over images, best local/raw control vs.\ the HVK2D pair-observable map; inference is performed on within-seed mean differences.}
 \label{tab:multi_dataset_reconstruction}
 \scriptsize
 \begin{tabular}{lccc}
@@ -278,7 +240,7 @@ The same-set CIFAR-10 and \textit{Monalisa} results (Table~\ref{tab:cifar10}) ar
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/cifar_metric_comparison.pdf}
-\caption{Same-set CIFAR-10 comparison across all eight methods of Table~\ref{tab:cifar10}: MSE (log scale, left), PSNR with the memorization framing made explicit (center), and mean SSIM over the five images (right). HVK2D is competitive with CNN and clearly ahead of the GAN/autoencoder/PHL baselines, while the MLP's near-$100$~dB PSNR reflects capacity-driven memorization of this small same-set fit rather than representation quality.}
+\caption{Same-set CIFAR-10 comparison across all eight methods of Table~\ref{tab:cifar10}: MSE (log scale, left), PSNR with the memorization framing made explicit (center), and mean SSIM over the five images (right). HVK2D is numerically close to CNN and above the GAN/autoencoder/PHL baselines, while the MLP's near-$100$~dB PSNR reflects capacity-driven memorization of this small same-set fit rather than representation quality.}
 \label{fig:cifar_metric_comparison}
 \end{figure}
 
@@ -316,7 +278,7 @@ Table~\ref{tab:hamiltonian_controls} shows the Hamiltonian energy term is, if an
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\linewidth]{figures/contrastive_order_parameter_curve.pdf}
-\caption{Order parameter and mean Hamiltonian energy (left) and order-parameter susceptibility (right) for the same contrastive Hamiltonian-core run. The energy diagnostic drifts steadily negative while the order parameter stays comparatively flat after an early reorganization near epoch 10. This is consistent with the energy term acting as a diagnostic signal without being the quantity that most improves reconstruction, matching the conditional-value reading of Table~\ref{tab:hamiltonian_controls}.}
+\caption{Order parameter and mean Hamiltonian energy (left) and the corresponding one-step order-parameter difference (right) for the same contrastive Hamiltonian-core run. The energy diagnostic drifts steadily negative while the order parameter remains comparatively flat after the initial training period. This is consistent with the energy term being monitored without being the quantity that most improves reconstruction, matching the conditional-value reading of Table~\ref{tab:hamiltonian_controls}.}
 \label{fig:contrastive_order_parameter}
 \end{figure}
 
@@ -339,66 +301,18 @@ ZZ-only observables & $5.1503\times10^{-4}$ & 32.88 & 0.9930 & Nearest-neighbor 
 \end{tabular}
 \end{table}
 
-\subsection{Full Training-Reorganization Ablation}
+\subsection{Restricted Diagnostic and Training-Trace Provenance Audit}
 \label{sec:restricted_ablation}
-The main paper's restricted pair-correlation diagnostic (entangling observables representationally necessary for a nonlocal-structure target, mean $R^2=0.9735$ vs.\ $R^2\leq0.02$ for non-entangling controls) also has a training-dynamics signature. Table~\ref{tab:phase_transition_ablation} gives the per-variant candidate reorganization epoch $t_c$, peak susceptibility $\mathcal{X}_{\max}$, and final order parameter $M_z(200)$. Every variant peaks at the same early epoch, but the entangling channel has a $2.1$--$6.7\times$ larger susceptibility peak than any resource-matched classical control and a final order parameter roughly double the strongest control's. These are finite-size optimization diagnostics, not thermodynamic phase-transition evidence.
+The main paper's restricted pair-correlation result remains supported by the five-seed final metrics: the entangling observable map reaches mean $R^2=0.9735$, versus $R^2\leq0.02$ for the tested non-entangling controls. Figure~\ref{fig:restricted_diagnostic_summary} displays those measured final metrics.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/full_ablation_metric_comparison.pdf}
-\caption{The restricted pair-correlation diagnostic underlying the entanglement-necessity result (mean $R^2=0.9735$ vs.\ $R^2\leq0.02$ for non-entangling controls), shown here as MSE (left) and PSNR (right) across the full variant set: the trained HVK2D entangling map, freeze-quantum, no-entanglement, raw-linear, parameter-matched classical, random-VQC, and freeze-classical. The entangling channel (blue) separates clearly from every non-entangling control on this target, in direct contrast to the ordinary held-out reconstruction result of Section~\ref{sec:holdout_headline} where the same entangling channel does not separate from local/raw controls --- the two figures together are the visual form of this document's central task-dependence argument.}
+\caption{The restricted pair-correlation diagnostic underlying the entanglement-necessity result (mean $R^2=0.9735$ vs.\ $R^2\leq0.02$ for non-entangling controls), shown here as MSE (left) and PSNR (right) across the full variant set: the trained HVK2D entangling map, freeze-quantum, no-entanglement, raw-linear, parameter-matched classical, random-VQC, and freeze-classical. The entangling channel (blue) separates numerically from every non-entangling control on this target, in direct contrast to the ordinary held-out reconstruction result of Section~\ref{sec:holdout_headline} where the same entangling channel does not separate from local/raw controls --- the two figures together visualize this document's central task-dependence argument.}
 \label{fig:restricted_diagnostic_summary}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\caption{Training-reorganization ablation on the restricted pair-correlation diagnostic.}
-\label{tab:phase_transition_ablation}
-\begin{tabular}{lccc}
-\toprule
-Variant & $t_c$ & $\mathcal{X}_{\max}$ & $M_z(200)$ \\
-\midrule
-HVK2D entangling observables & 10 & 0.2042 & 0.9225 \\
-Parameter-matched classical & 10 & 0.0983 & 0.4268 \\
-No entanglement & 10 & 0.0813 & 0.3475 \\
-Random VQC & 10 & 0.0305 & 0.1096 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Extended Order-Parameter Ablation Across Real Datasets}
-\label{sec:multi_dataset_ablation}
-We extend the same order-parameter/critical-epoch diagnostic to a small representative sample of images from CIFAR-10 and five further real datasets, training a fresh HVK2D model per image (non-overlapping $8\times8$ patches, 16 patches/image) and tracking $M_z(t)$ and $\mathcal{X}(t)=|M_z(t)-M_z(t-\Delta t)|$ at every step, applying the same median-plus-two-standard-deviation detection threshold used throughout this project. Table~\ref{tab:multi_dataset_phase_transition} reports the result: all 13 sampled images across the six datasets show a detected reorganization. This is a small-sample (2--3 images/dataset), single-seed diagnostic, reported at that scope; it shows that the signature recurs in the sampled real-image runs rather than only in the synthetic restricted diagnostic.
-
-Rather than a single combined trajectory, Figure~\ref{fig:multi_dataset_gallery} shows the order parameter and susceptibility in the same dual-axis style as the main paper's examples, individually for \emph{every one of the 13 sampled images}. Each image is identified by its real class or content label rather than a bare index. Each panel marks its candidate reorganization epoch $t_c$ and peak susceptibility $\mathcal{X}_{\max}$.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth]{figures/multi_dataset_phase_transition_gallery.pdf}
-\caption{Order-parameter reorganization display for the 13 sampled images underlying Table~\ref{tab:multi_dataset_phase_transition}. Each panel plots $M_z(t)$ (solid) and $\mathcal{X}(t)$ (dashed), with the candidate reorganization epoch $t_c$ and peak susceptibility annotated. All 13 panels meet the stated operational criterion; this is a descriptive sampled result.}
-\label{fig:multi_dataset_gallery}
-\end{figure}
-
-\begin{table}[H]
-\centering
-\caption{Order-parameter reorganization diagnostic across CIFAR-10 and five further real datasets (2--3 images/dataset, 100--200 training epochs, HVK2D). Every sampled image meets the stated susceptibility-peak criterion.}
-\label{tab:multi_dataset_phase_transition}
-\scriptsize
-\begin{tabular}{lccccc}
-\toprule
-Dataset & $n$ & Detected & Mean $t_c$ & Mean $\mathcal{X}_{\max}$ & Mean $M_z(\text{final})$ \\
-\midrule
-CIFAR-10 & 3 & 3/3 & 68.3 & $0.0053\pm0.0006$ & $-0.111\pm0.145$ \\
-MNIST & 2 & 2/2 & 51.0 & $0.0041\pm0.0003$ & $-0.045\pm0.085$ \\
-Fashion-MNIST & 2 & 2/2 & 72.0 & $0.0064\pm0.0015$ & $-0.311\pm0.008$ \\
-PathMNIST & 2 & 2/2 & 14.0 & $0.0073\pm0.0009$ & $0.111\pm0.322$ \\
-BloodMNIST & 2 & 2/2 & 70.0 & $0.0056\pm0.0012$ & $-0.113\pm0.148$ \\
-PneumoniaMNIST & 2 & 2/2 & 88.0 & $0.0052\pm0.0009$ & $0.051\pm0.029$ \\
-\midrule
-Total & 13 & \textbf{13/13} & -- & -- & -- \\
-\bottomrule
-\end{tabular}
-\end{table}
+The associated training-trajectory material does not meet the same evidentiary standard and is excluded. The per-variant curves previously produced by \path{run_newhvk_suite.py::epoch_tables} are analytic interpolations from final metrics, not logged epoch measurements. Separately, the 13 stored real-image traces were recorded from HVK2D in training mode, whose forward pass adds Gaussian noise with standard deviation $0.01$ to every observable; their maximum one-step changes therefore mix optimizer dynamics with injected jitter. Neither source supports a training-reorganization comparison. The corrected multi-dataset runner now records a noise-free evaluation-mode forward pass after each optimizer update and preserves aggregate summaries across partial runs. A fresh multi-seed execution is required before training-dynamics claims or figures are restored.
 
 \section{HVK1D versus HVK2D: A Direct Topology Comparison}
 \label{sec:topology_comparison}
@@ -423,7 +337,7 @@ HVK2D & 52{,}755 & $11.57\pm1.53$ & $0.304\pm0.188$ & $16.6\pm0.3$ \\
 \end{tabular}
 \end{table}
 
-The two topologies give close held-out reconstruction means at this scale. Across the 9 image--seed pairs, the paired HVK1D-minus-HVK2D difference is $0.16$~dB. Its bootstrap 95\% CI is $[-0.32,0.64]$~dB. After aggregating the three images within each seed, the two-sided Wilcoxon test gives $p=0.50$. The 3-seed, 3-image subset is too small to establish formal equivalence. HVK2D nevertheless completes the same 90-step budget in roughly half the wall-clock time of HVK1D at a comparable parameter count, a measured resource-cost difference. This is consistent with HVK2D's smaller measured observable set (19 vs.\ 27); the corresponding transpiled depth and two-qubit-gate counts are shown in Figure~\ref{fig:ibm_circuit_summary}. At the tested scale, the evidence supports treating topology primarily as a resource-cost choice rather than claiming an accuracy difference.
+The two topologies give close held-out reconstruction means at this scale. Across the 9 image--seed pairs, the paired HVK1D-minus-HVK2D difference is $0.16$~dB. After aggregating the three image differences within each seed, the seed-bootstrap 95\% CI is $[-0.38,0.46]$~dB and the two-sided Wilcoxon test gives $p=0.50$. The 3-seed, 3-image subset is too small to establish formal equivalence. HVK2D nevertheless completes the same 90-step budget in roughly half the wall-clock time of HVK1D at a comparable parameter count, a measured resource-cost difference. This is consistent with HVK2D's smaller measured observable set (19 vs.\ 27); the corresponding transpiled depth and two-qubit-gate counts are shown in Figure~\ref{fig:ibm_circuit_summary}. At the tested scale, the evidence supports treating topology primarily as a resource-cost choice rather than claiming an accuracy difference.
 
 \subsection{Surrogate Sweep: Full Statistical Scope}
 \label{sec:topology_surrogate}
@@ -459,7 +373,7 @@ The broader surrogate sweep reproduces the real-circuit pattern: HVK1D-pair and 
 
 \section{Held-Out Output-Level $D_4$ Symmetry Evaluation}
 \label{sec:d4_symmetry_experiment}
-The main paper's $D_4$-equivariance claim (pooled HVK2D observable map, equivariance error $9.57\times10^{-17}$) was previously demonstrated on a single pass over five images, with no held-out protocol, no classical baseline sharing the same pooling construction, and no measurement of what equivariance costs or buys at the output level. This section closes that gap with a held-out, multi-seed (5 seeds, 20 train / 10 held-out images per seed, disjoint CIFAR-10 splits) experiment across five modes: the provably-equivariant \emph{D4-pooled-HVK2D} map; a new \emph{D4-pooled-classical} baseline applying the identical Reynolds-averaging construction (group-averaging the feature map over the eight $D_4$ transforms) to the purely classical \emph{local-raw} feature map instead of the HVK2D-surrogate one, so the comparison is architecture-matched rather than quantum-vs-nothing; the non-symmetric \emph{HVK2D-positional} control; an \emph{ordinary-augmentation} baseline (\emph{HVK2D-augmented}: the same non-pooled feature map, but with a ridge readout trained on all eight $D_4$-transformed copies of every training image, instead of architectural pooling); and the non-symmetric classical \emph{local-raw} control. For every mode we measure both \emph{feature-equivariance error} (as before) and, new here, \emph{output consistency}: for each held-out image we predict a reconstruction from every one of its 8 $D_4$-transformed copies, rotate/reflect each prediction back to canonical orientation, and measure the pairwise mean-squared disagreement between the 8 canonicalized predictions, together with reconstruction accuracy (PSNR) against ground truth.
+The main paper's $D_4$-equivariance claim (pooled HVK2D observable map, equivariance error $9.57\times10^{-17}$) was previously demonstrated at feature-grid level on 1,000 cached CIFAR-10 images, giving 7,000 image--nonidentity-transform evaluations. That large numerical check did not use a fitted readout, a held-out reconstruction protocol, or a classical baseline sharing the same pooling construction, and therefore did not measure what equivariance costs or buys at the output level. This section closes those gaps with a held-out, multi-seed (5 seeds, 20 train / 10 held-out images per seed, disjoint CIFAR-10 splits) experiment across five modes: the provably-equivariant \emph{D4-pooled-HVK2D} map; a new \emph{D4-pooled-classical} baseline applying the identical Reynolds-averaging construction (group-averaging the feature map over the eight $D_4$ transforms) to the purely classical \emph{local-raw} feature map instead of the HVK2D-surrogate one, so the comparison is architecture-matched rather than quantum-vs-nothing; the non-symmetric \emph{HVK2D-positional} control; an \emph{ordinary-augmentation} baseline (\emph{HVK2D-augmented}: the same non-pooled feature map, but with a ridge readout trained on all eight $D_4$-transformed copies of every training image, instead of architectural pooling); and the non-symmetric classical \emph{local-raw} control. For every mode we measure both \emph{feature-equivariance error} (as before) and, new here, \emph{output consistency}: for each held-out image we predict a reconstruction from every one of its 8 $D_4$-transformed copies, rotate/reflect each prediction back to canonical orientation, and measure the pairwise mean-squared disagreement between the 8 canonicalized predictions, together with reconstruction accuracy (PSNR) against ground truth.
 
 \begin{table}[H]
 \centering
@@ -495,7 +409,7 @@ The main paper reports a real IBM Quantum hardware reconstruction pilot (five im
 \subsection{Reused Checkpoints}
 No model was retrained for this pilot. Two pre-existing artifacts were reused directly. The first was the ``shared VQC baseline'' Monalisa checkpoint under
 \begin{quote}
-\small\path{Main2/newHVK/results/ablation_study/legacy_hvk_controls/eval_controls/}\newline\path{shared-baseline-seed-42/}.
+\small\path{main2/newHVK/results/ablation_study/legacy_hvk_controls/eval_controls/}\newline\path{shared-baseline-seed-42/}.
 \end{quote}
 This is the run underlying the ``Legacy baseline, signed energy'' row of Table~\ref{tab:hamiltonian_controls} ($32.24$~dB simulator PSNR). The second set comprised four fresh HVK2D checkpoints trained for 200 steps with Adam ($\eta=0.004$) on an NVIDIA GTX~1050. Each checkpoint corresponds to one native-resolution $32\times32$ CIFAR-10 image optimized directly on its own target, following the same per-image protocol as \textit{Monalisa} rather than the held-out suite of Section~\ref{sec:holdout_headline}. Non-overlapping $8\times8$ patches give 16 patches per image, matching the Monalisa pilot's patch count and keeping the hardware circuit budget predictable.
 
@@ -505,7 +419,7 @@ The trained HVK1D forward pass applies, per patch: $R_X$ angle embedding, $R_Y$ 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.75\linewidth]{figures/ibm_circuit_summary.pdf}
-\caption{Transpiled circuit resource comparison between the HVK1D (\textit{Monalisa}) and HVK2D (CIFAR) per-patch circuits at \texttt{optimization\_level=1} on \texttt{ibm\_fez}: circuit depth (left) and CX-gate count (right). Both circuits are shallow (depth 18) and use few entangling gates (10--14 CX), consistent with the small hardware-vs-simulator PSNR gap reported in the main paper rather than a circuit heavy enough to accumulate substantial device noise.}
+\caption{Transpiled circuit resource comparison between the HVK1D (\textit{Monalisa}) and HVK2D (CIFAR) per-patch circuits at \texttt{optimization\_level=1} on \texttt{ibm\_fez}: circuit depth (left) and CX-gate count (right). Both circuits have depth 18 and use 10--14 CX gates. These resource counts document the executed circuits; they do not by themselves attribute the observed hardware--simulator PSNR gap to a particular noise source.}
 \label{fig:ibm_circuit_summary}
 \end{figure}
 
@@ -528,7 +442,7 @@ CIFAR airplane (HVK2D) & 16 & $7.14\times10^{-6}$ \\
 \end{tabular}
 \end{table}
 
-Both errors are far below anything that would explain the hardware-vs-simulator PSNR gap reported in the main paper, so that gap is attributable to genuine device noise, not a circuit-translation error.
+All translation discrepancies are small relative to the observable perturbations induced by finite-shot device execution: across the five checkpoints, the hardware--statevector mean absolute observable deviation is $0.096$--$0.125$ (maximum $0.218$--$0.340$), versus a maximum translation discrepancy of $7.89\times10^{-4}$ for Monalisa and $9.42\times10^{-6}$ for CIFAR. They therefore rule out a gate-translation mismatch of the measured magnitude as the primary explanation for the hardware--simulator PSNR gap. This pilot does not separate sampling noise, gate/readout errors, drift, and transpilation effects.
 
 \subsection{IBM Quantum Account, Backend, and Job Identifiers}
 Jobs were submitted via \texttt{qiskit-ibm-runtime} (channel \texttt{ibm\_quantum\_platform}) under a free/open-plan instance. Both pilots ran on \texttt{ibm\_fez}, a 156-qubit Heron-class processor. Transpilation used \texttt{optimization\_level=1}; each job used \texttt{SamplerV2} with 256 shots per circuit.
@@ -550,17 +464,17 @@ CIFAR airplane & \texttt{d9edgdphtsac739e4kdg} & 32 & Z, X \\
 \end{tabular}
 \end{table}
 
-Total: 176 circuits across 5 jobs. Quota consumption, read from \texttt{QiskitRuntimeService.}\allowbreak\texttt{usage()} immediately before and after the pilot: $19\rightarrow35$ seconds against a $600$-second monthly free-plan allowance --- the entire pilot cost $16$ seconds of billed quantum-processor time, with $565$ seconds remaining afterward, at an observed rate of $\approx\!0.09$--$0.13$~s/circuit.
+Total: 176 circuits across 5 jobs. Quota consumption, read from \texttt{QiskitRuntimeService.}\allowbreak\texttt{usage()} immediately before and after the pilot, changed from $19$ to $35$ seconds against a $600$-second monthly free-plan allowance. Thus the account meter indicated 16 seconds of billed quantum-processor time and 565 seconds remaining afterward, at an observed rate of $\approx\!0.09$--$0.13$~s/circuit. The readings were recorded contemporaneously, but the raw service-response object was not serialized; unlike the job identifiers and reconstruction outputs, this quota figure is therefore an execution-log record rather than a repository-recomputable artifact.
 
 \subsection{Reconstruction Decode}
 Hardware counts were converted to observable expectation values by the standard parity estimator, $\langle Z_i\rangle = \frac{1}{S}\sum_{\text{shots}} (-1)^{b_i}$ (identically for $X$, $Y$ after basis rotation), with pairwise correlators computed as the shot-weighted mean of $(-1)^{b_i+b_j}$ within the same measurement basis. The resulting observable vector, concatenated with the training-time positional encoding, was passed through the \emph{unmodified} trained decoder. No hardware-specific fine-tuning, error mitigation, or post-hoc calibration was applied.
 
 \section{Reproducibility and Artifact Map}\leavevmode\par
-The repository-level experiment drivers set Python, NumPy, and PyTorch random seeds explicitly. Unless a section states otherwise, multi-seed studies use seeds $\{0,1,2,3,4\}$; the reduced real-circuit topology confirmation uses $\{0,1,2\}$. Held-out samples are disjoint from their corresponding fitting samples, and each reported paired test preserves the pairing unit stated in its table or surrounding text (image within split, or seed after within-seed image aggregation). ``Mean $\pm$ std'' denotes the arithmetic mean and population-standard-deviation summary (NumPy \texttt{ddof=0}) over the unit named in the caption. Bootstrap intervals are percentile 95\% intervals; Wilcoxon values are two-sided signed-rank tests. No multiple-comparison correction is applied, so $p$-values should be interpreted as individual-comparison summaries rather than as a family-wise discovery analysis.
+The repository-level experiment drivers set Python, NumPy, and PyTorch random seeds explicitly. Unless a section states otherwise, multi-seed studies use seeds $\{0,1,2,3,4\}$; the reduced real-circuit topology confirmation and six-dataset reconstruction extension use $\{0,1,2\}$. Held-out samples are disjoint from their corresponding fitting samples, and each reported paired test preserves the pairing unit stated in its table or surrounding text (image within split, or seed after within-seed image aggregation). ``Mean $\pm$ std'' denotes the arithmetic mean and population-standard-deviation summary (NumPy \texttt{ddof=0}) over the unit named in the caption. Bootstrap intervals are percentile 95\% intervals; Wilcoxon values are two-sided signed-rank tests. No multiple-comparison correction is applied, so $p$-values should be interpreted as individual-comparison summaries rather than as a family-wise discovery analysis.
 
 The current verification environment uses Python 3.11.9, PyTorch 2.6.0 with CUDA 12.4, PennyLane 0.42.3, Qiskit 2.5.0, NumPy 2.4.6, pandas 3.0.3, scikit-learn 1.9.0, quimb 1.11.2, cotengra 0.7.5, and autoray 0.6.12 on an NVIDIA GeForce GTX 1050. The package constraints are declared in \path{pyproject.toml}; because that file does not pin every dependency to an exact version, the versions above identify the environment used for this verification pass rather than claiming bitwise reproducibility across arbitrary future installations.
 
-The principal artifact map is as follows. Core ablations and held-out controls are generated by \path{Main2/newHVK/run_newhvk_suite.py}, with tabular outputs under \path{Main2/newHVK/results/full_ablation_suite/}, \path{q1_validation/}, and \path{multi_dataset_validation/}. The matched real-circuit topology study is generated by \path{run_topology_comparison.py} and stored under \path{results/topology_comparison/}; its directory includes raw per-run JSON, summaries, paired statistics, and a surrogate manifest. The held-out $D_4$ study is generated by \path{run_d4_symmetry_experiment.py} and stored under \path{results/d4_symmetry_experiment/}. Training-reorganization traces are stored under \path{results/phase_transition_multi_dataset/}. Figure regeneration for the manuscript's reorganization diagnostics is implemented in \path{plot_training_reorganization.py}. Raw and summary artifacts are retained separately so that manuscript means and uncertainty intervals can be recomputed without reading values from figures.
+The principal artifact map is as follows. Core ablations are generated by \path{main2/newHVK/run_newhvk_suite.py}, with outputs under \path{main2/newHVK/results/full_ablation_suite/} and \path{main2/newHVK/results/q1_validation/}; the six-dataset extension is generated by \path{main2/newHVK/run_multi_dataset_validation.py} and stored under \path{main2/newHVK/results/multi_dataset_validation/}. The newer experiment drivers use the repository's historically uppercase path: \path{Main2/newHVK/run_topology_comparison.py}, \path{Main2/newHVK/run_d4_symmetry_experiment.py}, and \path{Main2/newHVK/run_phase_transition_multi_dataset.py}, with outputs respectively under \path{Main2/newHVK/results/topology_comparison/}, \path{Main2/newHVK/results/d4_symmetry_experiment/}, and \path{Main2/newHVK/results/phase_transition_multi_dataset/}. The topology directory includes raw per-run JSON, summaries, paired statistics, and a surrogate manifest. Excluded legacy training-mode traces and any future deterministic evaluation-mode traces have distinct filenames and provenance fields. Path case is intentional and must be preserved on case-sensitive systems. Hardware-pilot result metadata and measured observable arrays are stored under \path{IBM_Cloud/outputs/hardware_reconstruction/} and \path{IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/}; the corresponding drivers also write machine-readable local-validation records. Raw and summary artifacts are retained separately so that manuscript means and uncertainty intervals can be recomputed without reading values from figures.
 
 \section{Discussion}
 
@@ -571,6 +485,14 @@ The tie-with-classical outcome in Section~\ref{sec:holdout_headline} is consiste
 We distill this ablation study into concrete guidance for evaluating hybrid quantum--classical vision models: (1) \emph{resource-match} every classical control to the quantum model's feature width and readout parameter count; (2) \emph{freeze-isolate} each trainable component independently before crediting any one of them with an observed gain; (3) \emph{audit every favorable diagnostic for target--feature leakage} by tracing target- and feature-construction code for shared subexpressions; (4) \emph{report held-out, not same-set, performance} as the primary evidence for a representation-learning claim; (5) \emph{report multiple seeds with error bars} on any comparison intended to support a quantitative claim.
 
 \section{Conclusion}
-The resource-matched, freeze-based, multi-seed study provides a precise attribution map for HVK. The trainable classical decoder supplies the dominant contribution to ordinary held-out reconstruction, while the entangling and symmetry-aware channels become informative on tasks whose structure explicitly calls for nonlocal correlations or equivariance. On held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB compared with HVK2D's $18.12\pm1.54$~dB (Wilcoxon $p=9.5\times10^{-6}$, $n=20$), with the same direction on five further real datasets. These results refine the operating regime of the framework and motivate task-aligned HVK variants rather than weakening the framework itself. The leakage audit further contributes a transferable validation protocol, and Section~\ref{sec:hardware_methodology} provides the complete hardware-pilot methodology.
+The resource-matched, multi-seed study delineates the tested operating regime of HVK. Under a shared fitted readout, simple local/raw maps match or exceed the HVK2D pair-observable map on ordinary held-out reconstruction. The entangling observable channel separates on the restricted target constructed to require nonlocal correlations; separately, $D_4$ pooling enforces equivariance to numerical precision but does not improve held-out reconstruction accuracy in the tested experiment. On held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB compared with HVK2D's $18.12\pm1.54$~dB; seed-level inference gives a $-0.68$~dB HVK2D-minus-control difference (bootstrap 95\% CI $[-0.91,-0.46]$~dB; Wilcoxon $p=0.0625$, $n=5$). The same numerical direction appears on five further real datasets. These results motivate task-aligned HVK variants and strengthen the framework's evidentiary scope. The leakage and provenance audits contribute a transferable validation protocol, and Section~\ref{sec:hardware_methodology} provides the complete hardware-pilot methodology.
+
+\begin{thebibliography}{5}
+\bibitem{Krizhevsky2009} A. Krizhevsky, ``Learning multiple layers of features from tiny images,'' University of Toronto, Technical Report, 2009.
+\bibitem{LeCun1998} Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, ``Gradient-based learning applied to document recognition,'' \textit{Proceedings of the IEEE}, vol. 86, no. 11, pp. 2278--2324, 1998, doi: 10.1109/5.726791.
+\bibitem{Xiao2017} H. Xiao, K. Rasul, and R. Vollgraf, ``Fashion-MNIST: A novel image dataset for benchmarking machine learning algorithms,'' arXiv:1708.07747, 2017.
+\bibitem{Yang2023} J. Yang et al., ``MedMNIST v2---A large-scale lightweight benchmark for 2D and 3D biomedical image classification,'' \textit{Scientific Data}, vol. 10, Art. no. 41, 2023, doi: 10.1038/s41597-022-01721-8.
+\bibitem{Wolberg1993} W. Wolberg, O. Mangasarian, N. Street, and W. Street, ``Breast Cancer Wisconsin (Diagnostic),'' UCI Machine Learning Repository, 1993, doi: 10.24432/C5DW2B.
+\end{thebibliography}
 
 \end{document}
