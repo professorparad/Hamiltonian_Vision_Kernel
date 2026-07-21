@@ -1100,19 +1100,32 @@ def write_q1_statistical_tests(result_dir: Path, rows: list[dict[str, object]]) 
         keys = sorted(set(hvk_rows).intersection(model_rows))
         if not keys:
             continue
-        psnr_diff = np.asarray(
-            [float(hvk_rows[key]["psnr"]) - float(model_rows[key]["psnr"]) for key in keys],
-            dtype=np.float64,
-        )
-        mse_diff = np.asarray(
-            [float(hvk_rows[key]["mse"]) - float(model_rows[key]["mse"]) for key in keys],
-            dtype=np.float64,
-        )
+        image_psnr_diff = {
+            key: float(hvk_rows[key]["psnr"]) - float(model_rows[key]["psnr"])
+            for key in keys
+        }
+        image_mse_diff = {
+            key: float(hvk_rows[key]["mse"]) - float(model_rows[key]["mse"])
+            for key in keys
+        }
+        # Four held-out images share each fitted readout and are therefore not
+        # independent replicates. Aggregate within split seed before inference.
+        seeds = sorted({seed for seed, _ in keys})
+        psnr_diff = np.asarray([
+            np.mean([value for (row_seed, _), value in image_psnr_diff.items() if row_seed == seed])
+            for seed in seeds
+        ], dtype=np.float64)
+        mse_diff = np.asarray([
+            np.mean([value for (row_seed, _), value in image_mse_diff.items() if row_seed == seed])
+            for seed in seeds
+        ], dtype=np.float64)
         low, high = bootstrap_ci(psnr_diff, seed=40_000 + len(stats_rows))
         stats_rows.append(
             {
                 "comparison": f"HVK2D-real-cifar minus {model}",
-                "n_pairs": len(keys),
+                "n_seeds": len(seeds),
+                "n_image_seed_pairs": len(keys),
+                "inference_unit": "seed mean over four held-out images",
                 "mean_psnr_difference_db": float(psnr_diff.mean()),
                 "bootstrap95_low_db": low,
                 "bootstrap95_high_db": high,
