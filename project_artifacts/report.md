@@ -1,5 +1,10 @@
 # Quantum Contribution Ablation — Experiment Report
 
+> **Historical experiment plan.** Status and interpretation in this file are
+> preserved for provenance and are not authoritative for submission. Current
+> retained results, exclusions, and statistics are documented in the main
+> manuscript, supplementary study, and their machine-readable artifact map.
+
 **Date:** 2026-07-07
 **Branch:** `experiments_ablation_study`
 **Central question:** Are the classical projections and decoder doing all the learning, or does the quantum circuit contribute meaningful patch-specific structure?

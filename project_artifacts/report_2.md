@@ -1,5 +1,12 @@
 # Quantum Contribution Ablation — Critical Review (report_2)
 
+> **Historical review — not the submission evidence ledger.** Later provenance
+> and leakage audits changed which exploratory results are admissible. The
+> retained restricted nonlocal diagnostic is leakage-audited, whereas the old
+> Monalisa freeze aggregate cannot be reproduced from per-seed artifacts and is
+> excluded. Consult the main manuscript, supplementary study, and
+> `main2/newHVK/WHAT_WAS_TESTED_AND_PROVED.md` for the current claim boundary.
+
 **Reviewer role:** publication-quality scrutiny of the results in
 `experiments/quantum_contribution/results/`.
 **Date:** 2026-07-10

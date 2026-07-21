@@ -160,9 +160,11 @@ The current manuscript adds:
 - CIFAR-10 aggregate comparison across HVK, classical, and PHL baselines.
 - Mona Lisa comparison table including CNN, MLP, autoencoder, GAN, PHL, HVK1D,
   HVK2D, and Symmetric HVK1D.
-- Order-parameter tracking tables and figures.
-- IBM Heron patch-proxy hardware results, reported as hardware measurements
-  rather than full image reconstruction.
+- A provenance audit that excludes exploratory order-parameter trajectories
+  until deterministic, evaluation-mode multi-seed traces are available.
+- A scoped five-image IBM Heron reconstruction pilot using hardware-measured
+  observables and the unchanged trained decoder, with simulator-translation
+  checks and complete job/quota metadata in the supplementary study.
 
 The deployed static site is served from `docs/` by `.github/workflows/pages.yml`.
 It only links to files committed under `docs/assets`.
@@ -187,11 +189,13 @@ python -m compileall Main Main2 Baselines python_library
 
 ## Current Research Caveats
 
-- The quantum part is simulated, not executed on a QPU, except for the separate
-  `IBM_Cloud/` probe scripts.
+- Most quantitative comparisons are simulator studies; the separate five-image
+  IBM Heron pilot executes the measurement circuits on a QPU and is reported as
+  feasibility evidence, not as a hardware quantum-advantage benchmark.
 - `lightning.gpu` is optional and environment-dependent.
 - CIFAR runs use small grayscale 32x32 samples to keep the experiments quick.
 - The benchmark methods are intentionally simple. They are comparison anchors,
   not state-of-the-art reconstruction systems.
-- IBM Heron outputs are order/correlation proxy measurements. They should not be
-  described as full real-hardware high-quality image reconstructions.
+- The IBM Heron pilot contains real hardware reconstruction paths, but its five
+  per-image-optimized examples are too small to support a general performance or
+  quantum-advantage claim.

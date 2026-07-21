@@ -1,5 +1,21 @@
 # HVK — Consolidated Results Summary
 
+> **Historical snapshot — superseded for submission.** This document records an
+> earlier internal review and includes exploratory aggregates that are not
+> retained as manuscript evidence. In particular, its Monalisa component
+> attribution lacks reproducible per-seed artifacts, and its leakage verdict
+> predates the corrected restricted diagnostic. For submission claims and
+> current statistics, use `latex_outputs/paper_latex/paper_hvk.tex`,
+> `latex_outputs/paper_latex/supplementary_study.tex`, and their artifact map.
+
+> **Historical snapshot — superseded for submission.** This document records an
+> earlier internal review and includes exploratory aggregates that are not
+> retained as manuscript evidence. In particular, its Monalisa component
+> attribution lacks reproducible per-seed artifacts, and its leakage verdict
+> predates the corrected restricted diagnostic. For submission claims and
+> current statistics, use `latex_outputs/paper_latex/paper_hvk.tex`,
+> `latex_outputs/paper_latex/supplementary_study.tex`, and their artifact map.
+
 Companion to `algorithm.md` (implementation), `report.md` (experiment spec), and
 `report_2.md` (critical review). This file collects **all numeric results** across
 the ablation study, the multi-image benchmarks, and the second-generation newHVK
