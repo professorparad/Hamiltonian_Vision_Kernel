@@ -339,6 +339,12 @@ def worker_loop(worker_id: int) -> None:
     while True:
         claimed = claim_one()
         if claimed is None:
+            # On Windows, another thread's atomic rename can invalidate the
+            # current directory enumeration even while other pending files
+            # remain. Retry instead of silently retiring this worker.
+            if any(PENDING_DIR.glob("*.json")):
+                time.sleep(0.25)
+                continue
             return
         cid, bucket, config = claimed
         r = run_isolated(config)
@@ -358,7 +364,23 @@ def collect_results() -> dict:
         except json.JSONDecodeError:
             continue
         bucket = r.pop("bucket", None)
-        if bucket in results:
+        valid_budget = r.get("steps") == STEPS and r.get("seed") in SEEDS
+        valid_bucket = (
+            bucket == "qubit_sweep"
+            and r.get("topology") == "HVK1D"
+            and r.get("qubit_count") in ([4] if STEPS == 2 else [4, 6, 8])
+            and r.get("bond_dim") == 4
+            or bucket == "bond_dim_sweep"
+            and r.get("topology") in ("HVK1D", "HVK2D")
+            and r.get("qubit_count") == 6
+            and r.get("bond_dim") in ([1] if STEPS == 2 else [1, 2, 4, 8])
+            or bucket == "depth_sweep"
+            and r.get("topology") in ("HVK1D", "HVK2D")
+            and r.get("qubit_count") == 6
+            and r.get("bond_dim") == 4
+            and r.get("n_layers") in ([1] if STEPS == 2 else [1, 2, 3, 4])
+        )
+        if bucket in results and valid_budget and valid_bucket:
             results[bucket].append(r)
     return results
 
@@ -394,7 +416,7 @@ def main(smoke_test: bool = False):
 
         while not stop_flag.wait(5.0):
             results = collect_results()
-            tmp = RESULT_FILE.with_suffix(".json.tmp")
+            tmp = RESULT_FILE.with_suffix(f".{os.getpid()}.json.tmp")
             tmp.write_text(json.dumps(results, indent=2, default=str))
             os.replace(tmp, RESULT_FILE)
 
