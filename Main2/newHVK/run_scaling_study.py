@@ -290,12 +290,22 @@ def seed_queue(smoke_test: bool = False) -> None:
 
     for bucket, config in all_items:
         cid = _config_id(bucket, config)
-        if any((d / f"{cid}.json").exists() for d in (PENDING_DIR, CLAIMED_DIR, DONE_DIR)):
+        pending_path = PENDING_DIR / f"{cid}.json"
+        claimed_path = CLAIMED_DIR / f"{cid}.json"
+        done_path = DONE_DIR / f"{cid}.json"
+        if pending_path.exists() or claimed_path.exists():
             continue
+        if done_path.exists():
+            try:
+                prior = json.loads(done_path.read_text())
+            except (json.JSONDecodeError, OSError):
+                prior = {"status": "failed"}
+            if prior.get("status") not in ("failed", "timed_out"):
+                continue
         payload = json.dumps({"bucket": bucket, "config": config})
         tmp = PENDING_DIR / f".{cid}.tmp"
         tmp.write_text(payload)
-        tmp.rename(PENDING_DIR / f"{cid}.json")  # atomic same-directory rename
+        tmp.rename(pending_path)  # atomic same-directory rename
 
 
 def migrate_completed_results(path: Path) -> None:
@@ -367,6 +377,8 @@ def collect_results() -> dict:
         except json.JSONDecodeError:
             continue
         bucket = r.pop("bucket", None)
+        if r.get("status") in ("failed", "timed_out"):
+            continue
         valid_budget = r.get("steps") == STEPS and r.get("seed") in SEEDS
         valid_bucket = (
             bucket == "qubit_sweep"
