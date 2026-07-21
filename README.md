@@ -156,6 +156,8 @@ required to import or run the code.
 
 The current manuscript adds:
 
+- A machine-readable headline-claim provenance map at
+  `project_artifacts/submission_claim_audit.json`.
 - Symmetric HVK1D math and benchmark results.
 - CIFAR-10 aggregate comparison across HVK, classical, and PHL baselines.
 - Mona Lisa comparison table including CNN, MLP, autoencoder, GAN, PHL, HVK1D,
