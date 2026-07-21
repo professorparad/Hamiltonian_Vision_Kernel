@@ -230,34 +230,137 @@ def run_isolated(config: dict) -> dict:
 
 MAX_WORKERS = 2  # leave headroom for monitoring, LaTeX builds, and OS I/O while the CPU-bound sweep runs
 
+# --- File-based work queue -------------------------------------------------
+# A second, unrelated process on this machine has repeatedly (and, as far as
+# we can tell, accidentally) re-launched this exact script against this exact
+# results file, racing a single shared-JSON read-modify-write cycle and
+# repeatedly crashing/corrupting it. Rather than keep reactively detecting
+# and killing that duplicate, the work distribution is a directory-based
+# queue: one small JSON file per (bucket, config) pending unit of work,
+# claimed by an atomic rename (pending/ -> claimed/, which can only succeed
+# for exactly one process on a given file -- a second claimer gets
+# FileNotFoundError and just moves on to the next item). This makes the
+# whole pipeline safe by construction even under an uncontrolled second
+# writer: at worst a duplicate process cooperatively drains the same queue
+# instead of corrupting shared state.
+QUEUE_DIR = OUT_DIR / "queue"
+PENDING_DIR = QUEUE_DIR / "pending"
+CLAIMED_DIR = QUEUE_DIR / "claimed"
+DONE_DIR = QUEUE_DIR / "done"
 
-def read_results_with_retry(path: Path, attempts: int = 5, delay_s: float = 1.0) -> dict:
-    """A second, unrelated process on this machine has repeatedly (and, as
-    far as we can tell, accidentally) re-launched this exact script against
-    this exact results file, racing our own read/write cycle and crashing
-    the orchestrator with a JSONDecodeError when it reads mid-write. Retry
-    a transient bad read a few times before giving up, instead of dying."""
-    last_error: Exception | None = None
-    for attempt in range(attempts):
+
+def configure_queue(smoke_test: bool) -> None:
+    """Keep smoke-test claims physically separate from production work."""
+    global QUEUE_DIR, PENDING_DIR, CLAIMED_DIR, DONE_DIR
+    QUEUE_DIR = OUT_DIR / ("queue_smoke" if smoke_test else "queue")
+    PENDING_DIR = QUEUE_DIR / "pending"
+    CLAIMED_DIR = QUEUE_DIR / "claimed"
+    DONE_DIR = QUEUE_DIR / "done"
+
+
+def _config_id(bucket: str, config: dict) -> str:
+    import hashlib
+
+    key = bucket + "|" + json.dumps(config, sort_keys=True)
+    return hashlib.sha1(key.encode()).hexdigest()[:16]
+
+
+def seed_queue(smoke_test: bool = False) -> None:
+    """Idempotent: safe to call from multiple concurrent processes. Writes
+    one file per pending config; a config already in pending/claimed/done is
+    left untouched."""
+    for d in (PENDING_DIR, CLAIMED_DIR, DONE_DIR):
+        d.mkdir(parents=True, exist_ok=True)
+
+    all_items: list[tuple[str, dict]] = []
+    for q in ([4, 6, 8] if not smoke_test else [4]):
+        for seed in SEEDS:
+            all_items.append(("qubit_sweep", {"topology": "HVK1D", "seed": seed, "qubit_count": q, "bond_dim": 4, "steps": STEPS}))
+    for topology in ("HVK1D", "HVK2D"):
+        for chi in ([1, 2, 4, 8] if not smoke_test else [1]):
+            for seed in SEEDS:
+                all_items.append(("bond_dim_sweep", {"topology": topology, "seed": seed, "qubit_count": 6, "bond_dim": chi, "steps": STEPS}))
+    for topology in ("HVK1D", "HVK2D"):
+        for depth in ([1, 2, 3, 4] if not smoke_test else [1]):
+            for seed in SEEDS:
+                all_items.append(("depth_sweep", {"topology": topology, "seed": seed, "qubit_count": 6, "bond_dim": 4, "n_layers": depth, "steps": STEPS}))
+
+    for bucket, config in all_items:
+        cid = _config_id(bucket, config)
+        if any((d / f"{cid}.json").exists() for d in (PENDING_DIR, CLAIMED_DIR, DONE_DIR)):
+            continue
+        payload = json.dumps({"bucket": bucket, "config": config})
+        tmp = PENDING_DIR / f".{cid}.tmp"
+        tmp.write_text(payload)
+        tmp.rename(PENDING_DIR / f"{cid}.json")  # atomic same-directory rename
+
+
+def migrate_completed_results(path: Path) -> None:
+    """Import completed records from the pre-queue summary without rerunning them."""
+    if not path.exists():
+        return
+    try:
+        previous = json.loads(path.read_text())
+    except (json.JSONDecodeError, OSError):
+        return
+    for bucket in ("qubit_sweep", "bond_dim_sweep", "depth_sweep"):
+        for result in previous.get(bucket, []):
+            if result.get("status") in ("failed", "timed_out"):
+                continue
+            config = {
+                key: result[key]
+                for key in ("topology", "seed", "qubit_count", "bond_dim", "n_layers", "steps")
+                if key in result and result[key] is not None
+            }
+            cid = _config_id(bucket, config)
+            payload = dict(result)
+            payload["bucket"] = bucket
+            (DONE_DIR / f"{cid}.json").write_text(json.dumps(payload, indent=2, default=str))
+            # A stale claim/pending entry for an imported result is safe to discard.
+            (PENDING_DIR / f"{cid}.json").unlink(missing_ok=True)
+            (CLAIMED_DIR / f"{cid}.json").unlink(missing_ok=True)
+
+
+def claim_one() -> tuple[str, str, dict] | None:
+    """Try to atomically claim one pending item. Returns (config_id, bucket,
+    config) or None if nothing is available (including the case where a
+    listed file got claimed by someone else between our listdir and rename)."""
+    for f in PENDING_DIR.glob("*.json"):
         try:
-            return json.loads(path.read_text())
-        except (json.JSONDecodeError, OSError) as exc:
-            last_error = exc
-            time.sleep(delay_s)
-    print(f"WARNING: could not read {path} after {attempts} attempts ({last_error}); "
-          f"starting from an empty in-memory results dict for this run", flush=True)
-    return {"qubit_sweep": [], "bond_dim_sweep": [], "depth_sweep": []}
+            f.rename(CLAIMED_DIR / f.name)
+        except (FileNotFoundError, PermissionError, OSError):
+            continue  # someone else claimed it first
+        item = json.loads((CLAIMED_DIR / f.name).read_text())
+        return f.stem, item["bucket"], item["config"]
+    return None
 
 
-def write_results_atomic(path: Path, results: dict) -> None:
-    """Write-then-rename instead of an in-place write_text, so a concurrent
-    reader never observes a half-written file (os.replace is atomic on the
-    same filesystem on both POSIX and Windows)."""
-    import os
+def worker_loop(worker_id: int) -> None:
+    while True:
+        claimed = claim_one()
+        if claimed is None:
+            return
+        cid, bucket, config = claimed
+        r = run_isolated(config)
+        r["bucket"] = bucket
+        (DONE_DIR / f"{cid}.json").write_text(json.dumps(r, indent=2, default=str))
+        (CLAIMED_DIR / f"{cid}.json").unlink(missing_ok=True)
+        print(f"[worker {worker_id}] {json.dumps(r)}", flush=True)
 
-    tmp = path.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(results, indent=2, default=str))
-    os.replace(tmp, path)
+
+def collect_results() -> dict:
+    """Aggregate every done/*.json into the summary shape the rest of this
+    project (and the LaTeX integration) expects."""
+    results = {"qubit_sweep": [], "bond_dim_sweep": [], "depth_sweep": []}
+    for f in sorted(DONE_DIR.glob("*.json")):
+        try:
+            r = json.loads(f.read_text())
+        except json.JSONDecodeError:
+            continue
+        bucket = r.pop("bucket", None)
+        if bucket in results:
+            results[bucket].append(r)
+    return results
 
 
 def main(smoke_test: bool = False):
@@ -267,59 +370,47 @@ def main(smoke_test: bool = False):
         SEEDS = [0]
         RESULT_FILE = OUT_DIR / "scaling_study_SMOKE_TEST.json"  # never touch the production results file
 
-    if RESULT_FILE.exists():
-        results = read_results_with_retry(RESULT_FILE)
-    else:
-        results = {"qubit_sweep": [], "bond_dim_sweep": [], "depth_sweep": []}
-
-    def already_done(bucket: str, config: dict) -> bool:
-        for r in results[bucket]:
-            if r.get("status") in ("failed", "timed_out"):
-                continue
-            if all(r.get(k) == v for k, v in config.items()):
-                return True
-        return False
-
-    pending: list[tuple[str, dict]] = []
-    for q in ([4, 6, 8] if not smoke_test else [4]):
-        for seed in SEEDS:
-            config = {"topology": "HVK1D", "seed": seed, "qubit_count": q, "bond_dim": 4, "steps": STEPS}
-            if not already_done("qubit_sweep", config):
-                pending.append(("qubit_sweep", config))
-    for topology in ("HVK1D", "HVK2D"):
-        for chi in ([1, 2, 4, 8] if not smoke_test else [1]):
-            for seed in SEEDS:
-                config = {"topology": topology, "seed": seed, "qubit_count": 6, "bond_dim": chi, "steps": STEPS}
-                if not already_done("bond_dim_sweep", config):
-                    pending.append(("bond_dim_sweep", config))
-    for topology in ("HVK1D", "HVK2D"):
-        for depth in ([1, 2, 3, 4] if not smoke_test else [1]):
-            for seed in SEEDS:
-                config = {"topology": topology, "seed": seed, "qubit_count": 6, "bond_dim": 4, "n_layers": depth, "steps": STEPS}
-                if not already_done("depth_sweep", config):
-                    pending.append(("depth_sweep", config))
-
-    print(f"=== {len(pending)} configs remaining, running with {MAX_WORKERS} concurrent workers ===", flush=True)
+    configure_queue(smoke_test)
+    for d in (PENDING_DIR, CLAIMED_DIR, DONE_DIR):
+        d.mkdir(parents=True, exist_ok=True)
+    migrate_completed_results(RESULT_FILE)
+    seed_queue(smoke_test=smoke_test)
+    n_pending = len(list(PENDING_DIR.glob("*.json")))
+    n_claimed = len(list(CLAIMED_DIR.glob("*.json")))
+    n_done = len(list(DONE_DIR.glob("*.json")))
+    print(f"=== queue: {n_pending} pending, {n_claimed} claimed (possibly stale from a prior crash), "
+          f"{n_done} done -- running with {MAX_WORKERS} workers ===", flush=True)
 
     import threading
-    from concurrent.futures import ThreadPoolExecutor, as_completed
+    from concurrent.futures import ThreadPoolExecutor
 
-    write_lock = threading.Lock()
+    stop_flag = threading.Event()
 
-    def do_one(bucket_config):
-        bucket, config = bucket_config
-        return bucket, run_isolated(config)
+    def periodic_collector():
+        # keeps scaling_study.json (the file external monitoring already
+        # reads) in sync with the queue's done/ directory every few seconds,
+        # so progress stays visible without needing to know about the queue
+        import os
+
+        while not stop_flag.wait(5.0):
+            results = collect_results()
+            tmp = RESULT_FILE.with_suffix(".json.tmp")
+            tmp.write_text(json.dumps(results, indent=2, default=str))
+            os.replace(tmp, RESULT_FILE)
+
+    collector_thread = threading.Thread(target=periodic_collector, daemon=True)
+    collector_thread.start()
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-        futures = [pool.submit(do_one, bc) for bc in pending]
-        for i, future in enumerate(as_completed(futures), start=1):
-            bucket, r = future.result()
-            print(f"[{i}/{len(pending)}] {json.dumps(r)}", flush=True)
-            with write_lock:
-                results[bucket].append(r)
-                write_results_atomic(RESULT_FILE, results)
+        futures = [pool.submit(worker_loop, i) for i in range(MAX_WORKERS)]
+        for f in futures:
+            f.result()  # propagate any worker exception instead of silently swallowing it
 
-    print("\nDone. Saved to", RESULT_FILE, flush=True)
+    stop_flag.set()
+    results = collect_results()
+    RESULT_FILE.write_text(json.dumps(results, indent=2, default=str))
+    n_total = sum(len(v) for v in results.values())
+    print(f"\nDone: {n_total} results collected. Saved to", RESULT_FILE, flush=True)
 
 
 if __name__ == "__main__":

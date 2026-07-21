@@ -1882,13 +1882,13 @@ Model & MSE & PSNR (dB) & $R^2$ & Notes \\
 \end{{figure}}
 
 \section{{Imported Baselines and Ablations}}
-The folder also includes copied evidence from the completed HVK study: CIFAR baselines, Monalisa baselines, legacy ablation controls, and IBM Cloud circuit-resource outputs. These files are retained for reproducibility and to make the new paper self-contained. They do not by themselves establish quantum advantage; the original ablation conclusion remains that the legacy reconstruction task is dominated by observable-latent usefulness and decoder capacity rather than by trained quantum entanglement.
+The folder also includes copied records from the completed HVK study: CIFAR baselines, Monalisa baselines, legacy ablation controls, and IBM Cloud circuit-resource outputs. These files preserve provenance but do not by themselves establish quantum advantage or support quantitative component attribution. In particular, the earlier Monalisa freeze-isolation aggregate is excluded from manuscript evidence unless its per-seed artifacts are recovered or the study is rerun.
 
 \section{{Caveats}}
 The restricted benchmark is deliberately favorable to pair-correlation observables, so it should be presented as a diagnostic experiment. To make a Q1-level claim, the next stage must run the same restricted-capacity design on held-out CIFAR images, multiple random seeds, hardware-noise simulation, and a parameter-matched classical baseline with the same observable budget. The paper should not state that HVK2D proves hardware quantum advantage unless those tests remain positive.
 
 \section{{Conclusion}}
-HVK2D provides a clean route toward testing quantum advantage: reduce decoder capacity, make the target correlation-sensitive, and compare entangling observables against no-entanglement and classical controls. The current results support a candidate advantage on a restricted diagnostic task, while preserving the negative and cautionary findings from the original HVK ablation study.
+HVK2D provides a clean route toward testing entanglement-sensitive representation: reduce decoder capacity, make the target correlation-sensitive, and compare entangling observables against no-entanglement and classical controls. The current results demonstrate separation on a restricted diagnostic task, while the held-out image-reconstruction controls define the scope of that result.
 \end{{document}}
 """
     (PAPER_DIR / "newhvk_paper.tex").write_text(tex, encoding="utf-8")

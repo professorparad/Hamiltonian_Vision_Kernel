@@ -7,7 +7,7 @@ HVK2D, not a separate `newHVK` model. It does not overwrite the legacy `Main`,
 
 ## Purpose
 
-The original HVK ablations showed that the observable channel matters, but they did not show quantum advantage: no-entanglement, freeze-quantum, no-energy-loss, and classical replacements were too competitive.
+The retained held-out studies do not establish quantum advantage: local/raw and resource-matched classical features remain competitive on ordinary image reconstruction. The synthetic restricted-pair diagnostic separately tests when entangling observables become useful. An earlier Monalisa freeze-isolation aggregate is excluded from manuscript evidence because its per-seed artifacts are unavailable.
 
 This workspace therefore adds stricter diagnostics for HVK1D/HVK2D:
 
@@ -81,7 +81,7 @@ If no real dataset cache is found, outputs are explicitly labeled
 Outputs are written to:
 
 - `main2/newHVK/results/quantum_advantage_candidate/`
-- `main2/newHVK/results/full_ablation_suite/full_ablation_summary.csv`
+- `main2/newHVK/results/full_ablation_suite/full_ablation_summary.csv` (synthetic restricted-pair diagnostic)
 - `main2/newHVK/results/full_ablation_suite/multi_seed_results.csv`
 - `main2/newHVK/results/full_ablation_suite/heldout_cifar_proxy.csv`
 - `main2/newHVK/results/full_ablation_suite/noise_hardware_probe.csv`
