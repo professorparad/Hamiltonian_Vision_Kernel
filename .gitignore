@@ -66,6 +66,9 @@ CFIR10Dataset/
 *.fls
 *.log
 *.out
+*.synctex.gz
+*.toc
+/latex_outputs/paper_latex/paper_hvk.pdf
 
 main2/newHVK/datasets/
 
@@ -74,3 +77,7 @@ Main/outputs/
 Main/experiments/
 Main2/outputs/
 main2/newHVK/datasets/
+
+# Scaling sweep runtime state (authoritative scaling_study.json stays tracked)
+Main2/newHVK/results/scaling_study/queue*/
+Main2/newHVK/results/scaling_study/scaling_study*.json.tmp

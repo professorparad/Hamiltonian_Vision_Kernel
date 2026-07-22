@@ -1,0 +1,24 @@
+[
+  {
+    "variant": "hvk1d",
+    "patch_index": 0,
+    "backend": "ibm_fez",
+    "job_id": "d8vr896mvj5c73eibkp0",
+    "shots": 100,
+    "mean_order_parameter": 0.7766666666666664,
+    "mean_abs_order_parameter": 0.7766666666666664,
+    "mean_zz_correlation": 0.5960000000000001,
+    "hardware_proxy_loss": 0.42533333333333356
+  },
+  {
+    "variant": "hvk2d",
+    "patch_index": 0,
+    "backend": "ibm_fez",
+    "job_id": "d8vr896mvj5c73eibkp0",
+    "shots": 100,
+    "mean_order_parameter": 0.7466666666666666,
+    "mean_abs_order_parameter": 0.7533333333333332,
+    "mean_zz_correlation": 0.5285714285714286,
+    "hardware_proxy_loss": 0.4823809523809525
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "cifar10-native32": {
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "n_images": 200,
+    "n_recon_rows": 350,
+    "n_cls_rows": 35
+  },
+  "fashion-mnist": {
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "n_images": 800,
+    "n_recon_rows": 3500,
+    "n_cls_rows": 35
+  },
+  "pathmnist": {
+    "source": "medmnist-pathmnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "n_images": 800,
+    "n_recon_rows": 3150,
+    "n_cls_rows": 35
+  }
+}

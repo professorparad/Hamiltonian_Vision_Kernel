@@ -1,0 +1,32 @@
+{
+  "purpose": "Machine-readable provenance for the three numerical headline claims in paper_hvk.tex",
+  "claim_boundary": "These records support symmetry verification, a restricted representational result, and scoped hardware feasibility; they do not establish broad quantum advantage.",
+  "claims": {
+    "d4_equivariance": {
+      "manuscript_value": 9.57e-17,
+      "artifact_value": 9.573879468686641e-17,
+      "unit": "mean equivariance error",
+      "n_images": 1000,
+      "n_nonidentity_transforms": 7,
+      "n_evaluations": 7000,
+      "source": "main2/newHVK/results/extended_validation/d4_equivariance/d4_equivariance_summary.json"
+    },
+    "restricted_pair_diagnostic": {
+      "manuscript_mean_r2": 0.974,
+      "artifact_mean_r2": 0.9735224984535916,
+      "strongest_non_entangling_control_r2": 0.019056047538188837,
+      "n_seeds": 5,
+      "scope": "Leakage-audited synthetic distant-product target with a fixed linear-readout protocol",
+      "source": "main2/newHVK/results/full_ablation_suite/full_ablation_summary.json"
+    },
+    "hardware_reconstruction": {
+      "n_images": 5,
+      "backend": "ibm_fez",
+      "shots_per_measurement_basis": 256,
+      "minimum_hardware_psnr_db": 25.89595775307302,
+      "maximum_hardware_psnr_db": 31.5209513556915,
+      "monalisa_source": "IBM_Cloud/outputs/hardware_reconstruction/hardware_reconstruction_report.json",
+      "cifar_source": "IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/summary.json"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "backend": "ibm_fez",
+  "job_id": "d9ecu34inv1c73aq3qt0",
+  "n_patches": 16,
+  "shots": 256,
+  "psnr_hardware_db": 25.89595775307302,
+  "psnr_simulator_db": 37.994605460772675,
+  "mse_hardware": 0.0025727893225848675,
+  "mse_simulator": 0.00015868630725890398,
+  "cached_baseline_psnr_db": 32.235
+}

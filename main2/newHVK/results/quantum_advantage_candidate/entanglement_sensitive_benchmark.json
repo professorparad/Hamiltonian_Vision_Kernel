@@ -1,9 +1,9 @@
 [
   {
     "model": "HVK2D-entangling-observables",
-    "mse": 0.0019386712705805088,
-    "psnr": 27.124958255144843,
-    "r2": 0.9421463496967364,
+    "mse": 0.0019386712705805025,
+    "psnr": 27.124958255144858,
+    "r2": 0.9421463496967366,
     "notes": "Pairwise observable channel includes entanglement-sensitive correlations."
   },
   {
@@ -15,9 +15,9 @@
   },
   {
     "model": "parameter-matched-classical",
-    "mse": 0.03465453738779275,
-    "psnr": 14.602398942853585,
-    "r2": -0.03415752731219812,
+    "mse": 0.0346545373877927,
+    "psnr": 14.602398942853592,
+    "r2": -0.03415752731219679,
     "notes": "Tiny rank-limited tanh control with fewer nonlinear channels."
   },
   {

@@ -1,0 +1,352 @@
+[
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 0,
+    "model": "HVK1D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.13999999999999999
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 0,
+    "model": "HVK2D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.3,
+    "macro_f1": 0.24
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 0,
+    "model": "no-entanglement",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.13999999999999999
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 0,
+    "model": "local-only",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.13999999999999999
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 0,
+    "model": "raw-linear",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.3,
+    "macro_f1": 0.20666666666666664
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 0,
+    "model": "parameter-matched",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.15
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 0,
+    "model": "quadratic-classical",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.13999999999999999
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 1,
+    "model": "HVK1D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.4,
+    "macro_f1": 0.2833333333333333
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 1,
+    "model": "HVK2D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.4,
+    "macro_f1": 0.2833333333333333
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 1,
+    "model": "no-entanglement",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.4,
+    "macro_f1": 0.2833333333333333
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 1,
+    "model": "local-only",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.4,
+    "macro_f1": 0.26666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 1,
+    "model": "raw-linear",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.4,
+    "macro_f1": 0.2833333333333333
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 1,
+    "model": "parameter-matched",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.3,
+    "macro_f1": 0.24
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 1,
+    "model": "quadratic-classical",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.4,
+    "macro_f1": 0.2833333333333333
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 2,
+    "model": "HVK1D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.16666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 2,
+    "model": "HVK2D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.16666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 2,
+    "model": "no-entanglement",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.16666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 2,
+    "model": "local-only",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.16666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 2,
+    "model": "raw-linear",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.16666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 2,
+    "model": "parameter-matched",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.1,
+    "macro_f1": 0.06666666666666667
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 2,
+    "model": "quadratic-classical",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.16666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 3,
+    "model": "HVK1D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.3,
+    "macro_f1": 0.15666666666666668
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 3,
+    "model": "HVK2D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.3,
+    "macro_f1": 0.15666666666666668
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 3,
+    "model": "no-entanglement",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.3,
+    "macro_f1": 0.2
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 3,
+    "model": "local-only",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.10666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 3,
+    "model": "raw-linear",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.10666666666666666
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 3,
+    "model": "parameter-matched",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.2,
+    "macro_f1": 0.2
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 3,
+    "model": "quadratic-classical",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.3,
+    "macro_f1": 0.15666666666666668
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 4,
+    "model": "HVK1D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.1,
+    "macro_f1": 0.04
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 4,
+    "model": "HVK2D-pair-observable",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.1,
+    "macro_f1": 0.04
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 4,
+    "model": "no-entanglement",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.1,
+    "macro_f1": 0.03333333333333333
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 4,
+    "model": "local-only",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.1,
+    "macro_f1": 0.04
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 4,
+    "model": "raw-linear",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.1,
+    "macro_f1": 0.03333333333333333
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 4,
+    "model": "parameter-matched",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.3,
+    "macro_f1": 0.1833333333333333
+  },
+  {
+    "dataset": "cifar10-native32",
+    "source": "c:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Baselines\\cifar10_comparisons\\datasets\\images",
+    "seed": 4,
+    "model": "quadratic-classical",
+    "n_train": 10,
+    "n_test": 10,
+    "accuracy": 0.1,
+    "macro_f1": 0.05
+  }
+]

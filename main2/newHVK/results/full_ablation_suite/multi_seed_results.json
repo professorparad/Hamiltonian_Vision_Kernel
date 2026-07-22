@@ -3,54 +3,54 @@
     "experiment": "baseline",
     "model": "HVK2D-entangling-observables",
     "seed": 0,
-    "mse": 0.0010404747392990176,
-    "psnr": 29.827684591488627,
-    "r2": 0.9662534951800962,
+    "mse": 0.0010404747392990111,
+    "psnr": 29.82768459148865,
+    "r2": 0.9662534951800964,
     "notes": "Pairwise observable channel contains explicit two-site correlations."
   },
   {
     "experiment": "component-ablation",
     "model": "no-entanglement",
     "seed": 0,
-    "mse": 0.03174849071395563,
-    "psnr": 14.98276915732027,
-    "r2": -0.02972283173832002,
+    "mse": 0.0317484907139556,
+    "psnr": 14.982769157320275,
+    "r2": -0.029722831738319133,
     "notes": "Only single-site nonlinear channels are available."
   },
   {
     "experiment": "component-ablation",
     "model": "parameter-matched-classical",
     "seed": 0,
-    "mse": 0.03213876323134888,
-    "psnr": 14.929708398357494,
-    "r2": -0.04238083571654272,
+    "mse": 0.03213876323134864,
+    "psnr": 14.929708398357526,
+    "r2": -0.04238083571653517,
     "notes": "Small rank-limited tanh control with restricted nonlinear budget."
   },
   {
     "experiment": "component-ablation",
     "model": "raw-linear-classical",
     "seed": 0,
-    "mse": 0.031992859622689614,
-    "psnr": 14.949469395704886,
-    "r2": -0.037648633533356346,
+    "mse": 0.0319928596226896,
+    "psnr": 14.949469395704888,
+    "r2": -0.0376486335333559,
     "notes": "Linear readout from raw coordinates."
   },
   {
     "experiment": "component-ablation",
     "model": "random-vqc",
     "seed": 0,
-    "mse": 0.037266900182159224,
-    "psnr": 14.28676729858736,
-    "r2": -0.20870558324884603,
+    "mse": 0.03726690018215921,
+    "psnr": 14.286767298587362,
+    "r2": -0.20870558324884558,
     "notes": "Random latent vectors with no stable input-observable alignment."
   },
   {
     "experiment": "component-ablation",
     "model": "freeze-quantum",
     "seed": 0,
-    "mse": 0.0010404747200361015,
-    "psnr": 29.827684671892097,
-    "r2": 0.966253495804865,
+    "mse": 0.0010404747200360987,
+    "psnr": 29.827684671892108,
+    "r2": 0.9662534958048651,
     "notes": "Frozen pair-correlator basis with random channel scaling and masking."
   },
   {
@@ -66,7 +66,7 @@
     "experiment": "baseline",
     "model": "HVK2D-entangling-observables",
     "seed": 1,
-    "mse": 0.0005757545953604451,
+    "mse": 0.0005757545953604452,
     "psnr": 32.39762587047241,
     "r2": 0.9820037153125385,
     "notes": "Pairwise observable channel contains explicit two-site correlations."
@@ -84,9 +84,9 @@
     "experiment": "component-ablation",
     "model": "parameter-matched-classical",
     "seed": 1,
-    "mse": 0.03245745934614674,
-    "psnr": 14.886854781984056,
-    "r2": -0.014518482929844811,
+    "mse": 0.032457459346147,
+    "psnr": 14.88685478198402,
+    "r2": -0.01451848292985325,
     "notes": "Small rank-limited tanh control with restricted nonlinear budget."
   },
   {
@@ -129,8 +129,8 @@
     "experiment": "baseline",
     "model": "HVK2D-entangling-observables",
     "seed": 2,
-    "mse": 4.68142922615586e-05,
-    "psnr": 43.29621537893065,
+    "mse": 4.681429226155879e-05,
+    "psnr": 43.296215378930626,
     "r2": 0.998505109773699,
     "notes": "Pairwise observable channel contains explicit two-site correlations."
   },
@@ -138,18 +138,18 @@
     "experiment": "component-ablation",
     "model": "no-entanglement",
     "seed": 2,
-    "mse": 0.029248313464020875,
+    "mse": 0.029248313464020865,
     "psnr": 15.338991714411671,
-    "r2": 0.06603270452393595,
+    "r2": 0.06603270452393628,
     "notes": "Only single-site nonlinear channels are available."
   },
   {
     "experiment": "component-ablation",
     "model": "parameter-matched-classical",
     "seed": 2,
-    "mse": 0.031132543433740726,
-    "psnr": 15.067853973349514,
-    "r2": 0.0058648192529106025,
+    "mse": 0.03113254343374076,
+    "psnr": 15.06785397334951,
+    "r2": 0.005864819252909492,
     "notes": "Small rank-limited tanh control with restricted nonlinear budget."
   },
   {
@@ -165,17 +165,17 @@
     "experiment": "component-ablation",
     "model": "random-vqc",
     "seed": 2,
-    "mse": 0.03627183825329299,
+    "mse": 0.036271838253293,
     "psnr": 14.404304338590153,
-    "r2": -0.15824492639707022,
+    "r2": -0.15824492639707044,
     "notes": "Random latent vectors with no stable input-observable alignment."
   },
   {
     "experiment": "component-ablation",
     "model": "freeze-quantum",
     "seed": 2,
-    "mse": 4.681431291709155e-05,
-    "psnr": 43.296213462724815,
+    "mse": 4.681431291709207e-05,
+    "psnr": 43.296213462724765,
     "r2": 0.9985051091141193,
     "notes": "Frozen pair-correlator basis with random channel scaling and masking."
   },
@@ -184,7 +184,7 @@
     "model": "freeze-classical",
     "seed": 2,
     "mse": 0.06547497945631212,
-    "psnr": 11.839246291686592,
+    "psnr": 11.839246291686589,
     "r2": -1.09076976555885,
     "notes": "Quantum-like features are present but the classical readout is frozen."
   },
@@ -192,9 +192,9 @@
     "experiment": "baseline",
     "model": "HVK2D-entangling-observables",
     "seed": 3,
-    "mse": 0.0018400303264292015,
-    "psnr": 27.351750191142017,
-    "r2": 0.9452634763270533,
+    "mse": 0.0018400303264291928,
+    "psnr": 27.351750191142035,
+    "r2": 0.9452634763270537,
     "notes": "Pairwise observable channel contains explicit two-site correlations."
   },
   {
@@ -210,16 +210,16 @@
     "experiment": "component-ablation",
     "model": "parameter-matched-classical",
     "seed": 3,
-    "mse": 0.03588254518809165,
-    "psnr": 14.45116759553797,
-    "r2": -0.06742033319912677,
+    "mse": 0.03588254518809158,
+    "psnr": 14.45116759553798,
+    "r2": -0.06742033319912455,
     "notes": "Small rank-limited tanh control with restricted nonlinear budget."
   },
   {
     "experiment": "component-ablation",
     "model": "raw-linear-classical",
     "seed": 3,
-    "mse": 0.03489629190865944,
+    "mse": 0.03489629190865945,
     "psnr": 14.572207188621832,
     "r2": -0.03808164502547884,
     "notes": "Linear readout from raw coordinates."
@@ -228,7 +228,7 @@
     "experiment": "component-ablation",
     "model": "random-vqc",
     "seed": 3,
-    "mse": 0.03892000350520545,
+    "mse": 0.03892000350520544,
     "psnr": 14.098271292903426,
     "r2": -0.15777749019388954,
     "notes": "Random latent vectors with no stable input-observable alignment."
@@ -237,9 +237,9 @@
     "experiment": "component-ablation",
     "model": "freeze-quantum",
     "seed": 3,
-    "mse": 0.007913256786480112,
-    "psnr": 21.016447411166858,
-    "r2": 0.7645994409973436,
+    "mse": 0.007913256786480109,
+    "psnr": 21.01644741116686,
+    "r2": 0.7645994409973437,
     "notes": "Frozen pair-correlator basis with random channel scaling and masking."
   },
   {
@@ -255,8 +255,8 @@
     "experiment": "baseline",
     "model": "HVK2D-entangling-observables",
     "seed": 4,
-    "mse": 0.0007953591933171408,
-    "psnr": 30.9943669468246,
+    "mse": 0.0007953591933171399,
+    "psnr": 30.994366946824602,
     "r2": 0.9755866956745709,
     "notes": "Pairwise observable channel contains explicit two-site correlations."
   },
@@ -264,18 +264,18 @@
     "experiment": "component-ablation",
     "model": "no-entanglement",
     "seed": 4,
-    "mse": 0.032741731965436886,
-    "psnr": 14.848983510958146,
-    "r2": -0.0049973311808009235,
+    "mse": 0.03274173196543688,
+    "psnr": 14.848983510958147,
+    "r2": -0.0049973311808007015,
     "notes": "Only single-site nonlinear channels are available."
   },
   {
     "experiment": "component-ablation",
     "model": "parameter-matched-classical",
     "seed": 4,
-    "mse": 0.033555644750327705,
+    "mse": 0.03355564475032771,
     "psnr": 14.742344120758402,
-    "r2": -0.029980132258419223,
+    "r2": -0.029980132258419445,
     "notes": "Small rank-limited tanh control with restricted nonlinear budget."
   },
   {
@@ -291,18 +291,18 @@
     "experiment": "component-ablation",
     "model": "random-vqc",
     "seed": 4,
-    "mse": 0.040177168509215176,
-    "psnr": 13.960206734651726,
-    "r2": -0.23322575509403998,
+    "mse": 0.04017716850921518,
+    "psnr": 13.960206734651724,
+    "r2": -0.2332257550940402,
     "notes": "Random latent vectors with no stable input-observable alignment."
   },
   {
     "experiment": "component-ablation",
     "model": "freeze-quantum",
     "seed": 4,
-    "mse": 0.007973456072626292,
-    "psnr": 20.983533940453416,
-    "r2": 0.7552572331318378,
+    "mse": 0.00797345607262629,
+    "psnr": 20.98353394045342,
+    "r2": 0.7552572331318379,
     "notes": "Frozen pair-correlator basis with random channel scaling and masking."
   },
   {

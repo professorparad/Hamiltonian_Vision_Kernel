@@ -1,0 +1,58 @@
+[
+  {
+    "image": "0000_cat_domestic_cat_s_000907",
+    "mode": "non-pooled-real-circuit",
+    "mean_equivariance_error": 0.07604891168219703,
+    "max_equivariance_error": 0.10036034882068634,
+    "output_consistency_mse": 0.0186945591121912
+  },
+  {
+    "image": "0000_cat_domestic_cat_s_000907",
+    "mode": "D4-pooled-real-circuit",
+    "mean_equivariance_error": 5.499305899547835e-08,
+    "max_equivariance_error": 6.184433942735268e-08,
+    "output_consistency_mse": 9.778419393646764e-16
+  },
+  {
+    "image": "0001_ship_hydrofoil_s_000078",
+    "mode": "non-pooled-real-circuit",
+    "mean_equivariance_error": 0.39045726720775875,
+    "max_equivariance_error": 0.5259674191474915,
+    "output_consistency_mse": 0.06437365710735321
+  },
+  {
+    "image": "0001_ship_hydrofoil_s_000078",
+    "mode": "D4-pooled-real-circuit",
+    "mean_equivariance_error": 5.24773443747303e-08,
+    "max_equivariance_error": 6.057782542256973e-08,
+    "output_consistency_mse": 1.8282088082993697e-15
+  },
+  {
+    "image": "0002_ship_sea_boat_s_001456",
+    "mode": "non-pooled-real-circuit",
+    "mean_equivariance_error": 0.40538204567773,
+    "max_equivariance_error": 0.4925673007965088,
+    "output_consistency_mse": 0.05451076105237007
+  },
+  {
+    "image": "0002_ship_sea_boat_s_001456",
+    "mode": "D4-pooled-real-circuit",
+    "mean_equivariance_error": 5.6462886176080115e-08,
+    "max_equivariance_error": 6.666022756007806e-08,
+    "output_consistency_mse": 1.2395683438026772e-15
+  },
+  {
+    "image": "0003_airplane_jetliner_s_001705",
+    "mode": "non-pooled-real-circuit",
+    "mean_equivariance_error": 0.23872358618038042,
+    "max_equivariance_error": 0.3781411051750183,
+    "output_consistency_mse": 0.036624401807785034
+  },
+  {
+    "image": "0003_airplane_jetliner_s_001705",
+    "mode": "D4-pooled-real-circuit",
+    "mean_equivariance_error": 5.164835873269372e-08,
+    "max_equivariance_error": 5.9350163894578145e-08,
+    "output_consistency_mse": 1.803461893712388e-15
+  }
+]

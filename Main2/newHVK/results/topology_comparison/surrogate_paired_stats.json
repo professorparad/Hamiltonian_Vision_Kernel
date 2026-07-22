@@ -1,0 +1,200 @@
+[
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus HVK2D-pair-observable",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 50,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.07041119285861264,
+    "bootstrap95_low_db": -0.15058414446997537,
+    "bootstrap95_high_db": 0.023547686489490967,
+    "wilcoxon_p_psnr": 0.3125
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus local-only",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 50,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -1.2696529623236472,
+    "bootstrap95_low_db": -1.3713053547662688,
+    "bootstrap95_high_db": -1.1705429088299386,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus raw-linear",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 50,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -1.2696529623236472,
+    "bootstrap95_low_db": -1.371775921459851,
+    "bootstrap95_high_db": -1.1705429088299386,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus no-entanglement",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 50,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -1.0658110181453995,
+    "bootstrap95_low_db": -1.1907444965894474,
+    "bootstrap95_high_db": -0.9561741477643052,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus quadratic-classical",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 50,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.07137471320417955,
+    "bootstrap95_low_db": -0.1494886137783892,
+    "bootstrap95_high_db": 0.01858926338399094,
+    "wilcoxon_p_psnr": 0.1875
+  },
+  {
+    "dataset": "cifar10-native32",
+    "comparison": "HVK1D-pair-observable minus parameter-matched",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 50,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": 2.3240469920604783,
+    "bootstrap95_low_db": 1.940932366895656,
+    "bootstrap95_high_db": 2.714795186549483,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus HVK2D-pair-observable",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 500,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.021279102154647418,
+    "bootstrap95_low_db": -0.032715108789374656,
+    "bootstrap95_high_db": -0.006073070928617527,
+    "wilcoxon_p_psnr": 0.125
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus local-only",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 500,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.34155252696046967,
+    "bootstrap95_low_db": -0.35813027102463346,
+    "bootstrap95_high_db": -0.31521016268898583,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus raw-linear",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 500,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.34155252696046967,
+    "bootstrap95_low_db": -0.35813027102463346,
+    "bootstrap95_high_db": -0.3152101626889859,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus no-entanglement",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 500,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.3459063647594428,
+    "bootstrap95_low_db": -0.36403031644309103,
+    "bootstrap95_high_db": -0.3182352243792273,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus quadratic-classical",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 500,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.09423368986007169,
+    "bootstrap95_low_db": -0.1221381935998353,
+    "bootstrap95_high_db": -0.06415734208580821,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "fashion-mnist",
+    "comparison": "HVK1D-pair-observable minus parameter-matched",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 500,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": 1.3455031338820205,
+    "bootstrap95_low_db": 1.0939393545979865,
+    "bootstrap95_high_db": 1.5246523174870792,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus HVK2D-pair-observable",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 450,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": 0.003442010001665976,
+    "bootstrap95_low_db": -0.011760115413823774,
+    "bootstrap95_high_db": 0.01510817709770412,
+    "wilcoxon_p_psnr": 0.625
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus local-only",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 450,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.5210143655440046,
+    "bootstrap95_low_db": -0.5584071100477505,
+    "bootstrap95_high_db": -0.4891629782140935,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus raw-linear",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 450,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.5210143655440046,
+    "bootstrap95_low_db": -0.5549206904200281,
+    "bootstrap95_high_db": -0.4891629782140935,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus no-entanglement",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 450,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.46535857797329,
+    "bootstrap95_low_db": -0.4927295358018825,
+    "bootstrap95_high_db": -0.439334337235808,
+    "wilcoxon_p_psnr": 0.0625
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus quadratic-classical",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 450,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": -0.002166969804420842,
+    "bootstrap95_low_db": -0.017197413160226417,
+    "bootstrap95_high_db": 0.012792061665634786,
+    "wilcoxon_p_psnr": 0.8125
+  },
+  {
+    "dataset": "pathmnist",
+    "comparison": "HVK1D-pair-observable minus parameter-matched",
+    "n_seeds": 5,
+    "n_image_seed_pairs": 450,
+    "inference_unit": "seed mean over held-out images",
+    "mean_psnr_difference_db": 2.772090649885752,
+    "bootstrap95_low_db": 2.394983554445164,
+    "bootstrap95_high_db": 3.190782960273471,
+    "wilcoxon_p_psnr": 0.0625
+  }
+]

@@ -1,0 +1,352 @@
+[
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 0,
+    "model": "HVK1D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.58,
+    "macro_f1": 0.5663760788276201
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 0,
+    "model": "HVK2D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.56,
+    "macro_f1": 0.5403626655571735
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 0,
+    "model": "no-entanglement",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.62,
+    "macro_f1": 0.6003413555977832
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 0,
+    "model": "local-only",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.57,
+    "macro_f1": 0.5490407507569979
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 0,
+    "model": "raw-linear",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.62,
+    "macro_f1": 0.582336077347519
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 0,
+    "model": "parameter-matched",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.55,
+    "macro_f1": 0.5315621384119835
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 0,
+    "model": "quadratic-classical",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.53,
+    "macro_f1": 0.520363609558656
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 1,
+    "model": "HVK1D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.55,
+    "macro_f1": 0.5416168362081674
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 1,
+    "model": "HVK2D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.57,
+    "macro_f1": 0.5639055088358493
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 1,
+    "model": "no-entanglement",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.61,
+    "macro_f1": 0.6133603259485612
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 1,
+    "model": "local-only",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.6,
+    "macro_f1": 0.5907281064981292
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 1,
+    "model": "raw-linear",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.66,
+    "macro_f1": 0.651460529666412
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 1,
+    "model": "parameter-matched",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.5,
+    "macro_f1": 0.49949263562300306
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 1,
+    "model": "quadratic-classical",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.54,
+    "macro_f1": 0.5309952465834819
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 2,
+    "model": "HVK1D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.55,
+    "macro_f1": 0.5522476107147665
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 2,
+    "model": "HVK2D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.6,
+    "macro_f1": 0.6058070175438597
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 2,
+    "model": "no-entanglement",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.61,
+    "macro_f1": 0.6117117602189617
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 2,
+    "model": "local-only",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.66,
+    "macro_f1": 0.6632114600226056
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 2,
+    "model": "raw-linear",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.66,
+    "macro_f1": 0.6609311156679577
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 2,
+    "model": "parameter-matched",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.53,
+    "macro_f1": 0.5347657521506626
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 2,
+    "model": "quadratic-classical",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.61,
+    "macro_f1": 0.5991321910915395
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 3,
+    "model": "HVK1D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.59,
+    "macro_f1": 0.5844219044666614
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 3,
+    "model": "HVK2D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.59,
+    "macro_f1": 0.5850779534475187
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 3,
+    "model": "no-entanglement",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.62,
+    "macro_f1": 0.6133747412008281
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 3,
+    "model": "local-only",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.6,
+    "macro_f1": 0.5842190439867786
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 3,
+    "model": "raw-linear",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.65,
+    "macro_f1": 0.6478982923867835
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 3,
+    "model": "parameter-matched",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.58,
+    "macro_f1": 0.5636807829851309
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 3,
+    "model": "quadratic-classical",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.6,
+    "macro_f1": 0.5961536144864991
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 4,
+    "model": "HVK1D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.6,
+    "macro_f1": 0.5937231522061243
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 4,
+    "model": "HVK2D-pair-observable",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.57,
+    "macro_f1": 0.564588582660665
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 4,
+    "model": "no-entanglement",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.59,
+    "macro_f1": 0.567895149599955
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 4,
+    "model": "local-only",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.65,
+    "macro_f1": 0.6393771862812111
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 4,
+    "model": "raw-linear",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.68,
+    "macro_f1": 0.6707435585009957
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 4,
+    "model": "parameter-matched",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.58,
+    "macro_f1": 0.5748312582408693
+  },
+  {
+    "dataset": "fashion-mnist",
+    "source": "torchvision-fashion-mnist:C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\main2\\newHVK\\datasets",
+    "seed": 4,
+    "model": "quadratic-classical",
+    "n_train": 200,
+    "n_test": 100,
+    "accuracy": 0.61,
+    "macro_f1": 0.6090287312484108
+  }
+]

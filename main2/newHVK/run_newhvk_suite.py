@@ -371,7 +371,7 @@ def write_dict_csv(path: Path, rows: list[dict[str, object]]) -> None:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -488,6 +488,11 @@ def plot_heldout_proxy(result_dir: Path, summary: list[dict[str, object]]) -> No
 
 
 def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
+    """Create illustrative analytic interpolations, never measured epoch traces.
+
+    These rows are visualization scaffolding only and must not support training-
+    dynamics, change-point, or phase-transition claims.
+    """
     final_by_model = {str(row["model"]): float(row["mean_mse"]) for row in summary}
     selected = [
         "HVK2D-entangling-observables",
@@ -532,6 +537,7 @@ def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, objec
                 {
                     "epoch": epoch,
                     "model": model,
+                    "trace_provenance": "analytic_interpolation_not_measured",
                     "mse": mse,
                     "psnr": psnr,
                     "ssim_proxy": max(0.0, min(0.999, 1.0 - 2.2 * math.sqrt(mse))),
@@ -541,6 +547,7 @@ def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, objec
                 {
                     "epoch": epoch,
                     "model": model,
+                    "trace_provenance": "analytic_interpolation_not_measured",
                     "zz_mean": zz,
                     "xx_mean": xx,
                     "yy_mean": yy,
@@ -552,6 +559,7 @@ def epoch_tables(summary: list[dict[str, object]]) -> tuple[list[dict[str, objec
                 {
                     "epoch": epoch,
                     "model": model,
+                    "trace_provenance": "analytic_interpolation_not_measured",
                     "order_parameter": order,
                     "susceptibility": susceptibility,
                 }
@@ -1100,19 +1108,32 @@ def write_q1_statistical_tests(result_dir: Path, rows: list[dict[str, object]]) 
         keys = sorted(set(hvk_rows).intersection(model_rows))
         if not keys:
             continue
-        psnr_diff = np.asarray(
-            [float(hvk_rows[key]["psnr"]) - float(model_rows[key]["psnr"]) for key in keys],
-            dtype=np.float64,
-        )
-        mse_diff = np.asarray(
-            [float(hvk_rows[key]["mse"]) - float(model_rows[key]["mse"]) for key in keys],
-            dtype=np.float64,
-        )
+        image_psnr_diff = {
+            key: float(hvk_rows[key]["psnr"]) - float(model_rows[key]["psnr"])
+            for key in keys
+        }
+        image_mse_diff = {
+            key: float(hvk_rows[key]["mse"]) - float(model_rows[key]["mse"])
+            for key in keys
+        }
+        # Four held-out images share each fitted readout and are therefore not
+        # independent replicates. Aggregate within split seed before inference.
+        seeds = sorted({seed for seed, _ in keys})
+        psnr_diff = np.asarray([
+            np.mean([value for (row_seed, _), value in image_psnr_diff.items() if row_seed == seed])
+            for seed in seeds
+        ], dtype=np.float64)
+        mse_diff = np.asarray([
+            np.mean([value for (row_seed, _), value in image_mse_diff.items() if row_seed == seed])
+            for seed in seeds
+        ], dtype=np.float64)
         low, high = bootstrap_ci(psnr_diff, seed=40_000 + len(stats_rows))
         stats_rows.append(
             {
                 "comparison": f"HVK2D-real-cifar minus {model}",
-                "n_pairs": len(keys),
+                "n_seeds": len(seeds),
+                "n_image_seed_pairs": len(keys),
+                "inference_unit": "seed mean over four held-out images",
                 "mean_psnr_difference_db": float(psnr_diff.mean()),
                 "bootstrap95_low_db": low,
                 "bootstrap95_high_db": high,
@@ -1861,13 +1882,13 @@ Model & MSE & PSNR (dB) & $R^2$ & Notes \\
 \end{{figure}}
 
 \section{{Imported Baselines and Ablations}}
-The folder also includes copied evidence from the completed HVK study: CIFAR baselines, Monalisa baselines, legacy ablation controls, and IBM Cloud circuit-resource outputs. These files are retained for reproducibility and to make the new paper self-contained. They do not by themselves establish quantum advantage; the original ablation conclusion remains that the legacy reconstruction task is dominated by observable-latent usefulness and decoder capacity rather than by trained quantum entanglement.
+The folder also includes copied records from the completed HVK study: CIFAR baselines, Monalisa baselines, legacy ablation controls, and IBM Cloud circuit-resource outputs. These files preserve provenance but do not by themselves establish quantum advantage or support quantitative component attribution. In particular, the earlier Monalisa freeze-isolation aggregate is excluded from manuscript evidence unless its per-seed artifacts are recovered or the study is rerun.
 
 \section{{Caveats}}
 The restricted benchmark is deliberately favorable to pair-correlation observables, so it should be presented as a diagnostic experiment. To make a Q1-level claim, the next stage must run the same restricted-capacity design on held-out CIFAR images, multiple random seeds, hardware-noise simulation, and a parameter-matched classical baseline with the same observable budget. The paper should not state that HVK2D proves hardware quantum advantage unless those tests remain positive.
 
 \section{{Conclusion}}
-HVK2D provides a clean route toward testing quantum advantage: reduce decoder capacity, make the target correlation-sensitive, and compare entangling observables against no-entanglement and classical controls. The current results support a candidate advantage on a restricted diagnostic task, while preserving the negative and cautionary findings from the original HVK ablation study.
+HVK2D provides a clean route toward testing entanglement-sensitive representation: reduce decoder capacity, make the target correlation-sensitive, and compare entangling observables against no-entanglement and classical controls. The current results demonstrate separation on a restricted diagnostic task, while the held-out image-reconstruction controls define the scope of that result.
 \end{{document}}
 """
     (PAPER_DIR / "newhvk_paper.tex").write_text(tex, encoding="utf-8")

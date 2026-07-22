@@ -237,14 +237,33 @@ def write_multi_dataset_paired_stats(rows: list[dict[str, object]]) -> list[dict
             keys = sorted(set(hvk).intersection(ctrl))
             if not keys:
                 continue
-            psnr_diff = np.asarray([float(hvk[key]["psnr"]) - float(ctrl[key]["psnr"]) for key in keys])
-            mse_diff = np.asarray([float(hvk[key]["mse"]) - float(ctrl[key]["mse"]) for key in keys])
+            image_psnr_diff = {
+                key: float(hvk[key]["psnr"]) - float(ctrl[key]["psnr"])
+                for key in keys
+            }
+            image_mse_diff = {
+                key: float(hvk[key]["mse"]) - float(ctrl[key]["mse"])
+                for key in keys
+            }
+            # Held-out images produced by one fitted split share the same
+            # readout. Aggregate within seed before inferential statistics.
+            seeds = sorted({seed for seed, _ in keys})
+            psnr_diff = np.asarray([
+                np.mean([value for (row_seed, _), value in image_psnr_diff.items() if row_seed == seed])
+                for seed in seeds
+            ])
+            mse_diff = np.asarray([
+                np.mean([value for (row_seed, _), value in image_mse_diff.items() if row_seed == seed])
+                for seed in seeds
+            ])
             low, high = bootstrap_ci(psnr_diff, seed=150_000 + len(stats))
             stats.append(
                 {
                     "dataset": dataset,
                     "comparison": f"HVK2D-pair-observable minus {control}",
-                    "n_pairs": len(keys),
+                    "n_seeds": len(seeds),
+                    "n_image_seed_pairs": len(keys),
+                    "inference_unit": "seed mean over held-out images",
                     "mean_psnr_difference_db": float(psnr_diff.mean()),
                     "bootstrap95_low_db": low,
                     "bootstrap95_high_db": high,

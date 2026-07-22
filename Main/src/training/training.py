@@ -1,6 +1,6 @@
 import argparse
-import math
 import json
+import math
 import os
 import random
 import shutil
@@ -27,7 +27,6 @@ from src.decoder.patch_decoder import PatchDecoder
 from src.preprocessing.image_loader import load_image_grayscale
 from src.preprocessing.patching import extract_patches
 from src.preprocessing.positional_encoding import sinusoidal_positional_encoding
-from src.quantum.circuit import observable_dim
 from src.quantum.quantum_model import QuantumModel
 from src.quantum.symmetric_model import SymmetricQuantumModel
 from src.reconstruction.patch_stitching import stictch_patches
@@ -38,8 +37,7 @@ from src.tensornetworks.mps_features import (
 )
 from src.tensornetworks.mps_reconstruction import mps_reconstruct
 from src.training.data_generator import TrainingDataGenerator
-from src.training.order_parameters import detect_phase_transition
-from src.training.order_parameters import observable_slices
+from src.training.order_parameters import detect_phase_transition, observable_slices
 from src.training.phase_media import (
     save_epoch_frame,
     save_frames_as_gif,
@@ -88,9 +86,7 @@ def build_dataset(
     raw_positions = positions.copy()
 
     if feature_mode == "mps":
-        features = np.array(
-            [extract_mps_features(p, bond_dim=mps_bond_dim) for p in patches]
-        )
+        features = np.array([extract_mps_features(p, bond_dim=mps_bond_dim) for p in patches])
     elif feature_mode == "patch-statistics":
         features = np.array([extract_patch_statistics_features(p) for p in patches])
     else:
@@ -98,9 +94,7 @@ def build_dataset(
 
     features = torch.tensor(features, dtype=torch.float32)
 
-    features = (features - features.mean(dim=0)) / (
-        features.std(dim=0, unbiased=False) + 1e-8
-    )
+    features = (features - features.mean(dim=0)) / (features.std(dim=0, unbiased=False) + 1e-8)
 
     positions = sinusoidal_positional_encoding(positions, d_model=positional_dim)
 
@@ -186,9 +180,7 @@ def train(
         "symmetric": SymmetricQuantumModel,
     }
     if model_variant not in model_classes:
-        raise ValueError(
-            f"Unknown model_variant '{model_variant}'. Use one of: {sorted(model_classes)}"
-        )
+        raise ValueError(f"Unknown model_variant '{model_variant}'. Use one of: {sorted(model_classes)}")
     valid_ablation_modes = {
         "baseline",
         "freeze-classical",
@@ -203,23 +195,14 @@ def train(
         "zz-only",
     }
     if ablation_mode not in valid_ablation_modes:
-        raise ValueError(
-            f"Unknown ablation_mode '{ablation_mode}'. "
-            f"Use one of: {sorted(valid_ablation_modes)}"
-        )
+        raise ValueError(f"Unknown ablation_mode '{ablation_mode}'. Use one of: {sorted(valid_ablation_modes)}")
     valid_energy_loss_modes = {"linear", "positive", "contrastive"}
     if energy_loss_mode not in valid_energy_loss_modes:
         raise ValueError(
-            f"Unknown energy_loss_mode '{energy_loss_mode}'. "
-            f"Use one of: {sorted(valid_energy_loss_modes)}"
+            f"Unknown energy_loss_mode '{energy_loss_mode}'. Use one of: {sorted(valid_energy_loss_modes)}"
         )
-    if (
-        ablation_mode in {"classical-replacement", "classical-matched"}
-        and model_variant != "standard"
-    ):
-        raise ValueError(
-            f"{ablation_mode} is only available for the standard model."
-        )
+    if ablation_mode in {"classical-replacement", "classical-matched"} and model_variant != "standard":
+        raise ValueError(f"{ablation_mode} is only available for the standard model.")
 
     model_kwargs = {
         "feature_dim": train_features.shape[1],
@@ -227,15 +210,9 @@ def train(
     }
     if model_variant == "standard":
         model_kwargs["qubit_count"] = qubit_count
-        model_kwargs["observable_set"] = (
-            "zz-only" if ablation_mode == "zz-only" else observable_set
-        )
-        model_kwargs["use_classical_replacement"] = (
-            ablation_mode == "classical-replacement"
-        )
-        model_kwargs["use_parameter_matched_classical"] = (
-            ablation_mode == "classical-matched"
-        )
+        model_kwargs["observable_set"] = "zz-only" if ablation_mode == "zz-only" else observable_set
+        model_kwargs["use_classical_replacement"] = ablation_mode == "classical-replacement"
+        model_kwargs["use_parameter_matched_classical"] = ablation_mode == "classical-matched"
         model_kwargs["vqc_mode"] = {
             "random-vqc": "random",
             "no-entanglement": "no-entanglement",
@@ -260,11 +237,7 @@ def train(
             if parameter is not None:
                 parameter.requires_grad_(False)
 
-    trainable_parameters = [
-        p
-        for p in list(model.parameters()) + list(decoder.parameters())
-        if p.requires_grad
-    ]
+    trainable_parameters = [p for p in list(model.parameters()) + list(decoder.parameters()) if p.requires_grad]
     if not trainable_parameters:
         raise ValueError(f"Ablation mode '{ablation_mode}' left no trainable parameters.")
     optimizer = optim.Adam(trainable_parameters, lr=lr)
@@ -272,12 +245,8 @@ def train(
     if eval_only_image is not None:
         if checkpoint_dir is None:
             raise ValueError("--eval-only-image requires --checkpoint-dir")
-        model.load_state_dict(
-            torch.load(checkpoint_dir / "model.pt", map_location=device)
-        )
-        decoder.load_state_dict(
-            torch.load(checkpoint_dir / "decoder.pt", map_location=device)
-        )
+        model.load_state_dict(torch.load(checkpoint_dir / "model.pt", map_location=device))
+        decoder.load_state_dict(torch.load(checkpoint_dir / "decoder.pt", map_location=device))
         steps = 0
 
     total_losses = []
@@ -311,13 +280,9 @@ def train(
         elif energy_loss_mode == "positive":
             energy_loss = torch.mean(energies.square())
         else:
-            permutation = torch.randperm(
-                train_positions.shape[0], device=train_positions.device
-            )
+            permutation = torch.randperm(train_positions.shape[0], device=train_positions.device)
             _, negative_energies = model(train_features, train_positions[permutation])
-            energy_loss = F.softplus(
-                energies - negative_energies + energy_margin
-            ).mean()
+            energy_loss = F.softplus(energies - negative_energies + energy_margin).mean()
 
         if ablation_mode == "no-energy-loss":
             loss = reconstruction_loss
@@ -343,9 +308,7 @@ def train(
                 f"Energy: {energy_loss.item():.6f}"
             )
 
-        should_track = data_generator is not None and (
-            step % max(epoch_frame_interval, 1) == 0 or step == steps - 1
-        )
+        should_track = data_generator is not None and (step % max(epoch_frame_interval, 1) == 0 or step == steps - 1)
         if should_track:
             model.eval()
             decoder.eval()
@@ -353,9 +316,7 @@ def train(
                 tracked_observables, tracked_energies = model(features, positions)
                 tracked_pred = decoder(tracked_observables, positions).cpu().numpy()
             tracked_reconstruction = blend_seams(
-                stictch_patches(
-                    tracked_pred, image_size=image_size, patch_size=patch_size
-                ),
+                stictch_patches(tracked_pred, image_size=image_size, patch_size=patch_size),
                 patch_size=patch_size,
             )
             frame_path = ""
@@ -418,9 +379,7 @@ def train(
             }
             shuffled_pred = decoder(observables[perm], positions).cpu().numpy()
 
-        zero_positions = (
-            positions if zero_latent_uses_positions else torch.zeros_like(positions)
-        )
+        zero_positions = positions if zero_latent_uses_positions else torch.zeros_like(positions)
 
         zero_pred = decoder(torch.zeros_like(observables), zero_positions).cpu().numpy()
 
@@ -467,9 +426,7 @@ def train(
         "zero_latent": compute_image_metrics(img_zero, image),
     }
     if img_shuffled is not None:
-        comparison_metrics["shuffled_observables"] = compute_image_metrics(
-            img_shuffled, image
-        )
+        comparison_metrics["shuffled_observables"] = compute_image_metrics(img_shuffled, image)
 
     outputs = {
         "original": image,
@@ -487,9 +444,7 @@ def train(
         "media": {},
         "epoch_order_parameters": data_generator.epoch_rows if data_generator else [],
         "phase_transition": (
-            detect_phase_transition(data_generator.epoch_rows)
-            if data_generator
-            else detect_phase_transition([])
+            detect_phase_transition(data_generator.epoch_rows) if data_generator else detect_phase_transition([])
         ),
         "model_variant": model_variant,
         "ablation_mode": ablation_mode,
@@ -502,9 +457,7 @@ def train(
         "energy_weight": energy_weight,
         "energy_margin": energy_margin,
         "eval_only_image": str(eval_only_image) if eval_only_image is not None else None,
-        "train_image_paths": (
-            [str(path) for path in train_image_paths] if train_image_paths else None
-        ),
+        "train_image_paths": ([str(path) for path in train_image_paths] if train_image_paths else None),
         "zero_latent_uses_positions": zero_latent_uses_positions,
         "shuffle_metadata": shuffle_metadata,
     }
@@ -535,9 +488,7 @@ def train(
             random_latent=img_random,
             zero_latent=img_zero,
         )
-        plot_entropy_map(
-            entropy_features, grid_size=get_grid_size(image_size, patch_size)
-        )
+        plot_entropy_map(entropy_features, grid_size=get_grid_size(image_size, patch_size))
         plot_observables(observables.cpu().numpy())
         plot_training_curves(total_losses, reconstruction_losses, energy_losses)
 
@@ -627,9 +578,7 @@ def save_analysis_outputs(
                 output_dir / "phase_transition_epoch_vs_order_parameter.gif",
             )
             if phase_order_gif_path is not None:
-                media_paths["phase_transition_epoch_vs_order_parameter_gif"] = str(
-                    phase_order_gif_path
-                )
+                media_paths["phase_transition_epoch_vs_order_parameter_gif"] = str(phase_order_gif_path)
             merged_gif_path = save_merged_phase_transition_gif(
                 data_generator.epoch_rows,
                 outputs["phase_transition"],
@@ -637,30 +586,22 @@ def save_analysis_outputs(
                 output_dir / "phase_transition_order_parameter_reconstruction.gif",
             )
             if merged_gif_path is not None:
-                media_paths[
-                    "phase_transition_order_parameter_reconstruction_gif"
-                ] = str(merged_gif_path)
+                media_paths["phase_transition_order_parameter_reconstruction_gif"] = str(merged_gif_path)
             order_signal_gif_path = save_order_parameter_gif(
                 data_generator.epoch_rows,
                 outputs["phase_transition"],
                 output_dir / "hvk_order_parameter_phase_transition.gif",
             )
             if order_signal_gif_path is not None:
-                media_paths["order_parameter_phase_transition_gif"] = str(
-                    order_signal_gif_path
-                )
+                media_paths["order_parameter_phase_transition_gif"] = str(order_signal_gif_path)
             reconstruction_gif_path = save_frames_as_gif(
                 epoch_frame_paths or [],
                 output_dir / "hvk_reconstruction_phase_transition.gif",
             )
             if reconstruction_gif_path is not None:
-                media_paths["reconstruction_phase_transition_gif"] = str(
-                    reconstruction_gif_path
-                )
+                media_paths["reconstruction_phase_transition_gif"] = str(reconstruction_gif_path)
 
-    np.save(
-        output_dir / "quantum_reconstruction.npy", outputs["quantum_reconstruction"]
-    )
+    np.save(output_dir / "quantum_reconstruction.npy", outputs["quantum_reconstruction"])
     np.save(output_dir / "mps_baseline.npy", outputs["mps_baseline"])
     np.save(output_dir / "random_latent.npy", outputs["random_latent"])
     np.save(output_dir / "zero_latent.npy", outputs["zero_latent"])
@@ -669,9 +610,7 @@ def save_analysis_outputs(
         np.save(output_dir / "shuffled_observables.npy", outputs["shuffled_observables"])
 
     target = outputs["original"] if eval_target is None else eval_target
-    reconstruction_metrics = compute_image_metrics(
-        outputs["quantum_reconstruction"], target
-    )
+    reconstruction_metrics = compute_image_metrics(outputs["quantum_reconstruction"], target)
     comparison_metrics = {
         "quantum_reconstruction": reconstruction_metrics,
         "mps_baseline": compute_image_metrics(outputs["mps_baseline"], target),
@@ -679,17 +618,13 @@ def save_analysis_outputs(
         "zero_latent": compute_image_metrics(outputs["zero_latent"], target),
     }
     if outputs.get("shuffled_observables") is not None:
-        comparison_metrics["shuffled_observables"] = compute_image_metrics(
-            outputs["shuffled_observables"], target
-        )
+        comparison_metrics["shuffled_observables"] = compute_image_metrics(outputs["shuffled_observables"], target)
     total_history = outputs["history"]["total_loss"]
     reconstruction_history = outputs["history"]["reconstruction_loss"]
     energy_history = outputs["history"]["energy_loss"]
     metrics = {
         "final_total_loss": total_history[-1] if total_history else None,
-        "final_reconstruction_loss": (
-            reconstruction_history[-1] if reconstruction_history else None
-        ),
+        "final_reconstruction_loss": (reconstruction_history[-1] if reconstruction_history else None),
         "final_energy_loss": energy_history[-1] if energy_history else None,
         "reconstruction_metrics": reconstruction_metrics,
         "comparison_metrics": comparison_metrics,
@@ -713,29 +648,15 @@ def save_analysis_outputs(
         "eval_only_image": outputs.get("eval_only_image"),
         "train_image_paths": outputs.get("train_image_paths"),
     }
-    (output_dir / "metrics.json").write_text(
-        json.dumps(metrics, indent=2), encoding="utf-8"
-    )
+    (output_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
     if outputs.get("shuffled_observables") is not None:
         shuffled_summary = {
-            "normal_mse_vs_original": comparison_metrics[
-                "quantum_reconstruction"
-            ]["mse"],
-            "normal_psnr_vs_original": comparison_metrics[
-                "quantum_reconstruction"
-            ]["psnr"],
-            "normal_ssim_vs_original": comparison_metrics[
-                "quantum_reconstruction"
-            ]["ssim"],
-            "shuffled_mse_vs_original": comparison_metrics[
-                "shuffled_observables"
-            ]["mse"],
-            "shuffled_psnr_vs_original": comparison_metrics[
-                "shuffled_observables"
-            ]["psnr"],
-            "shuffled_ssim_vs_original": comparison_metrics[
-                "shuffled_observables"
-            ]["ssim"],
+            "normal_mse_vs_original": comparison_metrics["quantum_reconstruction"]["mse"],
+            "normal_psnr_vs_original": comparison_metrics["quantum_reconstruction"]["psnr"],
+            "normal_ssim_vs_original": comparison_metrics["quantum_reconstruction"]["ssim"],
+            "shuffled_mse_vs_original": comparison_metrics["shuffled_observables"]["mse"],
+            "shuffled_psnr_vs_original": comparison_metrics["shuffled_observables"]["psnr"],
+            "shuffled_ssim_vs_original": comparison_metrics["shuffled_observables"]["ssim"],
             "shuffled_mse_vs_normal": mse(
                 outputs["shuffled_observables"],
                 outputs["quantum_reconstruction"],
@@ -744,48 +665,26 @@ def save_analysis_outputs(
             "shuffled_shape": list(outputs["shuffled_observables"].shape),
             "shuffle_metadata": outputs.get("shuffle_metadata"),
         }
-        (output_dir / "shuffle_eval_summary.json").write_text(
-            json.dumps(shuffled_summary, indent=2), encoding="utf-8"
-        )
+        (output_dir / "shuffle_eval_summary.json").write_text(json.dumps(shuffled_summary, indent=2), encoding="utf-8")
     if outputs.get("zero_latent_uses_positions"):
         zero_summary = {
-            "normal_mse_vs_original": comparison_metrics[
-                "quantum_reconstruction"
-            ]["mse"],
-            "normal_psnr_vs_original": comparison_metrics[
-                "quantum_reconstruction"
-            ]["psnr"],
-            "normal_ssim_vs_original": comparison_metrics[
-                "quantum_reconstruction"
-            ]["ssim"],
-            "zero_latent_mse_vs_original": comparison_metrics["zero_latent"][
-                "mse"
-            ],
-            "zero_latent_psnr_vs_original": comparison_metrics["zero_latent"][
-                "psnr"
-            ],
-            "zero_latent_ssim_vs_original": comparison_metrics["zero_latent"][
-                "ssim"
-            ],
+            "normal_mse_vs_original": comparison_metrics["quantum_reconstruction"]["mse"],
+            "normal_psnr_vs_original": comparison_metrics["quantum_reconstruction"]["psnr"],
+            "normal_ssim_vs_original": comparison_metrics["quantum_reconstruction"]["ssim"],
+            "zero_latent_mse_vs_original": comparison_metrics["zero_latent"]["mse"],
+            "zero_latent_psnr_vs_original": comparison_metrics["zero_latent"]["psnr"],
+            "zero_latent_ssim_vs_original": comparison_metrics["zero_latent"]["ssim"],
             "zero_latent_mse_vs_normal": mse(
                 outputs["zero_latent"],
                 outputs["quantum_reconstruction"],
             ),
-            "random_latent_mse_vs_original": comparison_metrics[
-                "random_latent"
-            ]["mse"],
-            "random_latent_psnr_vs_original": comparison_metrics[
-                "random_latent"
-            ]["psnr"],
-            "random_latent_ssim_vs_original": comparison_metrics[
-                "random_latent"
-            ]["ssim"],
+            "random_latent_mse_vs_original": comparison_metrics["random_latent"]["mse"],
+            "random_latent_psnr_vs_original": comparison_metrics["random_latent"]["psnr"],
+            "random_latent_ssim_vs_original": comparison_metrics["random_latent"]["ssim"],
             "normal_shape": list(outputs["quantum_reconstruction"].shape),
             "zero_latent_shape": list(outputs["zero_latent"].shape),
         }
-        (output_dir / "zero_latent_eval_summary.json").write_text(
-            json.dumps(zero_summary, indent=2), encoding="utf-8"
-        )
+        (output_dir / "zero_latent_eval_summary.json").write_text(json.dumps(zero_summary, indent=2), encoding="utf-8")
     if model is not None and decoder is not None:
         torch.save(model.state_dict(), output_dir / "model.pt")
         torch.save(decoder.state_dict(), output_dir / "decoder.pt")
@@ -897,9 +796,7 @@ def resolve_path(value: str | Path, base_dir: Path = PROJECT_ROOT) -> Path:
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Run Hamiltonian Vision Kernel training and analysis."
-    )
+    parser = argparse.ArgumentParser(description="Run Hamiltonian Vision Kernel training and analysis.")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH)
     parser.add_argument("--image-path", type=Path)
     parser.add_argument("--train-image-paths", type=Path, nargs="+")
@@ -1014,9 +911,7 @@ def main():
 
     config["image_path"] = resolve_path(config["image_path"])
     if config.get("train_image_paths") is not None:
-        config["train_image_paths"] = [
-            resolve_path(path) for path in config["train_image_paths"]
-        ]
+        config["train_image_paths"] = [resolve_path(path) for path in config["train_image_paths"]]
     config["output_dir"] = resolve_path(config["output_dir"])
 
     if args.no_save:
@@ -1045,11 +940,7 @@ def main():
 
     if config["save_outputs"]:
         print(f"Results saved to: {config['output_dir']}")
-    final_loss = (
-        outputs["history"]["total_loss"][-1]
-        if outputs["history"]["total_loss"]
-        else None
-    )
+    final_loss = outputs["history"]["total_loss"][-1] if outputs["history"]["total_loss"] else None
     print("Final loss:", final_loss)
 
 
