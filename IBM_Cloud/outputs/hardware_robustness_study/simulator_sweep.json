@@ -87,5 +87,14 @@
     "psnr": 31.49300366148186,
     "topology": "HVK1D",
     "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1000,
+    "mse": 0.0010203382698819041,
+    "psnr": 29.912558239358358,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
   }
 ]
