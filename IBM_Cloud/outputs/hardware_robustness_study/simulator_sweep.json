@@ -1,0 +1,91 @@
+[
+  {
+    "mode": "ideal_statevector",
+    "shots": null,
+    "mse": 0.00015868735499680042,
+    "psnr": 37.99457678625799,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1000,
+    "mse": 0.0007718582055531442,
+    "psnr": 31.12462474537093,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1001,
+    "mse": 0.0012807517778128386,
+    "psnr": 28.92535032606593,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1002,
+    "mse": 0.0016378216678276658,
+    "psnr": 27.85733387615093,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1000,
+    "mse": 0.0010823573684319854,
+    "psnr": 29.656293219346054,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1001,
+    "mse": 0.0007081523071974516,
+    "psnr": 31.498733255565018,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1002,
+    "mse": 0.0012818069662898779,
+    "psnr": 28.92177372467171,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1000,
+    "mse": 0.0008479401003569365,
+    "psnr": 30.71634825813173,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1001,
+    "mse": 0.0011622733436524868,
+    "psnr": 29.34691722479654,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1002,
+    "mse": 0.0007090871804393828,
+    "psnr": 31.49300366148186,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  }
+]

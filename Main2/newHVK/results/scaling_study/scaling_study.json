@@ -57,6 +57,92 @@
       "grad_norm_var": 2.7095734405074774e-08
     }
   ],
-  "bond_dim_sweep": [],
-  "depth_sweep": []
+  "bond_dim_sweep": [
+    {
+      "topology": "HVK2D",
+      "seed": 0,
+      "qubit_count": 6,
+      "bond_dim": 1,
+      "n_layers": null,
+      "steps": 90,
+      "wall_time_s": 754.648521199997,
+      "psnr": 31.826965846866898,
+      "ssim": 0.9850147186568873,
+      "mse": 0.0006566038355231285,
+      "grad_norm_mean": 0.0018386141600785777,
+      "grad_norm_var": 1.5327993681154792e-07
+    },
+    {
+      "topology": "HVK2D",
+      "seed": 1,
+      "qubit_count": 6,
+      "bond_dim": 2,
+      "n_layers": null,
+      "steps": 90,
+      "wall_time_s": 636.8913225999859,
+      "psnr": 29.350044238115316,
+      "ssim": 0.9719954812374296,
+      "mse": 0.0011614367831498384,
+      "grad_norm_mean": 0.001231127571372781,
+      "grad_norm_var": 5.457958304940105e-08
+    },
+    {
+      "topology": "HVK2D",
+      "seed": 1,
+      "qubit_count": 6,
+      "bond_dim": 1,
+      "n_layers": null,
+      "steps": 90,
+      "wall_time_s": 629.854923100007,
+      "psnr": 29.280630167077597,
+      "ssim": 0.9713609311641912,
+      "mse": 0.0011801493819803,
+      "grad_norm_mean": 0.0013025742955505848,
+      "grad_norm_var": 7.20428780716465e-08
+    }
+  ],
+  "depth_sweep": [
+    {
+      "topology": "HVK2D",
+      "seed": 1,
+      "qubit_count": 6,
+      "bond_dim": 4,
+      "n_layers": 2,
+      "steps": 90,
+      "wall_time_s": 772.5021838999819,
+      "psnr": 30.73251824774409,
+      "ssim": 0.9801065692608099,
+      "mse": 0.0008447888540104032,
+      "grad_norm_mean": 0.0012489124346757308,
+      "grad_norm_var": 5.483977906913406e-08
+    },
+    {
+      "topology": "HVK1D",
+      "seed": 2,
+      "qubit_count": 6,
+      "bond_dim": 4,
+      "n_layers": 3,
+      "steps": 90,
+      "wall_time_s": 1081.680114799994,
+      "psnr": 28.113967488070895,
+      "ssim": 0.9624558265202106,
+      "mse": 0.0015438434202224016,
+      "grad_norm_mean": 0.0011151775834150612,
+      "grad_norm_var": 8.03672839129119e-08
+    },
+    {
+      "topology": "HVK1D",
+      "seed": 0,
+      "qubit_count": 6,
+      "bond_dim": 4,
+      "n_layers": 3,
+      "steps": 90,
+      "wall_time_s": 917.6977087999985,
+      "psnr": 28.34082806482317,
+      "ssim": 0.9640254521087119,
+      "mse": 0.0014652684330940247,
+      "grad_norm_mean": 0.0013835238059982657,
+      "grad_norm_var": 6.035727059573997e-08
+    }
+  ]
 }

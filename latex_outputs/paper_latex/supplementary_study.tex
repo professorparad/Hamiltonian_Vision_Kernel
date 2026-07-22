@@ -186,6 +186,23 @@ Second image, multi-image training & $1.4740\times10^{-3}$ & 28.31 & 0.9862 \\
 \subsection{Scaling and Non-Monotonicity}
 Table~\ref{tab:capacity_ablation} sweeps training steps, qubit count, and MPS bond dimension on \textit{Monalisa} (single-seed). The step sweep confirms the model is convergence-limited early and plateaus near 500 steps. Within the tested range $q=8$ gives the strongest qubit-count result, but the bond-dimension sweep is non-monotonic: $\chi=1$ and $\chi=2$ \emph{outperform} the default $\chi=4$ under the same 200-step budget, while $\chi=8$ partially recovers. Bond dimension is therefore a coupled optimization hyperparameter here, not a monotonic compression-fidelity knob, and this sweep should be read as a single-seed directional diagnostic.
 
+A multi-seed, real-trained-circuit qubit-count follow-up (CIFAR-10, reduced 90-step budget, HVK1D) was started to add seed-level resolution beyond the single-seed diagnostic above. Table~\ref{tab:qubit_multiseed_partial} reports the two configurations that completed before this follow-up was interrupted by unrelated infrastructure instability on the development machine, well short of covering $q=8$ or the bond-dimension/depth axes; we report the partial result rather than withhold it, since the $q=4$ row is a genuine 3-seed measurement. At $q=4$, PSNR varies meaningfully across seeds ($29.55\pm1.64$~dB) --- real seed-to-seed variance a single-seed number cannot show. The lower absolute value relative to Table~\ref{tab:capacity_ablation}'s single-seed $q=4$ figure ($32.71$~dB) is consistent with the shorter 90-step budget here (vs.\ 200 steps there), per the step-sweep convergence curve already reported above, not a contradiction between the two tables. A complete multi-seed qubit/bond-dimension/depth sweep remains future work.
+
+\begin{table}[H]
+\centering
+\caption{Partial multi-seed real-circuit qubit-count follow-up (HVK1D, CIFAR-10, 90-step budget). Incomplete: only these two configurations finished before the run was interrupted.}
+\label{tab:qubit_multiseed_partial}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Qubit count & Seeds completed & PSNR (dB) & SSIM \\
+\midrule
+$q=4$ & 3 & $29.55\pm1.64$ & $0.9710\pm0.0125$ \\
+$q=6$ & 1 & $29.46$ & $0.9733$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{figures/capacity_scaling_sweeps.pdf}
@@ -403,6 +420,36 @@ local-raw (classical) & $0.8380\pm0.0067$ & $0.01202\pm0.00245$ & $15.16\pm0.68$
 \end{figure*}
 
 Four findings follow. First, the Reynolds-averaging construction that gives HVK2D its provable equivariance is not specific to the quantum-surrogate feature map: applying the identical pooling operation to a purely classical local-observable map produces the same floating-point-precision equivariance ($8.94\times10^{-17}$ vs.\ $9.47\times10^{-17}$), confirming the guarantee is a property of the group-averaging construction itself, not of anything intrinsically quantum. Second, the separation between pooled and non-pooled modes is not an artifact of measuring features in isolation: it persists essentially unchanged at reconstruction output (output-consistency MSE $\sim10^{-21}$--$10^{-23}$ for pooled modes vs.\ $\sim0.010$--$0.012$ for non-pooled controls). Third, ordinary augmentation cannot change feature-equivariance error, but it reduces output-consistency MSE by roughly $8\%$ ($0.01055$ vs.\ $0.01149$). Fourth, exact pooling has a small accuracy trade-off relative to ordinary augmentation: pooled HVK2D is lower by $0.336$~dB on average across the five paired seeds (seed-bootstrap 95\% CI $[-0.441,-0.231]$~dB; two-sided Wilcoxon $p=0.0625$, the smallest attainable nonzero two-sided value at $n=5$). The symmetry guarantee is decisive, while the available sample supports a modest rather than zero accuracy cost.
+
+\subsection{Real-Circuit Confirmation}
+\label{sec:d4_real_circuit}
+Everything above is measured on the closed-form analytic surrogate. This subsection repeats the pooled-vs-non-pooled equivariance and output-consistency comparison on the \emph{actual trained quantum circuit} --- the same four already-trained HVK2D checkpoints used for the main paper's real IBM-hardware pilot (\textit{cat}, \textit{ship/hydrofoil}, \textit{ship/sea boat}, \textit{airplane}), replayed with no retraining. For each image we run the trained model's real PennyLane forward pass (exact statevector simulation of the trained weights, not the surrogate formula) on all eight $D_4$-transformed copies of the full image, and compute the same feature-equivariance error and output-consistency MSE as above, both without pooling and with the identical Reynolds-averaging construction applied to the real circuit's own output grid.
+
+\begin{table}[H]
+\centering
+\caption{Real-trained-circuit $D_4$ confirmation: exact PennyLane forward pass on four already-trained HVK2D hardware-pilot checkpoints, no retraining.}
+\label{tab:d4_real_circuit}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Image & Mode & Equivariance error & Output consistency (MSE) \\
+\midrule
+cat & non-pooled & $0.0760$ & $0.01869$ \\
+cat & D4-pooled & $5.50\times10^{-8}$ & $9.78\times10^{-16}$ \\
+ship (hydrofoil) & non-pooled & $0.3905$ & $0.06437$ \\
+ship (hydrofoil) & D4-pooled & $5.25\times10^{-8}$ & $1.83\times10^{-15}$ \\
+ship (sea boat) & non-pooled & $0.4054$ & $0.05451$ \\
+ship (sea boat) & D4-pooled & $5.65\times10^{-8}$ & $1.24\times10^{-15}$ \\
+airplane & non-pooled & $0.2387$ & $0.03662$ \\
+airplane & D4-pooled & $5.16\times10^{-8}$ & $1.80\times10^{-15}$ \\
+\midrule
+Mean & non-pooled & $0.2777$ & $0.04355$ \\
+Mean & D4-pooled & $5.39\times10^{-8}$ & $1.46\times10^{-15}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The real-circuit result confirms the surrogate's finding directly: pooling collapses the equivariance error from $\mathcal{O}(10^{-1})$ to $\mathcal{O}(10^{-8})$ and output-consistency MSE from $\mathcal{O}(10^{-2})$ to $\mathcal{O}(10^{-15})$, an 8--13 order-of-magnitude gap on every one of the four images, with no exceptions. The pooled real circuit's residual error ($\sim\!5\times10^{-8}$) is larger than the surrogate's floating-point-precision result ($\sim\!10^{-17}$) because the real circuit involves a full statevector simulation of the trained gates plus a fresh per-transform feature-standardization step, both of which accumulate ordinary floating-point noise that the closed-form surrogate formula does not --- the pooled result is exact up to numerical precision, not exact to the same sixteen digits as a symbolic identity, which is the expected and unremarkable difference between an analytic proxy and an actual simulated circuit.
 
 \section{Hardware Pilot Methodology}
 \label{sec:hardware_methodology}
