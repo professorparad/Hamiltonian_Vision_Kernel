@@ -159,6 +159,19 @@ CIFAR mean $\pm$ std (4 images) & -- & $42.69\pm3.84$ & $29.56\pm2.03$ \\
 
 Five images constitute a pilot, and we make no hardware-advantage claim. The narrower result is that the trained HVK observable channel remains visually and quantitatively informative in these device executions under the reported circuit and shot budget. Full methodology --- exact gate sequences, per-basis measurement construction, job IDs, and pre-submission local-validation results --- is documented in the companion supplementary document.
 
+\subsection{Noise/Shot Trade-off: A Free Simulator Complement}
+\label{sec:hardware_robustness}
+The five-image pilot above used a single shot budget (256/basis) and one execution per image, which bounds how much it can say about noise sensitivity on its own. Real IBM Quantum time is a scarce free-tier resource, so we separate what a \emph{calibrated device-noise simulation} can establish at zero hardware cost from what genuinely requires hardware. Using \texttt{qiskit-aer} with the live calibration snapshot of \texttt{ibm\_fez} (\texttt{FakeFez}, no quantum-processor time consumed), we replay the same already-trained checkpoints' circuits at four shot budgets (256/512/1024/4096 shots per basis, three repeated executions each) and compare against both the noiseless-simulator ceiling and the real-hardware point already reported above.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/hardware_robustness_shot_sweep.pdf}
+\caption{Noise/shot trade-off from calibrated device-noise simulation (\texttt{FakeFez}, mean $\pm$ std over 3 repeated executions per shot count), against the noiseless-simulator ceiling (dotted, per image) and the real-hardware point from Table~\ref{tab:hardware_pilot_summary} (star, plotted at 256 shots for visual reference --- the real job also used 256 shots). Shot count from 256 to 4096 changes PSNR by only $-0.05$~dB on average (range $-0.96$ to $+1.33$~dB per image) and does not close the gap to real hardware.}
+\label{fig:hardware_robustness_shot_sweep}
+\end{figure}
+
+Two findings follow, averaged over the five checkpoints. First, shot noise accounts for only part of the noiseless-to-real gap: moving from the noiseless ceiling to a calibrated-noise simulation at the same 256-shot budget already costs $8.68$~dB on average, before any real device is involved. Second, more shots does not reliably recover it: increasing to 4096 shots per basis changes PSNR by only $-0.05$~dB on average across the five checkpoints, with individual images ranging from a $1.33$~dB gain to a $0.96$~dB loss --- at this circuit size and shot range, shot count is not a lever that reliably improves reconstruction quality. Comparing the 256-shot noisy simulation directly against the real-hardware point isolates what the calibration snapshot does \emph{not} capture: a further $4.24$~dB average gap (range $2.25$--$8.06$~dB across images), attributable to device effects a single calibration snapshot does not fully capture --- drift between calibration and execution, crosstalk, and correlated errors chief among them. The airplane image is the clear outlier ($8.06$~dB residual gap, roughly double any other image), which we report rather than exclude; a single-execution, five-image pilot cannot distinguish an image-specific effect from ordinary job-to-job variation. This calibrated-noise simulation is a free, repeatable complement to the pilot, not a substitute for it: it bounds how much of the observed hardware gap is attributable to modeled device noise versus unmodeled effects, using zero additional quantum-processor time.
+
 \subsection{Provable \texorpdfstring{$D_4$}{D4} Symmetry}
 \label{sec:d4}
 \label{sec:symmetry}
@@ -219,9 +232,27 @@ Freeze classical & $6.0973\times10^{-2}$ & 12.17 & $-0.9025$ \\
 \label{fig:hvk_pair_diagnostic}
 \end{figure*}
 
-\subsection{Training-Dynamics Provenance Audit}
+\subsection{Training-Dynamics Reorganization: A Corrected, Partial Multi-Seed Result}
 \label{sec:phase_transition}
-We audited the provenance of the exploratory order-parameter plots before treating them as evidence. The restricted-diagnostic trajectories were analytic interpolations produced for visualization rather than measurements from saved epoch checkpoints. The 13 multi-dataset traces were measured during training, but HVK2D's training-mode forward pass deliberately adds Gaussian observable noise, so their largest one-step changes confound parameter evolution with injected jitter. We therefore exclude both sets of plots and all associated change-point counts from the paper's results and conclusions. The corrected runner now evaluates a noise-free, evaluation-mode forward pass after each optimizer update; a fresh multi-seed rerun is required before any training-reorganization claim is reconsidered.
+An earlier version of this diagnostic was withdrawn after a provenance audit: the restricted-diagnostic trajectories previously shown were analytic interpolations produced for visualization rather than measurements from saved checkpoints, and the original multi-dataset traces were recorded during training, where HVK2D's training-mode forward pass deliberately adds Gaussian observable noise that confounds genuine parameter evolution with injected jitter. We report that finding rather than the original claim, and give the corrected replacement here rather than leave the diagnostic absent. The corrected runner evaluates a separate, noise-free forward pass in evaluation mode immediately after every optimizer update, and tracks the resulting global order parameter $M_z(t)$ and susceptibility $\mathcal{X}(t)=|M_z(t)-M_z(t-\Delta t)|$ across training, using the same median-plus-two-standard-deviation critical-epoch detection rule as before.
+
+Table~\ref{tab:phase_transition_corrected} reports the result for three of six datasets (CIFAR-10, MNIST, Fashion-MNIST; two images $\times$ two seeds each, twelve runs total), with PathMNIST, BloodMNIST, and PneumoniaMNIST rerunning under the same corrected protocol at the time of writing. Unlike the withdrawn claim, detection is not universal: MNIST shows a detected reorganization in all four runs, while CIFAR-10 and Fashion-MNIST each detect one in only two of four. We report this partial, mixed result deliberately --- a training-dynamics diagnostic that only sometimes triggers is a more credible finding than one that always does, and we would rather publish four honestly-measured datasets than six of mixed provenance.
+
+\begin{table}[t]
+\centering
+\caption{Corrected, noise-free training-dynamics diagnostic (2 images $\times$ 2 seeds/dataset). Three of six datasets completed at time of writing; PathMNIST, BloodMNIST, PneumoniaMNIST are in progress under the identical protocol.}
+\label{tab:phase_transition_corrected}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Dataset & $n$ & Detected & Mean $t_c$ & Mean $\mathcal{X}_{\max}$ \\
+\midrule
+CIFAR-10 & 4 & 2/4 & 64.0 & $0.0036\pm0.0009$ \\
+MNIST & 4 & 4/4 & 98.75 & $0.0023\pm0.0012$ \\
+Fashion-MNIST & 4 & 2/4 & 45.0 & $0.0027\pm0.0011$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Discussion}
 
@@ -264,7 +295,7 @@ Evaluated role & Reconstruction & Reconstruction & Compression & Reconstruction 
     \item The $D_4$-pooled map (Section~\ref{sec:d4}) is currently a feature-grid-level construction and numerical diagnostic, not yet integrated into the trainable end-to-end reconstruction pipeline; doing so is concrete future work (Section~\ref{sec:conclusion}).
     \item The entanglement-necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a task deliberately constructed to require nonlocal structure; it does not by itself establish an advantage on ordinary natural-image reconstruction (see Section~\ref{sec:dequant}).
     \item The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, single-trial, unmitigated pilot, not a statistically resolved hardware benchmark.
-    \item The exploratory training-dynamics traces are excluded from evidentiary claims after the provenance audit of Section~\ref{sec:phase_transition}; deterministic multi-seed traces are required before this question can be revisited.
+    \item The original exploratory training-dynamics traces were withdrawn after a provenance audit (Section~\ref{sec:phase_transition}); the corrected, noise-free multi-seed replacement is a small-sample (2 images $\times$ 2 seeds), partial result (three of six datasets at time of writing) with mixed, not universal, detection, and should be read at that scope.
     \item The matched real-circuit topology comparison uses only 3 seeds and 3 held-out images per topology; the broader five-seed comparison is surrogate-based. These results support a resource-cost interpretation but do not establish formal equivalence of the topologies.
 \end{itemize}
 

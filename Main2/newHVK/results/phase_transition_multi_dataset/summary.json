@@ -31,39 +31,51 @@
   },
   {
     "dataset": "cifar10",
-    "trace_mode": "legacy_training_mode_with_observable_noise",
-    "evidentiary_status": "excluded",
-    "n_images": 3,
-    "n_detected": 3,
-    "mean_critical_epoch": 68.33333333333333,
-    "mean_max_susceptibility": 0.005340581138928731,
-    "std_max_susceptibility": 0.000615608966994541,
-    "mean_final_order_parameter": -0.11075264712174733,
-    "std_final_order_parameter": 0.14541435507139724,
+    "trace_mode": "post_update_eval_mode",
+    "evidentiary_status": "exploratory_pending_statistical_review",
+    "seeds": [
+      0,
+      1
+    ],
+    "n_images": 4,
+    "n_detected": 2,
+    "mean_critical_epoch": 64.0,
+    "mean_max_susceptibility": 0.0035878154449164867,
+    "std_max_susceptibility": 0.0008849737017615067,
+    "mean_final_order_parameter": -0.0879801781848073,
+    "std_final_order_parameter": 0.24533479536815406,
     "per_image": [
       {
-        "critical_epoch": 63,
-        "max_susceptibility": 0.005520634353160858,
-        "threshold": 0.0034541442450806903,
-        "detected": true,
-        "final_order_parameter": 0.08994342386722565,
-        "order_parameter_jump": 0.005520634353160858
-      },
-      {
-        "critical_epoch": 18,
-        "max_susceptibility": 0.005988217890262604,
-        "threshold": 0.004074897641431124,
-        "detected": true,
-        "final_order_parameter": -0.24994418025016785,
-        "order_parameter_jump": 0.005988217890262604
-      },
-      {
         "critical_epoch": 124,
-        "max_susceptibility": 0.004512891173362732,
-        "threshold": 0.0031051897108919147,
+        "max_susceptibility": 0.0033416152000427246,
+        "threshold": 0.0031455281934581383,
         "detected": true,
-        "final_order_parameter": -0.1722571849822998,
-        "order_parameter_jump": 0.004512891173362732
+        "final_order_parameter": 0.2773502767086029,
+        "order_parameter_jump": 0.0033416152000427246
+      },
+      {
+        "critical_epoch": -1,
+        "max_susceptibility": 0.004775539040565491,
+        "threshold": 0.004964829165000792,
+        "detected": false,
+        "final_order_parameter": -0.32696300745010376,
+        "order_parameter_jump": 0.004775539040565491
+      },
+      {
+        "critical_epoch": 4,
+        "max_susceptibility": 0.002336611971259117,
+        "threshold": 0.0012295265543920907,
+        "detected": true,
+        "final_order_parameter": -0.005903083831071854,
+        "order_parameter_jump": 0.002336611971259117
+      },
+      {
+        "critical_epoch": -1,
+        "max_susceptibility": 0.0038974955677986145,
+        "threshold": 0.003939262948481305,
+        "detected": false,
+        "final_order_parameter": -0.2964048981666565,
+        "order_parameter_jump": 0.0038974955677986145
       }
     ]
   },
@@ -99,31 +111,51 @@
   },
   {
     "dataset": "mnist",
-    "trace_mode": "legacy_training_mode_with_observable_noise",
-    "evidentiary_status": "excluded",
-    "n_images": 2,
-    "n_detected": 2,
-    "mean_critical_epoch": 51.0,
-    "mean_max_susceptibility": 0.004115540534257889,
-    "std_max_susceptibility": 0.00033407285809516907,
-    "mean_final_order_parameter": -0.044907236471772194,
-    "std_final_order_parameter": 0.08497375808656216,
+    "trace_mode": "post_update_eval_mode",
+    "evidentiary_status": "exploratory_pending_statistical_review",
+    "seeds": [
+      0,
+      1
+    ],
+    "n_images": 4,
+    "n_detected": 4,
+    "mean_critical_epoch": 98.75,
+    "mean_max_susceptibility": 0.0022818056459072977,
+    "std_max_susceptibility": 0.0011703950786585708,
+    "mean_final_order_parameter": 0.007444711867719889,
+    "std_final_order_parameter": 0.16566747184959915,
     "per_image": [
       {
-        "critical_epoch": 34,
-        "max_susceptibility": 0.0037814676761627197,
-        "threshold": 0.0028366630535547393,
+        "critical_epoch": 59,
+        "max_susceptibility": 0.001390129909850657,
+        "threshold": 0.0008892599500271815,
         "detected": true,
-        "final_order_parameter": 0.04006652161478996,
-        "order_parameter_jump": 0.0037814676761627197
+        "final_order_parameter": -0.007495577447116375,
+        "order_parameter_jump": 0.001390129909850657
       },
       {
-        "critical_epoch": 68,
-        "max_susceptibility": 0.004449613392353058,
-        "threshold": 0.003106761105209752,
+        "critical_epoch": 164,
+        "max_susceptibility": 0.0033670365810394287,
+        "threshold": 0.0030193940815569937,
         "detected": true,
-        "final_order_parameter": -0.12988099455833435,
-        "order_parameter_jump": 0.004449613392353058
+        "final_order_parameter": 0.25624793767929077,
+        "order_parameter_jump": 0.0033670365810394287
+      },
+      {
+        "critical_epoch": 6,
+        "max_susceptibility": 0.000864468514919281,
+        "threshold": 0.0005750610856524942,
+        "detected": true,
+        "final_order_parameter": -0.00871312152594328,
+        "order_parameter_jump": 0.000864468514919281
+      },
+      {
+        "critical_epoch": 166,
+        "max_susceptibility": 0.0035055875778198242,
+        "threshold": 0.0031621833264749554,
+        "detected": true,
+        "final_order_parameter": -0.21026039123535156,
+        "order_parameter_jump": 0.0035055875778198242
       }
     ]
   },

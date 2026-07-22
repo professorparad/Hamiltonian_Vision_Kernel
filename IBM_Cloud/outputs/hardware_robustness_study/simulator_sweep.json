@@ -96,5 +96,487 @@
     "psnr": 29.912558239358358,
     "topology": "HVK1D",
     "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1001,
+    "mse": 0.0008894972270354629,
+    "psnr": 30.50855401469965,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1002,
+    "mse": 0.0009787597227841616,
+    "psnr": 30.093239107265546,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "ideal_statevector",
+    "shots": null,
+    "mse": 3.275556082371622e-05,
+    "psnr": 44.84714960403613,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1000,
+    "mse": 0.00019884240464307368,
+    "psnr": 37.01490993486654,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1001,
+    "mse": 0.00022036221344023943,
+    "psnr": 36.56862873982261,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1002,
+    "mse": 0.00030027207685634494,
+    "psnr": 35.22485052186783,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1000,
+    "mse": 0.00028641248354688287,
+    "psnr": 35.43008056834249,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1001,
+    "mse": 0.00016384042100980878,
+    "psnr": 37.85578944725248,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1002,
+    "mse": 0.00016148341819643974,
+    "psnr": 37.918720662462405,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1000,
+    "mse": 0.00022159615764394403,
+    "psnr": 36.54437774306874,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1001,
+    "mse": 0.00019173532200511545,
+    "psnr": 37.17297872834915,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1002,
+    "mse": 0.00014521907723974437,
+    "psnr": 38.37976327191551,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1000,
+    "mse": 0.0001857241877587512,
+    "psnr": 37.3113153230711,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1001,
+    "mse": 0.00017500849207863212,
+    "psnr": 37.5694087717994,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1002,
+    "mse": 0.00016104737005662173,
+    "psnr": 37.93046362922668,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "ideal_statevector",
+    "shots": null,
+    "mse": 0.00022084890224505216,
+    "psnr": 36.55904755111052,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1000,
+    "mse": 0.0015458964044228196,
+    "psnr": 28.108196129370874,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1001,
+    "mse": 0.0013382688630372286,
+    "psnr": 28.734566264760115,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1002,
+    "mse": 0.0008509729523211718,
+    "psnr": 30.70084243492782,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1000,
+    "mse": 0.0019966193940490484,
+    "psnr": 26.99704714707654,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1001,
+    "mse": 0.0019432122353464365,
+    "psnr": 27.114797636790925,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1002,
+    "mse": 0.0006753185298293829,
+    "psnr": 31.704913336616546,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1000,
+    "mse": 0.002037957077845931,
+    "psnr": 26.90804967067062,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1001,
+    "mse": 0.001969407545402646,
+    "psnr": 27.056644024983683,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1002,
+    "mse": 0.0014973103534430265,
+    "psnr": 28.246881723903527,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1000,
+    "mse": 0.001605646451935172,
+    "psnr": 27.943500760416853,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1001,
+    "mse": 0.0014809085987508297,
+    "psnr": 28.294717451810957,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1002,
+    "mse": 0.0014417232014238834,
+    "psnr": 28.41118112455228,
+    "topology": "HVK2D",
+    "image_name": "0001_ship_hydrofoil_s_000078"
+  },
+  {
+    "mode": "ideal_statevector",
+    "shots": null,
+    "mse": 5.559326382353902e-05,
+    "psnr": 42.54977828229055,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1000,
+    "mse": 0.0004446163948159665,
+    "psnr": 33.52014527136737,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1001,
+    "mse": 0.0006092332187108696,
+    "psnr": 32.15216424591563,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1002,
+    "mse": 0.0003403317532502115,
+    "psnr": 34.68097528958826,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1000,
+    "mse": 0.0005380347720347345,
+    "psnr": 32.69189655904584,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1001,
+    "mse": 0.0005352103034965694,
+    "psnr": 32.71475534424405,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1002,
+    "mse": 0.0005421032547019422,
+    "psnr": 32.659179852764055,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1000,
+    "mse": 0.0005627524224109948,
+    "psnr": 32.49682626869488,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1001,
+    "mse": 0.0004238479887135327,
+    "psnr": 33.727898733600085,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1002,
+    "mse": 0.00047593683120794594,
+    "psnr": 33.22450685259168,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1000,
+    "mse": 0.0005251348484307528,
+    "psnr": 32.797291605760186,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1001,
+    "mse": 0.0005688595701940358,
+    "psnr": 32.44994931174352,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1002,
+    "mse": 0.0005430669989436865,
+    "psnr": 32.651465875813614,
+    "topology": "HVK2D",
+    "image_name": "0002_ship_sea_boat_s_001456"
+  },
+  {
+    "mode": "ideal_statevector",
+    "shots": null,
+    "mse": 2.0919926100759767e-05,
+    "psnr": 46.794398539390336,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1000,
+    "mse": 0.0002444880083203316,
+    "psnr": 36.117424373502836,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1001,
+    "mse": 0.0001900360657600686,
+    "psnr": 37.21163969183052,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 256,
+    "seed": 1002,
+    "mse": 0.0001533056201878935,
+    "psnr": 38.14441923607147,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1000,
+    "mse": 0.0003394520317669958,
+    "psnr": 34.69221587541795,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1001,
+    "mse": 0.00026103813434019685,
+    "psnr": 35.83296043145454,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 512,
+    "seed": 1002,
+    "mse": 0.0002502125862520188,
+    "psnr": 36.01690848110553,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1000,
+    "mse": 0.0003485424385871738,
+    "psnr": 34.57744334575692,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1001,
+    "mse": 0.0002144006866728887,
+    "psnr": 36.687738280381815,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 1024,
+    "seed": 1002,
+    "mse": 0.0002033752534771338,
+    "psnr": 36.91701892770994,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1000,
+    "mse": 0.0002054060169029981,
+    "psnr": 36.873868388814024,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1001,
+    "mse": 0.0002420368982711807,
+    "psnr": 36.161184212343294,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
+  },
+  {
+    "mode": "noisy_aer_ibm_fez",
+    "shots": 4096,
+    "seed": 1002,
+    "mse": 0.00022449747484643012,
+    "psnr": 36.48788539589072,
+    "topology": "HVK2D",
+    "image_name": "0003_airplane_jetliner_s_001705"
   }
 ]
