@@ -172,6 +172,31 @@ The five-image pilot above used a single shot budget (256/basis) and one executi
 
 Two findings follow, averaged over the five checkpoints. First, shot noise accounts for only part of the noiseless-to-real gap: moving from the noiseless ceiling to a calibrated-noise simulation at the same 256-shot budget already costs $8.68$~dB on average, before any real device is involved. Second, more shots does not reliably recover it: increasing to 4096 shots per basis changes PSNR by only $-0.05$~dB on average across the five checkpoints, with individual images ranging from a $1.33$~dB gain to a $0.96$~dB loss --- at this circuit size and shot range, shot count is not a lever that reliably improves reconstruction quality. Comparing the 256-shot noisy simulation directly against the real-hardware point isolates what the calibration snapshot does \emph{not} capture: a further $4.24$~dB average gap (range $2.25$--$8.06$~dB across images), attributable to device effects a single calibration snapshot does not fully capture --- drift between calibration and execution, crosstalk, and correlated errors chief among them. The airplane image is the clear outlier ($8.06$~dB residual gap, roughly double any other image), which we report rather than exclude; a single-execution, five-image pilot cannot distinguish an image-specific effect from ordinary job-to-job variation. This calibrated-noise simulation is a free, repeatable complement to the pilot, not a substitute for it: it bounds how much of the observed hardware gap is attributable to modeled device noise versus unmodeled effects, using zero additional quantum-processor time.
 
+\subsection{Real-Hardware Anchor Points: Repeated Execution and a Second Backend}
+\label{sec:hardware_anchors}
+The simulated trade-off above is bounded, in turn, by whether it actually reflects real devices. We spent a small, explicitly quota-tracked slice of the free-tier IBM Quantum allowance (four jobs, well under $1\%$ of the monthly limit) confirming it directly: the same two checkpoints (\textit{Monalisa}, CIFAR \textit{cat}) replayed with no retraining on \texttt{ibm\_marrakesh} and \texttt{ibm\_kingston} --- two backends distinct from the original pilot's \texttt{ibm\_fez} --- at the original 256-shot budget and, separately, at 1024 shots.
+
+\begin{table}[t]
+\centering
+\caption{Real-hardware anchor points: same checkpoints, no retraining, on two further backends. The original pilot's \texttt{ibm\_fez} point is shown for reference.}
+\label{tab:hardware_anchors}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Image & Backend & Shots & PSNR (dB) \\
+\midrule
+Monalisa & ibm\_fez (original pilot) & 256 & 25.90 \\
+Monalisa & ibm\_marrakesh & 256 & 25.94 \\
+Monalisa & ibm\_kingston & 1024 & 26.10 \\
+CIFAR cat & ibm\_fez (original pilot) & 256 & 31.52 \\
+CIFAR cat & ibm\_kingston & 256 & 28.93 \\
+CIFAR cat & ibm\_kingston & 1024 & 31.24 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Monalisa} reproduces almost exactly across backends at matched shots ($25.94$ vs.\ $25.90$~dB, \texttt{ibm\_marrakesh} vs.\ \texttt{ibm\_fez}), and gains only $0.16$~dB from quadrupling shots to 1024 --- consistent with the simulated finding above that shot count is not a reliable lever. The CIFAR \textit{cat} point is the more informative one: on \texttt{ibm\_kingston} at the original 256-shot budget it reaches $28.93$~dB, $2.59$~dB below the \texttt{ibm\_fez} pilot point, while its own 1024-shot execution on the same backend recovers to $31.24$~dB, within $0.28$~dB of the original. This is real job-to-job and backend-to-backend variation of a magnitude comparable to the unmodeled residual identified by the simulator comparison (Section~\ref{sec:hardware_robustness}) --- direct evidence, not merely a simulated bound, that a single 256-shot execution on a single backend is not yet a stable estimate of this pipeline's hardware performance, and that repeated execution matters at least as much as backend choice or shot count individually.
+
 \subsection{Provable \texorpdfstring{$D_4$}{D4} Symmetry}
 \label{sec:d4}
 \label{sec:symmetry}
