@@ -1,0 +1,13 @@
+[
+  {
+    "mode": "real_hardware",
+    "backend": "ibm_marrakesh",
+    "shots": 256,
+    "job_id": "d9gqm58gk0ls73f219m0",
+    "n_circuits": 48,
+    "mse": 0.002545467112213373,
+    "psnr": 25.942325097350786,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  }
+]

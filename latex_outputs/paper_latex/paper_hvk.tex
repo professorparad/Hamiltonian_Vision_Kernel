@@ -259,6 +259,19 @@ Total & 24 & $16/24$ & -- & -- \\
 \end{tabular}
 \end{table}
 
+\subsection{A Thermodynamically-Motivated Cross-Check: Effective Temperature}
+\label{sec:critical_temperature}
+The order-parameter diagnostic above is a magnetization-style statistic; HVK1D's own learned Heisenberg energy term (Appendix~\ref{app:circuits}) gives an independent, thermodynamically-motivated way to probe the same training dynamics. For bond $i$ with the model's own learned couplings, define a local bond temperature $T_i = \langle h_i\rangle / (k_B S_i)$, where $h_i = J_x^{(i)}\langle X_iX_{i+1}\rangle + J_y^{(i)}\langle Y_iY_{i+1}\rangle + J_z^{(i)}\langle Z_iZ_{i+1}\rangle$ is HVK's own bond energy (evaluated in the same noise-free evaluation mode as the order-parameter trace) and $S_i$ is the \emph{static} von Neumann bipartite entanglement entropy of that bond from the classical MPS decomposition of the input patch --- already computed as part of HVK's own feature extraction (Section~\ref{sec:architecture}), not a new quantity. This construction only has a clean bond-for-bond correspondence when the classical MPS chain and the quantum circuit share the same bond structure, which holds for HVK1D at $n_{\text{sites}}=6$ (six-qubit chain, five bonds, full $J_x/J_y/J_z$ couplings) but not for HVK2D's grid model (a single $ZZ$-type coupling per edge, no clean chain correspondence); we therefore run this diagnostic on HVK1D only. The effective temperature $T_{\text{eff}}(t) = H(t)/(k_B S)$, with $H(t)=\sum_i h_i(t)$ and $S=\sum_i S_i$ fixed, is tracked across training on the same two CIFAR-10 images (\textit{cat}, \textit{ship/hydrofoil}) and two seeds used in Table~\ref{tab:phase_transition_corrected}, with the identical median-plus-two-standard-deviation rule applied to $|T_{\text{eff}}(t)-T_{\text{eff}}(t-\Delta t)|$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/critical_temperature_traces.pdf}
+\caption{Effective temperature $T_{\text{eff}}(t)=H(t)/(k_BS)$ across training, HVK1D, two CIFAR-10 images $\times$ two seeds. Every trace cools monotonically (learned couplings drive $H(t)$ more negative as training proceeds, at fixed entropy $S$); detection identifies which traces have a sufficiently sharp inflection to cross the same threshold rule used for the order parameter.}
+\label{fig:critical_temperature}
+\end{figure}
+
+All four traces cool monotonically, consistent with an energy-minimizing objective acting against a fixed entropy normalization, and two of four cross the detection threshold ($t_c=125$ for \textit{cat} seed 1, $t_c=175$ for \textit{ship/hydrofoil} seed 0; mean $t_c=150.0$ among detected runs). This is a $2/4$ detection rate on HVK1D, compared with $2/4$ for the same two images under HVK2D's order-parameter diagnostic (Table~\ref{tab:phase_transition_corrected}) --- the two independently-motivated diagnostics agree at the level of overall detection rate on this small sample, though we do not claim they identify the same underlying event, since they are measured on different topologies with different bond structures. We report this as a complementary, small-sample (2 images $\times$ 2 seeds) cross-check rather than an independent confirmation at scale: it shows the same qualitative pattern --- a training-dynamics reorganization that is real but not universal --- from a genuinely different physical quantity, using nothing beyond what HVK1D already computes.
+
 \section{Discussion}
 
 \subsection{Task-Dependent Representational Scope}
