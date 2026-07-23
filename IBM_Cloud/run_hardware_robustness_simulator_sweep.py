@@ -91,7 +91,9 @@ def state_prep_gates_1d(qc, inputs, positional_angles, weights):
     for layer in range(weights.shape[0]):
         for q in range(N_QUBITS):
             phi, theta, omega = (float(x) for x in weights[layer, q])
-            qc.rz(phi, q); qc.ry(theta, q); qc.rz(omega, q)
+            qc.rz(phi, q)
+            qc.ry(theta, q)
+            qc.rz(omega, q)
         ring_range = (layer % (N_QUBITS - 1)) + 1
         for q in range(N_QUBITS):
             qc.cx(q, (q + ring_range) % N_QUBITS)
@@ -107,7 +109,8 @@ def build_measurement_circuits_1d(inputs, positional_angles, weights):
                 qc.h(q)
         elif basis == "Y":
             for q in range(N_QUBITS):
-                qc.sdg(q); qc.h(q)
+                qc.sdg(q)
+                qc.h(q)
         qc.measure(range(N_QUBITS), range(N_QUBITS))
         circuits[basis] = qc
     return circuits
@@ -116,7 +119,8 @@ def build_measurement_circuits_1d(inputs, positional_angles, weights):
 def observables_from_counts_1d(counts_by_basis):
     def marginals_and_pairs(counts):
         shots = sum(counts.values())
-        singles = np.zeros(N_QUBITS); pairs = np.zeros(N_BONDS)
+        singles = np.zeros(N_QUBITS)
+        pairs = np.zeros(N_BONDS)
         for bitstring, count in counts.items():
             bits = bitstring.replace(" ", "")[::-1]
             z = np.array([1.0 if b == "0" else -1.0 for b in bits[:N_QUBITS]])
@@ -134,7 +138,11 @@ def load_hvk1d():
     model = QuantumModelWeights1D()
     model.load_state_dict(torch.load(HVK1D_CHECKPOINT_DIR / "model.pt", map_location="cpu"))
     model.eval()
-    decoder = PatchDecoder1D(observable_dim=2 * N_QUBITS + 3 * N_BONDS, positional_dim=HVK1D_POSITIONAL_DIM, patch_size=HVK1D_PATCH_SIZE)
+    decoder = PatchDecoder1D(
+        observable_dim=2 * N_QUBITS + 3 * N_BONDS,
+        positional_dim=HVK1D_POSITIONAL_DIM,
+        patch_size=HVK1D_PATCH_SIZE,
+    )
     decoder.load_state_dict(torch.load(HVK1D_CHECKPOINT_DIR / "decoder.pt", map_location="cpu"))
     decoder.eval()
 
@@ -193,7 +201,9 @@ def state_prep_gates_2d(qc, inputs, positional_angles, weights):
             qc.cx(source, target)
         for q in range(N_QUBITS):
             phi, theta, omega = (float(x) for x in weights[layer, q])
-            qc.rz(phi, q); qc.ry(theta, q); qc.rz(omega, q)
+            qc.rz(phi, q)
+            qc.ry(theta, q)
+            qc.rz(omega, q)
 
 
 def build_measurement_circuits_2d(inputs, positional_angles, weights):
@@ -263,7 +273,6 @@ def load_hvk2d(stem: str):
     weights_np = model.weights.detach().numpy()
 
     image = np.zeros((32, 32), dtype=np.float32)  # ground truth reconstructed from patches below
-    grid = int(np.sqrt(len(patches)))
     for idx, (r, c) in enumerate(positions):
         rr, cc = int(round(r * 32)), int(round(c * 32))
         image[rr : rr + HVK2D_PATCH_SIZE, cc : cc + HVK2D_PATCH_SIZE] = patches[idx]
@@ -321,8 +330,8 @@ def ideal_statevector_run(ckpt: dict) -> dict:
 
 
 def noisy_aer_run(ckpt: dict, noise_backend, shots: int, seed: int) -> dict:
-    from qiskit_aer import AerSimulator
     from qiskit import transpile
+    from qiskit_aer import AerSimulator
 
     sim = AerSimulator.from_backend(noise_backend)
     n_patches = len(ckpt["patches"])

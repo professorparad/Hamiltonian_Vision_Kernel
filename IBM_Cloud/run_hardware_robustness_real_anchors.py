@@ -12,13 +12,10 @@ from __future__ import annotations
 
 import json
 import sys
-import time
 from pathlib import Path
 
 import numpy as np
-import torch
-import torch.nn as nn
-from qiskit import QuantumCircuit, transpile
+from qiskit import transpile
 
 REPO_ROOT = Path(r"c:\Users\HP\Desktop\HVK\Hamiltonian_Vision_Kernel")
 MAIN_DIR = REPO_ROOT / "Main"
@@ -26,14 +23,13 @@ for p in (MAIN_DIR, REPO_ROOT):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from src.preprocessing.image_loader import load_image_grayscale
-from src.preprocessing.patching import extract_patches
-from src.preprocessing.positional_encoding import sinusoidal_positional_encoding
-from src.tensornetworks.mps_features import extract_mps_features
 
 sys.path.insert(0, str(REPO_ROOT / "IBM_Cloud"))
 from run_hardware_robustness_simulator_sweep import (
-    load_hvk1d, load_hvk2d, decode_reconstruction, psnr_from_mse,
+    decode_reconstruction,
+    load_hvk1d,
+    load_hvk2d,
+    psnr_from_mse,
 )
 
 OUT_DIR = REPO_ROOT / "IBM_Cloud" / "outputs" / "hardware_robustness_study"
@@ -112,7 +108,8 @@ def main():
 
     usage_after = service.usage()
     print("\nUsage after:", usage_after["usage_remaining_seconds"], "s remaining", flush=True)
-    print("Quota consumed this run:", usage_before["usage_remaining_seconds"] - usage_after["usage_remaining_seconds"], "s", flush=True)
+    quota_consumed = usage_before["usage_remaining_seconds"] - usage_after["usage_remaining_seconds"]
+    print("Quota consumed this run:", quota_consumed, "s", flush=True)
     print("\nDone. Saved to", OUT_DIR / "real_hardware_anchors.json")
 
 
