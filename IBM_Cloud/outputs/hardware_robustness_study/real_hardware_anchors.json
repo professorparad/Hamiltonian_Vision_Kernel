@@ -9,5 +9,38 @@
     "psnr": 25.942325097350786,
     "topology": "HVK1D",
     "image_name": "monalisa"
+  },
+  {
+    "mode": "real_hardware",
+    "backend": "ibm_kingston",
+    "shots": 1024,
+    "job_id": "d9gqnk0gk0ls73f21bkg",
+    "n_circuits": 48,
+    "mse": 0.0024528326466679573,
+    "psnr": 26.10332082086328,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "real_hardware",
+    "backend": "ibm_kingston",
+    "shots": 256,
+    "job_id": "d9gqqi0gk0ls73f21glg",
+    "n_circuits": 32,
+    "mse": 0.0012804412981495261,
+    "psnr": 28.92640326976195,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "real_hardware",
+    "backend": "ibm_kingston",
+    "shots": 1024,
+    "job_id": "d9gqr8chonhs73ac3fmg",
+    "n_circuits": 32,
+    "mse": 0.0007520648068748415,
+    "psnr": 31.2374473380273,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
   }
 ]

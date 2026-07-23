@@ -274,6 +274,31 @@ All four traces cool monotonically, consistent with an energy-minimizing objecti
 
 \section{Discussion}
 
+\subsection{Why the Physics-Informed Regularizer Was Inert}
+\label{sec:regularizer_inert}
+Table~\ref{tab:hamiltonian_controls} shows the Hamiltonian energy term is, if anything, a mild drag on reconstruction quality in the present system. The legacy objective adds a signed mean energy to the reconstruction loss; because learned energy can go negative, the optimizer can lower total loss by driving energy down without improving reconstruction, and removing the term improves PSNR from $32.24$ to $33.30$~dB. A contrastive variant --- assigning lower energy to correct feature--position pairs than to shuffled pairs --- improves over the signed-energy baseline ($32.84$~dB) but remains below its own no-energy-loss counterpart ($33.33$~dB), and ZZ-only observables ($32.88$~dB) show nearest-neighbor correlations are largely sufficient on their own. We read this as a case where the reconstruction loss already dominates the optimization signal at this model scale and dataset size: a physically motivated regularizer has room to help when it resolves an otherwise underdetermined objective, and here the pixel-fidelity loss alone is sufficiently informative that the extra term mostly adds noise to the gradient. This does not mean Hamiltonian regularization is never useful --- only that its value is conditional on the reconstruction loss being under-constrained, a condition this patch-level pixel task does not meet.
+
+\begin{table*}[t]
+\centering
+\caption{Hamiltonian and observable-sector controls (single-seed). The energy objective is diagnostically useful but does not improve reconstruction accuracy.}
+\label{tab:hamiltonian_controls}
+\scriptsize
+\begin{tabular}{p{0.30\textwidth}cccp{0.32\textwidth}}
+\toprule
+Experiment & MSE & PSNR (dB) & SSIM & Interpretation \\
+\midrule
+Legacy baseline, signed energy & $5.9771\times10^{-4}$ & 32.24 & 0.9919 & Standard energy-regularized run \\
+No energy loss & $4.6772\times10^{-4}$ & 33.30 & 0.9937 & Removing energy improves PSNR \\
+No observable noise & $5.3518\times10^{-4}$ & 32.72 & 0.9928 & Noise is not essential \\
+Contrastive Hamiltonian core & $5.1975\times10^{-4}$ & 32.84 & 0.9930 & Stronger objective helps modestly vs. baseline \\
+Contrastive, no energy loss & $4.6498\times10^{-4}$ & 33.33 & 0.9937 & Energy removal still performs best \\
+ZZ-only observables & $5.1503\times10^{-4}$ & 32.88 & 0.9930 & Nearest-neighbor $ZZ$ correlations largely suffice \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The order-parameter and effective-temperature diagnostics of Sections~\ref{sec:phase_transition}--\ref{sec:critical_temperature} are the cleaner windows into latent ordering during training: critical epochs there are detected from susceptibility/rate-of-change peaks in quantities the model itself measures, not from the signed-energy curve this section shows to be an unreliable optimization signal on its own.
+
 \subsection{Task-Dependent Representational Scope}
 \label{sec:dequant}
 Whether a quantum feature map or kernel offers any advantage over a classical model is a property of the specific data and target, not a fixed property of the model class, and dequantization results have repeatedly shown that apparent quantum advantages on structured, low-entanglement classical data can be matched by classical algorithms once the right classical feature is identified \cite{Huang2021PowerData}. The restricted diagnostic of Section~\ref{sec:entanglement_necessity} is constructed so that the relevant structure is a genuine distant-element product raw or local features cannot represent under a fixed linear readout, and that is precisely the regime in which HVK's entangling channel separates. Natural image patches, at the resolution and patch size used in ordinary reconstruction, are a different regime --- low-entanglement, locally structured data where a linear or shallow classical readout is already close to sufficient. The companion supplementary study's held-out comparisons (Section~\ref{sec:ablation_relationship}) characterize exactly this second regime; together, the results delineate where the tested entangling representation does and does not yield a measurable benefit.
