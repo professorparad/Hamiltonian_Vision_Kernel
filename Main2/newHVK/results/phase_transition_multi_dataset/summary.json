@@ -1,31 +1,51 @@
 [
   {
     "dataset": "bloodmnist",
-    "trace_mode": "legacy_training_mode_with_observable_noise",
-    "evidentiary_status": "excluded",
-    "n_images": 2,
-    "n_detected": 2,
-    "mean_critical_epoch": 70.0,
-    "mean_max_susceptibility": 0.005643150769174099,
-    "std_max_susceptibility": 0.0012487554922699928,
-    "mean_final_order_parameter": -0.11308566480875015,
-    "std_final_order_parameter": 0.1475074514746666,
+    "trace_mode": "post_update_eval_mode",
+    "evidentiary_status": "exploratory_pending_statistical_review",
+    "seeds": [
+      0,
+      1
+    ],
+    "n_images": 4,
+    "n_detected": 3,
+    "mean_critical_epoch": 96.0,
+    "mean_max_susceptibility": 0.0033061497379094362,
+    "std_max_susceptibility": 0.0012282232366563424,
+    "mean_final_order_parameter": 0.04635913949459791,
+    "std_final_order_parameter": 0.23256896290757742,
     "per_image": [
       {
-        "critical_epoch": 60,
-        "max_susceptibility": 0.004394395276904106,
-        "threshold": 0.002806155448162626,
+        "critical_epoch": 1,
+        "max_susceptibility": 0.0029208632186055183,
+        "threshold": 0.0014975937668196967,
         "detected": true,
-        "final_order_parameter": 0.03442178666591644,
-        "order_parameter_jump": 0.004394395276904106
+        "final_order_parameter": 0.02108074352145195,
+        "order_parameter_jump": 0.0029208632186055183
       },
       {
-        "critical_epoch": 80,
-        "max_susceptibility": 0.006891906261444092,
-        "threshold": 0.005910487489255619,
+        "critical_epoch": -1,
+        "max_susceptibility": 0.0026260018348693848,
+        "threshold": 0.0028019560351384364,
+        "detected": false,
+        "final_order_parameter": 0.308718740940094,
+        "order_parameter_jump": 0.0026260018348693848
+      },
+      {
+        "critical_epoch": 119,
+        "max_susceptibility": 0.0022807419300079346,
+        "threshold": 0.0020693956804230564,
         "detected": true,
-        "final_order_parameter": -0.26059311628341675,
-        "order_parameter_jump": 0.006891906261444092
+        "final_order_parameter": 0.17151710391044617,
+        "order_parameter_jump": 0.0022807419300079346
+      },
+      {
+        "critical_epoch": 168,
+        "max_susceptibility": 0.005396991968154907,
+        "threshold": 0.005163577034663877,
+        "detected": true,
+        "final_order_parameter": -0.31588003039360046,
+        "order_parameter_jump": 0.005396991968154907
       }
     ]
   },
@@ -81,31 +101,51 @@
   },
   {
     "dataset": "fashion-mnist",
-    "trace_mode": "legacy_training_mode_with_observable_noise",
-    "evidentiary_status": "excluded",
-    "n_images": 2,
+    "trace_mode": "post_update_eval_mode",
+    "evidentiary_status": "exploratory_pending_statistical_review",
+    "seeds": [
+      0,
+      1
+    ],
+    "n_images": 4,
     "n_detected": 2,
-    "mean_critical_epoch": 72.0,
-    "mean_max_susceptibility": 0.006352320313453674,
-    "std_max_susceptibility": 0.0014608055353164673,
-    "mean_final_order_parameter": -0.31080958247184753,
-    "std_final_order_parameter": 0.008445113897323608,
+    "mean_critical_epoch": 45.0,
+    "mean_max_susceptibility": 0.0027481504948809743,
+    "std_max_susceptibility": 0.0011421633658773253,
+    "mean_final_order_parameter": -0.14134620525874197,
+    "std_final_order_parameter": 0.12778419895695733,
     "per_image": [
       {
-        "critical_epoch": 78,
-        "max_susceptibility": 0.004891514778137207,
-        "threshold": 0.003954528819037177,
+        "critical_epoch": 88,
+        "max_susceptibility": 0.0011748038232326508,
+        "threshold": 0.0009835463226820131,
         "detected": true,
-        "final_order_parameter": -0.31925469636917114,
-        "order_parameter_jump": 0.004891514778137207
+        "final_order_parameter": -0.009487438015639782,
+        "order_parameter_jump": 0.0011748038232326508
       },
       {
-        "critical_epoch": 66,
-        "max_susceptibility": 0.007813125848770142,
-        "threshold": 0.006142828817379261,
+        "critical_epoch": -1,
+        "max_susceptibility": 0.004286333918571472,
+        "threshold": 0.004825658078157361,
+        "detected": false,
+        "final_order_parameter": -0.2925683856010437,
+        "order_parameter_jump": 0.004286333918571472
+      },
+      {
+        "critical_epoch": 2,
+        "max_susceptibility": 0.0023320834152400494,
+        "threshold": 0.0013999822324512801,
         "detected": true,
-        "final_order_parameter": -0.3023644685745239,
-        "order_parameter_jump": 0.007813125848770142
+        "final_order_parameter": -0.020145772024989128,
+        "order_parameter_jump": 0.0023320834152400494
+      },
+      {
+        "critical_epoch": -1,
+        "max_susceptibility": 0.003199380822479725,
+        "threshold": 0.0037098841870759924,
+        "detected": false,
+        "final_order_parameter": -0.2431832253932953,
+        "order_parameter_jump": 0.003199380822479725
       }
     ]
   },
@@ -161,61 +201,101 @@
   },
   {
     "dataset": "pathmnist",
-    "trace_mode": "legacy_training_mode_with_observable_noise",
-    "evidentiary_status": "excluded",
-    "n_images": 2,
+    "trace_mode": "post_update_eval_mode",
+    "evidentiary_status": "exploratory_pending_statistical_review",
+    "seeds": [
+      0,
+      1
+    ],
+    "n_images": 4,
     "n_detected": 2,
-    "mean_critical_epoch": 14.0,
-    "mean_max_susceptibility": 0.007257971912622452,
-    "std_max_susceptibility": 0.0009499005973339081,
-    "mean_final_order_parameter": 0.11130766570568085,
-    "std_final_order_parameter": 0.32196439802646637,
+    "mean_critical_epoch": 54.5,
+    "mean_max_susceptibility": 0.003841645084321499,
+    "std_max_susceptibility": 0.001495724969793649,
+    "mean_final_order_parameter": -0.13850009348243475,
+    "std_final_order_parameter": 0.1576815654618357,
     "per_image": [
       {
-        "critical_epoch": 27,
-        "max_susceptibility": 0.006308071315288544,
-        "threshold": 0.005504096402580186,
+        "critical_epoch": 108,
+        "max_susceptibility": 0.0012699253857135773,
+        "threshold": 0.001002521799654993,
         "detected": true,
-        "final_order_parameter": -0.21065673232078552,
-        "order_parameter_jump": 0.006308071315288544
+        "final_order_parameter": 0.05662832781672478,
+        "order_parameter_jump": 0.0012699253857135773
+      },
+      {
+        "critical_epoch": -1,
+        "max_susceptibility": 0.004412844777107239,
+        "threshold": 0.004465175024717164,
+        "detected": false,
+        "final_order_parameter": -0.2648541033267975,
+        "order_parameter_jump": 0.004412844777107239
       },
       {
         "critical_epoch": 1,
-        "max_susceptibility": 0.00820787250995636,
-        "threshold": 0.0064925153185636676,
+        "max_susceptibility": 0.004904039204120636,
+        "threshold": 0.0016231104582754587,
         "detected": true,
-        "final_order_parameter": 0.4332720637321472,
-        "order_parameter_jump": 0.00820787250995636
+        "final_order_parameter": -0.026175834238529205,
+        "order_parameter_jump": 0.004904039204120636
+      },
+      {
+        "critical_epoch": -1,
+        "max_susceptibility": 0.0047797709703445435,
+        "threshold": 0.004998037022303859,
+        "detected": false,
+        "final_order_parameter": -0.3195987641811371,
+        "order_parameter_jump": 0.0047797709703445435
       }
     ]
   },
   {
     "dataset": "pneumoniamnist",
-    "trace_mode": "legacy_training_mode_with_observable_noise",
-    "evidentiary_status": "excluded",
-    "n_images": 2,
-    "n_detected": 2,
-    "mean_critical_epoch": 88.0,
-    "mean_max_susceptibility": 0.005170414224267006,
-    "std_max_susceptibility": 0.0009244848042726517,
-    "mean_final_order_parameter": 0.05102473869919777,
-    "std_final_order_parameter": 0.029077086597681046,
+    "trace_mode": "post_update_eval_mode",
+    "evidentiary_status": "exploratory_pending_statistical_review",
+    "seeds": [
+      0,
+      1
+    ],
+    "n_images": 4,
+    "n_detected": 3,
+    "mean_critical_epoch": 103.0,
+    "mean_max_susceptibility": 0.003589856904000044,
+    "std_max_susceptibility": 0.0008356774448741389,
+    "mean_final_order_parameter": 0.039053539047017694,
+    "std_final_order_parameter": 0.23631085126695647,
     "per_image": [
       {
-        "critical_epoch": 81,
-        "max_susceptibility": 0.004245929419994354,
-        "threshold": 0.00326508817983874,
+        "critical_epoch": 160,
+        "max_susceptibility": 0.0022858362644910812,
+        "threshold": 0.0015227722210372384,
         "detected": true,
-        "final_order_parameter": 0.08010182529687881,
-        "order_parameter_jump": 0.004245929419994354
+        "final_order_parameter": -0.01151724811643362,
+        "order_parameter_jump": 0.0022858362644910812
       },
       {
-        "critical_epoch": 95,
-        "max_susceptibility": 0.006094899028539658,
-        "threshold": 0.0035139036668042412,
+        "critical_epoch": 147,
+        "max_susceptibility": 0.0036189407110214233,
+        "threshold": 0.0032558189423783617,
         "detected": true,
-        "final_order_parameter": 0.021947652101516724,
-        "order_parameter_jump": 0.006094899028539658
+        "final_order_parameter": 0.29871463775634766,
+        "order_parameter_jump": 0.0036189407110214233
+      },
+      {
+        "critical_epoch": 2,
+        "max_susceptibility": 0.0038535743951797485,
+        "threshold": 0.002626022512754886,
+        "detected": true,
+        "final_order_parameter": 0.19095584750175476,
+        "order_parameter_jump": 0.0038535743951797485
+      },
+      {
+        "critical_epoch": -1,
+        "max_susceptibility": 0.004601076245307922,
+        "threshold": 0.004659599007411901,
+        "detected": false,
+        "final_order_parameter": -0.321939080953598,
+        "order_parameter_jump": 0.004601076245307922
       }
     ]
   }
