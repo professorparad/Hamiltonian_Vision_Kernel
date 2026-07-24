@@ -1,0 +1,642 @@
+[
+  {
+    "dataset": "cifar",
+    "bond_dim": 1,
+    "epoch": 0,
+    "h_total": -0.019740653711778577,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -3948.13084209389,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 1,
+    "epoch": 5,
+    "h_total": -0.006679540489130886,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -1335.9081315740552,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 1,
+    "epoch": 10,
+    "h_total": -0.019615382949268678,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -3923.0766889589886,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 1,
+    "epoch": 25,
+    "h_total": -0.11758071997610386,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -23516.144589288553,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 1,
+    "epoch": 50,
+    "h_total": -0.5725661948963534,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -114513.2418721185,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 1,
+    "epoch": 100,
+    "h_total": -2.2193103476893157,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -443862.0807507624,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 1,
+    "epoch": 150,
+    "h_total": -4.598012235481292,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -919602.4703273708,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 1,
+    "epoch": 200,
+    "h_total": -7.587864375556819,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -1517572.9134484802,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 2,
+    "epoch": 0,
+    "h_total": 0.06877912063282565,
+    "s_total": 0.014247527346014977,
+    "t_eff": 4.827442612493958,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 2,
+    "epoch": 5,
+    "h_total": -0.01522974380714004,
+    "s_total": 0.014247527346014977,
+    "t_eff": -1.068939433297511,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 2,
+    "epoch": 10,
+    "h_total": -0.05102942018129397,
+    "s_total": 0.014247527346014977,
+    "t_eff": -3.5816334260672162,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 2,
+    "epoch": 25,
+    "h_total": -0.13150874873099383,
+    "s_total": 0.014247527346014977,
+    "t_eff": -9.230285756761628,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 2,
+    "epoch": 50,
+    "h_total": -0.46517195855267346,
+    "s_total": 0.014247527346014977,
+    "t_eff": -32.64931150897434,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 2,
+    "epoch": 100,
+    "h_total": -1.8652394831879064,
+    "s_total": 0.014247527346014977,
+    "t_eff": -130.91671543340556,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 2,
+    "epoch": 150,
+    "h_total": -4.83991177965072,
+    "s_total": 0.014247527346014977,
+    "t_eff": -339.7018768315921,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 2,
+    "epoch": 200,
+    "h_total": -6.96105977660045,
+    "s_total": 0.014247527346014977,
+    "t_eff": -488.58020114960186,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 4,
+    "epoch": 0,
+    "h_total": -0.015095050956006162,
+    "s_total": 0.02289433591067791,
+    "t_eff": -0.6593356109956365,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 4,
+    "epoch": 5,
+    "h_total": -0.05904739979450824,
+    "s_total": 0.02289433591067791,
+    "t_eff": -2.5791269956412473,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 4,
+    "epoch": 10,
+    "h_total": -0.1266877754824236,
+    "s_total": 0.02289433591067791,
+    "t_eff": -5.533585947925944,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 4,
+    "epoch": 25,
+    "h_total": -0.19531688360439148,
+    "s_total": 0.02289433591067791,
+    "t_eff": -8.53123167085601,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 4,
+    "epoch": 50,
+    "h_total": -0.4128959485096857,
+    "s_total": 0.02289433591067791,
+    "t_eff": -18.034851507403243,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 4,
+    "epoch": 100,
+    "h_total": -2.402432416798547,
+    "s_total": 0.02289433591067791,
+    "t_eff": -104.93566732713367,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 4,
+    "epoch": 150,
+    "h_total": -4.671749358647503,
+    "s_total": 0.02289433591067791,
+    "t_eff": -204.0569936981051,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 4,
+    "epoch": 200,
+    "h_total": -7.180386713705957,
+    "s_total": 0.02289433591067791,
+    "t_eff": -313.6315786454862,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 8,
+    "epoch": 0,
+    "h_total": -0.008970029011834413,
+    "s_total": 0.02348124422132969,
+    "t_eff": -0.38200824995833466,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 8,
+    "epoch": 5,
+    "h_total": -0.07350863458486856,
+    "s_total": 0.02348124422132969,
+    "t_eff": -3.130525533144254,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 8,
+    "epoch": 10,
+    "h_total": -0.08749647327931598,
+    "s_total": 0.02348124422132969,
+    "t_eff": -3.7262281527584764,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 8,
+    "epoch": 25,
+    "h_total": -0.19635627917159582,
+    "s_total": 0.02348124422132969,
+    "t_eff": -8.362260420307345,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 8,
+    "epoch": 50,
+    "h_total": -0.5147758885868825,
+    "s_total": 0.02348124422132969,
+    "t_eff": -21.92285399081514,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 8,
+    "epoch": 100,
+    "h_total": -2.5277134524658322,
+    "s_total": 0.02348124422132969,
+    "t_eff": -107.64819055753995,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 8,
+    "epoch": 150,
+    "h_total": -4.778670651954599,
+    "s_total": 0.02348124422132969,
+    "t_eff": -203.51011245025046,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "cifar",
+    "bond_dim": 8,
+    "epoch": 200,
+    "h_total": -6.827685670927167,
+    "s_total": 0.02348124422132969,
+    "t_eff": -290.77188613050976,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 1,
+    "epoch": 0,
+    "h_total": 0.03195556479113293,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": 6391.113119679683,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 1,
+    "epoch": 5,
+    "h_total": -0.002431098535453202,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -486.2197193735837,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 1,
+    "epoch": 10,
+    "h_total": -0.022594098118133843,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -4518.819737781757,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 1,
+    "epoch": 25,
+    "h_total": -0.12824738719064044,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -25649.478086088406,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 1,
+    "epoch": 50,
+    "h_total": -0.29935977165587246,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -59871.95584366732,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 1,
+    "epoch": 100,
+    "h_total": -1.6547053065150976,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -330941.0696632941,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 1,
+    "epoch": 150,
+    "h_total": -3.8122154166921973,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -762443.1025993723,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 1,
+    "epoch": 200,
+    "h_total": -6.472349639632739,
+    "s_total": 4.999999873689376e-06,
+    "t_eff": -1294469.9606276096,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 2,
+    "epoch": 0,
+    "h_total": 0.0185869225897477,
+    "s_total": 0.029276825487613678,
+    "t_eff": 0.6348681006283069,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 2,
+    "epoch": 5,
+    "h_total": -0.03327692763923551,
+    "s_total": 0.029276825487613678,
+    "t_eff": -1.1366303239848932,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 2,
+    "epoch": 10,
+    "h_total": -0.052586250898457365,
+    "s_total": 0.029276825487613678,
+    "t_eff": -1.7961732538490331,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 2,
+    "epoch": 25,
+    "h_total": -0.22451523003110196,
+    "s_total": 0.029276825487613678,
+    "t_eff": -7.66870131210397,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 2,
+    "epoch": 50,
+    "h_total": -0.5544980042031966,
+    "s_total": 0.029276825487613678,
+    "t_eff": -18.939826807308442,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 2,
+    "epoch": 100,
+    "h_total": -2.2414639755152166,
+    "s_total": 0.029276825487613678,
+    "t_eff": -76.56103208537846,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 2,
+    "epoch": 150,
+    "h_total": -4.448087222874165,
+    "s_total": 0.029276825487613678,
+    "t_eff": -151.93201956803833,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 2,
+    "epoch": 200,
+    "h_total": -6.417080088984221,
+    "s_total": 0.029276825487613678,
+    "t_eff": -219.18633533882058,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 4,
+    "epoch": 0,
+    "h_total": 0.041870711916999426,
+    "s_total": 0.04450226575136185,
+    "t_eff": 0.940866969581613,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 4,
+    "epoch": 5,
+    "h_total": -0.06152035316335969,
+    "s_total": 0.04450226575136185,
+    "t_eff": -1.3824094599380494,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 4,
+    "epoch": 10,
+    "h_total": -0.08155977935530245,
+    "s_total": 0.04450226575136185,
+    "t_eff": -1.8327107165955159,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 4,
+    "epoch": 25,
+    "h_total": -0.2731411216664128,
+    "s_total": 0.04450226575136185,
+    "t_eff": -6.137690228908271,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 4,
+    "epoch": 50,
+    "h_total": -0.705254374188371,
+    "s_total": 0.04450226575136185,
+    "t_eff": -15.847606010190368,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 4,
+    "epoch": 100,
+    "h_total": -2.155318384291604,
+    "s_total": 0.04450226575136185,
+    "t_eff": -48.431655060745925,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 4,
+    "epoch": 150,
+    "h_total": -4.5639570681378245,
+    "s_total": 0.04450226575136185,
+    "t_eff": -102.55561129487344,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 4,
+    "epoch": 200,
+    "h_total": -6.278014362324029,
+    "s_total": 0.04450226575136185,
+    "t_eff": -141.07179165662842,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 8,
+    "epoch": 0,
+    "h_total": -0.002305249152414035,
+    "s_total": 0.04520012438297272,
+    "t_eff": -0.05100094709656247,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 8,
+    "epoch": 5,
+    "h_total": -0.0699698817479657,
+    "s_total": 0.04520012438297272,
+    "t_eff": -1.5480019735150103,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 8,
+    "epoch": 10,
+    "h_total": -0.08874951598409098,
+    "s_total": 0.04520012438297272,
+    "t_eff": -1.9634794637318231,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 8,
+    "epoch": 25,
+    "h_total": -0.26337942414102145,
+    "s_total": 0.04520012438297272,
+    "t_eff": -5.826962375356621,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 8,
+    "epoch": 50,
+    "h_total": -0.7254701241618022,
+    "s_total": 0.04520012438297272,
+    "t_eff": -16.050179818423093,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 8,
+    "epoch": 100,
+    "h_total": -2.1960692553548142,
+    "s_total": 0.04520012438297272,
+    "t_eff": -48.58546929534762,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 8,
+    "epoch": 150,
+    "h_total": -4.544665101449937,
+    "s_total": 0.04520012438297272,
+    "t_eff": -100.54541140072507,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  },
+  {
+    "dataset": "monalisa",
+    "bond_dim": 8,
+    "epoch": 200,
+    "h_total": -6.569837087765336,
+    "s_total": 0.04520012438297272,
+    "t_eff": -145.34997806865,
+    "backend": "ionq_simulator",
+    "job_id": "019f957f-dfbe-70fc-b6aa-b2398317f049"
+  }
+]

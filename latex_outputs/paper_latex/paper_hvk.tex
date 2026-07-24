@@ -383,6 +383,19 @@ $\chi$ (MPS bond dim.) & $n$ & Detected & Mean $t_c$ & Std $t_c$ \\
 \label{fig:bond_dimension_phase_transition}
 \end{figure}
 
+\subsection{MPS Bond Dimension, Replayed on Real Hardware}
+\label{sec:checkpoint_hardware_bond_dimension}
+Using the same checkpoint-replay methodology as Sections~\ref{sec:checkpoint_hardware_finite_size} and~\ref{sec:checkpoint_hardware_energy_entanglement}, we replay the bond-dimension comparison itself on real hardware. We trained fresh HVK1D checkpoints at $N=6$ (fixed, matching Section~\ref{sec:bond_dimension_phase_transition}) across $\chi\in\{1,2,4,8\}$ on the same two images, saved learned parameters at the same eight epoch labels, and executed all $64$ resulting circuits ($2$ images $\times$ $4$ bond dimensions $\times$ $8$ epoch labels) on \texttt{ibm\_marrakesh} at $256$, $512$, and $1024$ shots, with the same single-patch, single-seed limitation as the other checkpoint-replay sections.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/checkpoint_hardware_bond_dimension_order_parameter.pdf}
+\caption{Order parameter $M_z(t)$ vs epoch from real trained HVK1D checkpoints ($N=6$, $\chi\in\{1,2,4,8\}$), circuits rebuilt gate-for-gate and executed on real IBM Quantum hardware (\texttt{ibm\_marrakesh}, 1024 shots), one representative patch per image.}
+\label{fig:checkpoint_hardware_bond_dimension}
+\end{figure}
+
+Figure~\ref{fig:checkpoint_hardware_bond_dimension} shows hardware traces that are noisier than the two-seed simulator traces of Figure~\ref{fig:bond_dimension_phase_transition}, as expected from a single-shot-budget, single-patch measurement; we do not attempt to reproduce the simulator's $\chi$-dependent seed-agreement pattern from a single seed per $\chi$ on hardware, since that pattern is itself a property of \emph{cross-seed} agreement that a single-seed hardware probe cannot speak to. As with the other checkpoint-replay sections, this establishes that trained checkpoints at every tested bond dimension remain executable and produce non-degenerate hardware-measured order parameters, not an independent hardware confirmation of the simulator-side variance pattern in Section~\ref{sec:bond_dimension_phase_transition}.
+
 \subsection{Energy-to-Entanglement Ratio as an Orthogonal Diagnostic}
 \label{sec:critical_temperature}
 The learned Heisenberg energy provides a second scalar view of training. We define the signed energy-to-entanglement ratio
@@ -424,6 +437,19 @@ As a cross-platform check of the three-basis measurement path, the same 48 circu
 \end{figure}
 
 Figure~\ref{fig:checkpoint_hardware_energy_entanglement} shows the three shot budgets track each other closely for both images, more closely than the order-parameter hardware traces of Figure~\ref{fig:checkpoint_hardware_order_parameter} track across shot budgets --- consistent with $R_{ES}$ summing correlators over multiple bonds and bases, which averages down some of the shot noise visible in the single-qubit order-parameter measurement. As in Section~\ref{sec:checkpoint_hardware_finite_size}, we do not apply the descriptive detection rule to these single-patch traces; the result establishes that hardware-measured bond correlators, combined with a checkpoint's own learned couplings, reproduce a monotonically decreasing $R_{ES}(t)$ consistent in shape with the noiseless-simulator traces of Figure~\ref{fig:critical_temperature}, across three independent shot budgets on real hardware.
+
+\subsection{Energy-to-Entanglement Ratio Across Bond Dimension, Replayed on Real Hardware}
+\label{sec:checkpoint_hardware_bond_dimension_energy_entanglement}
+We replay $R_{ES}$ itself across the bond-dimension axis of Section~\ref{sec:checkpoint_hardware_bond_dimension}, measuring all three Pauli bases for each of the $64$ bond-dimension checkpoints ($2$ images $\times$ $4$ bond dimensions $\times$ $8$ epoch labels $\times$ $3$ bases $=192$ circuits) on \texttt{ibm\_marrakesh} and the IonQ simulator, at all three shot budgets. This exposes a construction limit rather than a training-dynamics result: at $\chi=1$ the MPS decomposition is an unentangled product state by definition, so every bond entropy $S_i$ collapses to the numerical floor ($S\approx5\times10^{-6}$, against $S\approx0.01$--$0.05$ at $\chi\geq2$), and $R_{ES}=H/S$ diverges to $O(10^5$--$10^6)$ as a division-by-near-zero artifact rather than a physically meaningful signal. We exclude $\chi=1$ from Figure~\ref{fig:checkpoint_hardware_bond_dimension_energy_entanglement} on these grounds; the order-parameter diagnostic of Section~\ref{sec:checkpoint_hardware_bond_dimension} has no such denominator and is unaffected.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/checkpoint_hardware_bond_dimension_r_es.pdf}
+\caption{$R_{ES}(t)=H(t)/S$ from real trained HVK1D checkpoints ($N=6$, $\chi\in\{2,4,8\}$; $\chi=1$ excluded, see text), Pauli bond correlators measured on real IBM Quantum hardware (\texttt{ibm\_marrakesh}, 1024 shots), one representative patch per image.}
+\label{fig:checkpoint_hardware_bond_dimension_energy_entanglement}
+\end{figure}
+
+For the well-defined range $\chi\in\{2,4,8\}$, $\chi=4$ and $\chi=8$ track closely for both images while $\chi=2$ diverges further negative by epoch 200, on real hardware, for a single patch and seed --- suggestive of the same qualitative pattern as the simulator-side bond-dimension comparison (Section~\ref{sec:bond_dimension_phase_transition}), where richer compression produced more consistent dynamics, but not independent confirmation of it, since a single hardware seed cannot speak to the cross-seed agreement that the simulator result is about.
 
 \section{Discussion}
 
