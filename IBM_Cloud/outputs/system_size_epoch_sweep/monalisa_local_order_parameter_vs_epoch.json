@@ -1,0 +1,137 @@
+[
+  {
+    "n_qubits": 4,
+    "epoch": 0,
+    "shots": 1024,
+    "mean_order_parameter": 0.9501953125,
+    "mean_abs_order_parameter": 0.9501953125,
+    "mean_zz_correlation": 0.8984375,
+    "hardware_proxy_loss": 0.1005859375
+  },
+  {
+    "n_qubits": 4,
+    "epoch": 5,
+    "shots": 1024,
+    "mean_order_parameter": 0.94140625,
+    "mean_abs_order_parameter": 0.94140625,
+    "mean_zz_correlation": 0.87890625,
+    "hardware_proxy_loss": 0.119140625
+  },
+  {
+    "n_qubits": 4,
+    "epoch": 10,
+    "shots": 1024,
+    "mean_order_parameter": 0.919921875,
+    "mean_abs_order_parameter": 0.919921875,
+    "mean_zz_correlation": 0.8346354166666667,
+    "hardware_proxy_loss": 0.16276041666666663
+  },
+  {
+    "n_qubits": 4,
+    "epoch": 25,
+    "shots": 1024,
+    "mean_order_parameter": 0.88720703125,
+    "mean_abs_order_parameter": 0.88720703125,
+    "mean_zz_correlation": 0.755859375,
+    "hardware_proxy_loss": 0.23486328125
+  },
+  {
+    "n_qubits": 4,
+    "epoch": 50,
+    "shots": 1024,
+    "mean_order_parameter": 0.845703125,
+    "mean_abs_order_parameter": 0.845703125,
+    "mean_zz_correlation": 0.6803385416666666,
+    "hardware_proxy_loss": 0.3141276041666667
+  },
+  {
+    "n_qubits": 6,
+    "epoch": 0,
+    "shots": 1024,
+    "mean_order_parameter": 0.9466145833333335,
+    "mean_abs_order_parameter": 0.9466145833333335,
+    "mean_zz_correlation": 0.895703125,
+    "hardware_proxy_loss": 0.1055338541666665
+  },
+  {
+    "n_qubits": 6,
+    "epoch": 5,
+    "shots": 1024,
+    "mean_order_parameter": 0.939453125,
+    "mean_abs_order_parameter": 0.939453125,
+    "mean_zz_correlation": 0.8773437499999998,
+    "hardware_proxy_loss": 0.12187500000000012
+  },
+  {
+    "n_qubits": 6,
+    "epoch": 10,
+    "shots": 1024,
+    "mean_order_parameter": 0.9215494791666667,
+    "mean_abs_order_parameter": 0.9215494791666667,
+    "mean_zz_correlation": 0.83515625,
+    "hardware_proxy_loss": 0.16087239583333324
+  },
+  {
+    "n_qubits": 6,
+    "epoch": 25,
+    "shots": 1024,
+    "mean_order_parameter": 0.8723958333333334,
+    "mean_abs_order_parameter": 0.8723958333333334,
+    "mean_zz_correlation": 0.7296874999999998,
+    "hardware_proxy_loss": 0.2627604166666667
+  },
+  {
+    "n_qubits": 6,
+    "epoch": 50,
+    "shots": 1024,
+    "mean_order_parameter": 0.8359374999999999,
+    "mean_abs_order_parameter": 0.8359374999999999,
+    "mean_zz_correlation": 0.6550781249999998,
+    "hardware_proxy_loss": 0.3365234375000002
+  },
+  {
+    "n_qubits": 8,
+    "epoch": 0,
+    "shots": 1024,
+    "mean_order_parameter": 0.9521484375,
+    "mean_abs_order_parameter": 0.9521484375,
+    "mean_zz_correlation": 0.9003906250000001,
+    "hardware_proxy_loss": 0.09765624999999994
+  },
+  {
+    "n_qubits": 8,
+    "epoch": 5,
+    "shots": 1024,
+    "mean_order_parameter": 0.930908203125,
+    "mean_abs_order_parameter": 0.930908203125,
+    "mean_zz_correlation": 0.8582589285714284,
+    "hardware_proxy_loss": 0.1399623325892858
+  },
+  {
+    "n_qubits": 8,
+    "epoch": 10,
+    "shots": 1024,
+    "mean_order_parameter": 0.913330078125,
+    "mean_abs_order_parameter": 0.913330078125,
+    "mean_zz_correlation": 0.8242187500000001,
+    "hardware_proxy_loss": 0.17456054687499994
+  },
+  {
+    "n_qubits": 8,
+    "epoch": 25,
+    "shots": 1024,
+    "mean_order_parameter": 0.88037109375,
+    "mean_abs_order_parameter": 0.88037109375,
+    "mean_zz_correlation": 0.7530691964285714,
+    "hardware_proxy_loss": 0.2430943080357143
+  },
+  {
+    "n_qubits": 8,
+    "epoch": 50,
+    "shots": 1024,
+    "mean_order_parameter": 0.834228515625,
+    "mean_abs_order_parameter": 0.834228515625,
+    "mean_zz_correlation": 0.656808035714286,
+    "hardware_proxy_loss": 0.337367466517857
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "1": {
+    "n": 2,
+    "n_detected": 2,
+    "mean_critical_epoch": 88.5,
+    "std_critical_epoch": 86.5
+  },
+  "2": {
+    "n": 2,
+    "n_detected": 2,
+    "mean_critical_epoch": 52.0,
+    "std_critical_epoch": 50.0
+  },
+  "4": {
+    "n": 2,
+    "n_detected": 2,
+    "mean_critical_epoch": 101.0,
+    "std_critical_epoch": 4.0
+  },
+  "8": {
+    "n": 2,
+    "n_detected": 2,
+    "mean_critical_epoch": 95.0,
+    "std_critical_epoch": 2.0
+  }
+}

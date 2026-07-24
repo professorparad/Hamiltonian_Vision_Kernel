@@ -1,0 +1,47 @@
+"""Paper-ready summary figure: order parameter vs epoch from REAL trained
+checkpoints replayed on real IBM hardware, Mona Lisa + CIFAR side by side."""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+RESULTS_PATH = Path(__file__).resolve().parent / "outputs" / "checkpoint_hardware_sweep" / "ibm_ibm_fez_shots1024.json"
+OUTPUT_PATHS = [
+    Path(__file__).resolve().parents[1] / "latex_outputs" / "paper_latex" / "figures" / "checkpoint_hardware_order_parameter.pdf",
+    Path(__file__).resolve().parent / "outputs" / "checkpoint_hardware_sweep" / "checkpoint_hardware_order_parameter.png",
+]
+DATASETS = ["monalisa", "cifar"]
+N_QUBITS_LIST = [4, 6, 8]
+
+
+def main() -> None:
+    rows = json.loads(RESULTS_PATH.read_text())
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.2), sharey=True)
+    for ax, dataset_name in zip(axes, DATASETS):
+        for n_qubits in N_QUBITS_LIST:
+            n_rows = sorted(
+                (r for r in rows if r["dataset"] == dataset_name and r["n_qubits"] == n_qubits),
+                key=lambda r: r["epoch"],
+            )
+            ax.plot([r["epoch"] for r in n_rows], [r["mean_order_parameter"] for r in n_rows], marker="o", label=f"N={n_qubits}")
+        ax.set_title(dataset_name)
+        ax.set_xlabel("Epoch (real gradient-descent steps)")
+        ax.grid(True, alpha=0.3)
+    axes[0].set_ylabel(r"Order parameter $M_z$ (real hardware)")
+    axes[0].legend(fontsize=8)
+    fig.suptitle("Order parameter vs epoch, real trained checkpoints replayed on ibm_fez (1024 shots)")
+    fig.tight_layout()
+    for output_path in OUTPUT_PATHS:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(output_path, dpi=200)
+        print(f"Saved {output_path}")
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    main()

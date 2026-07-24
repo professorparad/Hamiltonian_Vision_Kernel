@@ -1,0 +1,146 @@
+[
+  {
+    "dataset": "cifar",
+    "epoch": 0,
+    "h_total": 0.01450472732358321,
+    "s_total": 0.02289433591067791,
+    "t_eff": 0.6335509088437115,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "cifar",
+    "epoch": 5,
+    "h_total": -0.04789565899591253,
+    "s_total": 0.02289433591067791,
+    "t_eff": -2.0920309365066148,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "cifar",
+    "epoch": 10,
+    "h_total": -0.030539223065716214,
+    "s_total": 0.02289433591067791,
+    "t_eff": -1.3339204589670028,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "cifar",
+    "epoch": 25,
+    "h_total": -0.07276799055398442,
+    "s_total": 0.02289433591067791,
+    "t_eff": -3.1784276616665457,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "cifar",
+    "epoch": 50,
+    "h_total": -0.29471318994183093,
+    "s_total": 0.02289433591067791,
+    "t_eff": -12.87275556240864,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "cifar",
+    "epoch": 100,
+    "h_total": -1.8444358692504466,
+    "s_total": 0.02289433591067791,
+    "t_eff": -80.56297751751788,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "cifar",
+    "epoch": 150,
+    "h_total": -2.997096124687232,
+    "s_total": 0.02289433591067791,
+    "t_eff": -130.90993931339094,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "cifar",
+    "epoch": 200,
+    "h_total": -4.634800027997699,
+    "s_total": 0.02289433591067791,
+    "t_eff": -202.44308662545785,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "monalisa",
+    "epoch": 0,
+    "h_total": -0.00636373341876606,
+    "s_total": 0.04450226575136185,
+    "t_eff": -0.1429979645153532,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "monalisa",
+    "epoch": 5,
+    "h_total": -0.02085940697179467,
+    "s_total": 0.04450226575136185,
+    "t_eff": -0.4687268528829082,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "monalisa",
+    "epoch": 10,
+    "h_total": 0.0047272937517846,
+    "s_total": 0.04450226575136185,
+    "t_eff": 0.10622591169169711,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "monalisa",
+    "epoch": 25,
+    "h_total": -0.2071688181022182,
+    "s_total": 0.04450226575136185,
+    "t_eff": -4.655242033286327,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "monalisa",
+    "epoch": 50,
+    "h_total": -0.3967421983543318,
+    "s_total": 0.04450226575136185,
+    "t_eff": -8.915101100042097,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "monalisa",
+    "epoch": 100,
+    "h_total": -1.2869716648710892,
+    "s_total": 0.04450226575136185,
+    "t_eff": -28.919239125070966,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "monalisa",
+    "epoch": 150,
+    "h_total": -3.5148803452029824,
+    "s_total": 0.04450226575136185,
+    "t_eff": -78.98205374173384,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  },
+  {
+    "dataset": "monalisa",
+    "epoch": 200,
+    "h_total": -4.501203024527058,
+    "s_total": 0.04450226575136185,
+    "t_eff": -101.14547986557996,
+    "backend": "ibm_marrakesh",
+    "job_id": "d9hj4e3sbqfc73eq54i0"
+  }
+]

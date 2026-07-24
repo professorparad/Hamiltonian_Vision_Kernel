@@ -150,12 +150,18 @@ def main():
     print(f"Using device: {device}", flush=True)
 
     image_paths = sorted(CIFAR_DIR.glob("*.png"))[:2]  # cat, ship (hydrofoil) -- same 2 images as the CIFAR-10 phase-transition rerun
-    seeds = [0, 1]
+    seeds = [0, 1, 2, 3]  # strengthened from the original [0, 1] for a larger sample on the t_c estimate
 
-    results = []
+    results_path = OUT_DIR / "critical_temperature_cifar10.json"
+    results = json.loads(results_path.read_text()) if results_path.exists() else []
+    already_done = {(r["image_index"], r["seed"]) for r in results}
+
     for idx, path in enumerate(image_paths):
         image = load_grayscale_image(path)
         for seed in seeds:
+            if (idx, seed) in already_done:
+                print(f"skip (already done): image {idx} ({path.name}), seed {seed}", flush=True)
+                continue
             print(f"\n=== image {idx} ({path.name}), seed {seed} ===", flush=True)
             r = train_with_temperature_tracking(image, device, EPOCHS, seed)
             print(f"  critical_epoch={r['critical_epoch']} peak_rate={r['peak_rate_of_change']:.4f} "
@@ -164,11 +170,11 @@ def main():
             r["image_name"] = path.name
             r["seed"] = seed
             results.append(r)
-            (OUT_DIR / "critical_temperature_cifar10.json").write_text(json.dumps(results, indent=2))
+            results_path.write_text(json.dumps(results, indent=2))
 
     detected = [r for r in results if r["detected"]]
     print(f"\n=== Summary: {len(detected)}/{len(results)} detected ===")
-    print("Done. Saved to", OUT_DIR / "critical_temperature_cifar10.json")
+    print("Done. Saved to", results_path)
 
 
 if __name__ == "__main__":
