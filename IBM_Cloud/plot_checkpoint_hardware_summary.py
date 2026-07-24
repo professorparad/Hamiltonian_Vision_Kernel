@@ -10,10 +10,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-RESULTS_PATH = Path(__file__).resolve().parent / "outputs" / "checkpoint_hardware_sweep" / "ibm_ibm_fez_shots1024.json"
+SWEEP_DIR = Path(__file__).resolve().parent / "outputs" / "checkpoint_hardware_sweep"
+RESULTS_PATH = SWEEP_DIR / "ibm_ibm_fez_shots1024.json"
+FIGURES_DIR = Path(__file__).resolve().parents[1] / "latex_outputs" / "paper_latex" / "figures"
 OUTPUT_PATHS = [
-    Path(__file__).resolve().parents[1] / "latex_outputs" / "paper_latex" / "figures" / "checkpoint_hardware_order_parameter.pdf",
-    Path(__file__).resolve().parent / "outputs" / "checkpoint_hardware_sweep" / "checkpoint_hardware_order_parameter.png",
+    FIGURES_DIR / "checkpoint_hardware_order_parameter.pdf",
+    SWEEP_DIR / "checkpoint_hardware_order_parameter.png",
 ]
 DATASETS = ["monalisa", "cifar"]
 N_QUBITS_LIST = [4, 6, 8]
@@ -28,13 +30,21 @@ def main() -> None:
                 (r for r in rows if r["dataset"] == dataset_name and r["n_qubits"] == n_qubits),
                 key=lambda r: r["epoch"],
             )
-            ax.plot([r["epoch"] for r in n_rows], [r["mean_order_parameter"] for r in n_rows], marker="o", label=f"N={n_qubits}")
+            ax.plot(
+                [r["epoch"] for r in n_rows],
+                [r["mean_order_parameter"] for r in n_rows],
+                marker="o",
+                label=f"N={n_qubits}",
+            )
         ax.set_title(dataset_name)
         ax.set_xlabel("Epoch (real gradient-descent steps)")
         ax.grid(True, alpha=0.3)
     axes[0].set_ylabel(r"Order parameter $M_z$ (real hardware)")
     axes[0].legend(fontsize=8)
-    fig.suptitle("Order parameter vs epoch, real trained checkpoints replayed on ibm_fez (1024 shots)")
+    fig.suptitle(
+        "Order parameter vs epoch, real trained checkpoints\n"
+        "replayed on ibm_fez (1024 shots)"
+    )
     fig.tight_layout()
     for output_path in OUTPUT_PATHS:
         output_path.parent.mkdir(parents=True, exist_ok=True)

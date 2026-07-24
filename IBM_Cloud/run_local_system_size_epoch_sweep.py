@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from qiskit import transpile
 from qiskit_aer import AerSimulator
-
 from run_ibm_epoch_probe import build_epoch_circuit
 from run_ibm_hvk_probe import chain_edges, grid_edges, order_from_counts
 

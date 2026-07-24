@@ -35,15 +35,14 @@ for p in (MAIN_DIR, BENCH_DIR, ROOT):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
+from run_checkpoint_hardware_sweep import DATASETS, load_image, state_prep_gates
+from run_cross_quantum_validation import extract_qiskit_counts, run_on_ionq
+from run_ibm_hvk_probe import chain_edges, counts_from_sampler_result, order_from_counts, run_on_ibm
+from src.decoder.patch_decoder import PatchDecoder
 from src.preprocessing.patching import extract_patches
 from src.preprocessing.positional_encoding import sinusoidal_positional_encoding
-from src.tensornetworks.mps_features import extract_mps_features
 from src.quantum.quantum_model import QuantumModel
-from src.decoder.patch_decoder import PatchDecoder
-
-from run_ibm_hvk_probe import chain_edges, counts_from_sampler_result, order_from_counts, run_on_ibm
-from run_cross_quantum_validation import extract_qiskit_counts, run_on_ionq
-from run_checkpoint_hardware_sweep import DATASETS, load_image, state_prep_gates
+from src.tensornetworks.mps_features import extract_mps_features
 
 PATCH_SIZE = 8
 PATCH_STRIDE = 8
@@ -143,7 +142,9 @@ def save_plot(rows: list[dict], dataset_name: str, shots: int, provider: str, ba
             marker="o",
             label=f"chi = {bond_dim}",
         )
-    ax.set_title(f"Order parameter vs epoch (REAL trained checkpoints)\n{dataset_name}, {provider} {backend}, shots={shots}, N=6")
+    ax.set_title(
+        f"Order parameter vs epoch (REAL trained checkpoints)\n{dataset_name}, {provider} {backend}, shots={shots}, N=6"
+    )
     ax.set_xlabel("Epoch (real gradient-descent steps)")
     ax.set_ylabel("Order parameter")
     ax.grid(True, alpha=0.3)
@@ -181,7 +182,11 @@ def main() -> None:
             all_checkpoints[dataset_name][bond_dim] = train_and_checkpoint(image, bond_dim, args.seed, args.epochs)
 
     circuits, labels = build_all_circuits(all_checkpoints)
-    print(f"Built {len(circuits)} circuits ({len(DATASETS)} datasets x {len(BOND_DIMS)} bond dims x {len(EPOCH_LABELS)} epoch checkpoints).", flush=True)
+    print(
+        f"Built {len(circuits)} circuits ({len(DATASETS)} datasets x {len(BOND_DIMS)} bond dims "
+        f"x {len(EPOCH_LABELS)} epoch checkpoints).",
+        flush=True,
+    )
 
     if args.dry_run:
         for provider in args.providers:
@@ -195,21 +200,31 @@ def main() -> None:
         backend_name = args.ibm_backend if provider == "ibm" else args.ionq_backend
         for shots in shots_list:
             if provider == "ibm":
-                backend, job_id, result = run_on_ibm(circuits, backend_name, shots, os.environ.get("IBM_QUANTUM_TOKEN"), N_QUBITS)
+                backend, job_id, result = run_on_ibm(
+                    circuits, backend_name, shots, os.environ.get("IBM_QUANTUM_TOKEN"), N_QUBITS
+                )
             else:
                 backend, job_id, result = run_on_ionq(circuits, backend_name, shots)
 
             rows = []
             for index, label in enumerate(labels):
-                counts = counts_from_sampler_result(result, index) if provider == "ibm" else extract_qiskit_counts(result, index)
-                rows.append({**label, "backend": backend, "job_id": job_id, **order_from_counts(counts, edges, N_QUBITS)})
+                counts = (
+                    counts_from_sampler_result(result, index)
+                    if provider == "ibm"
+                    else extract_qiskit_counts(result, index)
+                )
+                rows.append(
+                    {**label, "backend": backend, "job_id": job_id, **order_from_counts(counts, edges, N_QUBITS)}
+                )
 
             json_path = args.output_dir / f"{provider}_{backend}_shots{shots}.json"
             json_path.write_text(json.dumps(rows, indent=2), encoding="utf-8")
             print(f"provider={provider} shots={shots}: backend={backend} job_id={job_id} results={json_path}")
 
             for dataset_name in DATASETS:
-                plot_path = args.output_dir / f"{dataset_name}_{provider}_{backend}_shots{shots}_order_parameter_vs_epoch.png"
+                plot_path = (
+                    args.output_dir / f"{dataset_name}_{provider}_{backend}_shots{shots}_order_parameter_vs_epoch.png"
+                )
                 save_plot(rows, dataset_name, shots, provider, backend, plot_path)
                 print(f"  plot: {plot_path}")
 

@@ -12,10 +12,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-
+from run_cross_quantum_validation import extract_qiskit_counts, run_on_ionq
 from run_ibm_epoch_probe import build_epoch_circuit
 from run_ibm_hvk_probe import chain_edges, grid_edges, order_from_counts
-from run_cross_quantum_validation import extract_qiskit_counts, run_on_ionq
 
 DATASETS = {
     "monalisa": Path(__file__).resolve().parent / "datasets" / "monalisa_patches.npz",
@@ -85,7 +84,10 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     circuits, labels = build_circuits(args.variant, args.patch_index)
-    print(f"Built {len(circuits)} circuits per shots job ({len(DATASETS)} datasets x {len(N_QUBITS_LIST)} qubit counts x {len(EPOCHS)} epochs).")
+    print(
+        f"Built {len(circuits)} circuits per shots job ({len(DATASETS)} datasets x {len(N_QUBITS_LIST)} qubit "
+        f"counts x {len(EPOCHS)} epochs)."
+    )
 
     if args.dry_run:
         for shots in shots_list:
@@ -106,7 +108,9 @@ def main() -> None:
         print(f"shots={shots}: backend={backend} job_id={job_id} results={json_path}")
 
         for dataset_name in DATASETS:
-            plot_path = args.output_dir / f"{dataset_name}_ionq_{args.backend}_shots{shots}_order_parameter_vs_epoch.png"
+            plot_path = (
+                args.output_dir / f"{dataset_name}_ionq_{args.backend}_shots{shots}_order_parameter_vs_epoch.png"
+            )
             save_plot(rows, dataset_name, shots, backend, plot_path)
             print(f"  plot: {plot_path}")
 

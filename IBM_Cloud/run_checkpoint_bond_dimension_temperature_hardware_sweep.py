@@ -33,16 +33,15 @@ for p in (MAIN_DIR, BENCH_DIR, ROOT):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from src.preprocessing.patching import extract_patches
-from src.preprocessing.positional_encoding import sinusoidal_positional_encoding
-from src.tensornetworks.mps_features import extract_mps_features
-from src.quantum.quantum_model import QuantumModel
-from src.decoder.patch_decoder import PatchDecoder
-
-from run_ibm_hvk_probe import chain_edges, counts_from_sampler_result, run_on_ibm
-from run_cross_quantum_validation import extract_qiskit_counts, run_on_ionq
 from run_checkpoint_hardware_sweep import DATASETS, load_image, state_prep_gates
 from run_checkpoint_temperature_hardware_sweep import per_bond_correlators
+from run_cross_quantum_validation import extract_qiskit_counts, run_on_ionq
+from run_ibm_hvk_probe import chain_edges, counts_from_sampler_result, run_on_ibm
+from src.decoder.patch_decoder import PatchDecoder
+from src.preprocessing.patching import extract_patches
+from src.preprocessing.positional_encoding import sinusoidal_positional_encoding
+from src.quantum.quantum_model import QuantumModel
+from src.tensornetworks.mps_features import extract_mps_features
 
 PATCH_SIZE = 8
 PATCH_STRIDE = 8
@@ -145,7 +144,9 @@ def build_all_circuits(all_checkpoints: dict) -> tuple[list[QuantumCircuit], lis
 def save_plot(rows: list[dict], dataset_name: str, shots: int, provider: str, backend: str, output_path: Path) -> None:
     fig, ax = plt.subplots(figsize=(7, 4.8))
     for bond_dim in BOND_DIMS:
-        d_rows = sorted((r for r in rows if r["dataset"] == dataset_name and r["bond_dim"] == bond_dim), key=lambda r: r["epoch"])
+        d_rows = sorted(
+            (r for r in rows if r["dataset"] == dataset_name and r["bond_dim"] == bond_dim), key=lambda r: r["epoch"]
+        )
         if not d_rows:
             continue
         ax.plot([r["epoch"] for r in d_rows], [r["r_es"] for r in d_rows], marker="o", label=f"chi={bond_dim}")
@@ -191,7 +192,11 @@ def main() -> None:
             s_totals[dataset_name][bond_dim] = s_total
 
     circuits, labels = build_all_circuits(all_checkpoints)
-    print(f"Built {len(circuits)} circuits ({len(DATASETS)} datasets x {len(BOND_DIMS)} bond dims x {len(EPOCH_LABELS)} epochs x 3 bases).", flush=True)
+    print(
+        f"Built {len(circuits)} circuits ({len(DATASETS)} datasets x {len(BOND_DIMS)} bond dims "
+        f"x {len(EPOCH_LABELS)} epochs x 3 bases).",
+        flush=True,
+    )
 
     if args.dry_run:
         for provider in args.providers:
@@ -205,13 +210,19 @@ def main() -> None:
         backend_name = args.ibm_backend if provider == "ibm" else args.ionq_backend
         for shots in shots_list:
             if provider == "ibm":
-                backend, job_id, result = run_on_ibm(circuits, backend_name, shots, os.environ.get("IBM_QUANTUM_TOKEN"), N_QUBITS)
+                backend, job_id, result = run_on_ibm(
+                    circuits, backend_name, shots, os.environ.get("IBM_QUANTUM_TOKEN"), N_QUBITS
+                )
             else:
                 backend, job_id, result = run_on_ionq(circuits, backend_name, shots)
 
             per_checkpoint: dict[tuple[str, int, int], dict[str, np.ndarray]] = {}
             for index, label in enumerate(labels):
-                counts = counts_from_sampler_result(result, index) if provider == "ibm" else extract_qiskit_counts(result, index)
+                counts = (
+                    counts_from_sampler_result(result, index)
+                    if provider == "ibm"
+                    else extract_qiskit_counts(result, index)
+                )
                 key = (label["dataset"], label["bond_dim"], label["epoch"])
                 per_checkpoint.setdefault(key, {})[label["basis"]] = per_bond_correlators(counts, edges, N_QUBITS)
 

@@ -11,8 +11,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 RESULTS_DIR = Path(__file__).resolve().parent / "outputs" / "checkpoint_temperature_hardware_sweep"
+FIGURES_DIR = Path(__file__).resolve().parents[1] / "latex_outputs" / "paper_latex" / "figures"
 OUTPUT_PATHS = [
-    Path(__file__).resolve().parents[1] / "latex_outputs" / "paper_latex" / "figures" / "checkpoint_hardware_energy_entanglement_ratio.pdf",
+    FIGURES_DIR / "checkpoint_hardware_energy_entanglement_ratio.pdf",
     RESULTS_DIR / "checkpoint_hardware_energy_entanglement_ratio.png",
 ]
 DATASETS = ["monalisa", "cifar"]

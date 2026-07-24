@@ -12,7 +12,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-
 from run_ibm_epoch_probe import build_epoch_circuit
 from run_ibm_hvk_probe import chain_edges, counts_from_sampler_result, grid_edges, order_from_counts, run_on_ibm
 
@@ -85,7 +84,10 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     circuits, labels = build_circuits(args.variant, args.patch_index)
-    print(f"Built {len(circuits)} circuits per shots job ({len(DATASETS)} datasets x {len(N_QUBITS_LIST)} qubit counts x {len(EPOCHS)} epochs).")
+    print(
+        f"Built {len(circuits)} circuits per shots job ({len(DATASETS)} datasets x {len(N_QUBITS_LIST)} qubit "
+        f"counts x {len(EPOCHS)} epochs)."
+    )
     max_n_qubits = max(N_QUBITS_LIST)
 
     if args.dry_run:

@@ -35,15 +35,13 @@ for p in (MAIN_DIR, BENCH_DIR, ROOT):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
+from run_cross_quantum_validation import extract_qiskit_counts, run_on_ionq
+from run_ibm_hvk_probe import chain_edges, counts_from_sampler_result, order_from_counts, run_on_ibm
+from src.decoder.patch_decoder import PatchDecoder
 from src.preprocessing.patching import extract_patches
 from src.preprocessing.positional_encoding import sinusoidal_positional_encoding
-from src.tensornetworks.mps_features import extract_mps_features
 from src.quantum.quantum_model import QuantumModel
-from src.decoder.patch_decoder import PatchDecoder
-from src.training.training import resolve_device
-
-from run_ibm_hvk_probe import chain_edges, counts_from_sampler_result, order_from_counts, run_on_ibm
-from run_cross_quantum_validation import extract_qiskit_counts, run_on_ionq
+from src.tensornetworks.mps_features import extract_mps_features
 
 PATCH_SIZE = 8
 PATCH_STRIDE = 8
@@ -123,7 +121,9 @@ def train_and_checkpoint(image: np.ndarray, qubit_count: int, seed: int, epochs:
     return checkpoints
 
 
-def state_prep_gates(qc: QuantumCircuit, inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray, n_qubits: int) -> None:
+def state_prep_gates(
+    qc: QuantumCircuit, inputs: np.ndarray, positional_angles: np.ndarray, weights: np.ndarray, n_qubits: int
+) -> None:
     for q in range(n_qubits):
         qc.rx(float(inputs[q]), q)
     for q in range(n_qubits):
@@ -176,7 +176,9 @@ def save_plot(rows: list[dict], dataset_name: str, shots: int, provider: str, ba
             marker="o",
             label=f"N = {n_qubits}",
         )
-    ax.set_title(f"Order parameter vs epoch (REAL trained checkpoints)\n{dataset_name}, {provider} {backend}, shots={shots}")
+    ax.set_title(
+        f"Order parameter vs epoch (REAL trained checkpoints)\n{dataset_name}, {provider} {backend}, shots={shots}"
+    )
     ax.set_xlabel("Epoch (real gradient-descent steps)")
     ax.set_ylabel("Order parameter")
     ax.grid(True, alpha=0.3)
@@ -215,7 +217,11 @@ def main() -> None:
             all_checkpoints[dataset_name][n_qubits] = train_and_checkpoint(image, n_qubits, args.seed, args.epochs)
 
     circuits, labels = build_all_circuits(all_checkpoints)
-    print(f"Built {len(circuits)} real-checkpoint circuits ({len(DATASETS)} datasets x {len(N_QUBITS_LIST)} qubit counts x {len(EPOCH_LABELS)} epoch checkpoints).", flush=True)
+    print(
+        f"Built {len(circuits)} real-checkpoint circuits ({len(DATASETS)} datasets "
+        f"x {len(N_QUBITS_LIST)} qubit counts x {len(EPOCH_LABELS)} epoch checkpoints).",
+        flush=True,
+    )
 
     if args.dry_run:
         for provider in args.providers:
@@ -227,7 +233,9 @@ def main() -> None:
         backend_name = args.ibm_backend if provider == "ibm" else args.ionq_backend
         for shots in shots_list:
             if provider == "ibm":
-                backend, job_id, result = run_on_ibm(circuits, backend_name, shots, os.environ.get("IBM_QUANTUM_TOKEN"), max(N_QUBITS_LIST))
+                backend, job_id, result = run_on_ibm(
+                    circuits, backend_name, shots, os.environ.get("IBM_QUANTUM_TOKEN"), max(N_QUBITS_LIST)
+                )
             else:
                 backend, job_id, result = run_on_ionq(circuits, backend_name, shots)
 
@@ -239,14 +247,18 @@ def main() -> None:
                     counts = extract_qiskit_counts(result, index)
                 n_qubits = label["n_qubits"]
                 edges = chain_edges(n_qubits)
-                rows.append({**label, "backend": backend, "job_id": job_id, **order_from_counts(counts, edges, n_qubits)})
+                rows.append(
+                    {**label, "backend": backend, "job_id": job_id, **order_from_counts(counts, edges, n_qubits)}
+                )
 
             json_path = args.output_dir / f"{provider}_{backend}_shots{shots}.json"
             json_path.write_text(json.dumps(rows, indent=2), encoding="utf-8")
             print(f"provider={provider} shots={shots}: backend={backend} job_id={job_id} results={json_path}")
 
             for dataset_name in DATASETS:
-                plot_path = args.output_dir / f"{dataset_name}_{provider}_{backend}_shots{shots}_order_parameter_vs_epoch.png"
+                plot_path = (
+                    args.output_dir / f"{dataset_name}_{provider}_{backend}_shots{shots}_order_parameter_vs_epoch.png"
+                )
                 save_plot(rows, dataset_name, shots, provider, backend, plot_path)
                 print(f"  plot: {plot_path}")
 

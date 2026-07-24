@@ -6,9 +6,8 @@ import time
 from pathlib import Path
 
 import numpy as np
-
-from run_ibm_hvk_probe import build_hvk_circuit, chain_edges, order_from_counts, run_on_ibm
 import run_ibm_system_size_shots_sweep as sweep
+from run_ibm_hvk_probe import build_hvk_circuit, run_on_ibm
 
 MAX_ATTEMPTS = 6
 RETRY_SECONDS = 75
