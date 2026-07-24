@@ -26,7 +26,7 @@ def main() -> None:
     run_index = {0: 0, 1: 0}
     for row in sorted(rows, key=lambda r: (r["image_index"], r["seed"])):
         img = row["image_index"]
-        trace = row["t_eff_trace"]
+        trace = row["r_es_trace"]
         epochs = list(range(len(trace)))
         color = SHADES[img][run_index[img] % len(SHADES[img])]
         run_index[img] += 1

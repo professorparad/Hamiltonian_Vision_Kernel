@@ -148,7 +148,7 @@ def save_plot(rows: list[dict], dataset_name: str, shots: int, provider: str, ba
         d_rows = sorted((r for r in rows if r["dataset"] == dataset_name and r["bond_dim"] == bond_dim), key=lambda r: r["epoch"])
         if not d_rows:
             continue
-        ax.plot([r["epoch"] for r in d_rows], [r["t_eff"] for r in d_rows], marker="o", label=f"chi={bond_dim}")
+        ax.plot([r["epoch"] for r in d_rows], [r["r_es"] for r in d_rows], marker="o", label=f"chi={bond_dim}")
     ax.set_title(f"R_ES vs epoch (REAL hardware)\n{dataset_name}, {provider} {backend}, shots={shots}, N=6")
     ax.set_xlabel("Epoch (real gradient-descent steps)")
     ax.set_ylabel(r"$R_{ES}(t) = H(t)/S$")
@@ -222,10 +222,10 @@ def main() -> None:
                 h_i = checkpoint["Jz"] * zz + checkpoint["Jx"] * xx + checkpoint["Jy"] * yy
                 h_total = float(h_i.sum())
                 s_total = s_totals[dataset_name][bond_dim]
-                t_eff = h_total / s_total
+                r_es = h_total / s_total
                 rows.append({
                     "dataset": dataset_name, "bond_dim": bond_dim, "epoch": epoch_label,
-                    "h_total": h_total, "s_total": s_total, "t_eff": t_eff,
+                    "h_total": h_total, "s_total": s_total, "r_es": r_es,
                     "backend": backend, "job_id": job_id,
                 })
 

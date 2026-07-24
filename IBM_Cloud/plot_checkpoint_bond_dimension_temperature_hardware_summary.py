@@ -31,7 +31,7 @@ def main() -> None:
                 (r for r in rows if r["dataset"] == dataset_name and r["bond_dim"] == bond_dim),
                 key=lambda r: r["epoch"],
             )
-            ax.plot([r["epoch"] for r in d_rows], [r["t_eff"] for r in d_rows], marker="o", label=f"chi={bond_dim}")
+            ax.plot([r["epoch"] for r in d_rows], [r["r_es"] for r in d_rows], marker="o", label=f"chi={bond_dim}")
         ax.set_title(dataset_name)
         ax.set_xlabel("Epoch (real gradient-descent steps)")
         ax.grid(True, alpha=0.3)

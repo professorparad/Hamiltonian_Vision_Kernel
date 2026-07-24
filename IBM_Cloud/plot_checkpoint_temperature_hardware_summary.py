@@ -25,7 +25,7 @@ def main() -> None:
         for shots in SHOTS_LIST:
             rows = json.loads((RESULTS_DIR / f"ibm_ibm_marrakesh_shots{shots}.json").read_text())
             d_rows = sorted((r for r in rows if r["dataset"] == dataset_name), key=lambda r: r["epoch"])
-            ax.plot([r["epoch"] for r in d_rows], [r["t_eff"] for r in d_rows], marker="o", label=f"shots={shots}")
+            ax.plot([r["epoch"] for r in d_rows], [r["r_es"] for r in d_rows], marker="o", label=f"shots={shots}")
         ax.set_title(dataset_name)
         ax.set_xlabel("Epoch (real gradient-descent steps)")
         ax.grid(True, alpha=0.3)

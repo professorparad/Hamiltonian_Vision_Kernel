@@ -186,6 +186,8 @@ Second image, multi-image training & $1.4740\times10^{-3}$ & 28.31 & 0.9862 \\
 \subsection{Scaling and Non-Monotonicity}
 Table~\ref{tab:capacity_ablation} sweeps training steps, qubit count, and MPS bond dimension on \textit{Monalisa} (single-seed). The step sweep confirms the model is convergence-limited early and plateaus near 500 steps. Within the tested range $q=8$ gives the strongest qubit-count result, but the bond-dimension sweep is non-monotonic: $\chi=1$ and $\chi=2$ \emph{outperform} the default $\chi=4$ under the same 200-step budget, while $\chi=8$ partially recovers. Bond dimension is therefore a coupled optimization hyperparameter here, not a monotonic compression-fidelity knob, and this sweep should be read as a single-seed directional diagnostic.
 
+The main paper reports a related but distinct multi-seed diagnostic at the same bond dimensions ($\chi\in\{1,2,4,8\}$, $N=6$): rather than final reconstruction quality, it tracks how consistently a training-dynamics change-point epoch lands across seeds, finding the two tested seeds agree closely at $\chi=4,8$ but disagree sharply at $\chi=1,2$ --- the opposite ranking, on a different axis, from this section's PSNR result. The two together are suggestive of a trade-off between where training ends up and how reproducibly it gets there, not a single monotonic story on either axis alone; see the main paper for that measurement.
+
 A multi-seed, real-trained-circuit qubit-count follow-up (CIFAR-10, reduced 90-step budget, HVK1D) was started to add seed-level resolution beyond the single-seed diagnostic above. Table~\ref{tab:qubit_multiseed_partial} reports the two configurations that completed before this follow-up was interrupted by unrelated infrastructure instability on the development machine, well short of covering $q=8$ or the bond-dimension/depth axes; we report the partial result rather than withhold it, since the $q=4$ row is a genuine 3-seed measurement. At $q=4$, PSNR varies meaningfully across seeds ($29.55\pm1.64$~dB) --- real seed-to-seed variance a single-seed number cannot show. The lower absolute value relative to Table~\ref{tab:capacity_ablation}'s single-seed $q=4$ figure ($32.71$~dB) is consistent with the shorter 90-step budget here (vs.\ 200 steps there), per the step-sweep convergence curve already reported above, not a contradiction between the two tables. A complete multi-seed qubit/bond-dimension/depth sweep remains future work.
 
 \begin{table}[H]
@@ -451,6 +453,33 @@ Mean & D4-pooled & $5.39\times10^{-8}$ & $1.46\times10^{-15}$ \\
 
 The real-circuit result confirms the surrogate's finding directly: pooling collapses the equivariance error from $\mathcal{O}(10^{-1})$ to $\mathcal{O}(10^{-8})$ and output-consistency MSE from $\mathcal{O}(10^{-2})$ to $\mathcal{O}(10^{-15})$, an 8--13 order-of-magnitude gap on every one of the four images, with no exceptions. The pooled real circuit's residual error ($\sim\!5\times10^{-8}$) is larger than the surrogate's floating-point-precision result ($\sim\!10^{-17}$) because the real circuit involves a full statevector simulation of the trained gates plus a fresh per-transform feature-standardization step, both of which accumulate ordinary floating-point noise that the closed-form surrogate formula does not --- the pooled result is exact up to numerical precision, not exact to the same sixteen digits as a symbolic identity, which is the expected and unremarkable difference between an analytic proxy and an actual simulated circuit.
 
+\section{Exact Circuit and Hamiltonian Definitions}
+\label{sec:supp_exact_circuits}
+For a one-dimensional chain of $n_{\text{bonds}}$ bonds indexed by $i$ and sites $(i,i+1)$, the anisotropic Heisenberg Hamiltonian is
+\begin{align}
+H_{\text{Heis}}=\sum_{i=0}^{n_{\text{bonds}}-1}\Bigl(
+J_x^{(i)}X_iX_{i+1}+J_y^{(i)}Y_iY_{i+1}\nonumber\\
+{}+J_z^{(i)}Z_iZ_{i+1}\Bigr).
+\end{align}
+Here $X,Y,Z$ are Pauli operators and $J_\alpha^{(i)}$ are bond-resolved couplings. HVK1D fixes six sites and treats the 15 coefficients on its five bonds as learnable parameters initialized independently from a zero-mean Gaussian with standard deviation $0.1$. Given patch $n$'s measured observables, its energy diagnostic is
+\begin{equation}
+\mathcal{E}_n(\theta,J) = \sum_{i=0}^{4}\sum_{\alpha\in\{x,y,z\}} J_\alpha^{(i)}\langle\sigma_\alpha^{(i)}\sigma_\alpha^{(i+1)}\rangle_n.
+\end{equation}
+HVK2D instead uses the seven edges $\mathcal{G}_{2D}$ of its $2\times3$ circuit graph and the implemented grid-Ising diagnostic $\mathcal{E}^{2D}_n=\sum_{(u,v)\in\mathcal{G}_{2D}}j_{uv}\langle Z_uZ_v\rangle_n$. Thus ``Hamiltonian diagnostic'' refers to the full $XX/YY/ZZ$ chain energy for HVK1D and the learned $ZZ$ graph energy for HVK2D. In either case, the patch-averaged term is $\mathcal{L}_{\text{energy}}=\frac{1}{N}\sum_n \mathcal{E}_n$, and the total objective is
+\begin{align}
+\mathcal{L}_{\text{total}}&=\mathcal{L}_{\text{rec}}
++\lambda\,\mathcal{L}_{\text{energy}},\\
+\mathcal{L}_{\text{rec}}&=\frac{1}{N}\sum_{n=1}^{N}
+\bigl\|D(o_n,e_n)-P_n\bigr\|_F^2.
+\end{align}
+with $D$ the classical decoder and $P_n$ the ground-truth patch.
+
+\begin{sloppypar}
+Per-patch coordinates $(r_i,c_j)$ are mapped to Fourier features $e_{4k}=\sin(\omega_k\pi r_i)$, $e_{4k+1}=\cos(\omega_k\pi r_i)$, $e_{4k+2}=\sin(\omega_k\pi c_j)$, and $e_{4k+3}=\cos(\omega_k\pi c_j)$ \cite{Xu2021}. HVK1D uses $k\in\{0,1\}$ (8-D), whereas the native-resolution HVK2D implementation uses one frequency (4-D); a learned linear map projects either vector to six $R_Y$ angles. Both six-qubit circuits first apply $U_{\text{enc}}(x_n)=\bigotimes_{i=0}^{5}R_X(x_n^{(i)})$ and $U_{\text{pos}}=\bigotimes_{i=0}^{5}R_Y(\theta_{\text{position}}^{(i)})$. Each of two HVK1D layers then applies per-qubit $\mathrm{Rot}$ gates followed by the strongly-entangling CNOT ring. Each HVK2D layer applies CNOTs over the four horizontal and three vertical grid edges followed by per-qubit $\mathrm{Rot}$ gates, matching the executed source and hardware-replay circuits.
+
+HVK1D returns local $Z/X$ measurements and the three nearest-neighbor pair sectors $ZZ/XX/YY$ (27 values); HVK2D returns local $Z/X$ measurements and grid-edge $ZZ$ correlations (19 values). Positional rotations and fixed graph connectivity distinguish circuit sites, so neither unpooled map is asserted to be permutation- or $D_4$-equivariant. The $D_4$ action in the main paper is instead the explicit permutation action on the $4\times4$ patch grid, and equivariance follows only after the stated Reynolds average over its eight transformations.
+\end{sloppypar}
+
 \section{Hardware Pilot Methodology}
 \label{sec:hardware_methodology}
 The main paper reports a real IBM Quantum hardware reconstruction pilot (five images: \textit{Monalisa} and four CIFAR-10 images, each optimized per-image, hardware PSNR $25.90$--$31.52$~dB against $36.56$--$46.79$~dB in noiseless simulation). This section gives the complete methodology.
@@ -537,6 +566,68 @@ Shots & Circuits & Mean $|{\Delta M_z}|$ & Max $|{\Delta M_z}|$ & Job ID \\
 
 A second IonQ ideal-simulator job (\texttt{019f9046-7ba6-7320-9766-552d88d490bf}) executed the 48 three-basis circuits required for the energy-to-entanglement ratio at 1024 shots. It reproduced the decreasing $R_{ES}(t)$ trajectory shape for both images. Because these are ideal finite-shot simulations, the numerical differences above describe sampling and cross-stack agreement only; they do not support claims about IonQ hardware noise, QPU quality, or comparative hardware performance.
 
+\subsection{Bond-Dimension Checkpoint Replays}
+\label{sec:supp_bond_dimension_hardware}
+The main paper's bond-dimension replay fixes $N=6$, varies the MPS bond dimension over $\chi\in\{1,2,4,8\}$, and uses two images, one representative patch, one training seed, and eight checkpoint epochs. At each shot budget, the order-parameter job therefore contains $2\times4\times8=64$ circuits. We executed the same circuit set on real IBM hardware (\texttt{ibm\_marrakesh}) and the IonQ ideal cloud simulator at 256, 512, and 1024 shots. This is an execution and portability check across trained checkpoints; one seed per $\chi$ cannot confirm the simulator study's cross-seed variance pattern.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{figures/checkpoint_hardware_bond_dimension_order_parameter.pdf}
+\caption{Bond-dimension checkpoint replay at 1024 shots on real IBM Quantum hardware. The plotted $M_z(t)$ traces use one representative patch and seed per image and $\chi$.}
+\label{fig:supp_checkpoint_hardware_bond_dimension}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Bond-dimension order-parameter replay jobs. Each job contains 64 circuits.}
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llll}
+\toprule
+Platform & Backend & Shots & Job ID \\
+\midrule
+IBM hardware & \texttt{ibm\_marrakesh} & 256 & \texttt{d9hqu0jsbqfc73eqgr80} \\
+IBM hardware & \texttt{ibm\_marrakesh} & 512 & \texttt{d9hr3d8gk0ls73f3elsg} \\
+IBM hardware & \texttt{ibm\_marrakesh} & 1024 & \texttt{d9hr43l0k0jc738il8ug} \\
+IonQ ideal simulator & \texttt{ionq\_simulator} & 256 & \texttt{019f9571-21d0-7339-9111-d31a308440a1} \\
+IonQ ideal simulator & \texttt{ionq\_simulator} & 512 & \texttt{019f9573-1ed9-768c-9768-465fe75a409b} \\
+IonQ ideal simulator & \texttt{ionq\_simulator} & 1024 & \texttt{019f9574-a981-71dd-94b0-9d8fb8968f49} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+We additionally replayed the three-basis energy-to-entanglement estimator for the same checkpoint grid. Each platform/shot job contains $2\times4\times8\times3=192$ circuits. At $\chi=1$, the MPS is a product state and the archived entropy sum is fixed at the numerical floor, $S=5.0\times10^{-6}$, compared with $S=0.014$--$0.045$ for $\chi\geq2$. Consequently, $R_{ES}=H/S$ reaches $O(10^5$--$10^6)$ through division by a near-zero denominator. We retain those rows in the machine-readable archive but exclude them from Figure~\ref{fig:supp_checkpoint_hardware_bond_dimension_res}; this is a construction-limit audit, not a physical divergence.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{figures/checkpoint_hardware_bond_dimension_r_es.pdf}
+\caption{Energy-to-entanglement ratio across $\chi\in\{2,4,8\}$ at 1024 shots on real IBM Quantum hardware; $\chi=1$ is excluded because its product-state entropy is at the numerical floor.}
+\label{fig:supp_checkpoint_hardware_bond_dimension_res}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Bond-dimension $R_{ES}$ replay jobs. Each job contains 192 circuits over three measurement bases.}
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llll}
+\toprule
+Platform & Backend & Shots & Job ID \\
+\midrule
+IBM hardware & \texttt{ibm\_marrakesh} & 256 & \texttt{d9hr44shonhs73adgq40} \\
+IBM hardware & \texttt{ibm\_marrakesh} & 512 & \texttt{d9hr5u50k0jc738ilbs0} \\
+IBM hardware & \texttt{ibm\_marrakesh} & 1024 & \texttt{d9hrb8shonhs73adh8mg} \\
+IonQ ideal simulator & \texttt{ionq\_simulator} & 256 & \texttt{019f957f-dfbe-70fc-b6aa-b2398317f049} \\
+IonQ ideal simulator & \texttt{ionq\_simulator} & 512 & \texttt{019f9584-4ba3-7224-ab7b-e81e32e6c1e2} \\
+IonQ ideal simulator & \texttt{ionq\_simulator} & 1024 & \texttt{019f9586-4eb6-7596-ba47-dc6132c7f943} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+For $\chi\in\{2,4,8\}$, the $\chi=4$ and $\chi=8$ traces are close on both images, while $\chi=2$ becomes more negative by epoch 200. This single-patch, single-seed pattern is descriptive. It neither establishes a bond-dimension scaling law nor independently confirms the two-seed simulator observation about initialization sensitivity. The complete per-shot IBM and IonQ summaries are stored under \path{IBM_Cloud/outputs/checkpoint_bond_dimension_hardware_sweep/} and \path{IBM_Cloud/outputs/checkpoint_bond_dimension_temperature_hardware_sweep/}.
+
 \subsection{Reconstruction Decode}
 Hardware counts were converted to observable expectation values by the standard parity estimator, $\langle Z_i\rangle = \frac{1}{S}\sum_{\text{shots}} (-1)^{b_i}$ (identically for $X$, $Y$ after basis rotation), with pairwise correlators computed as the shot-weighted mean of $(-1)^{b_i+b_j}$ within the same measurement basis. The resulting observable vector, concatenated with the training-time positional encoding, was passed through the \emph{unmodified} trained decoder. No hardware-specific fine-tuning, error mitigation, or post-hoc calibration was applied.
 
@@ -546,7 +637,7 @@ The repository-level experiment drivers set Python, NumPy, and PyTorch random se
 The current verification environment uses Python 3.11.9, PyTorch 2.6.0 with CUDA 12.4, PennyLane 0.42.3, Qiskit 2.5.0, NumPy 2.4.6, pandas 3.0.3, scikit-learn 1.9.0, quimb 1.11.2, cotengra 0.7.5, and autoray 0.6.12 on an NVIDIA GeForce GTX 1050. The package constraints are declared in \path{pyproject.toml}; because that file does not pin every dependency to an exact version, the versions above identify the environment used for this verification pass rather than claiming bitwise reproducibility across arbitrary future installations.
 
 \begin{sloppypar}
-The principal artifact map is as follows. The lowercase driver \path{main2/newHVK/run_newhvk_suite.py} generates the synthetic restricted-pair diagnostic under \path{main2/newHVK/results/full_ablation_suite/} and the held-out CIFAR-10 controls under \path{main2/newHVK/results/q1_validation/}; the six-dataset extension is generated by \path{main2/newHVK/run_multi_dataset_validation.py} and stored under \path{main2/newHVK/results/multi_dataset_validation/}. The newer experiment drivers use the repository's historically uppercase path: \path{Main2/newHVK/run_topology_comparison.py}, \path{Main2/newHVK/run_d4_symmetry_experiment.py}, and \path{Main2/newHVK/run_phase_transition_multi_dataset.py}, with outputs respectively under \path{Main2/newHVK/results/topology_comparison/}, \path{Main2/newHVK/results/d4_symmetry_experiment/}, and \path{Main2/newHVK/results/phase_transition_multi_dataset/}. The topology directory includes raw per-run JSON, summaries, paired statistics, and a surrogate manifest. Excluded legacy training-mode traces and any future deterministic evaluation-mode traces have distinct filenames and provenance fields. Path case is intentional and must be preserved on case-sensitive systems. Hardware-pilot result metadata and measured observable arrays are stored under \path{IBM_Cloud/outputs/hardware_reconstruction/} and \path{IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/}; the corresponding drivers also write machine-readable local-validation records. Raw and summary artifacts are retained separately so that manuscript means and uncertainty intervals can be recomputed without reading values from figures.
+The principal artifact map is as follows. The lowercase driver \path{main2/newHVK/run_newhvk_suite.py} generates the synthetic restricted-pair diagnostic under \path{main2/newHVK/results/full_ablation_suite/} and the held-out CIFAR-10 controls under \path{main2/newHVK/results/q1_validation/}; the six-dataset extension is generated by \path{main2/newHVK/run_multi_dataset_validation.py} and stored under \path{main2/newHVK/results/multi_dataset_validation/}. The newer experiment drivers use the repository's historically uppercase path: \path{Main2/newHVK/run_topology_comparison.py}, \path{Main2/newHVK/run_d4_symmetry_experiment.py}, and \path{Main2/newHVK/run_phase_transition_multi_dataset.py}, with outputs respectively under \path{Main2/newHVK/results/topology_comparison/}, \path{Main2/newHVK/results/d4_symmetry_experiment/}, and \path{Main2/newHVK/results/phase_transition_multi_dataset/}. The topology directory includes raw per-run JSON, summaries, paired statistics, and a surrogate manifest. Excluded legacy training-mode traces and any future deterministic evaluation-mode traces have distinct filenames and provenance fields. Path case is intentional and must be preserved on case-sensitive systems. Hardware-pilot result metadata and measured observable arrays are stored under \path{IBM_Cloud/outputs/hardware_reconstruction/} and \path{IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/}; bond-dimension hardware replays use the two output directories listed in Section~\ref{sec:supp_bond_dimension_hardware}. Raw and summary artifacts are retained separately so that manuscript means and uncertainty intervals can be recomputed without reading values from figures.
 \end{sloppypar}
 
 \section{Discussion}
@@ -560,12 +651,13 @@ We distill this ablation study into concrete guidance for evaluating hybrid quan
 \section{Conclusion}
 The resource-matched, multi-seed study delineates the tested operating regime of HVK. Under a shared fitted readout, simple local/raw maps match or exceed the HVK2D pair-observable map on ordinary held-out reconstruction. The entangling observable channel separates on the restricted target constructed to require nonlocal correlations; separately, $D_4$ pooling enforces equivariance to numerical precision but does not improve held-out reconstruction accuracy in the tested experiment. On held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB compared with HVK2D's $18.12\pm1.54$~dB; seed-level inference gives a $-0.68$~dB HVK2D-minus-control difference (bootstrap 95\% CI $[-0.91,-0.46]$~dB; Wilcoxon $p=0.0625$, $n=5$). The same numerical direction appears on five further real datasets. These results motivate task-aligned HVK variants and strengthen the framework's evidentiary scope. The leakage and provenance audits contribute a transferable validation protocol, and Section~\ref{sec:hardware_methodology} provides the complete hardware-pilot methodology.
 
-\begin{thebibliography}{5}
+\begin{thebibliography}{6}
 \bibitem{Krizhevsky2009} A. Krizhevsky, ``Learning multiple layers of features from tiny images,'' University of Toronto, Technical Report, 2009.
 \bibitem{LeCun1998} Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, ``Gradient-based learning applied to document recognition,'' \textit{Proceedings of the IEEE}, vol. 86, no. 11, pp. 2278--2324, 1998, doi: 10.1109/5.726791.
 \bibitem{Xiao2017} H. Xiao, K. Rasul, and R. Vollgraf, ``Fashion-MNIST: A novel image dataset for benchmarking machine learning algorithms,'' arXiv:1708.07747, 2017.
 \bibitem{Yang2023} J. Yang et al., ``MedMNIST v2---A large-scale lightweight benchmark for 2D and 3D biomedical image classification,'' \textit{Scientific Data}, vol. 10, Art. no. 41, 2023, doi: 10.1038/s41597-022-01721-8.
 \bibitem{Wolberg1993} W. Wolberg, O. Mangasarian, N. Street, and W. Street, ``Breast Cancer Wisconsin (Diagnostic),'' UCI Machine Learning Repository, 1993, doi: 10.24432/C5DW2B.
+\bibitem{Xu2021} R. Xu, X. Wang, K. Chen, B. Zhou, and C. C. Loy, ``Positional Encoding as Spatial Inductive Bias in GANs,'' in \textit{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 2021, pp. 13564--13573.
 \end{thebibliography}
 
 \end{document}

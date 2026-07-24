@@ -1,4 +1,4 @@
-"""Real-hardware replay of the effective-temperature diagnostic.
+"""Real-hardware replay of the energy-to-entanglement-ratio diagnostic.
 
 Trains real HVK1D checkpoints (N=6 only -- the effective-temperature
 construction requires n_sites == qubit_count, see paper_hvk.tex
@@ -7,7 +7,7 @@ projected per-qubit angles at several epoch checkpoints, measures Z/X/Y bases
 for each checkpoint's exact trained circuit on real hardware, and combines
 the hardware-measured ZZ/XX/YY bond correlators with the checkpoint's own
 Jx/Jy/Jz and the (fixed, classically computed) MPS bond entropy to get
-T_eff(t) = H(t)/(k_B S) measured on real quantum hardware.
+R_ES(t) = H(t)/(k_B S) measured on real quantum hardware.
 """
 from __future__ import annotations
 
@@ -157,8 +157,8 @@ def build_all_circuits(all_checkpoints: dict) -> tuple[list[QuantumCircuit], lis
 def save_plot(rows: list[dict], dataset_name: str, shots: int, provider: str, backend: str, output_path: Path) -> None:
     fig, ax = plt.subplots(figsize=(7, 4.8))
     d_rows = sorted((r for r in rows if r["dataset"] == dataset_name), key=lambda r: r["epoch"])
-    ax.plot([r["epoch"] for r in d_rows], [r["t_eff"] for r in d_rows], marker="o", color="tab:purple")
-    ax.set_title(f"Effective temperature vs epoch (REAL hardware)\n{dataset_name}, {provider} {backend}, shots={shots}, N=6")
+    ax.plot([r["epoch"] for r in d_rows], [r["r_es"] for r in d_rows], marker="o", color="tab:purple")
+    ax.set_title(f"R_ES vs epoch (REAL hardware)\n{dataset_name}, {provider} {backend}, shots={shots}, N=6")
     ax.set_xlabel("Epoch (real gradient-descent steps)")
     ax.set_ylabel(r"$T_{\mathrm{eff}}(t) = H(t)/(k_B S)$")
     ax.grid(True, alpha=0.3)
@@ -185,7 +185,7 @@ def main() -> None:
     shots_list = args.shots or SHOTS_LIST
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    print("Training real N=6 checkpoints for the temperature diagnostic (Mona Lisa + CIFAR)...", flush=True)
+    print("Training real N=6 checkpoints for the R_ES diagnostic (Mona Lisa + CIFAR)...", flush=True)
     all_checkpoints: dict[str, dict[int, dict]] = {}
     s_totals: dict[str, float] = {}
     for dataset_name, image_path in DATASETS.items():
@@ -226,10 +226,10 @@ def main() -> None:
                 zz, xx, yy = bases["Z"], bases["X"], bases["Y"]
                 h_i = checkpoint["Jz"] * zz + checkpoint["Jx"] * xx + checkpoint["Jy"] * yy
                 h_total = float(h_i.sum())
-                t_eff = h_total / s_totals[dataset_name]
+                r_es = h_total / s_totals[dataset_name]
                 rows.append({
                     "dataset": dataset_name, "epoch": epoch_label,
-                    "h_total": h_total, "s_total": s_totals[dataset_name], "t_eff": t_eff,
+                    "h_total": h_total, "s_total": s_totals[dataset_name], "r_es": r_es,
                     "backend": backend, "job_id": job_id,
                 })
 
@@ -238,7 +238,7 @@ def main() -> None:
             print(f"provider={provider} shots={shots}: backend={backend} job_id={job_id} results={json_path}")
 
             for dataset_name in DATASETS:
-                plot_path = args.output_dir / f"{dataset_name}_{provider}_{backend}_shots{shots}_t_eff_vs_epoch.png"
+                plot_path = args.output_dir / f"{dataset_name}_{provider}_{backend}_shots{shots}_r_es_vs_epoch.png"
                 save_plot(rows, dataset_name, shots, provider, backend, plot_path)
                 print(f"  plot: {plot_path}")
 

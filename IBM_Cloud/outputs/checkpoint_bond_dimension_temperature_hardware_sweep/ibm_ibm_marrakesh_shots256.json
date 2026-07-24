@@ -5,7 +5,7 @@
     "epoch": 0,
     "h_total": -0.007074200450006174,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -1414.8401257431026,
+    "r_es": -1414.8401257431026,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -15,7 +15,7 @@
     "epoch": 5,
     "h_total": -0.05450070745791891,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -10900.141766944524,
+    "r_es": -10900.141766944524,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -25,7 +25,7 @@
     "epoch": 10,
     "h_total": -0.06493009445512143,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -12986.019219078726,
+    "r_es": -12986.019219078726,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -35,7 +35,7 @@
     "epoch": 25,
     "h_total": -0.044920299245859496,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -8984.060076128346,
+    "r_es": -8984.060076128346,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -45,7 +45,7 @@
     "epoch": 50,
     "h_total": -0.317335633415496,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -63467.12828641371,
+    "r_es": -63467.12828641371,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -55,7 +55,7 @@
     "epoch": 100,
     "h_total": -1.3054448703769594,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -261088.9806710543,
+    "r_es": -261088.9806710543,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -65,7 +65,7 @@
     "epoch": 150,
     "h_total": -2.4130449013318866,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -482608.99245810596,
+    "r_es": -482608.99245810596,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -75,7 +75,7 @@
     "epoch": 200,
     "h_total": -6.0685060527175665,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -1213701.2412041856,
+    "r_es": -1213701.2412041856,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -85,7 +85,7 @@
     "epoch": 0,
     "h_total": 0.03507382856696495,
     "s_total": 0.014247527346014977,
-    "t_eff": 2.4617484644993555,
+    "r_es": 2.4617484644993555,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -95,7 +95,7 @@
     "epoch": 5,
     "h_total": -0.035670899738761364,
     "s_total": 0.014247527346014977,
-    "t_eff": -2.5036554675389686,
+    "r_es": -2.5036554675389686,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -105,7 +105,7 @@
     "epoch": 10,
     "h_total": -0.03904292105289642,
     "s_total": 0.014247527346014977,
-    "t_eff": -2.740329609812379,
+    "r_es": -2.740329609812379,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -115,7 +115,7 @@
     "epoch": 25,
     "h_total": -0.11741356362472288,
     "s_total": 0.014247527346014977,
-    "t_eff": -8.240978295617266,
+    "r_es": -8.240978295617266,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -125,7 +125,7 @@
     "epoch": 50,
     "h_total": -0.11396351037546992,
     "s_total": 0.014247527346014977,
-    "t_eff": -7.998827277727278,
+    "r_es": -7.998827277727278,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -135,7 +135,7 @@
     "epoch": 100,
     "h_total": -1.509213296114467,
     "s_total": 0.014247527346014977,
-    "t_eff": -105.92808558718738,
+    "r_es": -105.92808558718738,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -145,7 +145,7 @@
     "epoch": 150,
     "h_total": -3.6386553863994777,
     "s_total": 0.014247527346014977,
-    "t_eff": -255.3885525559077,
+    "r_es": -255.3885525559077,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -155,7 +155,7 @@
     "epoch": 200,
     "h_total": -4.497189742978662,
     "s_total": 0.014247527346014977,
-    "t_eff": -315.6470336052047,
+    "r_es": -315.6470336052047,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -165,7 +165,7 @@
     "epoch": 0,
     "h_total": 0.009779719115613261,
     "s_total": 0.02289433591067791,
-    "t_eff": 0.4271676258166547,
+    "r_es": 0.4271676258166547,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -175,7 +175,7 @@
     "epoch": 5,
     "h_total": 0.020111320627620444,
     "s_total": 0.02289433591067791,
-    "t_eff": 0.8784408818881936,
+    "r_es": 0.8784408818881936,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -185,7 +185,7 @@
     "epoch": 10,
     "h_total": -0.018197650817455724,
     "s_total": 0.02289433591067791,
-    "t_eff": -0.7948538402010755,
+    "r_es": -0.7948538402010755,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -195,7 +195,7 @@
     "epoch": 25,
     "h_total": -0.0859939865913475,
     "s_total": 0.02289433591067791,
-    "t_eff": -3.7561249615124206,
+    "r_es": -3.7561249615124206,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -205,7 +205,7 @@
     "epoch": 50,
     "h_total": -0.37124340352602303,
     "s_total": 0.02289433591067791,
-    "t_eff": -16.215513084739673,
+    "r_es": -16.215513084739673,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -215,7 +215,7 @@
     "epoch": 100,
     "h_total": -1.336163000902161,
     "s_total": 0.02289433591067791,
-    "t_eff": -58.362164603297146,
+    "r_es": -58.362164603297146,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -225,7 +225,7 @@
     "epoch": 150,
     "h_total": -3.3024646962294355,
     "s_total": 0.02289433591067791,
-    "t_eff": -144.24811049833366,
+    "r_es": -144.24811049833366,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -235,7 +235,7 @@
     "epoch": 200,
     "h_total": -4.567466830951162,
     "s_total": 0.02289433591067791,
-    "t_eff": -199.50204490626422,
+    "r_es": -199.50204490626422,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -245,7 +245,7 @@
     "epoch": 0,
     "h_total": 0.010016969677963061,
     "s_total": 0.02348124422132969,
-    "t_eff": 0.426594501702935,
+    "r_es": 0.426594501702935,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -255,7 +255,7 @@
     "epoch": 5,
     "h_total": -0.012205990409711376,
     "s_total": 0.02348124422132969,
-    "t_eff": -0.5198187240275711,
+    "r_es": -0.5198187240275711,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -265,7 +265,7 @@
     "epoch": 10,
     "h_total": -0.013847243550117128,
     "s_total": 0.02348124422132969,
-    "t_eff": -0.5897150687414889,
+    "r_es": -0.5897150687414889,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -275,7 +275,7 @@
     "epoch": 25,
     "h_total": -0.046508102779625915,
     "s_total": 0.02348124422132969,
-    "t_eff": -1.9806489954812228,
+    "r_es": -1.9806489954812228,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -285,7 +285,7 @@
     "epoch": 50,
     "h_total": -0.3487524726660922,
     "s_total": 0.02348124422132969,
-    "t_eff": -14.85238471091304,
+    "r_es": -14.85238471091304,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -295,7 +295,7 @@
     "epoch": 100,
     "h_total": -1.8621081148739904,
     "s_total": 0.02348124422132969,
-    "t_eff": -79.30193550742531,
+    "r_es": -79.30193550742531,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -305,7 +305,7 @@
     "epoch": 150,
     "h_total": -3.2880706693977118,
     "s_total": 0.02348124422132969,
-    "t_eff": -140.02966105224198,
+    "r_es": -140.02966105224198,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -315,7 +315,7 @@
     "epoch": 200,
     "h_total": -4.968790916260332,
     "s_total": 0.02348124422132969,
-    "t_eff": -211.60679857615145,
+    "r_es": -211.60679857615145,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -325,7 +325,7 @@
     "epoch": 0,
     "h_total": -0.016445386263512773,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -3289.077335791637,
+    "r_es": -3289.077335791637,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -335,7 +335,7 @@
     "epoch": 5,
     "h_total": -0.009421847171324771,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -1884.3694818681313,
+    "r_es": -1884.3694818681313,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -345,7 +345,7 @@
     "epoch": 10,
     "h_total": 0.018027854050160386,
     "s_total": 4.999999873689376e-06,
-    "t_eff": 3605.5709011164595,
+    "r_es": 3605.5709011164595,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -355,7 +355,7 @@
     "epoch": 25,
     "h_total": -0.03789298427727772,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -7578.597046907009,
+    "r_es": -7578.597046907009,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -365,7 +365,7 @@
     "epoch": 50,
     "h_total": -0.0361381052643992,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -7227.62123546491,
+    "r_es": -7227.62123546491,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -375,7 +375,7 @@
     "epoch": 100,
     "h_total": -1.3475685743615031,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -269513.7216807899,
+    "r_es": -269513.7216807899,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -385,7 +385,7 @@
     "epoch": 150,
     "h_total": -2.4640605868771672,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -492812.12982491497,
+    "r_es": -492812.12982491497,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -395,7 +395,7 @@
     "epoch": 200,
     "h_total": -4.697829439071938,
     "s_total": 4.999999873689376e-06,
-    "t_eff": -939565.911549819,
+    "r_es": -939565.911549819,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -405,7 +405,7 @@
     "epoch": 0,
     "h_total": -0.06862593147889129,
     "s_total": 0.029276825487613678,
-    "t_eff": -2.3440359511629865,
+    "r_es": -2.3440359511629865,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -415,7 +415,7 @@
     "epoch": 5,
     "h_total": -0.032707897007639986,
     "s_total": 0.029276825487613678,
-    "t_eff": -1.1171941104570204,
+    "r_es": -1.1171941104570204,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -425,7 +425,7 @@
     "epoch": 10,
     "h_total": -0.058750234955368796,
     "s_total": 0.029276825487613678,
-    "t_eff": -2.0067146617458445,
+    "r_es": -2.0067146617458445,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -435,7 +435,7 @@
     "epoch": 25,
     "h_total": -0.10074100102065131,
     "s_total": 0.029276825487613678,
-    "t_eff": -3.4409810265553693,
+    "r_es": -3.4409810265553693,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -445,7 +445,7 @@
     "epoch": 50,
     "h_total": -0.18164815951604396,
     "s_total": 0.029276825487613678,
-    "t_eff": -6.204503271466195,
+    "r_es": -6.204503271466195,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -455,7 +455,7 @@
     "epoch": 100,
     "h_total": -1.3906180572230369,
     "s_total": 0.029276825487613678,
-    "t_eff": -47.49893590107213,
+    "r_es": -47.49893590107213,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -465,7 +465,7 @@
     "epoch": 150,
     "h_total": -2.986680316273123,
     "s_total": 0.029276825487613678,
-    "t_eff": -102.01516955916945,
+    "r_es": -102.01516955916945,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -475,7 +475,7 @@
     "epoch": 200,
     "h_total": -4.58556456817314,
     "s_total": 0.029276825487613678,
-    "t_eff": -156.62779320501065,
+    "r_es": -156.62779320501065,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -485,7 +485,7 @@
     "epoch": 0,
     "h_total": -0.004514268886850914,
     "s_total": 0.04450226575136185,
-    "t_eff": -0.10143907980039801,
+    "r_es": -0.10143907980039801,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -495,7 +495,7 @@
     "epoch": 5,
     "h_total": -0.002911289397161454,
     "s_total": 0.04450226575136185,
-    "t_eff": -0.06541890279086214,
+    "r_es": -0.06541890279086214,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -505,7 +505,7 @@
     "epoch": 10,
     "h_total": -0.010077621729578823,
     "s_total": 0.04450226575136185,
-    "t_eff": -0.2264518796836862,
+    "r_es": -0.2264518796836862,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -515,7 +515,7 @@
     "epoch": 25,
     "h_total": -0.11990974616492167,
     "s_total": 0.04450226575136185,
-    "t_eff": -2.694463846736887,
+    "r_es": -2.694463846736887,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -525,7 +525,7 @@
     "epoch": 50,
     "h_total": -0.4434869934921153,
     "s_total": 0.04450226575136185,
-    "t_eff": -9.965492453124003,
+    "r_es": -9.965492453124003,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -535,7 +535,7 @@
     "epoch": 100,
     "h_total": -1.163677494507283,
     "s_total": 0.04450226575136185,
-    "t_eff": -26.148724674129035,
+    "r_es": -26.148724674129035,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -545,7 +545,7 @@
     "epoch": 150,
     "h_total": -3.002276028506458,
     "s_total": 0.04450226575136185,
-    "t_eff": -67.46344209259914,
+    "r_es": -67.46344209259914,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -555,7 +555,7 @@
     "epoch": 200,
     "h_total": -5.041687800548971,
     "s_total": 0.04450226575136185,
-    "t_eff": -113.2905867920823,
+    "r_es": -113.2905867920823,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -565,7 +565,7 @@
     "epoch": 0,
     "h_total": 0.0002118275297107175,
     "s_total": 0.04520012438297272,
-    "t_eff": 0.004686436876056801,
+    "r_es": 0.004686436876056801,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -575,7 +575,7 @@
     "epoch": 5,
     "h_total": 0.03764904144918546,
     "s_total": 0.04520012438297272,
-    "t_eff": 0.8329411027764381,
+    "r_es": 0.8329411027764381,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -585,7 +585,7 @@
     "epoch": 10,
     "h_total": -0.02466436236863956,
     "s_total": 0.04520012438297272,
-    "t_eff": -0.545670232224645,
+    "r_es": -0.545670232224645,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -595,7 +595,7 @@
     "epoch": 25,
     "h_total": -0.10649388583260588,
     "s_total": 0.04520012438297272,
-    "t_eff": -2.3560529376048147,
+    "r_es": -2.3560529376048147,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -605,7 +605,7 @@
     "epoch": 50,
     "h_total": -0.42146650049835443,
     "s_total": 0.04520012438297272,
-    "t_eff": -9.324454440154694,
+    "r_es": -9.324454440154694,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -615,7 +615,7 @@
     "epoch": 100,
     "h_total": -1.2250603208085522,
     "s_total": 0.04520012438297272,
-    "t_eff": -27.10302985958249,
+    "r_es": -27.10302985958249,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -625,7 +625,7 @@
     "epoch": 150,
     "h_total": -2.857777912635356,
     "s_total": 0.04520012438297272,
-    "t_eff": -63.225001073490546,
+    "r_es": -63.225001073490546,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   },
@@ -635,7 +635,7 @@
     "epoch": 200,
     "h_total": -4.201873101294041,
     "s_total": 0.04520012438297272,
-    "t_eff": -92.96153846153847,
+    "r_es": -92.96153846153847,
     "backend": "ibm_marrakesh",
     "job_id": "d9hr44shonhs73adgq40"
   }

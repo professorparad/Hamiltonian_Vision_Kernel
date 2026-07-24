@@ -22,7 +22,7 @@
 \maketitle
 
 \begin{abstract}
-We introduce the Hamiltonian Vision Kernel (HVK), a physics-informed framework for hybrid quantum--classical visual representation and reconstruction. HVK combines matrix-product-state patch features, a variational quantum circuit exposing a Pauli-correlator latent space, two-dimensional Fourier positional encoding, a learnable Hamiltonian energy diagnostic, and a classical decoder. HVK1D and HVK2D instantiate chain and grid interaction graphs, while observable pooling provides $D_4$ equivariance by construction. In a scoped three-image-per-dataset study across six real image datasets, the framework supports high-fidelity per-image reconstruction. Three results characterize its structure. First, the pooled HVK2D map achieves numerical equivariance error of $9.57\times10^{-17}$. Second, across five seeds on a leakage-audited task requiring distant-patch products, the entangling observable channel reaches mean $R^2=0.974$, compared with $R^2\leq0.02$ for non-entangling controls. Third, five images are reconstructed from observables measured on IBM Quantum hardware without retraining, reaching $25.90$--$31.52$~dB PSNR. These results motivate HVK as a framework for studying symmetry, topology, nonlocal correlations, Hamiltonian diagnostics, and hardware-executed visual models. A companion supplementary study provides resource-matched held-out controls, leakage audits, statistical controls, and complete hardware methodology.
+We introduce the Hamiltonian Vision Kernel (HVK), a physics-informed framework for hybrid quantum--classical visual representation and reconstruction. HVK combines matrix-product-state patch features, a variational quantum circuit exposing a Pauli-correlator latent space, two-dimensional Fourier positional encoding, a learnable Hamiltonian energy diagnostic, and a classical decoder. HVK1D and HVK2D instantiate chain and grid interaction graphs, while observable pooling provides $D_4$ equivariance by construction. In a scoped three-image-per-dataset study across six real image datasets, the framework supports high-fidelity per-image reconstruction. Three results characterize its structure. First, the pooled HVK2D map achieves numerical equivariance error of $9.57\times10^{-17}$. Second, across five seeds on a leakage-audited task requiring distant-patch products, the entangling observable channel reaches mean $R^2=0.974$, compared with $R^2\leq0.02$ for non-entangling controls. Third, five images are reconstructed from observables measured on IBM Quantum hardware without retraining, reaching $25.90$--$31.52$~dB PSNR. Fourth, exploratory training-dynamics diagnostics --- a magnetization-style change-point statistic and an energy-to-entanglement ratio, tracked across training and varied along qubit-count ($N=4,6,8$) and MPS-bond-dimension ($\chi=1,2,4,8$) axes --- are measured both in noiseless simulation and, via gate-for-gate checkpoint reconstruction, on real IBM Quantum hardware; these are descriptive, small-sample results, not inferential evidence of a thermodynamic phase transition. These results motivate HVK as a framework for studying symmetry, topology, nonlocal correlations, Hamiltonian diagnostics, and hardware-executed visual models. A companion supplementary study provides resource-matched held-out controls, leakage audits, statistical controls, and complete hardware methodology.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -44,6 +44,8 @@ We introduce the Hamiltonian Vision Kernel (HVK1D/HVK2D), which combines these i
 \noindent\textbf{4) Restricted nonlocal result:} In a leakage-audited fixed-readout protocol, entangling pair observables are necessary when the target depends explicitly on distant-patch products (Section~\ref{sec:entanglement_necessity}).
 
 \noindent\textbf{5) Hardware pilot:} Five fitted checkpoints are replayed on IBM hardware without retraining and decoded from hardware-measured observables (Section~\ref{sec:hardware_pilot}).
+
+\noindent\textbf{6) Training-dynamics diagnostics, in simulation and on real hardware:} A magnetization-style change-point statistic and an energy-to-entanglement ratio are tracked across training, varied along qubit-count ($N=4,6,8$) and MPS-bond-dimension ($\chi=1,2,4,8$) axes, and replayed via gate-for-gate checkpoint reconstruction on real IBM Quantum hardware and the IonQ simulator across three shot budgets (Sections~\ref{sec:phase_transition}--\ref{sec:checkpoint_hardware_bond_dimension_energy_entanglement}). These are descriptive, small-sample diagnostics --- not inferential evidence of a thermodynamic transition --- reported with the same detection formalism throughout (Eq.~\ref{eq:critical_epoch}).
 A companion document, \textit{Supplementary Material for the Hamiltonian Vision Kernel: Resource-Matched Ablations, Validation, and Reproducibility}, reports resource-matched held-out comparisons of HVK and classical/ablated feature maps, together with full hardware-pilot methodology (circuit construction, validation, job identifiers, quota accounting) and explicit provenance audits of excluded exploratory results. We keep that analysis in a companion document so the architecture-level contributions above and the generalization question do not obscure each other; Section~\ref{sec:ablation_relationship} summarizes its central finding and how it relates to the results here.
 
 \section{Hamiltonian Vision Kernel: Architecture (Compact)}
@@ -57,7 +59,7 @@ HVK treats each spatial patch as a finite spin state, compresses it as a matrix 
 &\rightarrow \text{Reconstruction}.
 \end{aligned}
 \end{equation}
-Two executed preprocessing configurations share this pipeline. For the $256\times256$ \textit{Monalisa}/HVK1D benchmark, sixteen non-overlapping $64\times64$ patches are $\ell_2$-normalized, reshaped as 12-site spin states, and sequentially SVD-compressed to MPS bond dimension $\chi=4$. Their 24 local $X/Z$ expectations, 11 nearest-neighbor $ZZ$ correlations, and 11 bipartite entropies form a 46-D feature vector. For the native $32\times32$ HVK2D multi-dataset experiments, sixteen $8\times8$ patches are represented by six-site MPSs, giving 12 local expectations, five nearest-neighbor $ZZ$ terms, and five entropies (22 dimensions). A learned linear layer compresses either MPS feature vector to six circuit angles. HVK1D then measures 27 observables (six local $Z$, six local $X$, and five each of $ZZ$, $XX$, and $YY$); HVK2D measures 19 (six local $Z$, six local $X$, and seven grid-edge $ZZ$ terms). The respective Fourier positional vectors have dimension eight and four. In both configurations, a two-hidden-layer MLP (128 and 256 units) maps the observable and positional vectors to one grayscale patch. Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits (rebuilt in Qiskit and numerically verified against the training-time PennyLane circuit as part of the hardware pilot of Section~\ref{sec:hardware_pilot}); the Hamiltonian energy-loss definitions and the $D_4$-pooling construction are given in Appendix~\ref{app:circuits}.
+Two executed preprocessing configurations share this pipeline. For the $256\times256$ \textit{Monalisa}/HVK1D benchmark, sixteen non-overlapping $64\times64$ patches are $\ell_2$-normalized, reshaped as 12-site spin states, and sequentially SVD-compressed to MPS bond dimension $\chi=4$. Their 24 local $X/Z$ expectations, 11 nearest-neighbor $ZZ$ correlations, and 11 bipartite entropies form a 46-D feature vector. For the native $32\times32$ HVK2D multi-dataset experiments, sixteen $8\times8$ patches are represented by six-site MPSs, giving 12 local expectations, five nearest-neighbor $ZZ$ terms, and five entropies (22 dimensions). A learned linear layer compresses either MPS feature vector to six circuit angles. HVK1D then measures 27 observables (six local $Z$, six local $X$, and five each of $ZZ$, $XX$, and $YY$); HVK2D measures 19 (six local $Z$, six local $X$, and seven grid-edge $ZZ$ terms). The respective Fourier positional vectors have dimension eight and four. In both configurations, a two-hidden-layer MLP (128 and 256 units) maps the observable and positional vectors to one grayscale patch. Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits (rebuilt in Qiskit and numerically verified against the training-time PennyLane circuit as part of the hardware pilot of Section~\ref{sec:hardware_pilot}); complete Hamiltonian, loss, positional-encoding, and measurement definitions are retained in the companion supplement.
 
 \begin{figure*}[t]
 \centering
@@ -353,11 +355,22 @@ $N$ (qubits) & $n$ & Detected & Mean $t_c$ & Std $t_c$ \\
 \label{fig:finite_size_phase_transition}
 \end{figure}
 
+Table~\ref{tab:finite_size_phase_transition} summarizes per-run detections: each run's own change magnitude is thresholded independently, then the resulting change epochs are averaged, giving a non-monotonic mean ($10.0\to85.0\to61.0$). A complementary view averages the change-magnitude \emph{traces themselves} across the four runs at each $N$ before locating a peak, rather than averaging four independently-detected peak locations. This ensemble-mean view (Figure~\ref{fig:finite_size_mean_susceptibility}) shows the peak of $\langle|\Delta M_z(t)|\rangle$ shifting later with $N$: epoch $3$ at $N=4$, epoch $96$ at $N=6$, epoch $163$ at $N=8$ --- monotonic, in contrast to Table~\ref{tab:finite_size_phase_transition}. We report both because they are not the same statistic and can disagree: per-run thresholding is sensitive to whichever single epoch happens to cross that run's own noisy threshold, while the ensemble mean suppresses run-to-run idiosyncrasy at the cost of blurring together events that do not align in time across runs. The $N=4$ peak at epoch $3$ sits at the very start of training, where curves are dominated by initialization transients rather than a mid-training reorganization, and should be read with that caveat; $N=6$ produces the sharpest, best-separated peak of the three (Figure~\ref{fig:finite_size_mean_susceptibility}), while $N=8$'s peak is broad and comparable in height to its own baseline fluctuation. With four runs per $N$, the shaded $\pm$one-std bands in Figure~\ref{fig:finite_size_mean_susceptibility} are wide enough that we treat the monotonic peak-shift as a second exploratory observation alongside Table~\ref{tab:finite_size_phase_transition}'s non-monotonic one, not as a resolution of it.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/finite_size_mean_susceptibility.pdf}
+\caption{Ensemble-mean change magnitude $\langle|\Delta M_z(t)|\rangle$ vs epoch, averaged across the four runs at each $N$ before peak-finding (shaded: $\pm$one std across runs), $N=4$ (blue), $N=6$ (red), $N=8$ (green). Dashed vertical lines mark each curve's peak epoch. The peak shifts monotonically later with $N$ (epochs $3$, $96$, $163$), a different statistic from the per-run-averaged epochs in Table~\ref{tab:finite_size_phase_transition}.}
+\label{fig:finite_size_mean_susceptibility}
+\end{figure}
+
 \subsection{A Second, Orthogonal Size Axis: MPS Bond Dimension}
 \label{sec:bond_dimension_phase_transition}
 Qubit count $N$ is a quantum circuit-width parameter; a second, purely classical size parameter enters before the circuit. We test whether the detected change epoch depends on MPS compression fidelity, holding $N=6$ fixed and varying $\chi\in\{1,2,4,8\}$ on CIFAR-10 (\textit{cat}), with two seeds each.
 
 All eight runs trigger, but the two seeds disagree sharply at $\chi=1$ and $\chi=2$ and agree closely at $\chi=4$ and $\chi=8$. The trajectories separate into qualitatively different optimization paths at low $\chi$ and similar rising paths at higher $\chi$. With only two seeds per setting, this is a hypothesis-generating observation that richer compression may reduce initialization sensitivity; it is not sufficient to estimate a population variance trend or establish a general relationship between bond dimension and optimization dynamics.
+
+This is a different measurement from, but worth reading alongside, the companion supplementary study's single-seed finding that MPS bond dimension is non-monotonic for \emph{final reconstruction quality}: under a fixed step budget, $\chi=1$ and $\chi=2$ outperform the default $\chi=4$ on PSNR, with $\chi=8$ only partially recovering. Taken together, the two results suggest bond dimension may trade off \emph{where} training ends up (reconstruction quality) against \emph{how reproducibly it gets there} (seed-to-seed agreement in training dynamics), rather than acting as a simple compression-fidelity knob on either axis --- a connection neither single result establishes on its own.
 
 \begin{table}[t]
 \centering
@@ -383,18 +396,7 @@ $\chi$ (MPS bond dim.) & $n$ & Detected & Mean $t_c$ & Std $t_c$ \\
 \label{fig:bond_dimension_phase_transition}
 \end{figure}
 
-\subsection{MPS Bond Dimension, Replayed on Real Hardware}
-\label{sec:checkpoint_hardware_bond_dimension}
-Using the same checkpoint-replay methodology as Sections~\ref{sec:checkpoint_hardware_finite_size} and~\ref{sec:checkpoint_hardware_energy_entanglement}, we replay the bond-dimension comparison itself on real hardware. We trained fresh HVK1D checkpoints at $N=6$ (fixed, matching Section~\ref{sec:bond_dimension_phase_transition}) across $\chi\in\{1,2,4,8\}$ on the same two images, saved learned parameters at the same eight epoch labels, and executed all $64$ resulting circuits ($2$ images $\times$ $4$ bond dimensions $\times$ $8$ epoch labels) on \texttt{ibm\_marrakesh} at $256$, $512$, and $1024$ shots, with the same single-patch, single-seed limitation as the other checkpoint-replay sections.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/checkpoint_hardware_bond_dimension_order_parameter.pdf}
-\caption{Order parameter $M_z(t)$ vs epoch from real trained HVK1D checkpoints ($N=6$, $\chi\in\{1,2,4,8\}$), circuits rebuilt gate-for-gate and executed on real IBM Quantum hardware (\texttt{ibm\_marrakesh}, 1024 shots), one representative patch per image.}
-\label{fig:checkpoint_hardware_bond_dimension}
-\end{figure}
-
-Figure~\ref{fig:checkpoint_hardware_bond_dimension} shows hardware traces that are noisier than the two-seed simulator traces of Figure~\ref{fig:bond_dimension_phase_transition}, as expected from a single-shot-budget, single-patch measurement; we do not attempt to reproduce the simulator's $\chi$-dependent seed-agreement pattern from a single seed per $\chi$ on hardware, since that pattern is itself a property of \emph{cross-seed} agreement that a single-seed hardware probe cannot speak to. As with the other checkpoint-replay sections, this establishes that trained checkpoints at every tested bond dimension remain executable and produce non-degenerate hardware-measured order parameters, not an independent hardware confirmation of the simulator-side variance pattern in Section~\ref{sec:bond_dimension_phase_transition}.
+As an execution check, we also replayed trained checkpoints across all four bond dimensions on real \texttt{ibm\_marrakesh} hardware and the IonQ ideal simulator at 256, 512, and 1024 shots. All checkpoint circuits completed and produced non-degenerate order parameters, but the single-patch, single-seed replay cannot confirm the cross-seed pattern above. The companion supplement reports the complete twelve-job audit trail, the hardware curves, and a three-basis $R_{ES}$ replay; it also documents why $\chi=1$ is excluded from the ratio because its product-state entropy reaches the numerical floor.
 
 \subsection{Energy-to-Entanglement Ratio as an Orthogonal Diagnostic}
 \label{sec:critical_temperature}
@@ -437,19 +439,6 @@ As a cross-platform check of the three-basis measurement path, the same 48 circu
 \end{figure}
 
 Figure~\ref{fig:checkpoint_hardware_energy_entanglement} shows the three shot budgets track each other closely for both images, more closely than the order-parameter hardware traces of Figure~\ref{fig:checkpoint_hardware_order_parameter} track across shot budgets --- consistent with $R_{ES}$ summing correlators over multiple bonds and bases, which averages down some of the shot noise visible in the single-qubit order-parameter measurement. As in Section~\ref{sec:checkpoint_hardware_finite_size}, we do not apply the descriptive detection rule to these single-patch traces; the result establishes that hardware-measured bond correlators, combined with a checkpoint's own learned couplings, reproduce a monotonically decreasing $R_{ES}(t)$ consistent in shape with the noiseless-simulator traces of Figure~\ref{fig:critical_temperature}, across three independent shot budgets on real hardware.
-
-\subsection{Energy-to-Entanglement Ratio Across Bond Dimension, Replayed on Real Hardware}
-\label{sec:checkpoint_hardware_bond_dimension_energy_entanglement}
-We replay $R_{ES}$ itself across the bond-dimension axis of Section~\ref{sec:checkpoint_hardware_bond_dimension}, measuring all three Pauli bases for each of the $64$ bond-dimension checkpoints ($2$ images $\times$ $4$ bond dimensions $\times$ $8$ epoch labels $\times$ $3$ bases $=192$ circuits) on \texttt{ibm\_marrakesh} and the IonQ simulator, at all three shot budgets. This exposes a construction limit rather than a training-dynamics result: at $\chi=1$ the MPS decomposition is an unentangled product state by definition, so every bond entropy $S_i$ collapses to the numerical floor ($S\approx5\times10^{-6}$, against $S\approx0.01$--$0.05$ at $\chi\geq2$), and $R_{ES}=H/S$ diverges to $O(10^5$--$10^6)$ as a division-by-near-zero artifact rather than a physically meaningful signal. We exclude $\chi=1$ from Figure~\ref{fig:checkpoint_hardware_bond_dimension_energy_entanglement} on these grounds; the order-parameter diagnostic of Section~\ref{sec:checkpoint_hardware_bond_dimension} has no such denominator and is unaffected.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/checkpoint_hardware_bond_dimension_r_es.pdf}
-\caption{$R_{ES}(t)=H(t)/S$ from real trained HVK1D checkpoints ($N=6$, $\chi\in\{2,4,8\}$; $\chi=1$ excluded, see text), Pauli bond correlators measured on real IBM Quantum hardware (\texttt{ibm\_marrakesh}, 1024 shots), one representative patch per image.}
-\label{fig:checkpoint_hardware_bond_dimension_energy_entanglement}
-\end{figure}
-
-For the well-defined range $\chi\in\{2,4,8\}$, $\chi=4$ and $\chi=8$ track closely for both images while $\chi=2$ diverges further negative by epoch 200, on real hardware, for a single patch and seed --- suggestive of the same qualitative pattern as the simulator-side bond-dimension comparison (Section~\ref{sec:bond_dimension_phase_transition}), where richer compression produced more consistent dynamics, but not independent confirmation of it, since a single hardware seed cannot speak to the cross-seed agreement that the simulator result is about.
 
 \section{Discussion}
 
@@ -495,7 +484,7 @@ Table~\ref{tab:differentiation} contrasts HVK's structural properties against re
 
 \begin{table*}[t]
 \centering
-\caption{Architectural differentiation against representative baseline designs evaluated or discussed in this work. Entries summarize those reference designs, not every model in each broad architecture family.}
+\caption{Architectural differentiation from representative baseline designs.}
 \label{tab:differentiation}
 \begin{tabular}{lcccc}
 \toprule
@@ -534,29 +523,6 @@ The source code, experiment drivers, machine-readable result summaries, validati
 
 \section*{Acknowledgements}
 We thank the maintainers of the open-source scientific computing libraries used in this work.
-
-\appendices
-
-\section{Exact Circuit Definitions}
-\label{app:circuits}
-For a one-dimensional chain of $n_{\text{bonds}}$ bonds indexed by $i$ and sites $(i,i+1)$, the anisotropic Heisenberg Hamiltonian is
-\begin{equation}
-H_{\text{Heis}} = \sum_{i=0}^{n_{\text{bonds}}-1}\Bigl(J_x^{(i)}X_i X_{i+1} + J_y^{(i)}Y_i Y_{i+1} + J_z^{(i)}Z_i Z_{i+1}\Bigr),
-\end{equation}
-where $X,Y,Z$ are Pauli operators and $J_\alpha^{(i)}$ are bond-resolved couplings. HVK1D fixes six sites and treats the 15 coefficients on its five bonds as learnable parameters initialized independently from a zero-mean Gaussian with standard deviation $0.1$. Given patch $n$'s measured observables, its energy diagnostic is
-\begin{equation}
-\mathcal{E}_n(\theta,J) = \sum_{i=0}^{4}\sum_{\alpha\in\{x,y,z\}} J_\alpha^{(i)}\langle\sigma_\alpha^{(i)}\sigma_\alpha^{(i+1)}\rangle_n,
-\end{equation}
-HVK2D instead uses the seven edges $\mathcal{G}_{2D}$ of its $2\times3$ circuit graph and the implemented grid-Ising diagnostic $\mathcal{E}^{2D}_n=\sum_{(u,v)\in\mathcal{G}_{2D}}j_{uv}\langle Z_uZ_v\rangle_n$. Thus ``Hamiltonian diagnostic'' refers to the full $XX/YY/ZZ$ chain energy for HVK1D and the learned $ZZ$ graph energy for HVK2D. In either case, the patch-averaged term is $\mathcal{L}_{\text{energy}}=\frac{1}{N}\sum_n \mathcal{E}_n$, and the total objective is
-\begin{equation}
-\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{rec}} + \lambda\,\mathcal{L}_{\text{energy}}, \quad
-\mathcal{L}_{\text{rec}} = \frac{1}{N}\sum_{n=1}^{N}\bigl\|D(o_n,e_n)-P_n\bigr\|_F^2,
-\end{equation}
-with $D$ the classical decoder and $P_n$ the ground-truth patch.
-
-Per-patch coordinates $(r_i,c_j)$ are mapped to Fourier features $e_{4k}=\sin(\omega_k\pi r_i)$, $e_{4k+1}=\cos(\omega_k\pi r_i)$, $e_{4k+2}=\sin(\omega_k\pi c_j)$, and $e_{4k+3}=\cos(\omega_k\pi c_j)$ \cite{Xu2021}. HVK1D uses $k\in\{0,1\}$ (8-D), whereas the native-resolution HVK2D implementation uses one frequency (4-D); a learned linear map projects either vector to six $R_Y$ angles. Both six-qubit circuits first apply $U_{\text{enc}}(x_n)=\bigotimes_{i=0}^{5}R_X(x_n^{(i)})$ and $U_{\text{pos}}=\bigotimes_{i=0}^{5}R_Y(\theta_{\text{position}}^{(i)})$. Each of two HVK1D layers then applies per-qubit $\mathrm{Rot}$ gates followed by the strongly-entangling CNOT ring. Each HVK2D layer applies CNOTs over the four horizontal and three vertical grid edges followed by per-qubit $\mathrm{Rot}$ gates, matching the executed source and hardware-replay circuits.
-
-HVK1D returns local $Z/X$ measurements and the three nearest-neighbor pair sectors $ZZ/XX/YY$ (27 values); HVK2D returns local $Z/X$ measurements and grid-edge $ZZ$ correlations (19 values). Positional rotations and fixed graph connectivity distinguish circuit sites, so neither unpooled map is asserted to be permutation- or $D_4$-equivariant. The $D_4$ action used in Section~\ref{sec:d4} is instead the explicit permutation action on the $4\times4$ patch grid, and equivariance follows only after the stated Reynolds average over its eight transformations.
 
 \begin{thebibliography}{99}
 \bibitem{Cerezo2021} M. Cerezo et al., ``Variational quantum algorithms,'' \textit{Nature Reviews Physics}, vol. 3, no. 9, pp. 625--644, 2021.

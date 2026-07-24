@@ -1,4 +1,4 @@
-"""Thermodynamically-motivated critical-temperature diagnostic, complementing
+"""Energy-to-entanglement-ratio diagnostic, complementing
 the order-parameter phase-transition result of run_phase_transition_multi_dataset.py.
 
 Local bond temperature: T_i = <h_i> / (k_B * S_i), where h_i is HVK1D's own
@@ -15,11 +15,11 @@ bonds and the quantum circuit bonds are then literally the same 5 bonds.
 HVK2D's grid model only has a single ZZ-type coupling per edge, so it does
 not fit this construction as cleanly and is not used here.
 
-Effective temperature T_eff(t) = H(t) / S, with H(t) = sum_i h_i(t) (the
+Signed energy-to-entanglement ratio R_ES(t) = H(t) / S, with H(t) = sum_i h_i(t) (the
 model's own tracked total bond energy) and S = sum_i S_i (fixed). Tracked
 across training in noise-free evaluation mode (mirrors the corrected
 phase-transition protocol exactly), with the same median-plus-two-std
-critical-epoch detection rule applied to |dT_eff/dt|.
+critical-epoch detection rule applied to |dR_ES/dt|.
 """
 from __future__ import annotations
 
@@ -112,7 +112,7 @@ def train_with_temperature_tracking(image: np.ndarray, device: torch.device, epo
     S_i = torch.tensor(bond_entropies, dtype=torch.float32, device=device)
     S_total = float(S_i.sum().item())
 
-    t_eff_trace, h_total_trace = [], []
+    r_es_trace, h_total_trace = [], []
     for step in range(epochs):
         model.train()
         decoder.train()
@@ -123,7 +123,7 @@ def train_with_temperature_tracking(image: np.ndarray, device: torch.device, epo
         loss.backward()
         optimizer.step()
 
-        # noise-free evaluation-mode pass for the temperature diagnostic itself
+        # Noise-free evaluation-mode pass for the ratio diagnostic itself.
         model.eval()
         with torch.no_grad():
             eval_obs, _ = model(features_t, positions)
@@ -133,12 +133,12 @@ def train_with_temperature_tracking(image: np.ndarray, device: torch.device, epo
             yy = eval_obs[:, 22:27].mean(dim=0)
             h_i = model.Jz.detach() * zz + model.Jx.detach() * xx + model.Jy.detach() * yy  # (5,)
             H_total = float(h_i.sum().item())
-        t_eff = H_total / S_total
-        t_eff_trace.append(t_eff)
+        r_es = H_total / S_total
+        r_es_trace.append(r_es)
         h_total_trace.append(H_total)
 
-    result = detect_critical_point(t_eff_trace)
-    result["t_eff_trace"] = t_eff_trace
+    result = detect_critical_point(r_es_trace)
+    result["r_es_trace"] = r_es_trace
     result["h_total_trace"] = h_total_trace
     result["bond_entropies"] = bond_entropies.tolist()
     result["S_total"] = S_total
@@ -165,7 +165,7 @@ def main():
             print(f"\n=== image {idx} ({path.name}), seed {seed} ===", flush=True)
             r = train_with_temperature_tracking(image, device, EPOCHS, seed)
             print(f"  critical_epoch={r['critical_epoch']} peak_rate={r['peak_rate_of_change']:.4f} "
-                  f"final_T_eff={r['final_value']:.4f} S_total={r['S_total']:.3f}", flush=True)
+                  f"final_R_ES={r['final_value']:.4f} S_total={r['S_total']:.3f}", flush=True)
             r["image_index"] = idx
             r["image_name"] = path.name
             r["seed"] = seed

@@ -18,9 +18,9 @@ evidence.
 ## Current inventory
 
 - Main manuscript: 13 figure files.
-- Supplement only: 11 figure files.
+- Supplement: 13 figure files.
 - Archived and uncited: 37 figure files.
-- Unique files: 60. The category counts sum to 61 because
+- Unique files: 62. The category counts sum to 63 because
   `full_ablation_metric_comparison.pdf` is cited in both documents;
   `ibm_circuit_summary.pdf` is intentionally supplement-only.
 
@@ -90,7 +90,10 @@ figures, or the supplement:
 
 IonQ ideal cloud-simulator results are intentionally summarized in prose in the
 main paper. Complete shot budgets, deviations, job identifiers, and the
-three-basis energy-to-entanglement replay are reported in
-`supplementary_study.tex`. No IonQ-simulator plot is added to the main paper
-because it would duplicate the checkpoint trajectories and could visually blur
-the distinction between ideal simulation and QPU hardware.
+three-basis energy-to-entanglement replays are reported in
+`supplementary_study.tex`. Both bond-dimension hardware figures are
+supplement-only: the main paper retains a concise checkpoint-executability result,
+while the supplement carries the full curves and denominator-limit analysis.
+No IonQ-simulator plot is added to the main paper because it would duplicate the
+checkpoint trajectories and could visually blur the distinction between ideal
+simulation and QPU hardware.

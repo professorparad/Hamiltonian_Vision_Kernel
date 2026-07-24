@@ -24,7 +24,7 @@ def main() -> None:
 
     fig, axes = plt.subplots(2, 4, figsize=(15, 6), sharex=True)
     for ax, row in zip(axes.flat, rows):
-        trace = row["t_eff_trace"]
+        trace = row["r_es_trace"]
         diffs = [0.0] + [abs(trace[i] - trace[i - 1]) for i in range(1, len(trace))]
         diffs = np.array(diffs)
         epochs = np.arange(len(diffs))
