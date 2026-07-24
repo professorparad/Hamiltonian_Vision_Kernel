@@ -4,7 +4,7 @@
 \usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm}
 \usepackage[hidelinks,hypertexnames=false]{hyperref}
 \usepackage{float}
-\usepackage{balance}
+\usepackage{flushend}
 \hypersetup{
   pdftitle={Hamiltonian Vision Kernel: Symmetry, Entangling Correlators, and Real-Hardware Replay in Hybrid Quantum Image Reconstruction},
   pdfauthor={Sparsho Chakraborty and Siddhartha Patra},
@@ -67,7 +67,7 @@ Two executed preprocessing configurations share this pipeline. For the $256\time
 \label{fig:hvk_ansatz}
 \end{figure*}
 
-Table~\ref{tab:variants} summarizes the tested variants. HVK1D uses a linear 6-qubit chain (5 nearest-neighbor bonds, 27-D observable vector); HVK2D arranges the same 6 qubits on a $2\times3$ lattice matching patch-boundary adjacency (19-D latent signature); a symmetric HVK1D variant adds a $\mathrm{U}(1)$-preserving coupling constraint; and a $D_4$-pooled HVK2D variant (Section~\ref{sec:symmetry}) group-averages the observable grid over the eight symmetries of the square, $\Phi_{D_4}(x)=\frac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx)$, which is equivariant by construction. An IBM Cloud circuit probe (Appendix~\ref{app:hardware}) confirms both HVK1D and HVK2D compile to depth-18, 6-qubit circuits on a Heron-class basis.
+Table~\ref{tab:variants} summarizes the tested variants. HVK1D uses a linear 6-qubit chain (5 nearest-neighbor bonds, 27-D observable vector); HVK2D arranges the same 6 qubits on a $2\times3$ lattice matching patch-boundary adjacency (19-D latent signature); a symmetric HVK1D variant adds a $\mathrm{U}(1)$-preserving coupling constraint; and a $D_4$-pooled HVK2D variant (Section~\ref{sec:symmetry}) group-averages the observable grid over the eight symmetries of the square, $\Phi_{D_4}(x)=\frac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx)$, which is equivariant by construction. The IBM Cloud circuit probe reported in the supplement confirms both HVK1D and HVK2D compile to depth-18, 6-qubit circuits on a Heron-class basis.
 
 \begin{table}[t]
 \centering
@@ -90,7 +90,7 @@ $D_4$-pooled HVK2D & $2\times3$ grid, pooled & 19-D & $D_4$-equivariant (proven)
 
 \section{Experimental Setup}
 \label{sec:protocol}
-All image-reconstruction results in Sections~\ref{sec:sameset_results}--\ref{sec:hardware_pilot} use the single-image \textit{Monalisa} protocol developed for HVK: a fresh model is optimized directly on its target image, with no held-out split. They therefore measure per-image fitting and reconstruction capability, including hardware replay of those fitted checkpoints. The symmetry and restricted-entanglement diagnostics use the separate protocols stated in their respective sections; the exploratory training-dynamics material is addressed only as a provenance audit and is not retained as evidence. Held-out generalization and component necessity are evaluated under the resource-matched statistical protocol of the companion supplementary study (Section~\ref{sec:ablation_relationship}). All settings report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings additionally report SSIM. Implementation details are given in Appendix~\ref{app:implementation}.
+All image-reconstruction results in Sections~\ref{sec:sameset_results}--\ref{sec:hardware_pilot} use the single-image \textit{Monalisa} protocol developed for HVK: a fresh model is optimized directly on its target image, with no held-out split. They therefore measure per-image fitting and reconstruction capability, including hardware replay of those fitted checkpoints. The symmetry and restricted-entanglement diagnostics use the separate protocols stated in their respective sections; the exploratory training-dynamics material is addressed only as a provenance audit and is not retained as evidence. Held-out generalization and component necessity are evaluated under the resource-matched statistical protocol of the companion supplementary study (Section~\ref{sec:ablation_relationship}). All settings report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings additionally report SSIM. Full implementation settings and environment versions are given in the companion supplementary document.
 
 \section{Results}
 \label{sec:results}
@@ -126,7 +126,7 @@ A model optimized on one image alone does not transfer zero-shot to a structural
 
 \subsection{A Real Hardware Reconstruction Pilot}
 \label{sec:hardware_pilot}
-Every result above is a noiseless-simulator result, a limitation we flagged rather than left implicit. We report a first step past it: a small but complete image-reconstruction pilot executed on real IBM Quantum hardware (\texttt{ibm\_fez}, a 156-qubit Heron-class processor), rather than the compiled-circuit feasibility probe of Appendix~\ref{app:hardware} alone. For five images --- the full 16-patch \textit{Monalisa} benchmark and four native-resolution CIFAR-10 images (\textit{cat}, \textit{ship}$\times2$, \textit{airplane}), each optimized directly on its own target image following the same per-image protocol as every result in this paper --- we took an already-trained HVK1D/HVK2D checkpoint's exact learned parameters, rebuilt its measurement circuits gate-for-gate in Qiskit, verified the translation against the original PennyLane simulator to within numerical noise ($\leq 7.9\times10^{-4}$ maximum absolute error per observable across every patch; full validation numbers in the companion supplementary document), and then executed the same circuits on real hardware with 256 shots per measurement basis, a fixed per-basis shot budget rather than an adaptive shadow-tomography-style estimation scheme \cite{Huang2020Shadows}. The hardware-measured observables were decoded by the same trained classical decoder, with no retraining and no simulator involved anywhere in the reconstruction path.
+Every result above is a noiseless-simulator result, a limitation we flagged rather than left implicit. We report a first step past it: a small but complete image-reconstruction pilot executed on real IBM Quantum hardware (\texttt{ibm\_fez}, a 156-qubit Heron-class processor), beyond the compiled-circuit feasibility probe documented in the supplement. For five images --- the full 16-patch \textit{Monalisa} benchmark and four native-resolution CIFAR-10 images (\textit{cat}, \textit{ship}$\times2$, \textit{airplane}), each optimized directly on its own target image following the same per-image protocol as every result in this paper --- we took an already-trained HVK1D/HVK2D checkpoint's exact learned parameters, rebuilt its measurement circuits gate-for-gate in Qiskit, verified the translation against the original PennyLane simulator to within numerical noise ($\leq 7.9\times10^{-4}$ maximum absolute error per observable across every patch; full validation numbers in the companion supplementary document), and then executed the same circuits on real hardware with 256 shots per measurement basis, a fixed per-basis shot budget rather than an adaptive shadow-tomography-style estimation scheme \cite{Huang2020Shadows}. The hardware-measured observables were decoded by the same trained classical decoder, with no retraining and no simulator involved anywhere in the reconstruction path.
 
 Reconstructions from real, noisy hardware measurements retain recognizable image structure. \textit{Monalisa} reaches $25.90$~dB PSNR from hardware measurements, against a $37.99$~dB noiseless-simulator replay of the identical circuit (Figure~\ref{fig:hardware_reconstruction_monalisa}); the four CIFAR-10 images average $29.56\pm2.03$~dB on hardware against $42.69\pm3.84$~dB in simulation (Figure~\ref{fig:hardware_reconstruction_cifar}, Table~\ref{tab:hardware_pilot_summary}). The observed gap is consistent with noise in these unmitigated device executions, although the five-image pilot does not isolate individual noise sources. Every hardware reconstruction remains above the random-latent control range ($11$--$15$~dB in the companion supplementary study). The pilot used 176 circuits; the contemporaneous account-meter reading increased by 16 quantum-processor seconds, with the provenance limitation documented in the supplement.
 
@@ -180,6 +180,10 @@ The finite-size comparison of Section~\ref{sec:finite_size_phase_transition} is 
 \end{figure}
 
 Figure~\ref{fig:checkpoint_hardware_order_parameter} shows the resulting curves are noisier and less structured than their noiseless-simulator counterparts in Figure~\ref{fig:finite_size_phase_transition}, as expected from single-shot-budget hardware measurement of a single patch rather than a change-magnitude trace averaged over multiple images and seeds. We do not apply the descriptive detection rule to these single-patch hardware traces; the figure establishes executable, non-degenerate hardware measurements across epochs, not independent confirmation of the detected change epochs in Table~\ref{tab:finite_size_phase_transition}. The same checkpoints were replayed on the IonQ simulator at the same three shot budgets; full per-shot data are archived alongside this submission.
+
+\subsection{Cross-Platform Replay on the IonQ Cloud Simulator}
+\label{sec:ionq_simulator}
+To test software-stack portability separately from device noise, we submitted the same checkpoint circuits through Qiskit to IonQ Quantum Cloud's ideal simulator (\texttt{ionq\_simulator}), with no hardware noise model enabled \cite{IonQBackends}. At each of 256, 512, and 1024 shots, one job contained 48 circuits spanning two images, $N\in\{4,6,8\}$, and eight epochs. All circuits completed, and the mean absolute $M_z$ deviation from the independently sampled 1024-shot trace decreased from $0.0257$ (256 shots) to $0.0213$ (512 shots). A separate 48-circuit, three-basis job reproduced the decreasing $R_{ES}(t)$ shape at 1024 shots. These are ideal cloud-simulator portability checks, not IonQ-QPU results; job identifiers, estimator details, and per-circuit summaries are reported in the supplement.
 
 \subsection{Noise/Shot Trade-off: A Free Simulator Complement}
 \label{sec:hardware_robustness}
@@ -250,7 +254,7 @@ Local/raw & $8.37\times10^{-1}$ & $1.31\times10^{-1}$ \\
 
 \subsection{Entanglement Necessity in the Nonlocal-Structure Protocol}
 \label{sec:entanglement_necessity}
-This diagnostic is deliberately constructed to reward pair-observable structure: the target is a fixed synthetic function of \emph{simulated} patch features not concatenated into any candidate's own input block (Appendix~\ref{app:leakage_summary} summarizes the leakage-audit procedure that rules out circularity), and every control receives the same raw inputs as HVK2D. Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic} report the result across five seeds: HVK2D's entangling observable channel reaches mean $R^2=0.9735$ ($32.77$~dB PSNR), a $17.74$~dB improvement over a no-entanglement control ($R^2=0.019$) and $18.52$~dB over random-VQC latents ($R^2=-0.173$); freezing the quantum circuit (features fixed, only readout trained) still reaches $R^2=0.853$, while a parameter-matched classical control ($R^2=-0.030$) and a frozen-classical control ($R^2=-0.903$) fail outright. This is evidence that an entangling pair-observable channel is \emph{representationally necessary within the tested feature class and fixed linear-readout protocol} to fit this target.
+This diagnostic is deliberately constructed to reward pair-observable structure: the target is a fixed synthetic function of \emph{simulated} patch features not concatenated into any candidate's own input block (the companion supplement gives the leakage-audit procedure that rules out circularity), and every control receives the same raw inputs as HVK2D. Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic} report the result across five seeds: HVK2D's entangling observable channel reaches mean $R^2=0.9735$ ($32.77$~dB PSNR), a $17.74$~dB improvement over a no-entanglement control ($R^2=0.019$) and $18.52$~dB over random-VQC latents ($R^2=-0.173$); freezing the quantum circuit (features fixed, only readout trained) still reaches $R^2=0.853$, while a parameter-matched classical control ($R^2=-0.030$) and a frozen-classical control ($R^2=-0.903$) fail outright. This is evidence that an entangling pair-observable channel is \emph{representationally necessary within the tested feature class and fixed linear-readout protocol} to fit this target.
 
 \begin{table*}[t]
 \centering
@@ -410,6 +414,8 @@ All eight $R_{ES}$ traces become more negative as learned signed energy decrease
 \label{sec:checkpoint_hardware_energy_entanglement}
 Using the same checkpoint-replay methodology as Section~\ref{sec:checkpoint_hardware_finite_size}, we measure $R_{ES}(t)$ itself from real hardware rather than from simulation. The $R_{ES}$ construction requires $N=6$ (Section~\ref{sec:critical_temperature}), so this replay is single-size: we trained fresh HVK1D checkpoints at $N=6$ on the same two images (\textit{Monalisa}, CIFAR-10 \textit{cat}) for 200 real gradient-descent epochs, saved each checkpoint's learned $J_x^{(i)},J_y^{(i)},J_z^{(i)}$ couplings and projected per-qubit angles at the same eight epoch labels, and measured all three Pauli bases needed to reconstruct $\langle X_iX_{i+1}\rangle$, $\langle Y_iY_{i+1}\rangle$, $\langle Z_iZ_{i+1}\rangle$ per bond ($2$ images $\times$ $8$ epoch labels $\times$ $3$ bases $=48$ circuits) on \texttt{ibm\_marrakesh} at $256$, $512$, and $1024$ shots. Hardware-measured bond correlators are combined with each checkpoint's own learned couplings and the fixed, classically-computed bond entropy $S$ to obtain $R_{ES}(t)$; this is a single-patch, single-seed probe, the same limitation noted in Section~\ref{sec:checkpoint_hardware_finite_size}.
 
+As a cross-platform check of the three-basis measurement path, the same 48 circuits were also executed as one 1024-shot job on the IonQ ideal cloud simulator (job identifier retained in the archive). The resulting $R_{ES}(t)$ traces preserve the same decreasing shape as the local and IBM replays. Since this execution used an ideal simulator rather than an IonQ QPU, it supports software-stack portability and estimator reproducibility only.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/checkpoint_hardware_energy_entanglement_ratio.pdf}
@@ -526,41 +532,6 @@ Per-patch coordinates $(r_i,c_j)$ are mapped to Fourier features $e_{4k}=\sin(\o
 
 HVK1D returns local $Z/X$ measurements and the three nearest-neighbor pair sectors $ZZ/XX/YY$ (27 values); HVK2D returns local $Z/X$ measurements and grid-edge $ZZ$ correlations (19 values). Positional rotations and fixed graph connectivity distinguish circuit sites, so neither unpooled map is asserted to be permutation- or $D_4$-equivariant. The $D_4$ action used in Section~\ref{sec:d4} is instead the explicit permutation action on the $4\times4$ patch grid, and equivariance follows only after the stated Reynolds average over its eight transformations.
 
-\section{Implementation Details}
-\label{app:implementation}
-Adam optimizer, $\eta=0.003$ (1D) / $\eta=0.004$ (2D); energy regularization $\lambda=0.01$ unless explicitly ablated. The Monalisa/HVK1D MPS extraction unrolls each $64\times64$ patch to $2^{12}$ amplitudes and produces the 46-D feature vector detailed above. The native $32\times32$ HVK2D runs analogously map each $8\times8$ patch to $2^6$ amplitudes and a 22-D feature vector. Both use sequential SVD compression with $\chi=4$, probabilities normalized with $\varepsilon=10^{-8}$ in the entropy calculation, feature standardization over the 16 patches, and a learned projection to six circuit inputs.
-
-\section{Leakage-Audit Summary}
-\label{app:leakage_summary}
-The entanglement-necessity diagnostic of Section~\ref{sec:entanglement_necessity} was independently audited for target--feature leakage: the target is a fixed synthetic function of simulated patch features not concatenated into any candidate model's own input block, so no model can achieve fit quality by copying precomputed target-construction quantities from its own features. This audit was itself the product of catching an earlier, circular benchmark of our own (an entangling observable channel reaching a spurious $R^2\approx1$ by copying, not learning, distant-patch product terms that had been concatenated onto its own input); the full post-mortem and the resulting general-purpose leakage-detection rule are given in the companion supplementary document.
-
-\section{Additional Hardware Results}
-\label{app:hardware}
-Table~\ref{tab:ibm_probe} and Figure~\ref{fig:ibm_circuit_summary} report circuit resources for the HVK1D and HVK2D patch circuits compiled to an IBM Heron-class basis (patch index $0$). Both variants use six measured qubits and depth-18 circuits after transpilation; HVK2D requires more CNOT gates because it encodes additional grid-adjacency links. This is a compiled-circuit feasibility check across the broader variant sweep, complementary to the finite-shot reconstruction pilot of Section~\ref{sec:hardware_pilot}: this appendix draws no image-quality conclusion by itself, while Section~\ref{sec:hardware_pilot} reports the actual hardware-measured reconstruction numbers, with full methodology in the companion supplementary document.
-
-\begin{table}[t]
-\centering
-\caption{Circuit-resource summary for HVK patch circuits mapped to an IBM Heron-class basis.}
-\label{tab:ibm_probe}
-\scriptsize
-\begin{tabular}{lccccc}
-\toprule
-Variant & Qubits & Depth & $R_Y$ & $R_Z$ & CNOT \\
-\midrule
-HVK1D & 6 & 18 & 11 & 6 & 10 \\
-HVK2D & 6 & 18 & 13 & 6 & 14 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/ibm_circuit_summary.pdf}
-\caption{IBM Cloud circuit-resource summary for the HVK1D and HVK2D hardware probes.}
-\label{fig:ibm_circuit_summary}
-\end{figure}
-
-\balance
 \begin{thebibliography}{99}
 \bibitem{Cerezo2021} M. Cerezo et al., ``Variational quantum algorithms,'' \textit{Nature Reviews Physics}, vol. 3, no. 9, pp. 625--644, 2021.
 \bibitem{Tilly2022} J. Tilly et al., ``The Variational Quantum Eigensolver: A review of methods and best practices,'' \textit{Physics Reports}, vol. 986, pp. 1--128, 2022.
@@ -587,6 +558,7 @@ HVK2D & 6 & 18 & 13 & 6 & 14 \\
 \bibitem{Cohen2016} T. Cohen and M. Welling, ``Group Equivariant Convolutional Networks,'' in \textit{Proceedings of the 33rd International Conference on Machine Learning}, PMLR, vol. 48, 2016, pp. 2990--2999.
 \bibitem{Meyer2023} J. J. Meyer, M. Mularski, E. Gil-Fuster, A. A. Mele, F. Arzani, A. Wilms, and J. Eisert, ``Exploiting Symmetry in Variational Quantum Machine Learning,'' \textit{PRX Quantum}, vol. 4, p. 010328, 2023.
 \bibitem{Huang2020Shadows} H.-Y. Huang, R. Kueng, and J. Preskill, ``Predicting many properties of a quantum system from very few measurements,'' \textit{Nature Physics}, vol. 16, pp. 1050--1057, 2020.
+\bibitem{IonQBackends} IonQ, ``Backends,'' \textit{IonQ Quantum Cloud Documentation}. [Online]. Available: \url{https://docs.ionq.com/user-manual/backends}. Accessed: Jul. 24, 2026.
 \bibitem{Huang2021PowerData} H.-Y. Huang, M. Broughton, M. Mohseni, R. Babbush, S. Boixo, H. Neven, and J. R. McClean, ``Power of data in quantum machine learning,'' \textit{Nature Communications}, vol. 12, no. 1, p. 2631, 2021.
 \bibitem{Krizhevsky2009} A. Krizhevsky, ``Learning multiple layers of features from tiny images,'' University of Toronto, Technical Report, 2009.
 \bibitem{LeCun1998} Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, ``Gradient-based learning applied to document recognition,'' \textit{Proceedings of the IEEE}, vol. 86, no. 11, pp. 2278--2324, 1998, doi: 10.1109/5.726791.

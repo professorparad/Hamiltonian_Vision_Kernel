@@ -515,6 +515,28 @@ CIFAR airplane & \texttt{d9edgdphtsac739e4kdg} & 32 & Z, X \\
 
 Total: 176 circuits across 5 jobs. Quota consumption, read from \texttt{QiskitRuntimeService.}\allowbreak\texttt{usage()} immediately before and after the pilot, changed from $19$ to $35$ seconds against a $600$-second monthly free-plan allowance. Thus the account meter indicated 16 seconds of billed quantum-processor time and 565 seconds remaining afterward, at an observed rate of $\approx\!0.09$--$0.13$~s/circuit. The readings were recorded contemporaneously, but the raw service-response object was not serialized; unlike the job identifiers and reconstruction outputs, this quota figure is therefore an execution-log record rather than a repository-recomputable artifact.
 
+\subsection{IonQ Ideal Cloud-Simulator Replay}
+The main paper's cross-platform check used IonQ Quantum Cloud's ideal simulator through the Qiskit provider, with no device-noise model. It therefore tests circuit translation, submission, count retrieval, bit-order handling, and estimator reproducibility, but is not an IonQ-QPU experiment. Each order-parameter job contained 48 circuits: two images (\textit{Monalisa}, CIFAR-10 \textit{cat}), three widths $N\in\{4,6,8\}$, and eight checkpoint epochs. Counts were reduced with the same $M_z$, nearest-neighbor $ZZ$, and proxy-loss estimators as the IBM replay.
+
+\begin{table}[H]
+\centering
+\caption{IonQ ideal cloud-simulator order-parameter replay. Deviations use the independently sampled 1024-shot IonQ trace at matched image, width, and epoch as the reference.}
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccl}
+\toprule
+Shots & Circuits & Mean $|{\Delta M_z}|$ & Max $|{\Delta M_z}|$ & Job ID \\
+\midrule
+256  & 48 & 0.0257 & 0.0902 & \texttt{019f903b-62c0-74db-adec-a33847ae8a1c} \\
+512  & 48 & 0.0213 & 0.0581 & \texttt{019f903d-09d4-7548-87f1-2a55185ee9b5} \\
+1024 & 48 & Reference & Reference & \texttt{019f903e-cac2-708f-911f-67b2b6d7471c} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+A second IonQ ideal-simulator job (\texttt{019f9046-7ba6-7320-9766-552d88d490bf}) executed the 48 three-basis circuits required for the energy-to-entanglement ratio at 1024 shots. It reproduced the decreasing $R_{ES}(t)$ trajectory shape for both images. Because these are ideal finite-shot simulations, the numerical differences above describe sampling and cross-stack agreement only; they do not support claims about IonQ hardware noise, QPU quality, or comparative hardware performance.
+
 \subsection{Reconstruction Decode}
 Hardware counts were converted to observable expectation values by the standard parity estimator, $\langle Z_i\rangle = \frac{1}{S}\sum_{\text{shots}} (-1)^{b_i}$ (identically for $X$, $Y$ after basis rotation), with pairwise correlators computed as the shot-weighted mean of $(-1)^{b_i+b_j}$ within the same measurement basis. The resulting observable vector, concatenated with the training-time positional encoding, was passed through the \emph{unmodified} trained decoder. No hardware-specific fine-tuning, error mitigation, or post-hoc calibration was applied.
 
