@@ -597,6 +597,15 @@ IonQ ideal simulator & \texttt{ionq\_simulator} & 1024 & \texttt{019f9574-a981-7
 }
 \end{table}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{figures/checkpoint_ionq_bond_dimension_order_parameter.pdf}
+\caption{The same bond-dimension checkpoint replay as Figure~\ref{fig:supp_checkpoint_hardware_bond_dimension}, executed instead on the IonQ ideal cloud simulator at 1024 shots.}
+\label{fig:supp_checkpoint_ionq_bond_dimension}
+\end{figure}
+
+Figure~\ref{fig:supp_checkpoint_ionq_bond_dimension} shows the corresponding IonQ traces: $\chi=1$ remains the most distinct trajectory on both images, the same qualitative pattern as Figure~\ref{fig:supp_checkpoint_hardware_bond_dimension}'s hardware replay, consistent with these being ideal-simulator and real-device executions of the identical checkpoint circuits rather than independent training runs.
+
 We additionally replayed the three-basis energy-to-entanglement estimator for the same checkpoint grid. Each platform/shot job contains $2\times4\times8\times3=192$ circuits. At $\chi=1$, the MPS is a product state and the archived entropy sum is fixed at the numerical floor, $S=5.0\times10^{-6}$, compared with $S=0.014$--$0.045$ for $\chi\geq2$. Consequently, $R_{ES}=H/S$ reaches $O(10^5$--$10^6)$ through division by a near-zero denominator. We retain those rows in the machine-readable archive but exclude them from Figure~\ref{fig:supp_checkpoint_hardware_bond_dimension_res}; this is a construction-limit audit, not a physical divergence.
 
 \begin{figure}[H]
@@ -626,7 +635,14 @@ IonQ ideal simulator & \texttt{ionq\_simulator} & 1024 & \texttt{019f9586-4eb6-7
 }
 \end{table}
 
-For $\chi\in\{2,4,8\}$, the $\chi=4$ and $\chi=8$ traces are close on both images, while $\chi=2$ becomes more negative by epoch 200. This single-patch, single-seed pattern is descriptive. It neither establishes a bond-dimension scaling law nor independently confirms the two-seed simulator observation about initialization sensitivity. The complete per-shot IBM and IonQ summaries are stored under \path{IBM_Cloud/outputs/checkpoint_bond_dimension_hardware_sweep/} and \path{IBM_Cloud/outputs/checkpoint_bond_dimension_temperature_hardware_sweep/}.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{figures/checkpoint_ionq_bond_dimension_r_es.pdf}
+\caption{Energy-to-entanglement ratio across $\chi\in\{2,4,8\}$ at 1024 shots on the IonQ ideal cloud simulator, the same checkpoints and circuits as Figure~\ref{fig:supp_checkpoint_hardware_bond_dimension_res}; $\chi=1$ is excluded for the same numerical-floor reason.}
+\label{fig:supp_checkpoint_ionq_bond_dimension_res}
+\end{figure}
+
+For $\chi\in\{2,4,8\}$, the $\chi=4$ and $\chi=8$ traces are close on both images, while $\chi=2$ becomes more negative by epoch 200, on both real hardware (Figure~\ref{fig:supp_checkpoint_hardware_bond_dimension_res}) and the IonQ ideal simulator (Figure~\ref{fig:supp_checkpoint_ionq_bond_dimension_res}). This single-patch, single-seed pattern is descriptive. It neither establishes a bond-dimension scaling law nor independently confirms the two-seed simulator observation about initialization sensitivity. The complete per-shot IBM and IonQ summaries are stored under \path{IBM_Cloud/outputs/checkpoint_bond_dimension_hardware_sweep/} and \path{IBM_Cloud/outputs/checkpoint_bond_dimension_temperature_hardware_sweep/}.
 
 \subsection{Reconstruction Decode}
 Hardware counts were converted to observable expectation values by the standard parity estimator, $\langle Z_i\rangle = \frac{1}{S}\sum_{\text{shots}} (-1)^{b_i}$ (identically for $X$, $Y$ after basis rotation), with pairwise correlators computed as the shot-weighted mean of $(-1)^{b_i+b_j}$ within the same measurement basis. The resulting observable vector, concatenated with the training-time positional encoding, was passed through the \emph{unmodified} trained decoder. No hardware-specific fine-tuning, error mitigation, or post-hoc calibration was applied.
