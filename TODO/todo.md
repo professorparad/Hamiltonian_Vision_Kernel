@@ -7,14 +7,15 @@ Do **A → B → C → D**. A and B gate submission. In the meeting, say **done 
 ---
 
 ## A. Verify before shipping (do first)
-- [ ] **A1** — Table I: only PneumoniaMNIST has a source file. Re-run the other 5 datasets into one summary, or delete those rows.
+- [ ] **A0** — Fill `results-core-map.md`: for every paper table/figure, give the script + command + params + artifact. Every `FILL:` is a task; a row with no source doesn't ship.
+- [ ] **A1** — Table I (map R1): only PneumoniaMNIST has a source file. Re-run the other 5 datasets into one summary, or delete those rows.
 - [ ] **A2** — "Monalisa 40.70 vs 34.72 dB" (§V-D) is backed by no file. Reproduce it or delete the sentence.
 - [ ] **A3** — Zero-shot 7.78 / 28.31 dB (§IV-B) has no source. Point to a file or re-run.
 
 ## B. Commit missing evidence
-- [ ] **B1** — Commit `run_core_multiseed_240.py` + its summary CSV (currently untracked).
-- [ ] **B2** — Commit `verify_shuffle_permutations.py` (the 0.301 ± 0.054 dB result).
-- [ ] **B3** — Narrow `.gitignore` so result CSV/JSON are tracked (ignore media only).
+- [ ] **B1** — `run_core_multiseed_240.py` is **not in the repo at all** (not just untracked). Locate it or confirm the current paper no longer needs it; if needed, rebuild + commit.
+- [ ] **B2** — `verify_shuffle_permutations.py` is also **absent**. Same: locate/rebuild or confirm unused, then commit.
+- [ ] **B3** — Narrow `.gitignore` so result CSV/JSON are tracked (`experiments/quantum_contribution/results/` is currently ignored; ignore media only).
 
 ## C. Rewrite for Framing A
 - [ ] **C1** — Remove every "existing HVK"; state it is our architecture.
@@ -22,12 +23,16 @@ Do **A → B → C → D**. A and B gate submission. In the meeting, say **done 
 - [ ] **C3** — Retitle: drop "Physics-Informed" and "Provable Symmetry"; keep hardware.
 - [ ] **C4** — Move the hardware pilot to lead Results; make D4 / entanglement / phase "additional diagnostics".
 - [ ] **C5** — Delete "advantage" / "significantly" wording not backed by a test.
+- [ ] **C6** — Add the **representativeness paragraph**: argue HVK is a representative instance of the "MPS features + Pauli-correlator latent + physics regularizer" design pattern, so its boundary is the pattern's boundary — not an idiosyncratic failure. *(Biggest rejection risk; do not skip.)*
 
 ## D. Submission hygiene
-- [ ] **D1** — Keep one `.tex`; delete stray tex/pdf copies.
+- [ ] **D1** — Keep one `.tex`; delete stray tex/pdf copies. **Compile `paper_hvk.pdf` and proofread the rendered paper.**
 - [ ] **D2** — Write `REPRODUCE.md`: one script per table/figure.
 - [ ] **D3** — Add Table I + topology to `submission_claim_audit.json` (after A1/A2).
 - [ ] **D4** — *(Supervisor)* confirm TQE APC/waiver, article type, length.
+- [ ] **D5** — Check every shared number agrees between `paper_hvk.tex` and `supplementary_study.tex` (held-out 18.80/18.12, leakage audit, hardware figures).
+- [ ] **D6** — Make the repo release-ready and mint a citable snapshot (Zenodo DOI); confirm it runs from clean. *(Depends on B1–B3.)*
+- [ ] **D7** — Submission packet: cover letter, author-contribution statement, ORCIDs, 2–3 suggested reviewers.
 
 ## E. Fix the bibliography (`literature_review.tex` — verified against primary sources)
 - [ ] **E1** — `Chakraborty2018`: change year **2018 → 2022** (IJIT 14(1), 475–489).
