@@ -81,3 +81,6 @@ main2/newHVK/datasets/
 # Scaling sweep runtime state (authoritative scaling_study.json stays tracked)
 Main2/newHVK/results/scaling_study/queue*/
 Main2/newHVK/results/scaling_study/scaling_study*.json.tmp
+
+# Local secrets - never commit
+.env.local

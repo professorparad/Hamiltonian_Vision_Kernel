@@ -1,0 +1,151 @@
+{
+  "0000_cat_domestic_cat_s_000907": {
+    "2": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 23.5,
+      "std_critical_epoch_order": 19.5
+    },
+    "4": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 102.5,
+      "std_critical_epoch_order": 68.5
+    },
+    "6": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 101.0,
+      "std_critical_epoch_order": 4.0,
+      "n_detected_r_es": 1,
+      "mean_critical_epoch_r_es": 99.0,
+      "std_critical_epoch_r_es": 0.0,
+      "order_r_es_epoch_gap": 2.0
+    },
+    "8": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 33.0,
+      "std_critical_epoch_order": 7.0
+    }
+  },
+  "0001_ship_hydrofoil_s_000078": {
+    "2": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 5.0,
+      "std_critical_epoch_order": 0.0
+    },
+    "4": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 31.5,
+      "std_critical_epoch_order": 30.5
+    },
+    "6": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 74.5,
+      "std_critical_epoch_order": 72.5,
+      "n_detected_r_es": 1,
+      "mean_critical_epoch_r_es": 143.0,
+      "std_critical_epoch_r_es": 0.0,
+      "order_r_es_epoch_gap": 68.5
+    },
+    "8": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 118.0,
+      "std_critical_epoch_order": 2.0
+    }
+  },
+  "0002_ship_sea_boat_s_001456": {
+    "2": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 91.5,
+      "std_critical_epoch_order": 62.5
+    },
+    "4": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 39.5,
+      "std_critical_epoch_order": 38.5
+    },
+    "6": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 86.0,
+      "std_critical_epoch_order": 81.0,
+      "n_detected_r_es": 1,
+      "mean_critical_epoch_r_es": 181.0,
+      "std_critical_epoch_r_es": 0.0,
+      "order_r_es_epoch_gap": 95.0
+    },
+    "8": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 79.5,
+      "std_critical_epoch_order": 75.5
+    }
+  },
+  "0003_airplane_jetliner_s_001705": {
+    "2": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 53.5,
+      "std_critical_epoch_order": 18.5
+    },
+    "4": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 51.5,
+      "std_critical_epoch_order": 50.5
+    },
+    "6": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 59.5,
+      "std_critical_epoch_order": 56.5,
+      "n_detected_r_es": 1,
+      "mean_critical_epoch_r_es": 180.0,
+      "std_critical_epoch_r_es": 0.0,
+      "order_r_es_epoch_gap": 120.5
+    },
+    "8": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 76.0,
+      "std_critical_epoch_order": 63.0
+    }
+  },
+  "monalisa": {
+    "2": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 5.0,
+      "std_critical_epoch_order": 4.0
+    },
+    "4": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 7.5,
+      "std_critical_epoch_order": 0.5
+    },
+    "6": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 85.0,
+      "std_critical_epoch_order": 81.0,
+      "n_detected_r_es": 0,
+      "mean_critical_epoch_r_es": null,
+      "std_critical_epoch_r_es": null
+    },
+    "8": {
+      "n": 2,
+      "n_detected_order": 2,
+      "mean_critical_epoch_order": 29.5,
+      "std_critical_epoch_order": 25.5
+    }
+  }
+}
