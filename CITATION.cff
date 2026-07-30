@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software or the associated paper, please cite as below."
+title: "Hamiltonian Vision Kernel"
+type: software
+authors:
+  - family-names: Chakraborty
+    given-names: Sparsho
+    affiliation: "School of Basic Sciences, Department of Physics, Indian Institute of Technology Bhubaneswar, Odisha, India"
+  - family-names: Patra
+    given-names: Siddhartha
+    affiliation: "Centre for Quantum Engineering, Research and Education (CQuERE), TCG CREST, Kolkata, India"
+license: Apache-2.0
+repository-code: "https://github.com/professorparad/Hamiltonian_Vision_Kernel"
+preferred-citation:
+  type: article
+  title: "Hamiltonian Vision Kernel: Symmetry, Entangling Correlators, and Real-Hardware Replay in Hybrid Quantum Image Reconstruction"
+  authors:
+    - family-names: Chakraborty
+      given-names: Sparsho
+    - family-names: Patra
+      given-names: Siddhartha
+  year: 2026

@@ -47,6 +47,30 @@ class SubmissionClaimAuditTests(unittest.TestCase):
         self.assertIn(r"R^2=0.974", manuscript)
         self.assertIn(r"25.90$--$31.52", manuscript)
 
+    def test_sameset_multi_dataset_matches_artifact(self):
+        claim = self.claims["sameset_multi_dataset"]
+        records = {row["dataset"]: row for row in load_json(claim["source"])}
+        for dataset, expected in claim["rows"].items():
+            actual = records[dataset]
+            self.assertEqual(actual["n_images"], expected["n_images"])
+            self.assertEqual(actual["mean_psnr"], expected["mean_psnr_db"])
+            self.assertEqual(actual["mean_ssim"], expected["mean_ssim"])
+
+    def test_zero_shot_generalization_matches_artifact(self):
+        claim = self.claims["zero_shot_generalization"]
+        record = load_json(claim["source"])
+        self.assertEqual(record["second_image_zero_shot"], claim["artifact_value"]["second_image_zero_shot"])
+        self.assertEqual(
+            record["second_image_multi_image_training"],
+            claim["artifact_value"]["second_image_multi_image_training"],
+        )
+
+    def test_hamiltonian_controls_extension_matches_artifact(self):
+        claim = self.claims["hamiltonian_controls_extension"]
+        records = {row["ablation_mode"]: row for row in load_json(claim["source"])}
+        self.assertEqual(records["no-obs-noise"]["psnr_db"], claim["rows"]["no_observable_noise"]["fresh_rerun_db"])
+        self.assertEqual(records["zz-only"]["psnr_db"], claim["rows"]["zz_only_observables"]["fresh_rerun_db"])
+
 
 if __name__ == "__main__":
     unittest.main()

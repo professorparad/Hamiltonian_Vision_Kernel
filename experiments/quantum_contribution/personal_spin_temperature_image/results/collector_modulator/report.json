@@ -1,0 +1,39 @@
+{
+  "status": "exploratory prototype; modulation parameters are not held-out",
+  "architecture": "Thermodynamic Qubit Collector\u2013Modulator Reconstruction (TQ-CMR)",
+  "parameters": {
+    "collector": {
+      "J": 0.7,
+      "Gamma": 0.35,
+      "temperatures": [
+        1.0,
+        1.5
+      ]
+    },
+    "modulator": {
+      "J": 0.7,
+      "temperature": 1.25,
+      "gammas": [
+        0.0,
+        0.35
+      ],
+      "feedback_strength": 0.8,
+      "edge_sensitivity": 2.0,
+      "coupling_floor": 0.2,
+      "transverse_floor": 0.15
+    }
+  },
+  "mean_psnr_db": {
+    "one_pass_quantum": 19.69736191699482,
+    "collector_modulator_classical": 17.380277836409498,
+    "collector_modulator_quantum": 17.46184725614729,
+    "gaussian": 22.005629496984103
+  },
+  "paired_effects": {
+    "cm_quantum_minus_cm_classical_mean_db": 0.08156941973779357,
+    "cm_quantum_vs_cm_classical_pvalue_two_sided": 3.8660128214593247e-07,
+    "cm_quantum_minus_one_pass_quantum_mean_db": -2.235514660847523,
+    "cm_quantum_vs_one_pass_pvalue_two_sided": 7.551487164917479e-05
+  },
+  "interpretation_limit": "Measured collector feedback makes this a hybrid quantum-control protocol. Exact diagonalization is classical simulation. Results do not establish novelty or quantum advantage."
+}

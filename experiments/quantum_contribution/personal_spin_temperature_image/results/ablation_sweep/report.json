@@ -1,0 +1,89 @@
+{
+  "interpretation": "Quantum contribution is assessed as the best repeated-mask transverse-field result minus the best Gamma=0 classical-Ising result. A positive value is only simulation evidence, not quantum advantage.",
+  "image_shape": [
+    24,
+    24
+  ],
+  "patch_shape": [
+    2,
+    3
+  ],
+  "seeds": [
+    3,
+    7,
+    11,
+    19,
+    29,
+    41
+  ],
+  "observed_fraction": 0.55,
+  "temperatures": [
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "couplings": [
+    0.25,
+    0.45,
+    0.7
+  ],
+  "gammas": [
+    0.0,
+    0.2,
+    0.35
+  ],
+  "best_by_family": {
+    "baseline": {
+      "family": "baseline",
+      "label": "gaussian",
+      "temperature": "",
+      "J": "",
+      "Gamma": "",
+      "n": 6,
+      "mean_psnr_db": 22.005629496984103,
+      "std_psnr_db": 0.8482170815905409,
+      "min_psnr_db": 20.7804167470183,
+      "max_psnr_db": 23.357815009439005
+    },
+    "local_only": {
+      "family": "local_only",
+      "label": "local_only: J=0, Gamma=0",
+      "temperature": 0.25,
+      "J": 0.0,
+      "Gamma": 0.0,
+      "n": 6,
+      "mean_psnr_db": 11.143245339508736,
+      "std_psnr_db": 0.23057920595080703,
+      "min_psnr_db": 10.930046703834428,
+      "max_psnr_db": 11.452574380935667
+    },
+    "classical_ising": {
+      "family": "classical_ising",
+      "label": "classical_ising: J=0.7, Gamma=0",
+      "temperature": 1.5,
+      "J": 0.7,
+      "Gamma": 0.0,
+      "n": 6,
+      "mean_psnr_db": 17.114056508316736,
+      "std_psnr_db": 0.3200123512021345,
+      "min_psnr_db": 16.782319149698264,
+      "max_psnr_db": 17.63827556542567
+    },
+    "quantum": {
+      "family": "quantum",
+      "label": "quantum: J=0.7, Gamma=0.2",
+      "temperature": 1.5,
+      "J": 0.7,
+      "Gamma": 0.2,
+      "n": 6,
+      "mean_psnr_db": 17.110888076790406,
+      "std_psnr_db": 0.3218655833474663,
+      "min_psnr_db": 16.782011763612473,
+      "max_psnr_db": 17.6332155153567
+    }
+  },
+  "best_quantum_minus_best_classical_ising_psnr_db": -0.00316843152632984
+}

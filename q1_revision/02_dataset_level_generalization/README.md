@@ -50,13 +50,44 @@ classes as training, matching the existing (smaller) held-out study's protocol. 
 unseen-class variant would need a class-aware split — flag to project owner as a
 possible follow-up once this run's results are in.
 
+## Result (2026-07-28, complete: 150 train / 50 held-out, 3 seeds, 20 epochs)
+
+| Model | Held-out PSNR (mean across seeds) |
+|---|---|
+| HVK2D quantum (real trained VQC + decoder) | 14.39 +/- 0.26 dB |
+| Classical linear control (same decoder, no quantum circuit) | 15.61 +/- 0.29 dB |
+
+Per-seed detail (`Main2/newHVK/results/dataset_level_generalization/dataset_level_generalization.json`):
+
+| Seed | HVK2D quantum | Classical linear control |
+|---|---|---|
+| 0 | 14.31 dB | 15.76 dB |
+| 1 | 14.73 dB | 15.86 dB |
+| 2 | 14.12 dB | 15.20 dB |
+
+**The classical control wins at every single seed**, by a consistent ~1.1-1.4 dB. This
+is a genuine, dataset-scale (not the old 6+4-image ridge-regression proxy) confirmation
+of the same direction the paper's existing supplement already reports at smaller scale
+("local/raw maps match or exceed the tested HVK map"). This *strengthens* the case for
+`../01_narrative_reframe/`'s boundary-study framing — this isn't an artifact of the tiny
+original sample size, it holds up at a real dataset scale with a real trained model.
+
+Absolute PSNR values here (14-16 dB) are much lower than the paper's per-image-fitted
+headline numbers (18+ dB) — expected and not a red flag: a single shared model trained
+for only 20 epochs across 150 images is a much harder task than fitting one model to one
+image's 16 patches, and the point of this experiment is the quantum-vs-classical *gap*
+under identical conditions, not the absolute number. Report both facts together so this
+isn't misread as a regression from the paper's existing results.
+
+**Still open**: unseen-class evaluation (reviewer's stretch goal, not attempted here);
+more epochs/images if compute allows, though the consistent 3-seed direction is already a
+credible signal without needing a bigger run to establish the qualitative finding.
+
 ## Status
 
-- Script written and smoke-tested (`--n-train 5 --n-heldout 5 --epochs 3`) — runs correctly
-  end-to-end, produces held-out PSNR/MSE/SSIM per image and per model.
-- Full run (150/50, 3 seeds, 20 epochs) queued to launch once the concurrent
-  qubit-energy phase-transition sweep (see `../07_phase_transition_scope/`) finishes, to
-  avoid CPU contention between two compute-bound background jobs.
+Complete. Ready to write into `supplementary_study.tex` alongside (or replacing) the
+existing `run_real_cifar_holdout` ridge-regression comparison, with a note that this is
+the genuine gradient-trained-model version at a larger scale.
 - `--device` defaults to `cpu`: PennyLane's `default.qubit` doesn't run on GPU, so moving
   the many tiny per-patch tensors to CUDA only adds transfer overhead (measured ~2.5x
   slower on this machine — learned the hard way on the phase-transition sweep, see that

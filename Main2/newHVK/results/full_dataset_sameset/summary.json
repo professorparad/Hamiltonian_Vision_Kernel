@@ -1,5 +1,45 @@
 [
   {
+    "dataset": "cifar10",
+    "n_images": 3,
+    "mean_psnr": 37.75101904451436,
+    "std_psnr": 2.3751791651786593,
+    "mean_ssim": 0.9986463189125061,
+    "std_ssim": 0.00034406866081695346
+  },
+  {
+    "dataset": "mnist",
+    "n_images": 3,
+    "mean_psnr": 25.765525329173247,
+    "std_psnr": 2.229772607722447,
+    "mean_ssim": 0.9782591660817465,
+    "std_ssim": 0.011565683150783277
+  },
+  {
+    "dataset": "fashion-mnist",
+    "n_images": 3,
+    "mean_psnr": 34.55401603298506,
+    "std_psnr": 3.0547524611473436,
+    "mean_ssim": 0.9979587197303772,
+    "std_ssim": 0.0006454239375928768
+  },
+  {
+    "dataset": "pathmnist",
+    "n_images": 3,
+    "mean_psnr": 36.85889191351664,
+    "std_psnr": 2.1050437860367945,
+    "mean_ssim": 0.9117725292841593,
+    "std_ssim": 0.06269533123635444
+  },
+  {
+    "dataset": "bloodmnist",
+    "n_images": 2,
+    "mean_psnr": 36.571000121950775,
+    "std_psnr": 2.363452067117816,
+    "mean_ssim": 0.9921788275241852,
+    "std_ssim": 0.006287068128585815
+  },
+  {
     "dataset": "pneumoniamnist",
     "n_images": 2,
     "mean_psnr": 41.603948147362644,

@@ -1,0 +1,147 @@
+{
+  "steps": 240,
+  "seeds_requested": [
+    0,
+    1,
+    2
+  ],
+  "n_seeds_requested": 3,
+  "spec_seeds": 5,
+  "scope_reduced": true,
+  "scope_note": "",
+  "variants": [
+    {
+      "old_variant_name": "baseline",
+      "ablation_mode": "baseline",
+      "n_seeds": 4,
+      "mean_psnr_db": 33.41691451521113,
+      "std_psnr_db": 0.02287833015476089,
+      "mean_ssim": 0.9938451858657179,
+      "std_ssim": 2.9835273050325776e-05,
+      "note": ""
+    },
+    {
+      "old_variant_name": "freeze-quantum",
+      "ablation_mode": "freeze-quantum",
+      "n_seeds": 3,
+      "mean_psnr_db": 33.39109739960144,
+      "std_psnr_db": 0.0561123885667342,
+      "mean_ssim": 0.9938092676935613,
+      "std_ssim": 6.468043828670754e-05,
+      "note": ""
+    },
+    {
+      "old_variant_name": "freeze-classical",
+      "ablation_mode": "freeze-classical",
+      "n_seeds": 3,
+      "mean_psnr_db": 10.937545676298543,
+      "std_psnr_db": 0.0024086447172972847,
+      "mean_ssim": 0.021906483222342357,
+      "std_ssim": 7.841567003352371e-05,
+      "note": ""
+    },
+    {
+      "old_variant_name": "no-entanglement",
+      "ablation_mode": "no-entanglement",
+      "n_seeds": 3,
+      "mean_psnr_db": 33.47576204018129,
+      "std_psnr_db": 0.023169881578139834,
+      "mean_ssim": 0.9939233465159943,
+      "std_ssim": 3.2167379039154697e-05,
+      "note": ""
+    },
+    {
+      "old_variant_name": "no-MPS",
+      "ablation_mode": "no-mps",
+      "n_seeds": 3,
+      "mean_psnr_db": 33.34122975613972,
+      "std_psnr_db": 0.054401947926412536,
+      "mean_ssim": 0.9937352404906203,
+      "std_ssim": 8.00287726314151e-05,
+      "note": ""
+    },
+    {
+      "old_variant_name": "no-energy",
+      "ablation_mode": "no-energy-loss",
+      "n_seeds": 3,
+      "mean_psnr_db": 33.44044709170234,
+      "std_psnr_db": 0.012219291033530007,
+      "mean_ssim": 0.9938745904476182,
+      "std_ssim": 1.165236358171962e-05,
+      "note": ""
+    },
+    {
+      "old_variant_name": "classical-replacement",
+      "ablation_mode": "classical-replacement",
+      "n_seeds": 3,
+      "mean_psnr_db": 33.49839962415305,
+      "std_psnr_db": 0.012854800484032073,
+      "mean_ssim": 0.9939534517245616,
+      "std_ssim": 1.7393252393893153e-05,
+      "note": ""
+    },
+    {
+      "old_variant_name": "classical-matched",
+      "ablation_mode": "classical-matched",
+      "n_seeds": 3,
+      "mean_psnr_db": 33.219512102143575,
+      "std_psnr_db": 0.1909346072437561,
+      "mean_ssim": 0.99355971036772,
+      "std_ssim": 0.0002698393976397596,
+      "note": ""
+    },
+    {
+      "old_variant_name": "random-VQC",
+      "ablation_mode": "random-vqc",
+      "n_seeds": 3,
+      "mean_psnr_db": 28.092934043199325,
+      "std_psnr_db": 0.2327805622748409,
+      "mean_ssim": 0.9790678114625028,
+      "std_ssim": 0.001350504771249138,
+      "note": ""
+    }
+  ],
+  "quantum_vs_classical_comparisons": [
+    {
+      "variant_a": "baseline",
+      "variant_b": "classical-replacement",
+      "mean_psnr_a_db": 33.41691451521113,
+      "mean_psnr_b_db": 33.49839962415305,
+      "psnr_gap_db": 0.0814851089419193,
+      "pooled_std_db": 0.018556183418937642,
+      "significant": true,
+      "verdict": "significant (gap >= 1 pooled std)"
+    },
+    {
+      "variant_a": "baseline",
+      "variant_b": "classical-matched",
+      "mean_psnr_a_db": 33.41691451521113,
+      "mean_psnr_b_db": 33.219512102143575,
+      "psnr_gap_db": 0.19740241306755735,
+      "pooled_std_db": 0.13597691391188,
+      "significant": true,
+      "verdict": "significant (gap >= 1 pooled std)"
+    },
+    {
+      "variant_a": "baseline",
+      "variant_b": "random-VQC",
+      "mean_psnr_a_db": 33.41691451521113,
+      "mean_psnr_b_db": 28.092934043199325,
+      "psnr_gap_db": 5.323980472011808,
+      "pooled_std_db": 0.16539378489480994,
+      "significant": true,
+      "verdict": "significant (gap >= 1 pooled std)"
+    },
+    {
+      "variant_a": "baseline",
+      "variant_b": "freeze-quantum",
+      "mean_psnr_a_db": 33.41691451521113,
+      "mean_psnr_b_db": 33.39109739960144,
+      "psnr_gap_db": 0.02581711560969069,
+      "pooled_std_db": 0.042848676416748305,
+      "significant": false,
+      "verdict": "not significant (gap < 1 pooled std)"
+    }
+  ],
+  "significance_rule": "gap in mean PSNR (dB) between variant A and variant B is compared against the pooled std = sqrt((std_A^2 + std_B^2) / 2) computed across each variant's seeds; gap < pooled_std => marked 'not significant' (per the old task spec's own instruction not to claim within-noise gaps)."
+}

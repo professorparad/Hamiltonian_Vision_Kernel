@@ -3,7 +3,7 @@
   "datasets": {
     "cifar10-native32": {
       "status": "tested",
-      "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+      "source": "./Baselines/cifar10_comparisons/datasets/images",
       "n_images_loaded": 400,
       "image_shape": [
         32,
@@ -13,7 +13,7 @@
     },
     "mnist": {
       "status": "tested",
-      "source": "torchvision-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+      "source": "torchvision-mnist:./main2/newHVK/datasets",
       "n_images_loaded": 400,
       "image_shape": [
         28,
@@ -23,7 +23,7 @@
     },
     "fashion-mnist": {
       "status": "tested",
-      "source": "torchvision-fashion-mnist:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets",
+      "source": "torchvision-fashion-mnist:./main2/newHVK/datasets",
       "n_images_loaded": 400,
       "image_shape": [
         28,
@@ -33,7 +33,7 @@
     },
     "pathmnist": {
       "status": "tested",
-      "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/pathmnist.npz",
+      "source": "local-npz:./main2/newHVK/datasets/pathmnist.npz",
       "n_images_loaded": 400,
       "image_shape": [
         28,
@@ -43,7 +43,7 @@
     },
     "bloodmnist": {
       "status": "tested",
-      "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/bloodmnist.npz",
+      "source": "local-npz:./main2/newHVK/datasets/bloodmnist.npz",
       "n_images_loaded": 400,
       "image_shape": [
         28,
@@ -53,7 +53,7 @@
     },
     "pneumoniamnist": {
       "status": "tested",
-      "source": "local-npz:/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/main2/newHVK/datasets/pneumoniamnist.npz",
+      "source": "local-npz:./main2/newHVK/datasets/pneumoniamnist.npz",
       "n_images_loaded": 400,
       "image_shape": [
         28,

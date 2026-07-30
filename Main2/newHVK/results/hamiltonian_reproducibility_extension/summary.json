@@ -1,0 +1,24 @@
+[
+  {
+    "label": "No observable noise",
+    "ablation_mode": "no-obs-noise",
+    "energy_loss_mode": "linear",
+    "steps": 200,
+    "seed": 42,
+    "psnr_db": 32.74812062164801,
+    "ssim": 0.9928108750899148,
+    "mse": 0.0005311142303980887,
+    "note": "Table hamiltonian_controls's original row, rerun"
+  },
+  {
+    "label": "ZZ-only observables",
+    "ablation_mode": "zz-only",
+    "energy_loss_mode": "linear",
+    "steps": 200,
+    "seed": 42,
+    "psnr_db": 32.11327352489989,
+    "ssim": 0.9918774628836277,
+    "mse": 0.0006147133535705507,
+    "note": "Table hamiltonian_controls's original row, rerun"
+  }
+]

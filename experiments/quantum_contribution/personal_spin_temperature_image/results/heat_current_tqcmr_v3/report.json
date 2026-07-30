@@ -1,0 +1,38 @@
+{
+  "status": "exploratory thermodynamic-neuron integration",
+  "architecture": "TQ-CMR v3 finite-reservoir collector-modulator",
+  "equations": {
+    "occupation": "g(beta)=1/(1+exp(beta*epsilon))",
+    "collector_current": "Jc=mu*epsilon*(g(beta_collector)-g(beta_z)), current into output reservoir",
+    "modulator_current": "Jm=mu_prime*epsilon*(g(beta_modulator)-g(beta_z)), current into output reservoir",
+    "reservoir_dynamics": "d beta_z/dt=-(beta_z^2/C)*(Jc+Jm)"
+  },
+  "parameters": {
+    "epsilon": 1.0,
+    "mu": 1.0,
+    "mu_prime": 0.3,
+    "heat_capacity": 10.0,
+    "t_final": 4000.0,
+    "collector_J": 0.7,
+    "collector_temperature": 1.25,
+    "quantum_Gamma": 0.35
+  },
+  "mean_psnr_db": {
+    "one_pass_quantum_collector": 19.69736191699482,
+    "v3_classical_collector": 20.561355736023472,
+    "v3_quantum_collector": 20.592800177090577,
+    "spatial_modulator_reservoir": 22.005629496984103
+  },
+  "paired_effects": {
+    "v3_quantum_minus_v3_classical_db": 0.0314444410671045,
+    "quantum_control_pvalue_two_sided": 0.18563259847504007,
+    "v3_quantum_minus_one_pass_collector_db": 0.8954382600957604,
+    "architecture_pvalue_two_sided": 0.0001192950805325213,
+    "v3_quantum_minus_spatial_modulator_db": -1.412829319893529
+  },
+  "convergence": {
+    "maximum_final_abs_net_current": 0.022296665520346887,
+    "mean_final_abs_net_current": 0.00015934889025191412
+  },
+  "interpretation_limit": "The quantum collector is exactly simulated and the spatial reservoir is constructed classically from observed pixels. This is a hybrid thermodynamic reconstruction protocol, not quantum advantage. The reference repository's current sign was reversed so its beta ODE has a stable zero-current fixed point."
+}

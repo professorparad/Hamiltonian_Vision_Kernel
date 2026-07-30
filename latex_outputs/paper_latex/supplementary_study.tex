@@ -14,7 +14,7 @@
 \maketitle
 
 \begin{abstract}
-This supplementary material accompanies the main manuscript, \textit{Hamiltonian Vision Kernel: A Physics-Informed Hybrid Quantum--Classical Autoencoder with Provable Symmetry and Real Hardware Validation}. The main paper introduces HVK as a new framework and establishes its provable $D_4$ symmetry, scoped nonlocal representational capability, and real IBM Quantum hardware execution. Here we strengthen that framework through resource-matched multi-seed controls, held-out evaluation, leakage auditing, and complete hardware methodology. On ordinary held-out reconstruction, simple local/raw feature maps match or exceed the tested HVK feature map under the same fitted readout. The entangling observable channel separates only on the restricted task constructed to require nonlocal correlations, while $D_4$ pooling supplies a distinct feature-level symmetry guarantee rather than a demonstrated reconstruction advantage. We also document why two exploratory evidence blocks --- the claimed multi-seed Monalisa freeze table and the available training-dynamics traces --- are excluded pending reproducible reruns. This task-dependent result sharpens HVK's design scope without changing its architectural contribution.
+This supplementary material accompanies the main manuscript, \textit{Hamiltonian Vision Kernel: Symmetry, Entangling Correlators, and Real-Hardware Replay in Hybrid Quantum Image Reconstruction}. The main paper introduces HVK as a new framework and establishes its provable $D_4$ symmetry, scoped nonlocal representational capability, and real IBM Quantum hardware execution. Here we strengthen that framework through resource-matched multi-seed controls, held-out evaluation, leakage auditing, and complete hardware methodology. On ordinary held-out reconstruction, simple local/raw feature maps match or exceed the tested HVK feature map under the same fitted readout, a direction that also holds when a single HVK2D model is trained end-to-end by gradient descent across 150 images and evaluated on 50 held-out images never seen during training. The entangling observable channel separates only on the restricted task constructed to require nonlocal correlations, while $D_4$ pooling supplies a distinct feature-level symmetry guarantee rather than a demonstrated reconstruction advantage. We also document why an earlier multi-seed Monalisa freeze table could not be reproduced from retained artifacts, and report its replacement: a fresh, matched-budget rerun of the same nine-variant comparison, which reaches the same conclusion as the held-out result above. The available training-dynamics traces remain excluded pending a reproducible rerun. This task-dependent result sharpens HVK's design scope without changing its architectural contribution.
 \end{abstract}
 
 \tableofcontents
@@ -44,6 +44,55 @@ We use three settings, in increasing order of evidentiary weight for a generaliz
 \begin{sloppypar}
 An earlier draft presented a nine-variant, five-seed Monalisa freeze-isolation table. The repository does not contain the per-seed records or a machine-readable summary that reproduces those reported means and standard deviations. The retained legacy directory contains only three evaluation-control records, while \path{main2/newHVK/results/full_ablation_suite/full_ablation_summary.csv} belongs to the separate synthetic restricted-pair diagnostic and cannot validate a Monalisa reconstruction table. We therefore exclude the earlier table, its summary figure, and all quantitative attribution claims derived from it. The freeze and replacement implementations remain available for a fresh matched-budget rerun, but no decoder-necessity conclusion is drawn from the incomplete legacy artifacts. The retained evidence below instead asks the reproducible held-out question: under an identical fitted readout, do the tested HVK features outperform resource-matched classical or ablated feature maps?
 \end{sloppypar}
+
+\subsection{A Fresh, Matched-Budget Rerun of the Nine-Variant Table}
+\label{sec:core_multiseed_rerun}
+The fresh matched-budget rerun anticipated above is now complete. All nine variants (baseline, freeze-quantum, freeze-classical, no-entanglement, no-MPS, no-energy-loss, classical-replacement, classical-matched, random-VQC) were trained on \textit{Monalisa} at a matched 240-step budget (identical learning rate and schedule across variants), for 3 seeds each --- reduced from an initially planned 5 seeds for compute-budget reasons on this CPU-only machine (real per-patch VQC circuit cost, not a resource shortfall specific to any one variant; documented explicitly as \texttt{scope\_reduced: true} in the run's own summary file). Table~\ref{tab:core_multiseed_240} reports mean $\pm$ std PSNR and SSIM per variant, and Table~\ref{tab:core_multiseed_240_stats} gives the quantum-vs-classical/random-control comparisons, marking any gap smaller than one pooled standard deviation as not significant, following this document's established statistical-protocol convention.
+
+\begin{table}[H]
+\centering
+\caption{Matched-budget (240-step) core ablation, \textit{Monalisa}, 3 seeds/variant. Freeze-classical's collapse is expected (decoder frozen, cannot learn to reconstruct) and serves as a sanity check on the ablation harness itself.}
+\label{tab:core_multiseed_240}
+\scriptsize
+\begin{tabular}{lcc}
+\toprule
+Variant & PSNR (dB) & SSIM \\
+\midrule
+Baseline (quantum) & $33.42\pm0.02$ & $0.99385\pm0.00003$ \\
+Freeze-quantum & $33.39\pm0.06$ & $0.99381\pm0.00006$ \\
+No-entanglement & $33.48\pm0.02$ & $0.99392\pm0.00003$ \\
+No-MPS & $33.34\pm0.05$ & $0.99374\pm0.00008$ \\
+No-energy-loss & $33.44\pm0.01$ & $0.99387\pm0.00001$ \\
+Classical-replacement & $33.50\pm0.01$ & $0.99395\pm0.00002$ \\
+Classical-matched & $33.22\pm0.19$ & $0.99356\pm0.00027$ \\
+Random-VQC & $28.09\pm0.23$ & $0.97907\pm0.00135$ \\
+Freeze-classical & $10.94\pm0.00$ & $0.0219\pm0.0001$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Quantum-baseline-vs-control comparisons for Table~\ref{tab:core_multiseed_240}. Significance rule: gap $\geq$ pooled std of the two variants' seed-level PSNR $\Rightarrow$ significant, following this document's convention of not claiming within-noise gaps.}
+\label{tab:core_multiseed_240_stats}
+\scriptsize
+\begin{tabular}{lcccl}
+\toprule
+Control & Gap (dB) & Pooled std (dB) & Sig.? & Winner \\
+\midrule
+Classical-replacement & 0.081 & 0.019 & Yes & Classical \\
+Classical-matched & 0.197 & 0.136 & Yes & Quantum (baseline) \\
+Random-VQC & 5.324 & 0.165 & Yes & Quantum (baseline) \\
+Freeze-quantum & 0.026 & 0.043 & No & Tie \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The clearest new result is that a plain \emph{classical-replacement} (the VQC swapped for a fixed classical tanh map, no other change) statistically \emph{beats} the quantum baseline at this matched budget, though by a small margin ($0.081$~dB against a $0.019$~dB pooled std). \emph{Classical-matched} (the same replacement, but rank-limited to the circuit's own parameter count) loses to the quantum baseline by a larger and also-significant margin ($0.197$~dB), suggesting the unconstrained classical replacement's small edge is partly a capacity effect rather than evidence that the classical map itself is a better inductive bias. \emph{Random-VQC} confirms the observable channel still carries real information ($5.32$~dB below baseline). \emph{Freeze-quantum} ties the baseline (not significant), consistent with the freeze-quantum row of the restricted pair-correlation diagnostic elsewhere in this study, where freezing the circuit costs representational capacity on a task requiring nonlocal structure but not on this ordinary per-image reconstruction task. Taken together, this matched-budget rerun does not establish a reconstruction advantage for the tested quantum component over resource-matched classical alternatives --- the same direction as, and additional evidence for, the held-out result immediately below.
+
+\subsection{A Reproducibility Note on the Shuffle-Observables Ablation}
+\label{sec:shuffle_reproducibility}
+A companion legacy diagnostic permutes the observable vector across patches at evaluation time, keeping positional encodings fixed, to test whether the decoder's use of observables is position-bound rather than order-invariant. As originally documented, this gave only a small effect: a single run measured a $0.19$~dB PSNR drop, and a repeated verification over five non-identity permutations gave a mean drop of $0.301\pm0.054$~dB (range $0.236$--$0.366$~dB) --- treated at the time as weak evidence for observable-position load-bearing behavior, explicitly not to be conflated with an earlier, discredited $\approx$12.5~dB figure for the same ablation. As with Table~\ref{tab:hamiltonian_controls} above, the script that produced this $0.301$~dB number was never committed to the repository and could not be recovered. We rebuilt an independent verifier (\texttt{Main2/newHVK/verify\_shuffle\_permutations.py}) that reproduces the exact safeguards the original documentation called for (permutation confirmed non-identity; the permuted tensor confirmed to be the exact object reaching the decoder, not a discarded copy) and ran it twice, under two architecture variants, for a like-for-like check: the current default checkpoint (\texttt{use\_energy\_feature=True}) gives a mean shuffle-induced drop of $15.70\pm0.79$~dB (baseline $33.41$~dB), and a legacy-equivalent checkpoint (\texttt{use\_energy\_feature=False}) gives $16.18\pm0.51$~dB (baseline $33.45$~dB) --- both far closer in magnitude to the discredited $\approx$12.5~dB figure than to the originally documented $0.301$~dB. \textbf{This discrepancy is not resolved.} Two explanations remain undistinguished: either the original, unrecoverable verification script had an undetected bug in one of the two safeguards it claimed to check, or some other unrecoverable difference between the original and rebuilt protocol explains the gap. We report both numbers rather than adopt one, and neither the $0.301$~dB nor the $\approx$16~dB figure should be treated as a settled measurement of this ablation.
 
 \subsection{Held-Out Reconstruction Under Resource-Matched Controls}
 \label{sec:holdout_headline}
@@ -166,19 +215,42 @@ Strict classical random features & $0.947{\pm}0.019$ & $0.984{\pm}0.010$ & $0.95
 \end{table}
 
 \subsection{Adaptation Beyond Single-Image Optimization}
-Table~\ref{tab:generalization_controls} shows a model optimized on \textit{Monalisa} alone does not transfer zero-shot to a structurally different image, reaching only $7.78$~dB PSNR ($\mathrm{SSIM}=0.0196$). Extending training to include a second image recovers $28.31$~dB ($\mathrm{SSIM}=0.9862$). This confirms single-image runs measure per-image optimization, not representation learning, which is precisely why the held-out protocol of Section~\ref{sec:holdout_headline} is the evidentiary core of this ablation study.
+Table~\ref{tab:generalization_controls} shows a model optimized on \textit{Monalisa} alone does not transfer zero-shot to a structurally different image, reaching only $8.31$~dB PSNR ($\mathrm{SSIM}=0.1044$). Extending training to include a second image recovers $28.63$~dB ($\mathrm{SSIM}=0.9858$). This confirms single-image runs measure per-image optimization, not representation learning, which is precisely why the held-out protocol of Section~\ref{sec:holdout_headline} is the evidentiary core of this ablation study.
 
 \begin{table}[H]
 \centering
-\caption{Generalization controls (single-seed). Single-image optimization does not transfer zero-shot.}
+\caption{Generalization controls (single-seed, fresh rerun 2026-07-29 -- see reproducibility note below). Single-image optimization does not transfer zero-shot.}
 \label{tab:generalization_controls}
 \scriptsize
 \begin{tabular}{lccc}
 \toprule
 Experiment & MSE & PSNR (dB) & SSIM \\
 \midrule
-Second image, zero-shot & $1.6657\times10^{-1}$ & 7.78 & 0.0196 \\
-Second image, multi-image training & $1.4740\times10^{-3}$ & 28.31 & 0.9862 \\
+Second image, zero-shot & $1.4762\times10^{-1}$ & 8.31 & 0.1044 \\
+Second image, multi-image training & $1.3712\times10^{-3}$ & 28.63 & 0.9858 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Reproducibility note.} No script backing this table's original values (previously reported as $7.78$/$28.31$~dB) was ever found in the repository, and the original choice of "second image" was undocumented. We rebuilt the protocol from scratch (\texttt{Main2/newHVK/run\_zero\_shot\_generalization.py}): train \textsc{Quantum2DGridModel}+\textsc{PatchDecoder2D} (the same architecture and per-image protocol as the main paper's same-set reconstruction table, 8$\times$8 patches, 100 steps) on \textit{Monalisa} alone; evaluate zero-shot (no further training) on \textit{Hand of God} (Michelangelo) -- the only other image bundled alongside \textit{monalisa.jpg} in this repository's data directories and otherwise unused by any committed script, making it the natural candidate for the undocumented original second image; then continue training the same model on both images' patches jointly for another 100 steps and re-evaluate. The result lands within $0.5$~dB of the previously reported, unsourced figures at both stages ($8.31$ vs.\ $7.78$~dB zero-shot; $28.63$ vs.\ $28.31$~dB after adaptation), which we read as evidence that this reconstruction recovers close to the original protocol, though it is a fresh, independently-verified run rather than a literal recovery of the original script.
+
+\subsection{Dataset-Level Generalization: A Single Trained Model Across Many Images}
+\label{sec:dataset_level_generalization}
+Every result above either fits a fixed, non-trained feature map with a linear readout (Section~\ref{sec:holdout_headline}) or optimizes a single image in isolation (Table~\ref{tab:generalization_controls}). Neither tests the case a genuine generalization claim requires: one model, trained end-to-end by gradient descent across many images, evaluated on images it never saw during training. We add that experiment directly. A single \textsc{Quantum2DGridModel} + \textsc{PatchDecoder2D} --- the paper's actual gradient-trained HVK2D architecture, not a closed-form feature transform fit by ridge regression --- is trained via full-batch Adam across all patches from $N_{\text{train}}=150$ CIFAR-10 images and evaluated, with no further training, on $N_{\text{heldout}}=50$ images never seen during training; normalization statistics are computed from the training split only, so no held-out information leaks into the fitted model. A parameter-matched \textsc{ClassicalLinearControl} (identical decoder and observable width, a single linear feature map, no quantum circuit) is trained identically on the same split for a fair head-to-head comparison. We use 3 seeds, each reshuffling the train/held-out split, and 20 full-batch epochs; this scope was set by a timing probe showing the real per-patch circuit cost is $\approx$137~ms (total compute budget $\approx$5.5 hours), so it reflects a training-budget constraint rather than a claim of full convergence.
+
+Table~\ref{tab:dataset_level_generalization} gives the result. The classical linear control wins at every one of the three seeds, by a consistent $1.1$--$1.4$~dB (mean $15.61\pm0.29$~dB vs.\ $14.39\pm0.26$~dB). This is a genuine, dataset-scale confirmation of the same direction already reported throughout this document at fixed-feature/linear-readout scale (Section~\ref{sec:holdout_headline}): it is not an artifact of a small sample, since it now holds with a real gradient-trained model across 200 total images, rather than the earlier 6-train/4-held-out ridge-regression proxy. The absolute PSNR here (14--16~dB) is substantially lower than the per-image-fitted headline numbers elsewhere in this document (18+~dB in Table~\ref{tab:hvk_real_cifar}, 28+~dB in Table~\ref{tab:generalization_controls}); this is expected, not a regression --- a single shared model trained for only 20 epochs across 150 images is a much harder task than fitting one model to one image's 16 patches, and the quantity of interest here is the quantum-vs-classical \emph{gap} under identical conditions, not the absolute reconstruction quality. Unseen-\emph{class} / distribution-shift evaluation (as opposed to the unseen-\emph{image}, same-class split used here) remains future work.
+
+\begin{table}[H]
+\centering
+\caption{Dataset-level generalization: one model trained via full-batch Adam across 150 CIFAR-10 training images, evaluated with no further training on 50 held-out images never seen during training (3 seeds, 20 epochs). Held-out PSNR by seed and mean $\pm$ std across seeds.}
+\label{tab:dataset_level_generalization}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Model & Seed 0 & Seed 1 & Seed 2 & Mean $\pm$ std \\
+\midrule
+HVK2D quantum (trained VQC + decoder) & 14.31 & 14.73 & 14.12 & $14.39\pm0.26$ \\
+Classical linear control (no quantum circuit) & 15.76 & 15.86 & 15.20 & $15.61\pm0.29$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -318,6 +390,51 @@ No observable noise & $5.3518\times10^{-4}$ & 32.72 & 0.9928 & Noise is not esse
 Contrastive Hamiltonian core & $5.1975\times10^{-4}$ & 32.84 & 0.9930 & Stronger objective helps modestly \\
 Contrastive, no energy loss & $4.6498\times10^{-4}$ & 33.33 & 0.9937 & Energy removal still performs best \\
 ZZ-only observables & $5.1503\times10^{-4}$ & 32.88 & 0.9930 & Nearest-neighbor $ZZ$ largely suffice \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{A Reproducibility Note on Table~\ref{tab:hamiltonian_controls}, and an Energy-as-Decoder-Feature Follow-Up}
+\label{sec:hamiltonian_followup}
+While investigating whether the energy term could be made to actively help reconstruction rather than merely act as a diagnostic (motivated by the conditional-value reading above), we found that Table~\ref{tab:hamiltonian_controls}'s absolute PSNR values are not independently reproducible from the current codebase and documented protocol. Re-running the unmodified legacy-signed-energy, no-energy-loss, and contrastive configurations at the documented protocol (\textit{Monalisa}, $256\times256$/patch=64, \texttt{model\_variant=standard}, 200 steps, seed 42, in an environment matching the paper's stated package versions exactly) reproduces PSNR values 6--12~dB \emph{higher} than published, across every variant tested, not only a new one (Table~\ref{tab:hamiltonian_reproducibility}). The script that generated Table~\ref{tab:hamiltonian_controls}'s original numbers is referenced only in commit messages and was never actually committed to the repository (the referenced path lies inside a gitignored directory, and \texttt{git cat-file} confirms no corresponding blob exists in any commit), so the original protocol could not be recovered to explain the gap directly; a shorter-step rerun ruled out step count alone as the explanation. Rather than block on an unrecoverable protocol, we adopt this fresh, same-environment reproduction as the baseline for the remainder of this section, disclosing the gap here explicitly rather than silently revising Table~\ref{tab:hamiltonian_controls}'s historical values. The qualitative finding is unchanged under the new environment: removing the energy loss still improves PSNR (here $38.63\rightarrow44.56$~dB) exactly as it does in Table~\ref{tab:hamiltonian_controls} ($32.24\rightarrow33.30$~dB) --- only the absolute PSNR scale differs between the two protocols, not the sign or approximate size of the effect. We also reran the remaining two observable-sector rows from Table~\ref{tab:hamiltonian_controls} (no observable noise, ZZ-only) at the identical protocol; unlike the three variants above, these land within $1$~dB of the published values ($32.75$ vs.\ $32.72$~dB, and $32.11$ vs.\ $32.88$~dB, respectively) rather than 6--12~dB higher. We do not have a confirmed explanation for why these two rows reproduce so much more closely than the other three under the same rerun protocol; we report the observation plainly rather than speculate.
+
+\begin{table}[H]
+\centering
+\caption{Fresh, same-environment reproduction of Table~\ref{tab:hamiltonian_controls}'s configurations (\textit{Monalisa}, 200 steps, seed 42), alongside two new coupling/objective variants. Absolute PSNR is not directly comparable to Table~\ref{tab:hamiltonian_controls} for the first three rows (see reproducibility note above); the two observable-sector rows are close to their Table~\ref{tab:hamiltonian_controls} counterparts.}
+\label{tab:hamiltonian_reproducibility}
+\scriptsize
+\begin{tabular}{lcc}
+\toprule
+Config & PSNR (dB) & Note \\
+\midrule
+Legacy signed energy (linear, unbounded coupling) & 38.63 & Table~\ref{tab:hamiltonian_controls}'s legacy baseline, rerun \\
+No energy loss & 44.56 & Table~\ref{tab:hamiltonian_controls}'s no-energy-loss control, rerun \\
+Contrastive energy, unbounded coupling & 42.92 & Table~\ref{tab:hamiltonian_controls}'s contrastive variant, rerun \\
+No observable noise & 32.75 & Table~\ref{tab:hamiltonian_controls}'s no-noise control, rerun; within $0.03$~dB of published \\
+ZZ-only observables & 32.11 & Table~\ref{tab:hamiltonian_controls}'s ZZ-only control, rerun; within $0.77$~dB of published \\
+Positive/squared energy, unbounded coupling & 44.69 & Untested in the original Table~\ref{tab:hamiltonian_controls} \\
+Bounded coupling ($\tanh$) + positive energy & 44.56 & Root-cause fix for the unbounded-coupling pathology (see text) \\
+Bounded coupling + contrastive energy & 43.01 & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The root cause of the legacy objective's drag, beyond what Table~\ref{tab:hamiltonian_controls} alone shows: the learned couplings $J_x,J_y,J_z$ feed only the energy loss and never reach the decoder, so under a linear (signed) energy loss the optimizer can drive them to unbounded magnitude to cheaply lower total loss with no reconstruction benefit, competing with the reconstruction gradient on shared circuit weights. Bounding the couplings ($\tanh$) and switching to the already-implemented but previously untested \texttt{positive} (squared) energy-loss mode removes this pathology --- bounded-coupling + positive energy \emph{ties} the no-energy-loss control ($44.56$ vs.\ $44.56$--$44.69$~dB at seed 42) rather than beating it: the fix stops the Hamiltonian term from actively \emph{hurting} reconstruction, but by construction it still cannot \emph{help}, since energy never reaches the decoder.
+
+To let the energy signal actually help reconstruction rather than only avoid hurting it, we additionally feed the learned energy into the decoder as an input feature, concatenated alongside observables and positions, rather than using it only as a side-channel loss term. Table~\ref{tab:hamiltonian_decoder_feature} gives the full 3-seed result against the no-energy-loss baseline. Two of three seeds show a real improvement (up to $+1.25$~dB); the third shows a $-5.08$~dB regression that outweighs both wins combined, so the mean delta across seeds is negative ($\approx-1.1$~dB). We read this as a genuinely different and weaker claim than ``the Hamiltonian term now helps'': feeding energy into the decoder increases outcome variance more than it reliably improves the mean, and is better characterized as a promising but seed-sensitive direction than a validated fix. A larger multi-seed study (5+ seeds) would be needed before claiming either that this construction reliably helps or that it is neutral; until then, the conservative framing above --- energy as an interpretability/diagnostic signal rather than a performance-improving inductive bias --- remains the safer default characterization for the main text.
+
+\begin{table}[H]
+\centering
+\caption{Feeding the learned Hamiltonian energy into the decoder as an input feature, vs.\ the no-energy-loss baseline (\textit{Monalisa}, 200 steps, 3 seeds). Not a robust win: two of three seeds improve, one regresses sharply enough that the mean delta across seeds is negative ($\approx-1.1$~dB).}
+\label{tab:hamiltonian_decoder_feature}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Seed & No energy loss (dB) & Energy fed to decoder (dB) & $\Delta$ (dB) \\
+\midrule
+42 & 44.56 & 45.81 & $+1.25$ \\
+43 & 43.77 & 44.28 & $+0.51$ \\
+44 & 45.33 & 40.25 & $-5.08$ \\
 \bottomrule
 \end{tabular}
 \end{table}

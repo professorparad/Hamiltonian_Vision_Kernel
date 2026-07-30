@@ -1,0 +1,73 @@
+{
+  "interpretation": "Exact classical simulation of a quantum Gibbs model; reconstruction is from site-resolved magnetizations, while temperature controls thermal mixing. It is not inversion from temperature alone.",
+  "image": "C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Main\\data\\monalisa.jpg",
+  "image_shape": [
+    24,
+    24
+  ],
+  "patch_shape": [
+    2,
+    3
+  ],
+  "qubits_per_patch": 6,
+  "parameters": {
+    "temperatures": [
+      0.25,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "coupling_J": 0.45,
+    "transverse_field_Gamma": 0.35,
+    "local_field_strength": 2.0,
+    "observed_fraction_requested": 0.55,
+    "observed_fraction_actual": 0.6024305555555556,
+    "seed": 7
+  },
+  "tasks": {
+    "encoded": {
+      "0.25": {
+        "mse": 0.07863507128054911,
+        "mae": 0.24524590892462722,
+        "psnr_db": 11.043837152006029
+      },
+      "0.5": {
+        "mse": 0.06798133472120507,
+        "mae": 0.22934877422286937,
+        "psnr_db": 11.676103128867666
+      },
+      "1.0": {
+        "mse": 0.033947554886716996,
+        "mae": 0.1656568188687212,
+        "psnr_db": 14.691915008370229
+      },
+      "2.0": {
+        "mse": 0.0033211946887511472,
+        "mae": 0.046644533135597924,
+        "psnr_db": 24.787056652712224
+      }
+    },
+    "completion": {
+      "0.25": {
+        "mse": 0.0626325628414969,
+        "mae": 0.20780375444964366,
+        "psnr_db": 12.03199817180251
+      },
+      "0.5": {
+        "mse": 0.04164341700662189,
+        "mae": 0.16024245371695156,
+        "psnr_db": 13.80453642124149
+      },
+      "1.0": {
+        "mse": 0.021107315625287042,
+        "mae": 0.11725028059689664,
+        "psnr_db": 16.755669956480222
+      },
+      "2.0": {
+        "mse": 0.04479551453747871,
+        "mae": 0.17998486525259597,
+        "psnr_db": 13.487654705810442
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "dataset": "pneumoniamnist",
+    "n_images": 2,
+    "mean_psnr": 41.603948147362644,
+    "std_psnr": 0.9795341253988674,
+    "mean_ssim": 0.9985133111476898,
+    "std_ssim": 0.0006225407123565674
+  }
+]

@@ -48,16 +48,34 @@ project owner): report a fresh, self-consistent same-environment comparison inst
 Table X's numbers, with this gap disclosed explicitly rather than silently overwritten.
 See `Main_new/README.md` for the full writeup of this finding.
 
-**Honest current result** (single seed, being extended to 3): the `positive` energy-loss
-fix stops the Hamiltonian term from *hurting* (it no longer trails "no energy loss" by
-~6 dB the way the legacy linear mode does), but at one seed it only ties with removing
-the energy loss entirely rather than clearly beating it. Bounding the couplings on top
-of `positive` mode doesn't add anything further at that seed. Multi-seed check (43, 44)
-in progress to see if this holds or if noise is doing the work.
+**v1 result** (bounded couplings + `positive` loss, energy still a side-channel loss
+only): ties "no energy loss" (44.56 vs 44.56-44.69 dB at seed 42) — stops the Hamiltonian
+from *hurting*, doesn't make it *help*. Root cause: energy never reaches the decoder, so
+it structurally cannot improve reconstruction, only compete with it or sit neutral.
 
-**Still open**: which framing (path 1 vs 2) the paper actually uses depends on how the
-multi-seed result lands. If `positive`+bounded ties "no energy loss" robustly across
-seeds, the honest framing is still closer to path 1 (energy is a diagnostic, not a
-performance win) but with a corrected, no-longer-actively-harmful default. If it
-robustly wins, path 2's stronger claim becomes defensible. Either way, this is a more
-defensible result than Table X's original story.
+**v2 fix**: feed energy into the decoder as an actual input (`use_energy_feature=True`,
+see `Main_new/README.md`). Full 3-seed result vs "no energy loss":
+
+| Seed | No energy loss | Energy fed to decoder | Delta |
+|---|---|---|---|
+| 42 | 44.56 dB | 45.81 dB | +1.25 dB |
+| 43 | 43.77 dB | 44.28 dB | +0.51 dB |
+| 44 | 45.33 dB | 40.25 dB | -5.08 dB |
+
+**Not a robust win.** 2/3 seeds improve, 1/3 regresses badly enough that the mean delta
+across seeds is negative (~-1.1 dB). Feeding energy into the decoder increases outcome
+variance more than it reliably improves the mean. This is a genuinely different, weaker
+finding than "the Hamiltonian now helps" — it's "the Hamiltonian *can* help, seed-
+dependently, and can also hurt more than the old bug did." Chasing an apparent bug in the
+seed-44 result (it initially looked suspiciously like a stale-cache artifact) cost
+significant time before an isolated rerun with explicit `PYTHONPATH` confirmed it was a
+genuine, reproducible result, not a bug — a useful lesson in not assuming "looks like a
+bug" without an unambiguous isolated retest.
+
+**Still open**: this needs a larger seed count (5+) before either claim ("the Hamiltonian
+helps" or "it's neutral/diagnostic-only") can be made with confidence. Current best
+framing given the data in hand: energy-as-decoder-feature is a promising *direction*,
+not yet a validated result — present it as exploratory in the paper, with the honest
+per-seed variance shown, rather than as a headline fix. Path 1's conservative framing
+(energy as diagnostic, not performance claim) remains the safer default until more seeds
+land.

@@ -1,0 +1,62 @@
+{
+  "created_utc": "2026-07-23T19:04:10.343986+00:00",
+  "status": "parameters frozen before held-out mask evaluation",
+  "primary_hypothesis": "At fixed J=0.7 and T=1.25, the Gamma=0.35 transverse-field model has a positive mean paired missing-pixel PSNR difference relative to the Gamma=0 classical-Ising control.",
+  "primary_endpoint": "paired PSNR difference in dB: quantum minus classical Ising",
+  "primary_test": "two-sided paired t-test at alpha=0.05",
+  "estimation": "mean paired difference and percentile bootstrap 95% confidence interval",
+  "secondary_test": "two-sided Wilcoxon signed-rank test",
+  "decision_rule": "Call the held-out result statistically positive only if mean delta > 0, the bootstrap 95% interval excludes zero, and the two-sided paired t-test p-value is below 0.05.",
+  "no_tuning_rule": "No J, T, Gamma, patch shape, field strength, or mask seed may be changed after evaluation starts.",
+  "configuration": {
+    "image": "C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Main\\data\\monalisa.jpg",
+    "image_shape": [
+      24,
+      24
+    ],
+    "patch_shape": [
+      2,
+      3
+    ],
+    "stride": 1,
+    "observed_fraction": 0.55,
+    "field_strength": 2.0,
+    "coupling_J": 0.7,
+    "temperature": 1.25,
+    "classical_Gamma": 0.0,
+    "quantum_Gamma": 0.35,
+    "heldout_seeds": [
+      101,
+      103,
+      107,
+      109,
+      113,
+      127,
+      131,
+      137,
+      139,
+      149,
+      151,
+      157,
+      163,
+      167,
+      173,
+      179,
+      181,
+      191,
+      193,
+      197,
+      199,
+      211,
+      223,
+      227,
+      229,
+      233,
+      239,
+      241,
+      251,
+      257
+    ]
+  },
+  "interpretation_limit": "A positive result is evidence for a transverse-field contribution within this exact quantum-model simulation. It is not evidence of computational quantum advantage or quantum-hardware performance."
+}

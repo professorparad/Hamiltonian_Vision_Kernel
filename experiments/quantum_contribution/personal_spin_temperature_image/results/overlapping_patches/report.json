@@ -1,0 +1,72 @@
+{
+  "method": "Stride-one overlapping six-qubit patches. Measurements for a pixel are averaged over every patch containing it. This removes hard tiling boundaries but is not a single globally coupled quantum state.",
+  "image_shape": [
+    24,
+    24
+  ],
+  "patch_shape": [
+    2,
+    3
+  ],
+  "patches_per_mask": 506,
+  "seeds": [
+    3,
+    7,
+    11,
+    19,
+    29,
+    41
+  ],
+  "coupling_J": 0.7,
+  "temperatures": [
+    1.0,
+    1.25,
+    1.5,
+    1.75
+  ],
+  "gammas": [
+    0.0,
+    0.1,
+    0.2,
+    0.35
+  ],
+  "best_classical_ising": {
+    "Gamma": 0.0,
+    "temperature": 1.25,
+    "n": 6,
+    "mean_psnr_db": 19.627882404075894,
+    "std_psnr_db": 0.4270833625145802,
+    "min_psnr_db": 19.11023349172519,
+    "max_psnr_db": 20.131927747540537
+  },
+  "best_quantum": {
+    "Gamma": 0.35,
+    "temperature": 1.25,
+    "n": 6,
+    "mean_psnr_db": 19.69736191699482,
+    "std_psnr_db": 0.43747504441534385,
+    "min_psnr_db": 19.122643270336155,
+    "max_psnr_db": 20.28068157644554
+  },
+  "best_quantum_minus_best_classical_ising_psnr_db": 0.06947951291892451,
+  "paired_quantum_minus_classical": {
+    "per_seed_psnr_db": [
+      0.14875382890500433,
+      0.012409778610965816,
+      0.0626124829593877,
+      -0.0055140746842852195,
+      0.12885497547797442,
+      0.06976008624447516
+    ],
+    "mean_psnr_db": 0.06947951291892036,
+    "std_psnr_db": 0.06121779203238131,
+    "approx_95pct_ci_psnr_db": [
+      0.020495077390264113,
+      0.11846394844757661
+    ],
+    "paired_ttest_pvalue_two_sided": 0.03889915898998377,
+    "note": "Exploratory test after selecting the best settings; it is not a preregistered confirmatory p-value."
+  },
+  "gaussian_baseline_mean_psnr_db": 22.005629496984103,
+  "gaussian_baseline_std_psnr_db": 0.8482170815905409
+}

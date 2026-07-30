@@ -12,15 +12,21 @@
     "std_critical_epoch": 50.0
   },
   "4": {
-    "n": 2,
-    "n_detected": 2,
-    "mean_critical_epoch": 101.0,
-    "std_critical_epoch": 4.0
+    "n": 10,
+    "n_detected": 10,
+    "mean_critical_epoch": 73.8,
+    "std_critical_epoch": 60.9077991721914
+  },
+  "6": {
+    "n": 10,
+    "n_detected": 10,
+    "mean_critical_epoch": 73.3,
+    "std_critical_epoch": 61.36782544623852
   },
   "8": {
-    "n": 2,
-    "n_detected": 2,
-    "mean_critical_epoch": 95.0,
-    "std_critical_epoch": 2.0
+    "n": 10,
+    "n_detected": 10,
+    "mean_critical_epoch": 72.5,
+    "std_critical_epoch": 60.145240875733464
   }
 }

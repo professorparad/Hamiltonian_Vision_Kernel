@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-
 MAIN2_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = MAIN2_ROOT.parent
 
@@ -23,3 +22,4 @@ class Main2Config:
     energy_loss_mode: str = "positive"
     energy_weight: float = 0.01
     energy_margin: float = 0.25
+    use_energy_feature: bool = True

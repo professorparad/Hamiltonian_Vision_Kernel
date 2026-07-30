@@ -22,6 +22,9 @@ SHADES = {
     6: ["#d62728", "#e8696a", "#a3181a", "#f0a3a3"],
     8: ["#2ca02c", "#6fc26f", "#146414", "#a8dda8"],
 }
+# Distinct linestyle per run-within-N, on top of the color/shade coding above,
+# so individual runs stay distinguishable in grayscale or for colorblind readers.
+RUN_LINESTYLES = ["-", "--", ":", "-."]
 
 
 def main() -> None:
@@ -33,13 +36,15 @@ def main() -> None:
         n = row["qubit_count"]
         trace = row["order_trace"]
         epochs = list(range(len(trace)))
-        color = SHADES[n][run_index[n] % len(SHADES[n])]
+        idx = run_index[n]
+        color = SHADES[n][idx % len(SHADES[n])]
+        linestyle = RUN_LINESTYLES[idx % len(RUN_LINESTYLES)]
         run_index[n] += 1
         label = f"N={n} ({row['dataset']}, seed={row['seed']})"
-        ax.plot(epochs, trace, color=color, alpha=0.7, linewidth=1.2, label=label)
+        ax.plot(epochs, trace, color=color, linestyle=linestyle, alpha=0.8, linewidth=1.3, label=label)
         if row["detected"]:
             tc = row["critical_epoch"]
-            ax.axvline(tc, color=color, linestyle="--", alpha=0.5, linewidth=0.9)
+            ax.axvline(tc, color=color, linestyle=":", alpha=0.5, linewidth=0.9)
 
     # Summary markers for the mean detected change epoch per N
     for n in (4, 6, 8):

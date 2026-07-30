@@ -55,6 +55,6 @@
   "energy_weight": 0.01,
   "energy_margin": 0.25,
   "seed": 42,
-  "eval_only_image": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Main/data/monalisa.jpg",
+  "eval_only_image": "./Main/data/monalisa.jpg",
   "train_image_paths": null
 }
