@@ -1,0 +1,2471 @@
+[
+  {
+    "seed": 0,
+    "train_images": [
+      "0459_frog_bullfrog_s_001725",
+      "0206_airplane_twinjet_s_001153",
+      "0222_truck_tractor_trailer_s_000351",
+      "0162_frog_bullfrog_s_000701",
+      "0711_ship_iceboat_s_000304",
+      "0814_airplane_airbus_s_001294",
+      "0350_truck_aerial_ladder_truck_s_000799",
+      "0890_deer_odocoileus_hemionus_s_000537",
+      "0518_dog_lapdog_s_001485",
+      "0264_airplane_stealth_bomber_s_000001",
+      "0683_ship_boat_s_000723",
+      "0674_bird_wagtail_s_000934",
+      "0511_frog_rana_temporaria_s_001354",
+      "0391_bird_honey_eater_s_000550",
+      "0329_frog_leopard_frog_s_000545",
+      "0325_automobile_compact_car_s_001351",
+      "0081_automobile_auto_s_000935",
+      "0201_automobile_car_s_001162",
+      "0582_ship_motorboat_s_001323",
+      "0380_frog_leopard_frog_s_000262",
+      "0945_cat_tabby_cat_s_000383",
+      "0970_truck_lorry_s_000851",
+      "0813_bird_sparrow_s_002119",
+      "0734_truck_lorry_s_001633",
+      "0652_dog_chihuahua_s_000077",
+      "0509_deer_capreolus_capreolus_s_000731",
+      "0025_bird_gamecock_s_000228",
+      "0584_airplane_airliner_s_000551",
+      "0036_deer_barking_deer_s_000257",
+      "0651_truck_tipper_truck_s_000441",
+      "0583_deer_mule_deer_s_000311",
+      "0144_ship_police_boat_s_000898",
+      "0209_truck_tractor_trailer_s_000541",
+      "0008_cat_tabby_cat_s_001397",
+      "0467_cat_tabby_cat_s_000907",
+      "0164_ship_boat_s_000847",
+      "0494_automobile_wagon_s_000971",
+      "0768_dog_mutt_s_001792",
+      "0388_bird_ostrich_s_002190",
+      "0158_dog_lapdog_s_000392",
+      "0631_dog_dog_s_000734",
+      "0926_ship_boat_s_000989",
+      "0898_cat_tabby_s_001247",
+      "0084_bird_emu_s_000246",
+      "0907_frog_leopard_frog_s_000116",
+      "0694_ship_container_vessel_s_000454",
+      "0421_dog_chihuahua_s_001890",
+      "0954_deer_odocoileus_hemionus_s_001104",
+      "0106_cat_house_cat_s_001448",
+      "0069_horse_arabian_s_000445",
+      "0451_truck_truck_s_001161",
+      "0973_automobile_car_s_001247",
+      "0245_cat_tabby_cat_s_002450",
+      "0299_frog_bufo_viridis_s_000987",
+      "0522_airplane_attack_aircraft_s_000424",
+      "0762_frog_western_toad_s_000281",
+      "0273_cat_true_cat_s_001813",
+      "0853_truck_tow_truck_s_001659",
+      "0920_frog_rana_catesbeiana_s_000113",
+      "0334_frog_bufo_bufo_s_000019",
+      "0002_ship_sea_boat_s_001456",
+      "0406_airplane_airbus_s_000131",
+      "0486_truck_fire_truck_s_001021",
+      "0979_truck_fire_engine_s_000567",
+      "0100_deer_deer_s_001324",
+      "0600_ship_fireboat_s_000445",
+      "0117_deer_moose_s_000121",
+      "0686_truck_delivery_truck_s_000326",
+      "0371_horse_american_saddle_horse_s_000006",
+      "0577_truck_trailer_truck_s_000098",
+      "0707_truck_lorry_s_001791",
+      "0665_ship_ship_s_001855",
+      "0270_bird_rhea_s_001591",
+      "0534_frog_barking_frog_s_000968",
+      "0074_airplane_dive_bomber_s_000494",
+      "0212_dog_king_charles_spaniel_s_000314",
+      "0947_automobile_station_wagon_s_002759",
+      "0274_ship_passenger_ship_s_001312",
+      "0284_airplane_attack_aircraft_s_000069",
+      "0126_ship_freighter_s_001352",
+      "0625_truck_fire_truck_s_001004",
+      "0445_horse_gelding_s_000609",
+      "0641_cat_tabby_s_000931",
+      "0046_cat_tomcat_s_002930",
+      "0843_bird_bird_s_000253",
+      "0189_airplane_jetliner_s_000761",
+      "0958_horse_saddle_horse_s_000817",
+      "0978_automobile_shooting_brake_s_001249",
+      "0012_dog_toy_spaniel_s_001592",
+      "0420_deer_elk_s_001680",
+      "0053_cat_house_cat_s_000481",
+      "0594_automobile_convertible_s_001959",
+      "0498_bird_flightless_bird_s_000209",
+      "0220_horse_quarter_horse_s_000328",
+      "0567_horse_dawn_horse_s_001771",
+      "0208_horse_stallion_s_001069",
+      "0555_deer_fawn_s_002185",
+      "0519_ship_cruiser_s_000063",
+      "0269_airplane_twinjet_s_000129",
+      "0297_airplane_stealth_fighter_s_001020",
+      "0679_dog_dog_s_000487",
+      "0292_frog_american_toad_s_000714",
+      "0357_bird_ostrich_s_001468",
+      "0374_bird_cassowary_s_001528",
+      "0416_airplane_fighter_aircraft_s_001207",
+      "0865_automobile_shooting_brake_s_000692",
+      "0337_ship_dredger_s_000621",
+      "0870_cat_domestic_cat_s_001784",
+      "0876_deer_wapiti_s_001915",
+      "0821_bird_rhea_americana_s_000092",
+      "0705_deer_sika_s_000257",
+      "0530_truck_laundry_truck_s_000478",
+      "0859_ship_oil_tanker_s_002047",
+      "0928_airplane_stealth_fighter_s_000911",
+      "0767_airplane_airbus_s_002291",
+      "0447_airplane_biplane_s_001810",
+      "0981_truck_delivery_truck_s_000570",
+      "0912_airplane_stealth_fighter_s_000987",
+      "0505_deer_american_elk_s_000598",
+      "0579_dog_toy_s_000745",
+      "0786_cat_cat_s_002258",
+      "0626_truck_fire_truck_s_001064",
+      "0991_dog_puppy_s_002220",
+      "0878_cat_tabby_s_000778",
+      "0199_ship_sea_boat_s_001760",
+      "0326_horse_broodmare_s_000250",
+      "0484_dog_pekingese_s_000364",
+      "0785_airplane_monoplane_s_000099",
+      "0194_horse_riding_horse_s_000059",
+      "0472_ship_sea_boat_s_000399",
+      "0558_cat_tomcat_s_001466",
+      "0450_bird_ostrich_s_000401",
+      "0365_deer_deer_s_000001",
+      "0477_airplane_dive_bomber_s_000642",
+      "0829_cat_felis_domesticus_s_000575",
+      "0471_horse_gelding_s_000199",
+      "0105_automobile_convertible_s_000268",
+      "0028_truck_tipper_truck_s_000866",
+      "0793_deer_alces_alces_s_001700",
+      "0968_automobile_motorcar_s_002394",
+      "0635_frog_rana_catesbeiana_s_000579",
+      "0147_bird_hen_s_000410",
+      "0141_dog_pekinese_s_001214",
+      "0296_frog_pickerel_frog_s_000400",
+      "0925_dog_chihuahua_s_000729",
+      "0994_frog_rana_pipiens_s_000903",
+      "0539_airplane_multiengine_airplane_s_000322",
+      "0930_deer_fallow_deer_s_000001",
+      "0068_cat_tabby_cat_s_002157",
+      "0723_automobile_coupe_s_000991"
+    ],
+    "heldout_images": [
+      "0590_frog_rana_catesbeiana_s_000910",
+      "0862_cat_domestic_cat_s_001908",
+      "0049_frog_rana_pipiens_s_000931",
+      "0429_frog_spadefoot_s_000564",
+      "0480_ship_pilot_boat_s_001132",
+      "0186_frog_leopard_frog_s_000317",
+      "0972_bird_honey_eater_s_000375",
+      "0330_automobile_police_cruiser_s_000079",
+      "0358_ship_boat_s_000258",
+      "0098_airplane_dive_bomber_s_000862",
+      "0389_dog_pekingese_s_001472",
+      "0381_truck_fire_engine_s_001293",
+      "0580_deer_roe_deer_s_000077",
+      "0882_cat_alley_cat_s_001141",
+      "0714_deer_fallow_deer_s_001726",
+      "0946_airplane_jumbojet_s_000280",
+      "0464_cat_tabby_cat_s_002837",
+      "0403_ship_oil_tanker_s_000751",
+      "0611_truck_tipper_s_000338",
+      "0481_frog_bufo_americanus_s_000171",
+      "0673_cat_domestic_cat_s_000360",
+      "0566_truck_moving_van_s_000139",
+      "0720_deer_cervus_elaphus_s_001701",
+      "0533_dog_maltese_s_001596",
+      "0502_dog_pekinese_s_002173",
+      "0363_automobile_automobile_s_000538",
+      "0903_dog_puppy_s_001406",
+      "0314_deer_wapiti_s_000030",
+      "0089_truck_aerial_ladder_truck_s_001320",
+      "0070_bird_bird_s_000650",
+      "0094_deer_fawn_s_001906",
+      "0879_horse_tennessee_walker_s_000865",
+      "0412_cat_cat_s_002303",
+      "0013_horse_lippizan_s_000752",
+      "0901_frog_grass_frog_s_001143",
+      "0026_deer_elk_s_000015",
+      "0031_dog_pekingese_s_000608",
+      "0019_frog_rana_clamitans_s_000570",
+      "0922_truck_dumper_s_001460",
+      "0153_airplane_dive_bomber_s_001345",
+      "0634_horse_tennessee_walker_s_000914",
+      "0112_frog_green_frog_s_001459",
+      "0676_cat_house_cat_s_001004",
+      "0735_deer_sika_s_000659",
+      "0340_bird_dromaius_novaehollandiae_s_000183",
+      "0160_bird_flying_bird_s_000011",
+      "0812_horse_gelding_s_001297",
+      "0386_horse_saddle_horse_s_000012",
+      "0769_deer_musk_deer_s_000189",
+      "0244_airplane_attack_aircraft_s_001090"
+    ],
+    "hvk2d_quantum": {
+      "final_train_recon_mse": 0.044191889464855194,
+      "train_seconds": 6463.664742946625,
+      "heldout_rows": [
+        {
+          "image": "0590_frog_rana_catesbeiana_s_000910",
+          "mse": 0.04298745095729828,
+          "psnr": 13.66658306639238,
+          "ssim": 0.5148334171249281
+        },
+        {
+          "image": "0862_cat_domestic_cat_s_001908",
+          "mse": 0.050779618322849274,
+          "psnr": 12.943105677573612,
+          "ssim": 0.22681064613864552
+        },
+        {
+          "image": "0049_frog_rana_pipiens_s_000931",
+          "mse": 0.0306098572909832,
+          "psnr": 15.14138695161992,
+          "ssim": 0.6136757504579652
+        },
+        {
+          "image": "0429_frog_spadefoot_s_000564",
+          "mse": 0.10489498823881149,
+          "psnr": 9.792452613986747,
+          "ssim": 0.2761955206846108
+        },
+        {
+          "image": "0480_ship_pilot_boat_s_001132",
+          "mse": 0.058934856206178665,
+          "psnr": 12.296277717564937,
+          "ssim": 0.4422296772878479
+        },
+        {
+          "image": "0186_frog_leopard_frog_s_000317",
+          "mse": 0.05511672794818878,
+          "psnr": 12.58716572599446,
+          "ssim": 0.17356868787020305
+        },
+        {
+          "image": "0972_bird_honey_eater_s_000375",
+          "mse": 0.034472040832042694,
+          "psnr": 14.625330044986999,
+          "ssim": 0.4830970041674118
+        },
+        {
+          "image": "0330_automobile_police_cruiser_s_000079",
+          "mse": 0.05701672285795212,
+          "psnr": 12.439977481912175,
+          "ssim": 0.1616766135132948
+        },
+        {
+          "image": "0358_ship_boat_s_000258",
+          "mse": 0.05073847621679306,
+          "psnr": 12.946625796955944,
+          "ssim": 0.11866478262031471
+        },
+        {
+          "image": "0098_airplane_dive_bomber_s_000862",
+          "mse": 0.15749484300613403,
+          "psnr": 8.027336621324524,
+          "ssim": 0.43165250507567715
+        },
+        {
+          "image": "0389_dog_pekingese_s_001472",
+          "mse": 0.0311904177069664,
+          "psnr": 15.059788090640865,
+          "ssim": 0.3268254476799174
+        },
+        {
+          "image": "0381_truck_fire_engine_s_001293",
+          "mse": 0.03757917135953903,
+          "psnr": 14.250528005512823,
+          "ssim": 0.4814842141616233
+        },
+        {
+          "image": "0580_deer_roe_deer_s_000077",
+          "mse": 0.032044507563114166,
+          "psnr": 14.942463979530753,
+          "ssim": 0.43317372025336576
+        },
+        {
+          "image": "0882_cat_alley_cat_s_001141",
+          "mse": 0.06944867223501205,
+          "psnr": 11.583360529720071,
+          "ssim": 0.481020371639116
+        },
+        {
+          "image": "0714_deer_fallow_deer_s_001726",
+          "mse": 0.022536054253578186,
+          "psnr": 16.4712212049507,
+          "ssim": 0.6310005884017768
+        },
+        {
+          "image": "0946_airplane_jumbojet_s_000280",
+          "mse": 0.03547101095318794,
+          "psnr": 14.50126433599265,
+          "ssim": 0.3596774906687501
+        },
+        {
+          "image": "0464_cat_tabby_cat_s_002837",
+          "mse": 0.019060438498854637,
+          "psnr": 17.1986711233136,
+          "ssim": 0.46909028127053953
+        },
+        {
+          "image": "0403_ship_oil_tanker_s_000751",
+          "mse": 0.01813557744026184,
+          "psnr": 17.414686118438517,
+          "ssim": 0.5191053300957555
+        },
+        {
+          "image": "0611_truck_tipper_s_000338",
+          "mse": 0.12293820083141327,
+          "psnr": 9.10313146955415,
+          "ssim": 0.45958518408990545
+        },
+        {
+          "image": "0481_frog_bufo_americanus_s_000171",
+          "mse": 0.03558119758963585,
+          "psnr": 14.487794385506469,
+          "ssim": 0.3066312267133922
+        },
+        {
+          "image": "0673_cat_domestic_cat_s_000360",
+          "mse": 0.06516853719949722,
+          "psnr": 11.85962027252312,
+          "ssim": 0.33267453609659225
+        },
+        {
+          "image": "0566_truck_moving_van_s_000139",
+          "mse": 0.04754995182156563,
+          "psnr": 13.228499187610318,
+          "ssim": 0.5893575662416911
+        },
+        {
+          "image": "0720_deer_cervus_elaphus_s_001701",
+          "mse": 0.037358589470386505,
+          "psnr": 14.276095295723534,
+          "ssim": 0.6505210133423088
+        },
+        {
+          "image": "0533_dog_maltese_s_001596",
+          "mse": 0.050854772329330444,
+          "psnr": 12.936682856312586,
+          "ssim": 0.5406220952953106
+        },
+        {
+          "image": "0502_dog_pekinese_s_002173",
+          "mse": 0.05897672474384308,
+          "psnr": 12.29319349538918,
+          "ssim": -0.01816186614399242
+        },
+        {
+          "image": "0363_automobile_automobile_s_000538",
+          "mse": 0.04938168078660965,
+          "psnr": 13.064341322265438,
+          "ssim": 0.08096017595441937
+        },
+        {
+          "image": "0903_dog_puppy_s_001406",
+          "mse": 0.03967304900288582,
+          "psnr": 14.015044212993782,
+          "ssim": 0.5341046242673899
+        },
+        {
+          "image": "0314_deer_wapiti_s_000030",
+          "mse": 0.029565831646323204,
+          "psnr": 15.29209900384501,
+          "ssim": 0.32862062059993996
+        },
+        {
+          "image": "0089_truck_aerial_ladder_truck_s_001320",
+          "mse": 0.02240895852446556,
+          "psnr": 16.495783272038125,
+          "ssim": 0.5500585886377586
+        },
+        {
+          "image": "0070_bird_bird_s_000650",
+          "mse": 0.010235349647700787,
+          "psnr": 19.89897316902465,
+          "ssim": 0.5530403786352541
+        },
+        {
+          "image": "0094_deer_fawn_s_001906",
+          "mse": 0.0539650060236454,
+          "psnr": 12.67887770126829,
+          "ssim": 0.3250040960635364
+        },
+        {
+          "image": "0879_horse_tennessee_walker_s_000865",
+          "mse": 0.03669152781367302,
+          "psnr": 14.354342041003328,
+          "ssim": 0.44963256744511654
+        },
+        {
+          "image": "0412_cat_cat_s_002303",
+          "mse": 0.03842189535498619,
+          "psnr": 14.154212151664495,
+          "ssim": 0.4065952318921089
+        },
+        {
+          "image": "0013_horse_lippizan_s_000752",
+          "mse": 0.06870576739311218,
+          "psnr": 11.630068052712762,
+          "ssim": 0.2626132333310472
+        },
+        {
+          "image": "0901_frog_grass_frog_s_001143",
+          "mse": 0.034342482686042786,
+          "psnr": 14.64168312032571,
+          "ssim": 0.3596458243367485
+        },
+        {
+          "image": "0026_deer_elk_s_000015",
+          "mse": 0.07073849439620972,
+          "psnr": 11.50344187981496,
+          "ssim": 0.0323638393094442
+        },
+        {
+          "image": "0031_dog_pekingese_s_000608",
+          "mse": 0.016407664865255356,
+          "psnr": 17.849532232306654,
+          "ssim": 0.30944957623192454
+        },
+        {
+          "image": "0019_frog_rana_clamitans_s_000570",
+          "mse": 0.042363014072179794,
+          "psnr": 13.730131479897647,
+          "ssim": 0.32893740174084973
+        },
+        {
+          "image": "0922_truck_dumper_s_001460",
+          "mse": 0.02467167004942894,
+          "psnr": 16.078014516978183,
+          "ssim": 0.4966993859085261
+        },
+        {
+          "image": "0153_airplane_dive_bomber_s_001345",
+          "mse": 0.05697920173406601,
+          "psnr": 12.442836394229492,
+          "ssim": 0.4334877390188682
+        },
+        {
+          "image": "0634_horse_tennessee_walker_s_000914",
+          "mse": 0.057067591696977615,
+          "psnr": 12.43610454676945,
+          "ssim": -0.09750501927183954
+        },
+        {
+          "image": "0112_frog_green_frog_s_001459",
+          "mse": 0.020913202315568924,
+          "psnr": 16.795794611327377,
+          "ssim": 0.551259533921415
+        },
+        {
+          "image": "0676_cat_house_cat_s_001004",
+          "mse": 0.023598652333021164,
+          "psnr": 16.27112797921596,
+          "ssim": 0.3456447711837342
+        },
+        {
+          "image": "0735_deer_sika_s_000659",
+          "mse": 0.007292442489415407,
+          "psnr": 21.371269871809332,
+          "ssim": 0.23702014233428143
+        },
+        {
+          "image": "0340_bird_dromaius_novaehollandiae_s_000183",
+          "mse": 0.019263550639152527,
+          "psnr": 17.152636610915287,
+          "ssim": 0.4186342445190203
+        },
+        {
+          "image": "0160_bird_flying_bird_s_000011",
+          "mse": 0.033161990344524384,
+          "psnr": 14.793594114841436,
+          "ssim": 0.6469941049551938
+        },
+        {
+          "image": "0812_horse_gelding_s_001297",
+          "mse": 0.020660463720560074,
+          "psnr": 16.848599350419416,
+          "ssim": 0.5360089401435258
+        },
+        {
+          "image": "0386_horse_saddle_horse_s_000012",
+          "mse": 0.031070096418261528,
+          "psnr": 15.076573990187956,
+          "ssim": 0.4353281675022367
+        },
+        {
+          "image": "0769_deer_musk_deer_s_000189",
+          "mse": 0.01673509180545807,
+          "psnr": 17.763719008446273,
+          "ssim": 0.6930354809158751
+        },
+        {
+          "image": "0244_airplane_attack_aircraft_s_001090",
+          "mse": 0.029478080570697784,
+          "psnr": 15.305007984484378,
+          "ssim": 0.5265154531057393
+        }
+      ],
+      "heldout_psnr_mean": 14.31434101335633,
+      "heldout_psnr_std": 2.5072174239722638
+    },
+    "classical_linear_control": {
+      "final_train_recon_mse": 0.03353818878531456,
+      "train_seconds": 0.35463714599609375,
+      "heldout_rows": [
+        {
+          "image": "0590_frog_rana_catesbeiana_s_000910",
+          "mse": 0.02595696598291397,
+          "psnr": 15.857460720366747,
+          "ssim": 0.7565269707632775
+        },
+        {
+          "image": "0862_cat_domestic_cat_s_001908",
+          "mse": 0.02905482053756714,
+          "psnr": 15.367818027165177,
+          "ssim": 0.5751529250147622
+        },
+        {
+          "image": "0049_frog_rana_pipiens_s_000931",
+          "mse": 0.028956487774848938,
+          "psnr": 15.382541162492434,
+          "ssim": 0.7195545902592322
+        },
+        {
+          "image": "0429_frog_spadefoot_s_000564",
+          "mse": 0.0658130943775177,
+          "psnr": 11.816876892108304,
+          "ssim": 0.6018924585393693
+        },
+        {
+          "image": "0480_ship_pilot_boat_s_001132",
+          "mse": 0.0369846485555172,
+          "psnr": 14.319785038006499,
+          "ssim": 0.7595314708625474
+        },
+        {
+          "image": "0186_frog_leopard_frog_s_000317",
+          "mse": 0.043598901480436325,
+          "psnr": 13.605244530936844,
+          "ssim": 0.4640396525660247
+        },
+        {
+          "image": "0972_bird_honey_eater_s_000375",
+          "mse": 0.03416650742292404,
+          "psnr": 14.663994134890562,
+          "ssim": 0.5988498373624562
+        },
+        {
+          "image": "0330_automobile_police_cruiser_s_000079",
+          "mse": 0.05382353067398071,
+          "psnr": 12.690278171271824,
+          "ssim": 0.29837854547897646
+        },
+        {
+          "image": "0358_ship_boat_s_000258",
+          "mse": 0.045239612460136414,
+          "psnr": 13.444811240636724,
+          "ssim": 0.3488843806329196
+        },
+        {
+          "image": "0098_airplane_dive_bomber_s_000862",
+          "mse": 0.12392499297857285,
+          "psnr": 9.068410970293652,
+          "ssim": 0.6061874059006758
+        },
+        {
+          "image": "0389_dog_pekingese_s_001472",
+          "mse": 0.019294362515211105,
+          "psnr": 17.145695659238736,
+          "ssim": 0.6614532410666072
+        },
+        {
+          "image": "0381_truck_fire_engine_s_001293",
+          "mse": 0.02719094417989254,
+          "psnr": 15.655757116843706,
+          "ssim": 0.698256013032458
+        },
+        {
+          "image": "0580_deer_roe_deer_s_000077",
+          "mse": 0.01975473202764988,
+          "psnr": 17.043288571342583,
+          "ssim": 0.6667513490575802
+        },
+        {
+          "image": "0882_cat_alley_cat_s_001141",
+          "mse": 0.061425209045410156,
+          "psnr": 12.11653356832194,
+          "ssim": 0.7085075610764255
+        },
+        {
+          "image": "0714_deer_fallow_deer_s_001726",
+          "mse": 0.010987217538058758,
+          "psnr": 19.591122767181037,
+          "ssim": 0.8409284890270293
+        },
+        {
+          "image": "0946_airplane_jumbojet_s_000280",
+          "mse": 0.02938312292098999,
+          "psnr": 15.319020480530167,
+          "ssim": 0.5638566945655192
+        },
+        {
+          "image": "0464_cat_tabby_cat_s_002837",
+          "mse": 0.012502048164606094,
+          "psnr": 19.030188322943292,
+          "ssim": 0.7568803413164663
+        },
+        {
+          "image": "0403_ship_oil_tanker_s_000751",
+          "mse": 0.017887406051158905,
+          "psnr": 17.474526342423932,
+          "ssim": 0.5729117324757123
+        },
+        {
+          "image": "0611_truck_tipper_s_000338",
+          "mse": 0.11426945775747299,
+          "psnr": 9.42069833470849,
+          "ssim": 0.5942507188500148
+        },
+        {
+          "image": "0481_frog_bufo_americanus_s_000171",
+          "mse": 0.014457179233431816,
+          "psnr": 18.39916434763324,
+          "ssim": 0.6244371893594947
+        },
+        {
+          "image": "0673_cat_domestic_cat_s_000360",
+          "mse": 0.039225853979587555,
+          "psnr": 14.064275926846756,
+          "ssim": 0.6809958617068038
+        },
+        {
+          "image": "0566_truck_moving_van_s_000139",
+          "mse": 0.04027934372425079,
+          "psnr": 13.949176140682304,
+          "ssim": 0.6687994174195202
+        },
+        {
+          "image": "0720_deer_cervus_elaphus_s_001701",
+          "mse": 0.03176610916852951,
+          "psnr": 14.980359759225497,
+          "ssim": 0.8080662019159748
+        },
+        {
+          "image": "0533_dog_maltese_s_001596",
+          "mse": 0.034120697528123856,
+          "psnr": 14.669820991481629,
+          "ssim": 0.7641055384951749
+        },
+        {
+          "image": "0502_dog_pekinese_s_002173",
+          "mse": 0.052649710327386856,
+          "psnr": 12.786040139099006,
+          "ssim": 0.30881340962518306
+        },
+        {
+          "image": "0363_automobile_automobile_s_000538",
+          "mse": 0.04153414070606232,
+          "psnr": 13.815947701626506,
+          "ssim": 0.2796154997701555
+        },
+        {
+          "image": "0903_dog_puppy_s_001406",
+          "mse": 0.02136516571044922,
+          "psnr": 16.70293734400513,
+          "ssim": 0.7974159811396898
+        },
+        {
+          "image": "0314_deer_wapiti_s_000030",
+          "mse": 0.01537826843559742,
+          "psnr": 18.13092562532046,
+          "ssim": 0.7373172423263091
+        },
+        {
+          "image": "0089_truck_aerial_ladder_truck_s_001320",
+          "mse": 0.015398964285850525,
+          "psnr": 18.12508488258748,
+          "ssim": 0.7387315562677957
+        },
+        {
+          "image": "0070_bird_bird_s_000650",
+          "mse": 0.0050734831020236015,
+          "psnr": 22.946937817682173,
+          "ssim": 0.7625781513253705
+        },
+        {
+          "image": "0094_deer_fawn_s_001906",
+          "mse": 0.04672723263502121,
+          "psnr": 13.304299387901121,
+          "ssim": 0.4220165870640682
+        },
+        {
+          "image": "0879_horse_tennessee_walker_s_000865",
+          "mse": 0.02918422408401966,
+          "psnr": 15.348518487135337,
+          "ssim": 0.6003411527186857
+        },
+        {
+          "image": "0412_cat_cat_s_002303",
+          "mse": 0.02020825445652008,
+          "psnr": 16.94471198243277,
+          "ssim": 0.7594120592447811
+        },
+        {
+          "image": "0013_horse_lippizan_s_000752",
+          "mse": 0.048762474209070206,
+          "psnr": 13.119142663825148,
+          "ssim": 0.5680737636369334
+        },
+        {
+          "image": "0901_frog_grass_frog_s_001143",
+          "mse": 0.038810424506664276,
+          "psnr": 14.110516069406458,
+          "ssim": 0.5858470633618631
+        },
+        {
+          "image": "0026_deer_elk_s_000015",
+          "mse": 0.058116838335990906,
+          "psnr": 12.356980201582816,
+          "ssim": 0.34130209505603837
+        },
+        {
+          "image": "0031_dog_pekingese_s_000608",
+          "mse": 0.011005338281393051,
+          "psnr": 19.58396603589107,
+          "ssim": 0.6537708063210783
+        },
+        {
+          "image": "0019_frog_rana_clamitans_s_000570",
+          "mse": 0.029101446270942688,
+          "psnr": 15.360854271006295,
+          "ssim": 0.630865651430242
+        },
+        {
+          "image": "0922_truck_dumper_s_001460",
+          "mse": 0.023219775408506393,
+          "psnr": 16.34141985257138,
+          "ssim": 0.587070489409173
+        },
+        {
+          "image": "0153_airplane_dive_bomber_s_001345",
+          "mse": 0.046628355979919434,
+          "psnr": 13.313498966071823,
+          "ssim": 0.6822029261738796
+        },
+        {
+          "image": "0634_horse_tennessee_walker_s_000914",
+          "mse": 0.061690639704465866,
+          "psnr": 12.097807262922643,
+          "ssim": 0.20629245551368636
+        },
+        {
+          "image": "0112_frog_green_frog_s_001459",
+          "mse": 0.01200505718588829,
+          "psnr": 19.206357668475558,
+          "ssim": 0.7813188832538269
+        },
+        {
+          "image": "0676_cat_house_cat_s_001004",
+          "mse": 0.01655159890651703,
+          "psnr": 17.811600464359035,
+          "ssim": 0.6390330722952692
+        },
+        {
+          "image": "0735_deer_sika_s_000659",
+          "mse": 0.0036900141276419163,
+          "psnr": 24.329719710915683,
+          "ssim": 0.5694185594402358
+        },
+        {
+          "image": "0340_bird_dromaius_novaehollandiae_s_000183",
+          "mse": 0.016075946390628815,
+          "psnr": 17.938234507440548,
+          "ssim": 0.6453806308773649
+        },
+        {
+          "image": "0160_bird_flying_bird_s_000011",
+          "mse": 0.015157371759414673,
+          "psnr": 18.193760974729507,
+          "ssim": 0.8767082930983258
+        },
+        {
+          "image": "0812_horse_gelding_s_001297",
+          "mse": 0.013014542870223522,
+          "psnr": 18.85571081678911,
+          "ssim": 0.7691008390100238
+        },
+        {
+          "image": "0386_horse_saddle_horse_s_000012",
+          "mse": 0.023332694545388222,
+          "psnr": 16.32035104385856,
+          "ssim": 0.5854162493834942
+        },
+        {
+          "image": "0769_deer_musk_deer_s_000189",
+          "mse": 0.009410670027136803,
+          "psnr": 20.263794542848604,
+          "ssim": 0.8628621512446697
+        },
+        {
+          "image": "0244_airplane_attack_aircraft_s_001090",
+          "mse": 0.027485033497214317,
+          "psnr": 15.609037294042185,
+          "ssim": 0.5769891990509629
+        }
+      ],
+      "heldout_psnr_mean": 15.75990009864197,
+      "heldout_psnr_std": 3.013200634306753
+    }
+  },
+  {
+    "seed": 1,
+    "train_images": [
+      "0705_deer_sika_s_000257",
+      "0649_dog_toy_s_000974",
+      "0543_horse_quarter_horse_s_000457",
+      "0927_frog_bufo_bufo_s_000850",
+      "0577_truck_trailer_truck_s_000098",
+      "0471_horse_gelding_s_000199",
+      "0608_cat_tomcat_s_001650",
+      "0252_truck_tractor_trailer_s_000158",
+      "0918_ship_packet_boat_s_001250",
+      "0745_horse_walking_horse_s_001609",
+      "0624_horse_plantation_walking_horse_s_000279",
+      "0463_deer_sika_s_001946",
+      "0809_horse_lipizzan_s_001314",
+      "0048_horse_quarter_horse_s_001535",
+      "0583_deer_mule_deer_s_000311",
+      "0262_dog_peke_s_000634",
+      "0191_ship_packet_boat_s_000646",
+      "0525_dog_chihuahua_s_000087",
+      "0823_ship_passenger_ship_s_000095",
+      "0500_deer_sika_s_000271",
+      "0297_airplane_stealth_fighter_s_001020",
+      "0824_horse_broodmare_s_000680",
+      "0875_ship_police_boat_s_000906",
+      "0968_automobile_motorcar_s_002394",
+      "0902_frog_rana_pipiens_s_000638",
+      "0374_bird_cassowary_s_001528",
+      "0284_airplane_attack_aircraft_s_000069",
+      "0410_horse_gelding_s_002024",
+      "0838_truck_tipper_truck_s_000305",
+      "0675_airplane_biplane_s_000545",
+      "0069_horse_arabian_s_000445",
+      "0777_frog_toad_s_001504",
+      "0925_dog_chihuahua_s_000729",
+      "0712_ship_liberty_ship_s_001463",
+      "0149_bird_rhea_s_000225",
+      "0231_automobile_coupe_s_000534",
+      "0801_automobile_police_cruiser_s_000257",
+      "0103_cat_tabby_cat_s_002739",
+      "0629_automobile_compact_car_s_000197",
+      "0742_airplane_plane_s_000201",
+      "0743_horse_stallion_s_001797",
+      "0842_horse_stallion_s_000235",
+      "0621_horse_lippizan_s_000097",
+      "0906_automobile_wagon_s_002450",
+      "0183_bird_sparrow_s_000653",
+      "0130_deer_sambar_s_001185",
+      "0662_horse_walking_horse_s_001586",
+      "0547_frog_leopard_frog_s_001770",
+      "0010_airplane_plane_s_000026",
+      "0950_cat_tabby_cat_s_001316",
+      "0407_automobile_police_cruiser_s_000979",
+      "0595_deer_elk_s_002129",
+      "0235_airplane_airliner_s_001880",
+      "0635_frog_rana_catesbeiana_s_000579",
+      "0454_truck_trucking_rig_s_001375",
+      "0804_deer_mule_deer_s_001072",
+      "0827_frog_true_frog_s_000243",
+      "0286_automobile_automobile_s_000402",
+      "0548_bird_sparrow_s_002465",
+      "0771_automobile_police_cruiser_s_000080",
+      "0067_bird_pipit_s_000291",
+      "0023_truck_aerial_ladder_truck_s_001218",
+      "0133_truck_garbage_truck_s_000418",
+      "0770_frog_spring_frog_s_000127",
+      "0154_airplane_bomber_s_000024",
+      "0663_frog_bufo_bufo_s_001856",
+      "0813_bird_sparrow_s_002119",
+      "0795_horse_quarter_horse_s_000440",
+      "0511_frog_rana_temporaria_s_001354",
+      "0634_horse_tennessee_walker_s_000914",
+      "0965_frog_bufo_viridis_s_000406",
+      "0980_bird_prunella_modularis_s_000579",
+      "0593_frog_rana_catesbeiana_s_001047",
+      "0204_automobile_motorcar_s_001795",
+      "0513_automobile_station_wagon_s_001085",
+      "0828_dog_chihuahua_s_001645",
+      "0600_ship_fireboat_s_000445",
+      "0009_automobile_wagon_s_002806",
+      "0602_airplane_twinjet_s_001272",
+      "0657_automobile_wagon_s_002458",
+      "0535_frog_yosemite_toad_s_000096",
+      "0329_frog_leopard_frog_s_000545",
+      "0153_airplane_dive_bomber_s_001345",
+      "0518_dog_lapdog_s_001485",
+      "0645_automobile_wagon_s_002625",
+      "0579_dog_toy_s_000745",
+      "0896_cat_cat_s_001691",
+      "0304_frog_bufo_bufo_s_000295",
+      "0464_cat_tabby_cat_s_002837",
+      "0735_deer_sika_s_000659",
+      "0660_truck_camion_s_000130",
+      "0378_airplane_amphibious_aircraft_s_000350",
+      "0280_truck_trailer_truck_s_000299",
+      "0521_horse_stud_mare_s_001276",
+      "0397_cat_tabby_s_000009",
+      "0268_horse_broodmare_s_000020",
+      "0208_horse_stallion_s_001069",
+      "0696_ship_hydrofoil_s_000784",
+      "0150_ship_speedboat_s_002646",
+      "0501_frog_pickerel_frog_s_000017",
+      "0489_airplane_biplane_s_002238",
+      "0572_automobile_auto_s_000610",
+      "0839_bird_pipit_s_000616",
+      "0032_deer_deer_s_001275",
+      "0710_frog_true_frog_s_001141",
+      "0685_frog_bufo_bufo_s_001807",
+      "0632_frog_leptodactylus_pentadactylus_s_000183",
+      "0263_horse_broodmare_s_001549",
+      "0594_automobile_convertible_s_001959",
+      "0379_frog_rana_temporaria_s_001462",
+      "0449_bird_meadow_pipit_s_001487",
+      "0643_horse_saddle_horse_s_000905",
+      "0225_truck_trucking_rig_s_000033",
+      "0169_airplane_monoplane_s_001537",
+      "0806_ship_cargo_ship_s_001943",
+      "0802_deer_fallow_deer_s_000312",
+      "0111_airplane_stealth_bomber_s_001353",
+      "0639_dog_toy_dog_s_000062",
+      "0741_horse_arabian_s_001814",
+      "0790_cat_true_cat_s_000778",
+      "0055_ship_boat_s_001029",
+      "0443_truck_articulated_lorry_s_000398",
+      "0946_airplane_jumbojet_s_000280",
+      "0845_cat_felis_catus_s_001559",
+      "0361_dog_mongrel_s_002694",
+      "0073_ship_passenger_ship_s_000924",
+      "0437_dog_pekinese_s_002150",
+      "0412_cat_cat_s_002303",
+      "0420_deer_elk_s_001680",
+      "0674_bird_wagtail_s_000934",
+      "0986_cat_cat_s_000455",
+      "0402_horse_lippizaner_s_000522",
+      "0860_deer_alces_alces_s_000026",
+      "0899_dog_japanese_spaniel_s_000753",
+      "0520_dog_toy_dog_s_000168",
+      "0495_ship_icebreaker_s_000017",
+      "0128_dog_puppy_s_000146",
+      "0044_airplane_biplane_s_000278",
+      "0854_airplane_airbus_s_001681",
+      "0310_ship_ferry_s_000307",
+      "0703_ship_boat_s_001216",
+      "0766_horse_riding_horse_s_001061",
+      "0726_automobile_auto_s_002007",
+      "0816_truck_aerial_ladder_truck_s_000188",
+      "0661_deer_alces_alces_s_000636",
+      "0904_ship_scow_s_000017",
+      "0264_airplane_stealth_bomber_s_000001",
+      "0889_deer_cervus_unicolor_s_000060",
+      "0016_dog_puppy_s_001937",
+      "0990_automobile_auto_s_001185"
+    ],
+    "heldout_images": [
+      "0049_frog_rana_pipiens_s_000931",
+      "0242_ship_rowboat_s_000909",
+      "0911_cat_tabby_s_000948",
+      "0568_truck_tandem_trailer_s_001432",
+      "0076_truck_camion_s_000449",
+      "0299_frog_bufo_viridis_s_000987",
+      "0039_dog_pekingese_s_002007",
+      "0445_horse_gelding_s_000609",
+      "0613_ship_passenger_ship_s_001606",
+      "0664_cat_tabby_cat_s_002118",
+      "0611_truck_tipper_s_000338",
+      "0063_cat_tabby_cat_s_000838",
+      "0778_airplane_airliner_s_000279",
+      "0278_deer_musk_deer_s_000156",
+      "0376_airplane_airbus_s_001726",
+      "0198_horse_arabian_s_002455",
+      "0961_automobile_automobile_s_001096",
+      "0514_dog_pekingese_s_002612",
+      "0346_deer_elk_s_001574",
+      "0004_frog_green_frog_s_001658",
+      "0071_frog_bufo_marinus_s_000444",
+      "0756_frog_leopard_frog_s_002075",
+      "0733_truck_dump_truck_s_001828",
+      "0916_cat_tomcat_s_001983",
+      "0138_bird_passerine_s_000759",
+      "0947_automobile_station_wagon_s_002759",
+      "0690_cat_felis_domesticus_s_000249",
+      "0159_deer_reindeer_s_000021",
+      "0078_cat_domestic_cat_s_002061",
+      "0167_deer_red_deer_s_001908",
+      "0031_dog_pekingese_s_000608",
+      "0152_frog_midwife_toad_s_000083",
+      "0479_deer_barking_deer_s_000236",
+      "0077_cat_domestic_cat_s_001722",
+      "0817_dog_blenheim_spaniel_s_000096",
+      "0475_horse_tennessee_walker_s_001482",
+      "0637_cat_felis_domesticus_s_000177",
+      "0157_truck_delivery_truck_s_001315",
+      "0898_cat_tabby_s_001247",
+      "0912_airplane_stealth_fighter_s_000987",
+      "0773_deer_muntjac_s_001035",
+      "0716_cat_house_cat_s_001284",
+      "0261_automobile_motorcar_s_000236",
+      "0627_deer_muntjac_s_000678",
+      "0640_dog_maltese_s_000864",
+      "0447_airplane_biplane_s_001810",
+      "0123_bird_emu_s_001971",
+      "0089_truck_aerial_ladder_truck_s_001320",
+      "0959_ship_ferry_s_000340",
+      "0734_truck_lorry_s_001633"
+    ],
+    "hvk2d_quantum": {
+      "final_train_recon_mse": 0.03731884807348251,
+      "train_seconds": 5466.012279748917,
+      "heldout_rows": [
+        {
+          "image": "0049_frog_rana_pipiens_s_000931",
+          "mse": 0.024587932974100113,
+          "psnr": 16.092779794220988,
+          "ssim": 0.5168076101506374
+        },
+        {
+          "image": "0242_ship_rowboat_s_000909",
+          "mse": 0.023775950074195862,
+          "psnr": 16.238621198695526,
+          "ssim": 0.5656633536819922
+        },
+        {
+          "image": "0911_cat_tabby_s_000948",
+          "mse": 0.04213559627532959,
+          "psnr": 13.753508558485192,
+          "ssim": 0.5642282080544873
+        },
+        {
+          "image": "0568_truck_tandem_trailer_s_001432",
+          "mse": 0.029446542263031006,
+          "psnr": 15.309656945695323,
+          "ssim": 0.5788654001102319
+        },
+        {
+          "image": "0076_truck_camion_s_000449",
+          "mse": 0.03563276305794716,
+          "psnr": 14.481505000095344,
+          "ssim": 0.4635360897219925
+        },
+        {
+          "image": "0299_frog_bufo_viridis_s_000987",
+          "mse": 0.03327275812625885,
+          "psnr": 14.779111970462315,
+          "ssim": 0.253689084179261
+        },
+        {
+          "image": "0039_dog_pekingese_s_002007",
+          "mse": 0.028618142008781433,
+          "psnr": 15.433585655981496,
+          "ssim": 0.49941459434993507
+        },
+        {
+          "image": "0445_horse_gelding_s_000609",
+          "mse": 0.030795611441135406,
+          "psnr": 15.11511168651989,
+          "ssim": 0.2889016111375933
+        },
+        {
+          "image": "0613_ship_passenger_ship_s_001606",
+          "mse": 0.03515482321381569,
+          "psnr": 14.540150816984,
+          "ssim": 0.3935115011300089
+        },
+        {
+          "image": "0664_cat_tabby_cat_s_002118",
+          "mse": 0.03837329521775246,
+          "psnr": 14.159709051686676,
+          "ssim": 0.4921808406857365
+        },
+        {
+          "image": "0611_truck_tipper_s_000338",
+          "mse": 0.13392969965934753,
+          "psnr": 8.731231050797208,
+          "ssim": 0.40888812832682264
+        },
+        {
+          "image": "0063_cat_tabby_cat_s_000838",
+          "mse": 0.0589660182595253,
+          "psnr": 12.29398197409574,
+          "ssim": 0.4582694085494176
+        },
+        {
+          "image": "0778_airplane_airliner_s_000279",
+          "mse": 0.01067014504224062,
+          "psnr": 19.718296770500743,
+          "ssim": 0.3669223059004123
+        },
+        {
+          "image": "0278_deer_musk_deer_s_000156",
+          "mse": 0.023636754602193832,
+          "psnr": 16.26412153641705,
+          "ssim": 0.4883982866869941
+        },
+        {
+          "image": "0376_airplane_airbus_s_001726",
+          "mse": 0.10080021619796753,
+          "psnr": 9.965385364075214,
+          "ssim": 0.6355657734941607
+        },
+        {
+          "image": "0198_horse_arabian_s_002455",
+          "mse": 0.06619682908058167,
+          "psnr": 11.791628133667686,
+          "ssim": 0.5323487984668533
+        },
+        {
+          "image": "0961_automobile_automobile_s_001096",
+          "mse": 0.0361868217587471,
+          "psnr": 14.414495587335018,
+          "ssim": 0.25982057894438576
+        },
+        {
+          "image": "0514_dog_pekingese_s_002612",
+          "mse": 0.036621663719415665,
+          "psnr": 14.362619296206455,
+          "ssim": 0.502346787772349
+        },
+        {
+          "image": "0346_deer_elk_s_001574",
+          "mse": 0.047176532447338104,
+          "psnr": 13.262739836354573,
+          "ssim": 0.5189333262049864
+        },
+        {
+          "image": "0004_frog_green_frog_s_001658",
+          "mse": 0.023372450843453407,
+          "psnr": 16.312957449471043,
+          "ssim": 0.3355506364268831
+        },
+        {
+          "image": "0071_frog_bufo_marinus_s_000444",
+          "mse": 0.02654562145471573,
+          "psnr": 15.760071030146854,
+          "ssim": 0.6018879281379481
+        },
+        {
+          "image": "0756_frog_leopard_frog_s_002075",
+          "mse": 0.04973828047513962,
+          "psnr": 13.033092329998755,
+          "ssim": 0.3061536518439438
+        },
+        {
+          "image": "0733_truck_dump_truck_s_001828",
+          "mse": 0.020159509032964706,
+          "psnr": 16.955200489562074,
+          "ssim": 0.5311048771989259
+        },
+        {
+          "image": "0916_cat_tomcat_s_001983",
+          "mse": 0.02529522031545639,
+          "psnr": 15.969615336355165,
+          "ssim": 0.42802837721216747
+        },
+        {
+          "image": "0138_bird_passerine_s_000759",
+          "mse": 0.024119919165968895,
+          "psnr": 16.17624151997578,
+          "ssim": 0.12109399786632699
+        },
+        {
+          "image": "0947_automobile_station_wagon_s_002759",
+          "mse": 0.0648622140288353,
+          "psnr": 11.88008231054736,
+          "ssim": 0.31700412313108695
+        },
+        {
+          "image": "0690_cat_felis_domesticus_s_000249",
+          "mse": 0.011783747002482414,
+          "psnr": 19.28716590385158,
+          "ssim": 0.6002525112876469
+        },
+        {
+          "image": "0159_deer_reindeer_s_000021",
+          "mse": 0.011514237150549889,
+          "psnr": 19.387648299343372,
+          "ssim": 0.5524223038495378
+        },
+        {
+          "image": "0078_cat_domestic_cat_s_002061",
+          "mse": 0.049102865159511566,
+          "psnr": 13.088931659898273,
+          "ssim": 0.37006244208713346
+        },
+        {
+          "image": "0167_deer_red_deer_s_001908",
+          "mse": 0.039706408977508545,
+          "psnr": 14.011393884781258,
+          "ssim": 0.3026217805397456
+        },
+        {
+          "image": "0031_dog_pekingese_s_000608",
+          "mse": 0.010388627648353577,
+          "psnr": 19.834418195373416,
+          "ssim": 0.5887658361982309
+        },
+        {
+          "image": "0152_frog_midwife_toad_s_000083",
+          "mse": 0.03245745599269867,
+          "psnr": 14.886855230689559,
+          "ssim": 0.5117367312856614
+        },
+        {
+          "image": "0479_deer_barking_deer_s_000236",
+          "mse": 0.020737580955028534,
+          "psnr": 16.832419055725957,
+          "ssim": 0.4481291877593838
+        },
+        {
+          "image": "0077_cat_domestic_cat_s_001722",
+          "mse": 0.039575353264808655,
+          "psnr": 14.025751997688964,
+          "ssim": 0.36313323334632297
+        },
+        {
+          "image": "0817_dog_blenheim_spaniel_s_000096",
+          "mse": 0.018339894711971283,
+          "psnr": 17.366031619125156,
+          "ssim": 0.5982678143179099
+        },
+        {
+          "image": "0475_horse_tennessee_walker_s_001482",
+          "mse": 0.03310709446668625,
+          "psnr": 14.800789319768612,
+          "ssim": 0.25242872557412865
+        },
+        {
+          "image": "0637_cat_felis_domesticus_s_000177",
+          "mse": 0.02816508524119854,
+          "psnr": 15.502889300410523,
+          "ssim": 0.36361876824352724
+        },
+        {
+          "image": "0157_truck_delivery_truck_s_001315",
+          "mse": 0.04066629707813263,
+          "psnr": 13.907653710364787,
+          "ssim": 0.6152931399450445
+        },
+        {
+          "image": "0898_cat_tabby_s_001247",
+          "mse": 0.05940624698996544,
+          "psnr": 12.261678834595791,
+          "ssim": 0.19931071367914058
+        },
+        {
+          "image": "0912_airplane_stealth_fighter_s_000987",
+          "mse": 0.066306933760643,
+          "psnr": 11.78441054754592,
+          "ssim": 0.37951071352877086
+        },
+        {
+          "image": "0773_deer_muntjac_s_001035",
+          "mse": 0.03318419307470322,
+          "psnr": 14.790687384397312,
+          "ssim": 0.37003248500331404
+        },
+        {
+          "image": "0716_cat_house_cat_s_001284",
+          "mse": 0.03107517957687378,
+          "psnr": 15.075863529833404,
+          "ssim": 0.3926722584461316
+        },
+        {
+          "image": "0261_automobile_motorcar_s_000236",
+          "mse": 0.03741590306162834,
+          "psnr": 14.269437682827474,
+          "ssim": 0.41125602804012446
+        },
+        {
+          "image": "0627_deer_muntjac_s_000678",
+          "mse": 0.029405632987618446,
+          "psnr": 15.315694675093168,
+          "ssim": 0.35774739360137275
+        },
+        {
+          "image": "0640_dog_maltese_s_000864",
+          "mse": 0.05744156613945961,
+          "psnr": 12.407737276018844,
+          "ssim": 0.38571429973101445
+        },
+        {
+          "image": "0447_airplane_biplane_s_001810",
+          "mse": 0.04111121594905853,
+          "psnr": 13.860396778740702,
+          "ssim": 0.3505323300433743
+        },
+        {
+          "image": "0123_bird_emu_s_001971",
+          "mse": 0.027016211301088333,
+          "psnr": 15.683755556248727,
+          "ssim": 0.6978117934065707
+        },
+        {
+          "image": "0089_truck_aerial_ladder_truck_s_001320",
+          "mse": 0.02314927615225315,
+          "psnr": 16.3546258425713,
+          "ssim": 0.49997904695682643
+        },
+        {
+          "image": "0959_ship_ferry_s_000340",
+          "mse": 0.0456588976085186,
+          "psnr": 13.404745783542563,
+          "ssim": 0.31935563255986066
+        },
+        {
+          "image": "0734_truck_lorry_s_001633",
+          "mse": 0.07053860276937485,
+          "psnr": 11.515731471006283,
+          "ssim": 0.09214722161701581
+        }
+      ],
+      "heldout_psnr_mean": 14.72904428467553,
+      "heldout_psnr_std": 2.256750275540436
+    },
+    "classical_linear_control": {
+      "final_train_recon_mse": 0.029559608548879623,
+      "train_seconds": 0.29836201667785645,
+      "heldout_rows": [
+        {
+          "image": "0049_frog_rana_pipiens_s_000931",
+          "mse": 0.021619485691189766,
+          "psnr": 16.651546417488067,
+          "ssim": 0.7564899299353746
+        },
+        {
+          "image": "0242_ship_rowboat_s_000909",
+          "mse": 0.020449552685022354,
+          "psnr": 16.89316187341292,
+          "ssim": 0.6493439208793206
+        },
+        {
+          "image": "0911_cat_tabby_s_000948",
+          "mse": 0.02613040804862976,
+          "psnr": 15.828538083406201,
+          "ssim": 0.7565963710399182
+        },
+        {
+          "image": "0568_truck_tandem_trailer_s_001432",
+          "mse": 0.021484464406967163,
+          "psnr": 16.678754685101232,
+          "ssim": 0.7483506056508088
+        },
+        {
+          "image": "0076_truck_camion_s_000449",
+          "mse": 0.02770749293267727,
+          "psnr": 15.574027688681447,
+          "ssim": 0.6392226561165644
+        },
+        {
+          "image": "0299_frog_bufo_viridis_s_000987",
+          "mse": 0.01991746574640274,
+          "psnr": 17.007659210513655,
+          "ssim": 0.4611215094592099
+        },
+        {
+          "image": "0039_dog_pekingese_s_002007",
+          "mse": 0.022177662700414658,
+          "psnr": 16.540842259866753,
+          "ssim": 0.6638835417432838
+        },
+        {
+          "image": "0445_horse_gelding_s_000609",
+          "mse": 0.018618442118167877,
+          "psnr": 17.300566610447113,
+          "ssim": 0.6320956164601248
+        },
+        {
+          "image": "0613_ship_passenger_ship_s_001606",
+          "mse": 0.02722346782684326,
+          "psnr": 15.650565535583086,
+          "ssim": 0.5674377853721329
+        },
+        {
+          "image": "0664_cat_tabby_cat_s_002118",
+          "mse": 0.030127141624689102,
+          "psnr": 15.210420709656061,
+          "ssim": 0.678072627719369
+        },
+        {
+          "image": "0611_truck_tipper_s_000338",
+          "mse": 0.1238657683134079,
+          "psnr": 9.07048699166179,
+          "ssim": 0.5253891110962859
+        },
+        {
+          "image": "0063_cat_tabby_cat_s_000838",
+          "mse": 0.03766703978180885,
+          "psnr": 14.240385092616021,
+          "ssim": 0.7320480891628939
+        },
+        {
+          "image": "0778_airplane_airliner_s_000279",
+          "mse": 0.013051538728177547,
+          "psnr": 18.843382835929532,
+          "ssim": 0.45264581463971815
+        },
+        {
+          "image": "0278_deer_musk_deer_s_000156",
+          "mse": 0.016412559896707535,
+          "psnr": 17.84823675966464,
+          "ssim": 0.7017232885807843
+        },
+        {
+          "image": "0376_airplane_airbus_s_001726",
+          "mse": 0.07758031040430069,
+          "psnr": 11.102484870895939,
+          "ssim": 0.7236503472224658
+        },
+        {
+          "image": "0198_horse_arabian_s_002455",
+          "mse": 0.04291469603776932,
+          "psnr": 13.67393959210057,
+          "ssim": 0.7533849224749078
+        },
+        {
+          "image": "0961_automobile_automobile_s_001096",
+          "mse": 0.03487379848957062,
+          "psnr": 14.575007462513438,
+          "ssim": 0.34653821570854076
+        },
+        {
+          "image": "0514_dog_pekingese_s_002612",
+          "mse": 0.02746887318789959,
+          "psnr": 15.61159155589067,
+          "ssim": 0.662857273401708
+        },
+        {
+          "image": "0346_deer_elk_s_001574",
+          "mse": 0.03780786693096161,
+          "psnr": 14.22417824257273,
+          "ssim": 0.6773875155152218
+        },
+        {
+          "image": "0004_frog_green_frog_s_001658",
+          "mse": 0.01715097948908806,
+          "psnr": 17.657110724399324,
+          "ssim": 0.517753415982064
+        },
+        {
+          "image": "0071_frog_bufo_marinus_s_000444",
+          "mse": 0.016095057129859924,
+          "psnr": 17.933074774351006,
+          "ssim": 0.802230836936797
+        },
+        {
+          "image": "0756_frog_leopard_frog_s_002075",
+          "mse": 0.04603341966867447,
+          "psnr": 13.369267616241503,
+          "ssim": 0.4322971680215669
+        },
+        {
+          "image": "0733_truck_dump_truck_s_001828",
+          "mse": 0.015487436205148697,
+          "psnr": 18.100204695300985,
+          "ssim": 0.6557319101576964
+        },
+        {
+          "image": "0916_cat_tomcat_s_001983",
+          "mse": 0.024906659498810768,
+          "psnr": 16.036845164826648,
+          "ssim": 0.5465996797316499
+        },
+        {
+          "image": "0138_bird_passerine_s_000759",
+          "mse": 0.021209048107266426,
+          "psnr": 16.734788228100978,
+          "ssim": 0.367922222805283
+        },
+        {
+          "image": "0947_automobile_station_wagon_s_002759",
+          "mse": 0.05026141554117203,
+          "psnr": 12.98765284285765,
+          "ssim": 0.4665987322421267
+        },
+        {
+          "image": "0690_cat_felis_domesticus_s_000249",
+          "mse": 0.007927916944026947,
+          "psnr": 21.008409083385896,
+          "ssim": 0.7658166260357141
+        },
+        {
+          "image": "0159_deer_reindeer_s_000021",
+          "mse": 0.011129127815365791,
+          "psnr": 19.535388697907234,
+          "ssim": 0.6192726803330018
+        },
+        {
+          "image": "0078_cat_domestic_cat_s_002061",
+          "mse": 0.03444230556488037,
+          "psnr": 14.629077846112054,
+          "ssim": 0.6070195810819278
+        },
+        {
+          "image": "0167_deer_red_deer_s_001908",
+          "mse": 0.04518885165452957,
+          "psnr": 13.44968694881187,
+          "ssim": 0.5006240009857102
+        },
+        {
+          "image": "0031_dog_pekingese_s_000608",
+          "mse": 0.009384200908243656,
+          "psnr": 20.276027028951304,
+          "ssim": 0.6787727343845826
+        },
+        {
+          "image": "0152_frog_midwife_toad_s_000083",
+          "mse": 0.01945185288786888,
+          "psnr": 17.110390236107676,
+          "ssim": 0.7105166274123478
+        },
+        {
+          "image": "0479_deer_barking_deer_s_000236",
+          "mse": 0.0144796222448349,
+          "psnr": 18.392427681888524,
+          "ssim": 0.6660448385880728
+        },
+        {
+          "image": "0077_cat_domestic_cat_s_001722",
+          "mse": 0.02537742257118225,
+          "psnr": 15.955524886225017,
+          "ssim": 0.6134942827555485
+        },
+        {
+          "image": "0817_dog_blenheim_spaniel_s_000096",
+          "mse": 0.013870595023036003,
+          "psnr": 18.57904908091943,
+          "ssim": 0.7153681651312018
+        },
+        {
+          "image": "0475_horse_tennessee_walker_s_001482",
+          "mse": 0.031721871346235275,
+          "psnr": 14.986412005671934,
+          "ssim": 0.3189771501279604
+        },
+        {
+          "image": "0637_cat_felis_domesticus_s_000177",
+          "mse": 0.026948463171720505,
+          "psnr": 15.694659968992264,
+          "ssim": 0.4247250222470635
+        },
+        {
+          "image": "0157_truck_delivery_truck_s_001315",
+          "mse": 0.029465166851878166,
+          "psnr": 15.306910952902026,
+          "ssim": 0.726334233365675
+        },
+        {
+          "image": "0898_cat_tabby_s_001247",
+          "mse": 0.04661644250154495,
+          "psnr": 13.314608724048831,
+          "ssim": 0.4506316413354213
+        },
+        {
+          "image": "0912_airplane_stealth_fighter_s_000987",
+          "mse": 0.057580433785915375,
+          "psnr": 12.397250676600946,
+          "ssim": 0.5473693881702177
+        },
+        {
+          "image": "0773_deer_muntjac_s_001035",
+          "mse": 0.025037363171577454,
+          "psnr": 16.01411411097918,
+          "ssim": 0.528293600873477
+        },
+        {
+          "image": "0716_cat_house_cat_s_001284",
+          "mse": 0.0317634679377079,
+          "psnr": 14.980720873536082,
+          "ssim": 0.552528501261119
+        },
+        {
+          "image": "0261_automobile_motorcar_s_000236",
+          "mse": 0.02466549165546894,
+          "psnr": 16.079102233549285,
+          "ssim": 0.6464494499524068
+        },
+        {
+          "image": "0627_deer_muntjac_s_000678",
+          "mse": 0.019488176330924034,
+          "psnr": 17.10228799490525,
+          "ssim": 0.6004981848348053
+        },
+        {
+          "image": "0640_dog_maltese_s_000864",
+          "mse": 0.046121761202812195,
+          "psnr": 13.360941171176071,
+          "ssim": 0.5448371742239292
+        },
+        {
+          "image": "0447_airplane_biplane_s_001810",
+          "mse": 0.030562642961740494,
+          "psnr": 15.148090920443762,
+          "ssim": 0.44783935168278527
+        },
+        {
+          "image": "0123_bird_emu_s_001971",
+          "mse": 0.016701748594641685,
+          "psnr": 17.772380578793918,
+          "ssim": 0.8313465254157238
+        },
+        {
+          "image": "0089_truck_aerial_ladder_truck_s_001320",
+          "mse": 0.015317099168896675,
+          "psnr": 18.14823475841058,
+          "ssim": 0.7305113785714397
+        },
+        {
+          "image": "0959_ship_ferry_s_000340",
+          "mse": 0.03900701552629471,
+          "psnr": 14.08857276810612,
+          "ssim": 0.45539179631347326
+        },
+        {
+          "image": "0734_truck_lorry_s_001633",
+          "mse": 0.0380374938249588,
+          "psnr": 14.197881051375303,
+          "ssim": 0.5851242814374509
+        }
+      ],
+      "heldout_psnr_mean": 15.857457416077612,
+      "heldout_psnr_std": 2.252379507283526
+    }
+  },
+  {
+    "seed": 2,
+    "train_images": [
+      "0234_ship_ship_s_000124",
+      "0463_deer_sika_s_001946",
+      "0911_cat_tabby_s_000948",
+      "0054_ship_container_vessel_s_000228",
+      "0771_automobile_police_cruiser_s_000080",
+      "0972_bird_honey_eater_s_000375",
+      "0571_horse_mare_s_001216",
+      "0052_airplane_stealth_bomber_s_002171",
+      "0963_frog_western_toad_s_000335",
+      "0959_ship_ferry_s_000340",
+      "0883_airplane_stealth_bomber_s_001977",
+      "0912_airplane_stealth_fighter_s_000987",
+      "0888_airplane_jetliner_s_000162",
+      "0259_truck_fire_engine_s_000316",
+      "0165_deer_alces_alces_s_001359",
+      "0324_deer_stag_s_002975",
+      "0185_ship_minesweeper_s_001119",
+      "0113_bird_dunnock_s_000063",
+      "0393_bird_sparrow_s_000417",
+      "0451_truck_truck_s_001161",
+      "0450_bird_ostrich_s_000401",
+      "0448_bird_passerine_s_001889",
+      "0782_horse_cavalry_horse_s_000154",
+      "0650_cat_tabby_cat_s_001887",
+      "0436_bird_cassowary_s_000558",
+      "0663_frog_bufo_bufo_s_001856",
+      "0214_ship_oil_tanker_s_000006",
+      "0837_bird_ostrich_s_001633",
+      "0444_dog_puppy_s_000558",
+      "0342_bird_flying_bird_s_001452",
+      "0134_automobile_auto_s_000152",
+      "0906_automobile_wagon_s_002450",
+      "0114_automobile_car_s_000246",
+      "0602_airplane_twinjet_s_001272",
+      "0558_cat_tomcat_s_001466",
+      "0376_airplane_airbus_s_001726",
+      "0941_automobile_car_s_001324",
+      "0399_cat_domestic_cat_s_001520",
+      "0098_airplane_dive_bomber_s_000862",
+      "0680_truck_dump_truck_s_000758",
+      "0749_dog_toy_spaniel_s_001354",
+      "0096_frog_grass_frog_s_000060",
+      "0163_frog_toad_frog_s_001171",
+      "0900_bird_sparrow_s_001420",
+      "0503_deer_fawn_s_000029",
+      "0604_automobile_compact_car_s_001912",
+      "0810_dog_puppy_s_002093",
+      "0372_truck_delivery_truck_s_000460",
+      "0077_cat_domestic_cat_s_001722",
+      "0000_cat_domestic_cat_s_000907",
+      "0645_automobile_wagon_s_002625",
+      "0072_ship_tug_s_000115",
+      "0852_ship_ship_s_001431",
+      "0718_deer_cervus_elaphus_s_000234",
+      "0118_bird_bird_s_000109",
+      "0780_truck_sound_truck_s_001237",
+      "0601_dog_dog_s_000161",
+      "0548_bird_sparrow_s_002465",
+      "0890_deer_odocoileus_hemionus_s_000537",
+      "0023_truck_aerial_ladder_truck_s_001218",
+      "0854_airplane_airbus_s_001681",
+      "0699_dog_puppy_s_001777",
+      "0020_horse_tennessee_walker_s_000353",
+      "0622_automobile_automobile_s_000453",
+      "0416_airplane_fighter_aircraft_s_001207",
+      "0562_frog_true_frog_s_000107",
+      "0606_deer_moose_s_001324",
+      "0144_ship_police_boat_s_000898",
+      "0847_airplane_propeller_plane_s_001067",
+      "0976_frog_alytes_obstetricans_s_000379",
+      "0565_cat_felis_catus_s_000634",
+      "0333_frog_spadefoot_s_000359",
+      "0773_deer_muntjac_s_001035",
+      "0231_automobile_coupe_s_000534",
+      "0805_deer_roe_deer_s_001655",
+      "0433_horse_lippizan_s_000641",
+      "0107_frog_rana_clamitans_s_000231",
+      "0310_ship_ferry_s_000307",
+      "0902_frog_rana_pipiens_s_000638",
+      "0868_airplane_jumbojet_s_000565",
+      "0637_cat_felis_domesticus_s_000177",
+      "0479_deer_barking_deer_s_000236",
+      "0380_frog_leopard_frog_s_000262",
+      "0007_frog_green_frog_s_000634",
+      "0047_truck_tractor_trailer_s_000750",
+      "0446_dog_lapdog_s_001911",
+      "0298_airplane_attack_aircraft_s_000610",
+      "0681_frog_alytes_obstetricans_s_000347",
+      "0368_ship_banana_boat_s_001397",
+      "0778_airplane_airliner_s_000279",
+      "0103_cat_tabby_cat_s_002739",
+      "0151_truck_trailer_truck_s_000118",
+      "0752_truck_truck_s_000331",
+      "0337_ship_dredger_s_000621",
+      "0232_dog_mutt_s_000099",
+      "0799_bird_wagtail_s_000932",
+      "0621_horse_lippizan_s_000097",
+      "0474_dog_lapdog_s_002161",
+      "0454_truck_trucking_rig_s_001375",
+      "0222_truck_tractor_trailer_s_000351",
+      "0249_bird_finch_s_000376",
+      "0735_deer_sika_s_000659",
+      "0815_ship_passenger_ship_s_000933",
+      "0556_frog_green_frog_s_000088",
+      "0354_bird_lark_s_000045",
+      "0599_cat_tabby_cat_s_001748",
+      "0056_horse_lippizan_s_000221",
+      "0106_cat_house_cat_s_001448",
+      "0561_horse_quarter_horse_s_001721",
+      "0754_bird_anthus_pratensis_s_000461",
+      "0772_frog_texas_toad_s_000110",
+      "0063_cat_tabby_cat_s_000838",
+      "0512_frog_rana_pipiens_s_000604",
+      "0019_frog_rana_clamitans_s_000570",
+      "0257_airplane_stealth_fighter_s_000424",
+      "0808_horse_lippizaner_s_000076",
+      "0787_truck_camion_s_001419",
+      "0483_dog_dog_s_001319",
+      "0835_deer_roe_deer_s_001819",
+      "0943_deer_odocoileus_hemionus_s_000171",
+      "0916_cat_tomcat_s_001983",
+      "0292_frog_american_toad_s_000714",
+      "0004_frog_green_frog_s_001658",
+      "0285_truck_wrecker_s_000893",
+      "0539_airplane_multiengine_airplane_s_000322",
+      "0928_airplane_stealth_fighter_s_000911",
+      "0813_bird_sparrow_s_002119",
+      "0585_truck_bookmobile_s_001012",
+      "0149_bird_rhea_s_000225",
+      "0600_ship_fireboat_s_000445",
+      "0845_cat_felis_catus_s_001559",
+      "0760_cat_domestic_cat_s_000276",
+      "0104_automobile_police_cruiser_s_000916",
+      "0449_bird_meadow_pipit_s_001487",
+      "0236_deer_capreolus_capreolus_s_000795",
+      "0471_horse_gelding_s_000199",
+      "0138_bird_passerine_s_000759",
+      "0423_airplane_plane_s_000335",
+      "0074_airplane_dive_bomber_s_000494",
+      "0820_frog_bufo_viridis_s_000986",
+      "0988_bird_wagtail_s_000321",
+      "0438_cat_house_cat_s_000751",
+      "0402_horse_lippizaner_s_000522",
+      "0227_deer_fallow_deer_s_000662",
+      "0112_frog_green_frog_s_001459",
+      "0458_deer_deer_s_000840",
+      "0397_cat_tabby_s_000009",
+      "0273_cat_true_cat_s_001813",
+      "0148_dog_feist_s_000467",
+      "0999_ship_oil_tanker_s_000524"
+    ],
+    "heldout_images": [
+      "0865_automobile_shooting_brake_s_000692",
+      "0944_airplane_airplane_s_000359",
+      "0371_horse_american_saddle_horse_s_000006",
+      "0734_truck_lorry_s_001633",
+      "0705_deer_sika_s_000257",
+      "0885_airplane_fighter_aircraft_s_001600",
+      "0066_automobile_police_cruiser_s_000689",
+      "0783_frog_midwife_toad_s_000002",
+      "0305_automobile_convertible_s_001403",
+      "0994_frog_rana_pipiens_s_000903",
+      "0538_truck_truck_s_001476",
+      "0078_cat_domestic_cat_s_002061",
+      "0500_deer_sika_s_000271",
+      "0264_airplane_stealth_bomber_s_000001",
+      "0361_dog_mongrel_s_002694",
+      "0154_airplane_bomber_s_000024",
+      "0722_ship_pontoon_s_001997",
+      "0591_truck_delivery_truck_s_000030",
+      "0909_ship_powerboat_s_002200",
+      "0294_cat_mouser_s_000788",
+      "0630_bird_bird_s_001352",
+      "0716_cat_house_cat_s_001284",
+      "0901_frog_grass_frog_s_001143",
+      "0731_bird_wagtail_s_002007",
+      "0620_horse_appaloosa_s_001027",
+      "0442_truck_transporter_s_000274",
+      "0400_truck_dump_truck_s_001839",
+      "0926_ship_boat_s_000989",
+      "0753_automobile_shooting_brake_s_001227",
+      "0119_horse_lippizaner_s_001814",
+      "0960_truck_truck_s_001495",
+      "0484_dog_pekingese_s_000364",
+      "0093_frog_true_frog_s_000002",
+      "0153_airplane_dive_bomber_s_001345",
+      "0914_airplane_airliner_s_000031",
+      "0238_dog_toy_dog_s_001097",
+      "0873_bird_struthio_camelus_s_000145",
+      "0694_ship_container_vessel_s_000454",
+      "0942_horse_stallion_s_000179",
+      "0779_dog_chihuahua_s_001177",
+      "0921_truck_camion_s_001794",
+      "0401_ship_ferryboat_s_000107",
+      "0453_cat_tabby_cat_s_002527",
+      "0788_frog_rana_palustris_s_000204",
+      "0660_truck_camion_s_000130",
+      "0384_bird_flightless_bird_s_000241",
+      "0362_ship_sea_boat_s_000419",
+      "0702_deer_muntjac_s_000356",
+      "0366_automobile_automobile_s_002170",
+      "0364_truck_aerial_ladder_truck_s_000162"
+    ],
+    "hvk2d_quantum": {
+      "final_train_recon_mse": 0.04328589513897896,
+      "train_seconds": 4537.641242980957,
+      "heldout_rows": [
+        {
+          "image": "0865_automobile_shooting_brake_s_000692",
+          "mse": 0.033241383731365204,
+          "psnr": 14.783209062360482,
+          "ssim": 0.5499282531249501
+        },
+        {
+          "image": "0944_airplane_airplane_s_000359",
+          "mse": 0.028342021629214287,
+          "psnr": 15.475691748684334,
+          "ssim": 0.1404103114008057
+        },
+        {
+          "image": "0371_horse_american_saddle_horse_s_000006",
+          "mse": 0.0726693794131279,
+          "psnr": 11.386485486082387,
+          "ssim": 0.41535744910833544
+        },
+        {
+          "image": "0734_truck_lorry_s_001633",
+          "mse": 0.06885501742362976,
+          "psnr": 11.620644074767569,
+          "ssim": 0.12466573657339357
+        },
+        {
+          "image": "0705_deer_sika_s_000257",
+          "mse": 0.01782294362783432,
+          "psnr": 17.490205665309414,
+          "ssim": 0.08741663403140841
+        },
+        {
+          "image": "0885_airplane_fighter_aircraft_s_001600",
+          "mse": 0.03665675222873688,
+          "psnr": 14.358460159591964,
+          "ssim": 0.48259970997329615
+        },
+        {
+          "image": "0066_automobile_police_cruiser_s_000689",
+          "mse": 0.027050379663705826,
+          "psnr": 15.678266350049055,
+          "ssim": 0.5884707522283312
+        },
+        {
+          "image": "0783_frog_midwife_toad_s_000002",
+          "mse": 0.022193923592567444,
+          "psnr": 16.537659134520595,
+          "ssim": 0.3208745490135272
+        },
+        {
+          "image": "0305_automobile_convertible_s_001403",
+          "mse": 0.05002874881029129,
+          "psnr": 13.007803584314242,
+          "ssim": 0.6320694705593108
+        },
+        {
+          "image": "0994_frog_rana_pipiens_s_000903",
+          "mse": 0.04741376265883446,
+          "psnr": 13.24095578595241,
+          "ssim": 0.43977833504093744
+        },
+        {
+          "image": "0538_truck_truck_s_001476",
+          "mse": 0.0609859824180603,
+          "psnr": 12.147699757771965,
+          "ssim": 0.45245332544114875
+        },
+        {
+          "image": "0078_cat_domestic_cat_s_002061",
+          "mse": 0.03912317380309105,
+          "psnr": 14.07565921030173,
+          "ssim": 0.4909212118950222
+        },
+        {
+          "image": "0500_deer_sika_s_000271",
+          "mse": 0.027435818687081337,
+          "psnr": 15.616820758915601,
+          "ssim": 0.43700416492599653
+        },
+        {
+          "image": "0264_airplane_stealth_bomber_s_000001",
+          "mse": 0.020044483244419098,
+          "psnr": 16.9800513557161,
+          "ssim": 0.7131140635736612
+        },
+        {
+          "image": "0361_dog_mongrel_s_002694",
+          "mse": 0.04115459322929382,
+          "psnr": 13.855816865073,
+          "ssim": 0.36278707522326575
+        },
+        {
+          "image": "0154_airplane_bomber_s_000024",
+          "mse": 0.07680738717317581,
+          "psnr": 11.145970084286079,
+          "ssim": 0.06318993478971585
+        },
+        {
+          "image": "0722_ship_pontoon_s_001997",
+          "mse": 0.030709516257047653,
+          "psnr": 15.127270246038059,
+          "ssim": 0.38471238729687113
+        },
+        {
+          "image": "0591_truck_delivery_truck_s_000030",
+          "mse": 0.04821519926190376,
+          "psnr": 13.168160340634634,
+          "ssim": 0.4237826671721133
+        },
+        {
+          "image": "0909_ship_powerboat_s_002200",
+          "mse": 0.05641673505306244,
+          "psnr": 12.48592050925559,
+          "ssim": 0.036067490822075075
+        },
+        {
+          "image": "0294_cat_mouser_s_000788",
+          "mse": 0.06634926795959473,
+          "psnr": 11.781638644025955,
+          "ssim": 0.38121761131535237
+        },
+        {
+          "image": "0630_bird_bird_s_001352",
+          "mse": 0.02591661736369133,
+          "psnr": 15.864216832084592,
+          "ssim": 0.6041775538125744
+        },
+        {
+          "image": "0716_cat_house_cat_s_001284",
+          "mse": 0.029952675104141235,
+          "psnr": 15.235643842567901,
+          "ssim": 0.38252707935819263
+        },
+        {
+          "image": "0901_frog_grass_frog_s_001143",
+          "mse": 0.02665926143527031,
+          "psnr": 15.741518863936399,
+          "ssim": 0.2975439785940321
+        },
+        {
+          "image": "0731_bird_wagtail_s_002007",
+          "mse": 0.07232262939214706,
+          "psnr": 11.4072579285153,
+          "ssim": 0.4310088387818651
+        },
+        {
+          "image": "0620_horse_appaloosa_s_001027",
+          "mse": 0.023030219599604607,
+          "psnr": 16.377019208963066,
+          "ssim": 0.3457700710700941
+        },
+        {
+          "image": "0442_truck_transporter_s_000274",
+          "mse": 0.034901212900877,
+          "psnr": 14.571594800034319,
+          "ssim": 0.5914441945328511
+        },
+        {
+          "image": "0400_truck_dump_truck_s_001839",
+          "mse": 0.07062174379825592,
+          "psnr": 11.510615630033083,
+          "ssim": 0.5309997576172454
+        },
+        {
+          "image": "0926_ship_boat_s_000989",
+          "mse": 0.027976423501968384,
+          "psnr": 15.532078063788292,
+          "ssim": 0.5832412049509532
+        },
+        {
+          "image": "0753_automobile_shooting_brake_s_001227",
+          "mse": 0.0853251963853836,
+          "psnr": 10.689227034713538,
+          "ssim": 0.38807510719050237
+        },
+        {
+          "image": "0119_horse_lippizaner_s_001814",
+          "mse": 0.03862607851624489,
+          "psnr": 14.131193810398727,
+          "ssim": 0.5345652288700539
+        },
+        {
+          "image": "0960_truck_truck_s_001495",
+          "mse": 0.03547441214323044,
+          "psnr": 14.500847926306438,
+          "ssim": 0.5645394766866899
+        },
+        {
+          "image": "0484_dog_pekingese_s_000364",
+          "mse": 0.04277661070227623,
+          "psnr": 13.68793628638046,
+          "ssim": 0.43740959549334946
+        },
+        {
+          "image": "0093_frog_true_frog_s_000002",
+          "mse": 0.026562057435512543,
+          "psnr": 15.757382885553914,
+          "ssim": 0.5347798828521817
+        },
+        {
+          "image": "0153_airplane_dive_bomber_s_001345",
+          "mse": 0.06274110078811646,
+          "psnr": 12.024478659058722,
+          "ssim": 0.4677821348866823
+        },
+        {
+          "image": "0914_airplane_airliner_s_000031",
+          "mse": 0.06826461851596832,
+          "psnr": 11.658043324044947,
+          "ssim": 0.4923126921685178
+        },
+        {
+          "image": "0238_dog_toy_dog_s_001097",
+          "mse": 0.12009599804878235,
+          "psnr": 9.20471464323059,
+          "ssim": 0.41475198344149466
+        },
+        {
+          "image": "0873_bird_struthio_camelus_s_000145",
+          "mse": 0.00925825722515583,
+          "psnr": 20.33470757241487,
+          "ssim": 0.48432068222015073
+        },
+        {
+          "image": "0694_ship_container_vessel_s_000454",
+          "mse": 0.03915692865848541,
+          "psnr": 14.07191380172846,
+          "ssim": 0.42965073086137034
+        },
+        {
+          "image": "0942_horse_stallion_s_000179",
+          "mse": 0.06410114467144012,
+          "psnr": 11.931342150981658,
+          "ssim": 0.3033110867340812
+        },
+        {
+          "image": "0779_dog_chihuahua_s_001177",
+          "mse": 0.032050274312496185,
+          "psnr": 14.941682490814012,
+          "ssim": 0.35795437127293306
+        },
+        {
+          "image": "0921_truck_camion_s_001794",
+          "mse": 0.04956940561532974,
+          "psnr": 13.047862886706021,
+          "ssim": 0.5476373619435992
+        },
+        {
+          "image": "0401_ship_ferryboat_s_000107",
+          "mse": 0.04188670217990875,
+          "psnr": 13.779238311271397,
+          "ssim": 0.46025391368131824
+        },
+        {
+          "image": "0453_cat_tabby_cat_s_002527",
+          "mse": 0.024349194020032883,
+          "psnr": 16.13515409744845,
+          "ssim": 0.15588606518437942
+        },
+        {
+          "image": "0788_frog_rana_palustris_s_000204",
+          "mse": 0.01701761595904827,
+          "psnr": 17.691012814048264,
+          "ssim": 0.5345833381142185
+        },
+        {
+          "image": "0660_truck_camion_s_000130",
+          "mse": 0.045596856623888016,
+          "psnr": 13.410650958872008,
+          "ssim": 0.45784241153966293
+        },
+        {
+          "image": "0384_bird_flightless_bird_s_000241",
+          "mse": 0.03331950679421425,
+          "psnr": 14.77301435780751,
+          "ssim": 0.28363325385425864
+        },
+        {
+          "image": "0362_ship_sea_boat_s_000419",
+          "mse": 0.04064491018652916,
+          "psnr": 13.909938317747976,
+          "ssim": 0.39899249556810423
+        },
+        {
+          "image": "0702_deer_muntjac_s_000356",
+          "mse": 0.053835444152355194,
+          "psnr": 12.689316995866287,
+          "ssim": 0.1525203959753536
+        },
+        {
+          "image": "0366_automobile_automobile_s_002170",
+          "mse": 0.024148792028427124,
+          "psnr": 16.171045886602677,
+          "ssim": 0.3464126584688038
+        },
+        {
+          "image": "0364_truck_aerial_ladder_truck_s_000162",
+          "mse": 0.030841292813420296,
+          "psnr": 15.108674253692435,
+          "ssim": 0.5175895530355332
+        }
+      ],
+      "heldout_psnr_mean": 14.117074269185268,
+      "heldout_psnr_std": 2.093444230460827
+    },
+    "classical_linear_control": {
+      "final_train_recon_mse": 0.03456777706742287,
+      "train_seconds": 0.2623162269592285,
+      "heldout_rows": [
+        {
+          "image": "0865_automobile_shooting_brake_s_000692",
+          "mse": 0.02182941883802414,
+          "psnr": 16.609578263063863,
+          "ssim": 0.7831323148325955
+        },
+        {
+          "image": "0944_airplane_airplane_s_000359",
+          "mse": 0.0322587676346302,
+          "psnr": 14.913522277623962,
+          "ssim": 0.31774177717070107
+        },
+        {
+          "image": "0371_horse_american_saddle_horse_s_000006",
+          "mse": 0.055801935493946075,
+          "psnr": 12.533507372673911,
+          "ssim": 0.7183073106205624
+        },
+        {
+          "image": "0734_truck_lorry_s_001633",
+          "mse": 0.04094430059194565,
+          "psnr": 13.878065430790052,
+          "ssim": 0.5747365280093216
+        },
+        {
+          "image": "0705_deer_sika_s_000257",
+          "mse": 0.014669968746602535,
+          "psnr": 18.33570811391381,
+          "ssim": 0.4087164684456452
+        },
+        {
+          "image": "0885_airplane_fighter_aircraft_s_001600",
+          "mse": 0.02542928233742714,
+          "psnr": 15.94665896265238,
+          "ssim": 0.6988529019574649
+        },
+        {
+          "image": "0066_automobile_police_cruiser_s_000689",
+          "mse": 0.015567593276500702,
+          "psnr": 18.077785234322768,
+          "ssim": 0.7947354008684976
+        },
+        {
+          "image": "0783_frog_midwife_toad_s_000002",
+          "mse": 0.01761747896671295,
+          "psnr": 17.540562383291164,
+          "ssim": 0.5533859374244076
+        },
+        {
+          "image": "0305_automobile_convertible_s_001403",
+          "mse": 0.033208612352609634,
+          "psnr": 14.787492713511883,
+          "ssim": 0.8279710176416532
+        },
+        {
+          "image": "0994_frog_rana_pipiens_s_000903",
+          "mse": 0.02927923947572708,
+          "psnr": 15.33440208207385,
+          "ssim": 0.7332930081400347
+        },
+        {
+          "image": "0538_truck_truck_s_001476",
+          "mse": 0.048247382044792175,
+          "psnr": 13.165262469698572,
+          "ssim": 0.6176600579095053
+        },
+        {
+          "image": "0078_cat_domestic_cat_s_002061",
+          "mse": 0.03092818334698677,
+          "psnr": 15.096455887439816,
+          "ssim": 0.6430881789428224
+        },
+        {
+          "image": "0500_deer_sika_s_000271",
+          "mse": 0.023370061069726944,
+          "psnr": 16.313401527249844,
+          "ssim": 0.6734978761643923
+        },
+        {
+          "image": "0264_airplane_stealth_bomber_s_000001",
+          "mse": 0.011859179474413395,
+          "psnr": 19.25945358363155,
+          "ssim": 0.831371061270941
+        },
+        {
+          "image": "0361_dog_mongrel_s_002694",
+          "mse": 0.033091749995946884,
+          "psnr": 14.802802653730339,
+          "ssim": 0.6318167853355764
+        },
+        {
+          "image": "0154_airplane_bomber_s_000024",
+          "mse": 0.07027547806501389,
+          "psnr": 11.531961913229217,
+          "ssim": 0.23018615988718055
+        },
+        {
+          "image": "0722_ship_pontoon_s_001997",
+          "mse": 0.02560986950993538,
+          "psnr": 15.915926343882429,
+          "ssim": 0.6102010010950392
+        },
+        {
+          "image": "0591_truck_delivery_truck_s_000030",
+          "mse": 0.025383278727531433,
+          "psnr": 15.95452281323003,
+          "ssim": 0.7104807249845565
+        },
+        {
+          "image": "0909_ship_powerboat_s_002200",
+          "mse": 0.052722297608852386,
+          "psnr": 12.780056716859887,
+          "ssim": 0.31610951647085506
+        },
+        {
+          "image": "0294_cat_mouser_s_000788",
+          "mse": 0.03610929846763611,
+          "psnr": 14.423809489753909,
+          "ssim": 0.729299870821757
+        },
+        {
+          "image": "0630_bird_bird_s_001352",
+          "mse": 0.030570082366466522,
+          "psnr": 15.147033911314933,
+          "ssim": 0.6645918845900317
+        },
+        {
+          "image": "0716_cat_house_cat_s_001284",
+          "mse": 0.03187452256679535,
+          "psnr": 14.965563115982746,
+          "ssim": 0.5414145647167377
+        },
+        {
+          "image": "0901_frog_grass_frog_s_001143",
+          "mse": 0.029342148452997208,
+          "psnr": 15.325080899773722,
+          "ssim": 0.6226724582788458
+        },
+        {
+          "image": "0731_bird_wagtail_s_002007",
+          "mse": 0.05896803364157677,
+          "psnr": 12.29383354040931,
+          "ssim": 0.5407337289173176
+        },
+        {
+          "image": "0620_horse_appaloosa_s_001027",
+          "mse": 0.020651690661907196,
+          "psnr": 16.850443887978198,
+          "ssim": 0.486564539515344
+        },
+        {
+          "image": "0442_truck_transporter_s_000274",
+          "mse": 0.02323317714035511,
+          "psnr": 16.33891396305006,
+          "ssim": 0.7729810660826577
+        },
+        {
+          "image": "0400_truck_dump_truck_s_001839",
+          "mse": 0.053516075015068054,
+          "psnr": 12.715157461708289,
+          "ssim": 0.749990967152918
+        },
+        {
+          "image": "0926_ship_boat_s_000989",
+          "mse": 0.022908035665750504,
+          "psnr": 16.40012149400747,
+          "ssim": 0.715277047935964
+        },
+        {
+          "image": "0753_automobile_shooting_brake_s_001227",
+          "mse": 0.06622716784477234,
+          "psnr": 11.789638168342334,
+          "ssim": 0.6147456989039395
+        },
+        {
+          "image": "0119_horse_lippizaner_s_001814",
+          "mse": 0.03448191657662392,
+          "psnr": 14.624086031860902,
+          "ssim": 0.665165056070353
+        },
+        {
+          "image": "0960_truck_truck_s_001495",
+          "mse": 0.029408061876893044,
+          "psnr": 15.315335965030098,
+          "ssim": 0.7484867883065883
+        },
+        {
+          "image": "0484_dog_pekingese_s_000364",
+          "mse": 0.029218874871730804,
+          "psnr": 15.34336511413583,
+          "ssim": 0.6390716716896093
+        },
+        {
+          "image": "0093_frog_true_frog_s_000002",
+          "mse": 0.02122507244348526,
+          "psnr": 16.73150818787086,
+          "ssim": 0.6726147597272294
+        },
+        {
+          "image": "0153_airplane_dive_bomber_s_001345",
+          "mse": 0.04900413379073143,
+          "psnr": 13.09767283098415,
+          "ssim": 0.6807304387072208
+        },
+        {
+          "image": "0914_airplane_airliner_s_000031",
+          "mse": 0.08838929980993271,
+          "psnr": 10.536003064209698,
+          "ssim": 0.5357147366499542
+        },
+        {
+          "image": "0238_dog_toy_dog_s_001097",
+          "mse": 0.10339592397212982,
+          "psnr": 9.854965814674495,
+          "ssim": 0.60066978793724
+        },
+        {
+          "image": "0873_bird_struthio_camelus_s_000145",
+          "mse": 0.005673516541719437,
+          "psnr": 22.46147674569254,
+          "ssim": 0.7941350939445522
+        },
+        {
+          "image": "0694_ship_container_vessel_s_000454",
+          "mse": 0.03178396821022034,
+          "psnr": 14.977918823263657,
+          "ssim": 0.5944385813044523
+        },
+        {
+          "image": "0942_horse_stallion_s_000179",
+          "mse": 0.040186166763305664,
+          "psnr": 13.959234178671728,
+          "ssim": 0.626421653232096
+        },
+        {
+          "image": "0779_dog_chihuahua_s_001177",
+          "mse": 0.024547789245843887,
+          "psnr": 16.099876139916557,
+          "ssim": 0.5967435732236853
+        },
+        {
+          "image": "0921_truck_camion_s_001794",
+          "mse": 0.033589549362659454,
+          "psnr": 14.737958226133268,
+          "ssim": 0.7496627896374348
+        },
+        {
+          "image": "0401_ship_ferryboat_s_000107",
+          "mse": 0.02218320593237877,
+          "psnr": 16.539756891098897,
+          "ssim": 0.7815716604907973
+        },
+        {
+          "image": "0453_cat_tabby_cat_s_002527",
+          "mse": 0.018808959051966667,
+          "psnr": 17.256352390320938,
+          "ssim": 0.4872909117169799
+        },
+        {
+          "image": "0788_frog_rana_palustris_s_000204",
+          "mse": 0.014066806994378567,
+          "psnr": 18.51804471299674,
+          "ssim": 0.6798565463585208
+        },
+        {
+          "image": "0660_truck_camion_s_000130",
+          "mse": 0.04231610149145126,
+          "psnr": 13.734943499222842,
+          "ssim": 0.5572055086368188
+        },
+        {
+          "image": "0384_bird_flightless_bird_s_000241",
+          "mse": 0.02936776727437973,
+          "psnr": 15.32129070068124,
+          "ssim": 0.3509957595851718
+        },
+        {
+          "image": "0362_ship_sea_boat_s_000419",
+          "mse": 0.0319054089486599,
+          "psnr": 14.961356844216825,
+          "ssim": 0.6611591737554776
+        },
+        {
+          "image": "0702_deer_muntjac_s_000356",
+          "mse": 0.04533439874649048,
+          "psnr": 13.435721397843416,
+          "ssim": 0.38113799787526026
+        },
+        {
+          "image": "0366_automobile_automobile_s_002170",
+          "mse": 0.01908186264336109,
+          "psnr": 17.19379234650228,
+          "ssim": 0.5843075428423408
+        },
+        {
+          "image": "0364_truck_aerial_ladder_truck_s_000162",
+          "mse": 0.023255273699760437,
+          "psnr": 16.334785447529306,
+          "ssim": 0.6660012887860134
+        }
+      ],
+      "heldout_psnr_mean": 15.20124336056093,
+      "heldout_psnr_std": 2.2382749811597122
+    }
+  }
+]

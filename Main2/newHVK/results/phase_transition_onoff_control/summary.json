@@ -1,0 +1,100 @@
+{
+  "protocol": "median + 2*std threshold on |delta M_z(t)| (same rule as paper_hvk.tex sec:phase_transition / run_qubit_energy_phase_transition.py::detect_change_point / Main_new/src/training/order_parameters.py::detect_phase_transition)",
+  "epochs": 200,
+  "seeds": [
+    0,
+    1
+  ],
+  "images": [
+    "monalisa",
+    "cifar_cat"
+  ],
+  "n_hamiltonian_on_runs": 4,
+  "n_hamiltonian_on_detected": 4,
+  "n_hamiltonian_off_runs": 4,
+  "n_hamiltonian_off_detected": 4,
+  "fires_only_when_hamiltonian_on": false,
+  "guardrail_result": "FAIL: the classical-replacement (Hamiltonian-off, energy identically 0) control ALSO triggers detection under the same median+2*std threshold. This confirms the guardrail's worry in experiments/todo.md Task 5 -- a median+2*std threshold on a small change-magnitude trace can be a threshold artifact, not physics. Reported honestly, not suppressed.",
+  "per_run": [
+    {
+      "image": "monalisa",
+      "seed": 0,
+      "hamiltonian_on": true,
+      "detected": true,
+      "critical_epoch": 4,
+      "max_change": 0.004523448646068573,
+      "threshold": 0.0022438131749408915,
+      "energy_identically_zero": false
+    },
+    {
+      "image": "monalisa",
+      "seed": 0,
+      "hamiltonian_on": false,
+      "detected": true,
+      "critical_epoch": 8,
+      "max_change": 0.005429275333881378,
+      "threshold": 0.0018233305630375072,
+      "energy_identically_zero": true
+    },
+    {
+      "image": "monalisa",
+      "seed": 1,
+      "hamiltonian_on": true,
+      "detected": true,
+      "critical_epoch": 162,
+      "max_change": 0.004270664881914854,
+      "threshold": 0.00306411905500781,
+      "energy_identically_zero": false
+    },
+    {
+      "image": "monalisa",
+      "seed": 1,
+      "hamiltonian_on": false,
+      "detected": true,
+      "critical_epoch": 23,
+      "max_change": 0.0024266233667731285,
+      "threshold": 0.0010978685796542709,
+      "energy_identically_zero": true
+    },
+    {
+      "image": "cifar_cat",
+      "seed": 0,
+      "hamiltonian_on": true,
+      "detected": true,
+      "critical_epoch": 97,
+      "max_change": 0.004499450325965881,
+      "threshold": 0.0027141196458634665,
+      "energy_identically_zero": false
+    },
+    {
+      "image": "cifar_cat",
+      "seed": 0,
+      "hamiltonian_on": false,
+      "detected": true,
+      "critical_epoch": 6,
+      "max_change": 0.004978284239768982,
+      "threshold": 0.0014275919089212323,
+      "energy_identically_zero": true
+    },
+    {
+      "image": "cifar_cat",
+      "seed": 1,
+      "hamiltonian_on": true,
+      "detected": true,
+      "critical_epoch": 105,
+      "max_change": 0.005874112248420715,
+      "threshold": 0.0035715307472787773,
+      "energy_identically_zero": false
+    },
+    {
+      "image": "cifar_cat",
+      "seed": 1,
+      "hamiltonian_on": false,
+      "detected": true,
+      "critical_epoch": 1,
+      "max_change": 0.001855403184890747,
+      "threshold": 0.0006549871177241225,
+      "energy_identically_zero": true
+    }
+  ]
+}

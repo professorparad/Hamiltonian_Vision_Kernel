@@ -26,6 +26,7 @@ OUTPUT_PATHS = [
 ]
 
 COLORS = {4: "tab:blue", 6: "tab:red", 8: "tab:green"}
+LINESTYLES = {4: "-", 6: "--", 8: "-."}
 
 
 def main() -> None:
@@ -42,9 +43,16 @@ def main() -> None:
         peak_epoch = int(mean_diff.argmax())
         summary[n] = peak_epoch
 
-        ax.plot(epochs, mean_diff, color=COLORS[n], linewidth=2, label=f"N={n} (peak at t={peak_epoch})")
+        ax.plot(
+            epochs,
+            mean_diff,
+            color=COLORS[n],
+            linestyle=LINESTYLES[n],
+            linewidth=2,
+            label=f"N={n} (peak at t={peak_epoch})",
+        )
         ax.fill_between(epochs, mean_diff - std_diff, mean_diff + std_diff, color=COLORS[n], alpha=0.15)
-        ax.axvline(peak_epoch, color=COLORS[n], linestyle="--", alpha=0.6, linewidth=1.2)
+        ax.axvline(peak_epoch, color=COLORS[n], linestyle=":", alpha=0.6, linewidth=1.2)
 
     ax.set_xlabel("Epoch")
     ax.set_ylabel(r"Mean susceptibility $\langle|\Delta M_z(t)|\rangle$ (across runs, $\pm$std shaded)")

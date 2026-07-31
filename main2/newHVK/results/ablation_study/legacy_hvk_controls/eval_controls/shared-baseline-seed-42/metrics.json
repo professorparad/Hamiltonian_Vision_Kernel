@@ -45,11 +45,11 @@
     "proof": "Phase transition at epoch 10: susceptibility peak 0.008927 exceeds threshold 0.004676 (median 0.001901 + 2*std 0.001388); order-parameter jump 0.008927."
   },
   "media": {
-    "order_parameter_curve": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_order_parameter_curve.png",
-    "phase_transition_epoch_vs_order_parameter_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/phase_transition_epoch_vs_order_parameter.gif",
-    "phase_transition_order_parameter_reconstruction_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/phase_transition_order_parameter_reconstruction.gif",
-    "order_parameter_phase_transition_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_order_parameter_phase_transition.gif",
-    "reconstruction_phase_transition_gif": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_reconstruction_phase_transition.gif"
+    "order_parameter_curve": "./experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_order_parameter_curve.png",
+    "phase_transition_epoch_vs_order_parameter_gif": "./experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/phase_transition_epoch_vs_order_parameter.gif",
+    "phase_transition_order_parameter_reconstruction_gif": "./experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/phase_transition_order_parameter_reconstruction.gif",
+    "order_parameter_phase_transition_gif": "./experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_order_parameter_phase_transition.gif",
+    "reconstruction_phase_transition_gif": "./experiments/quantum_contribution/results/eval_controls/shared-baseline-seed-42/hvk_reconstruction_phase_transition.gif"
   },
   "model_variant": "standard",
   "ablation_mode": "baseline",

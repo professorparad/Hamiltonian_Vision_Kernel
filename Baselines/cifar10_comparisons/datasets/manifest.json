@@ -7,7 +7,7 @@
   "original_image_size": 32,
   "saved_image_size": 32,
   "color_mode": "grayscale (native res)",
-  "images_dir": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+  "images_dir": "./Baselines/cifar10_comparisons/datasets/images",
   "samples": [
     {
       "index": 0,

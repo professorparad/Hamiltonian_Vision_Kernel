@@ -83,11 +83,45 @@ than an initial single-seed reading suggested. The bounded-coupling change speci
 does not appear to add anything on top of `positive` mode by itself at this seed
 (44.56 vs 44.69 dB, within run-to-run noise).
 
-**Multi-seed check in progress** (seeds 43, 44 for `no_energy_loss` vs this folder's
-`bounded_positive`, the core comparison) — do not treat the single-seed numbers above as
-final. Results land in `/tmp/hamiltonian_seeds_extension.log` during the run; move to
-`Main_new/results/hamiltonian_ablation/` once complete and update this table with
-mean±std across 3 seeds.
+## Architectural fix v2: feed energy into the decoder (2026-07-28)
+
+The v1 fix above (bounded couplings + `positive` loss) only ever ties "no energy loss"
+because the energy term never reaches reconstruction at all — it's a pure side-channel
+regularizer, so it can only avoid hurting, never help. Fix: `PatchDecoder` now accepts
+an optional `energy` tensor, concatenated into its input alongside observables and
+positions (`use_energy_feature=True`, the new default) — see `src/decoder/patch_decoder.py`
+and the corresponding wiring in `src/training/training.py`. This makes the Hamiltonian
+signal an actual input to reconstruction, not just a competing loss term.
+
+**Full 3-seed result, energy-fed-to-decoder vs "no energy loss" baseline** (200 steps,
+Monalisa, `model_variant=standard`):
+
+| Seed | No energy loss | Energy fed to decoder | Delta |
+|---|---|---|---|
+| 42 | 44.56 dB | 45.81 dB | +1.25 dB |
+| 43 | 43.77 dB | 44.28 dB | +0.51 dB |
+| 44 | 45.33 dB | 40.25 dB | **-5.08 dB** |
+
+**Honest read: this is not a robust win.** Two of three seeds show a real, meaningful
+improvement; the third shows a large regression that outweighs both wins combined
+(mean delta across seeds is negative: roughly -1.1 dB). Feeding energy into the decoder
+appears to substantially *increase the variance* of the outcome — sometimes it helps
+the decoder use the physics-informed signal productively, sometimes it introduces a
+noisy/misleading input that actively confuses reconstruction at that particular
+initialization. This is a materially different (weaker) claim than "the fix works" —
+report it as high-variance / seed-sensitive, not as a reliable improvement, until a
+larger multi-seed study (5+ seeds) either confirms a net-positive mean or shows this
+was noise.
+
+Debugging note for future readers: seed 44 initially appeared to reproduce bit-identical
+results to the pre-decoder-feature version across three separate attempts, which looked
+like a bug (stale bytecode cache, wrong cwd resolving a different `src` package via `-m`
+module lookup, etc. were all suspected and partially confirmed as real transient issues
+during a period when a second, independent agent session sharing this same repo checkout
+was switching branches concurrently). A final isolated run with explicit `PYTHONPATH`
+(removing all cwd ambiguity) confirmed the result was genuine, not a bug — seed 44
+really does regress when energy feeds the decoder. Don't assume a suspicious exact match
+is automatically a bug; verify with an isolated, unambiguous rerun first.
 
 ## What's unchanged
 

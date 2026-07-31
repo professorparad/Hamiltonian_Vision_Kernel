@@ -1,7 +1,7 @@
 [
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 0,
     "model": "HVK2D-pair-observable",
     "n_train": 10,
@@ -11,7 +11,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 0,
     "model": "no-entanglement",
     "n_train": 10,
@@ -21,7 +21,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 0,
     "model": "local-only",
     "n_train": 10,
@@ -31,7 +31,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 0,
     "model": "raw-linear",
     "n_train": 10,
@@ -41,7 +41,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 0,
     "model": "quadratic-classical",
     "n_train": 10,
@@ -51,7 +51,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 0,
     "model": "parameter-matched",
     "n_train": 10,
@@ -61,7 +61,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 1,
     "model": "HVK2D-pair-observable",
     "n_train": 10,
@@ -71,7 +71,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 1,
     "model": "no-entanglement",
     "n_train": 10,
@@ -81,7 +81,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 1,
     "model": "local-only",
     "n_train": 10,
@@ -91,7 +91,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 1,
     "model": "raw-linear",
     "n_train": 10,
@@ -101,7 +101,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 1,
     "model": "quadratic-classical",
     "n_train": 10,
@@ -111,7 +111,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 1,
     "model": "parameter-matched",
     "n_train": 10,
@@ -121,7 +121,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 2,
     "model": "HVK2D-pair-observable",
     "n_train": 10,
@@ -131,7 +131,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 2,
     "model": "no-entanglement",
     "n_train": 10,
@@ -141,7 +141,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 2,
     "model": "local-only",
     "n_train": 10,
@@ -151,7 +151,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 2,
     "model": "raw-linear",
     "n_train": 10,
@@ -161,7 +161,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 2,
     "model": "quadratic-classical",
     "n_train": 10,
@@ -171,7 +171,7 @@
   },
   {
     "dataset": "cifar10-native32",
-    "source": "/home/adminpc/Desktop/HVK/Script/Hamiltonian_Vision_Kernel/Baselines/cifar10_comparisons/datasets/images",
+    "source": "./Baselines/cifar10_comparisons/datasets/images",
     "seed": 2,
     "model": "parameter-matched",
     "n_train": 10,

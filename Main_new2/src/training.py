@@ -59,6 +59,7 @@ def run_main2(config: Main2Config):
     decoder = PatchDecoder(
         positional_dim=data["positions"].shape[1],
         patch_size=config.patch_size,
+        use_energy_feature=config.use_energy_feature,
     ).to(device)
     optimizer = optim.Adam(list(model.parameters()) + list(decoder.parameters()), lr=config.lr)
     output_dir = Path(config.output_dir)
@@ -73,7 +74,7 @@ def run_main2(config: Main2Config):
         decoder.train()
         optimizer.zero_grad()
         observables, energies = model(data["features"], data["positions"])
-        output = decoder(observables, data["positions"])
+        output = decoder(observables, data["positions"], energies if config.use_energy_feature else None)
         reconstruction_loss = torch.mean((output - data["targets"]) ** 2)
 
         if config.energy_loss_mode == "linear":
@@ -105,7 +106,9 @@ def run_main2(config: Main2Config):
                     data["features"], data["positions"]
                 )
                 pred_patches = decoder(
-                    tracked_observables, data["positions"]
+                    tracked_observables,
+                    data["positions"],
+                    tracked_energies if config.use_energy_feature else None,
                 ).cpu().numpy()
             reconstruction = blend_seams(
                 stictch_patches(

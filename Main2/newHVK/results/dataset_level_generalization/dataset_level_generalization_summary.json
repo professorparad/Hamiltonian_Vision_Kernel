@@ -1,0 +1,12 @@
+{
+  "hvk2d_quantum": {
+    "n_seeds": 3,
+    "psnr_mean_across_seeds": 14.386819855739041,
+    "psnr_std_across_seeds": 0.25503818264414335
+  },
+  "classical_linear_control": {
+    "n_seeds": 3,
+    "psnr_mean_across_seeds": 15.60620029176017,
+    "psnr_std_across_seeds": 0.28910430025746675
+  }
+}

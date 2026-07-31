@@ -9,7 +9,6 @@ import pennylane as qml
 import torch
 import torch.nn as nn
 
-
 N_QUBITS = 6
 N_LAYERS = 2
 EDGES_H = [(0, 1), (1, 2), (3, 4), (4, 5)]
@@ -93,11 +92,19 @@ class Quantum2DGridModel(nn.Module):
 
 
 class PatchDecoder(nn.Module):
-    def __init__(self, positional_dim: int, patch_size: int):
+    """Patch decoder with an optional Hamiltonian-energy input (see Main_new2/README.md):
+    in the original decoder the learned energy never reaches reconstruction at all, so
+    it can only ever compete with the reconstruction loss, never help it. Setting
+    `use_energy_feature=True` (the default) concatenates the per-patch energy into the
+    decoder input so the model can actually use it."""
+
+    def __init__(self, positional_dim: int, patch_size: int, use_energy_feature: bool = True):
         super().__init__()
         self.patch_size = patch_size
+        self.use_energy_feature = use_energy_feature
+        input_dim = OBS_DIM + positional_dim + (1 if use_energy_feature else 0)
         self.net = nn.Sequential(
-            nn.Linear(OBS_DIM + positional_dim, 128),
+            nn.Linear(input_dim, 128),
             nn.ReLU(),
             nn.Linear(128, 256),
             nn.ReLU(),
@@ -105,6 +112,11 @@ class PatchDecoder(nn.Module):
             nn.Sigmoid(),
         )
 
-    def forward(self, observables, positions):
-        decoder_input = torch.cat([observables, positions], dim=-1)
+    def forward(self, observables, positions, energy=None):
+        parts = [observables, positions]
+        if self.use_energy_feature:
+            if energy is None:
+                raise ValueError("use_energy_feature=True requires an `energy` tensor")
+            parts.append(energy.reshape(-1, 1))
+        decoder_input = torch.cat(parts, dim=-1)
         return self.net(decoder_input).view(-1, 1, self.patch_size, self.patch_size)

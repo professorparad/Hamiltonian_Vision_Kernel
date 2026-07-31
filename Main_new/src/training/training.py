@@ -138,6 +138,7 @@ def train(
     energy_loss_mode: str = "positive",
     energy_weight: float = 0.01,
     energy_margin: float = 0.25,
+    use_energy_feature: bool = True,
     log_prefix: str = "",
 ):
     device = resolve_device(device) if isinstance(device, str) else device
@@ -224,6 +225,7 @@ def train(
         observable_dim=model.observable_dim,
         positional_dim=positions.shape[1],
         patch_size=patch_size,
+        use_energy_feature=use_energy_feature,
     ).to(device)
 
     if ablation_mode == "freeze-classical":
@@ -232,7 +234,11 @@ def train(
         model.feature_projection.requires_grad_(False)
         model.position_projection.requires_grad_(False)
     elif ablation_mode == "freeze-quantum":
-        for parameter_name in ("weights", "Jx", "Jy", "Jz"):
+        # Jx/Jy/Jz are computed properties (torch.tanh(Jx_raw), see quantum_model.py) as
+        # of the bounded-coupling change, not leaf Parameters -- requires_grad_() must be
+        # called on the underlying leaf tensors (*_raw) or it raises "you can only change
+        # requires_grad flags of leaf variables".
+        for parameter_name in ("weights", "Jx_raw", "Jy_raw", "Jz_raw"):
             parameter = getattr(model, parameter_name, None)
             if parameter is not None:
                 parameter.requires_grad_(False)
@@ -271,7 +277,7 @@ def train(
 
         observables, energies = model(train_features, train_positions)
 
-        output = decoder(observables, train_positions)
+        output = decoder(observables, train_positions, energies if use_energy_feature else None)
 
         reconstruction_loss = torch.mean((output - train_targets) ** 2)
 
@@ -314,7 +320,9 @@ def train(
             decoder.eval()
             with torch.no_grad():
                 tracked_observables, tracked_energies = model(features, positions)
-                tracked_pred = decoder(tracked_observables, positions).cpu().numpy()
+                tracked_pred = decoder(
+                    tracked_observables, positions, tracked_energies if use_energy_feature else None
+                ).cpu().numpy()
             tracked_reconstruction = blend_seams(
                 stictch_patches(tracked_pred, image_size=image_size, patch_size=patch_size),
                 patch_size=patch_size,
@@ -362,7 +370,7 @@ def train(
     with torch.no_grad():
         observables, energies = model(features, positions)
 
-        pred = decoder(observables, positions).cpu().numpy()
+        pred = decoder(observables, positions, energies if use_energy_feature else None).cpu().numpy()
 
         shuffled_pred = None
         shuffle_metadata = None
@@ -377,13 +385,19 @@ def train(
                 "changed_points": int(observables.shape[0] - fixed_points),
                 "is_identity": bool(fixed_points == observables.shape[0]),
             }
-            shuffled_pred = decoder(observables[perm], positions).cpu().numpy()
+            shuffled_pred = decoder(
+                observables[perm], positions, energies[perm] if use_energy_feature else None
+            ).cpu().numpy()
 
         zero_positions = positions if zero_latent_uses_positions else torch.zeros_like(positions)
 
-        zero_pred = decoder(torch.zeros_like(observables), zero_positions).cpu().numpy()
+        zero_energy = torch.zeros(observables.shape[0], device=observables.device) if use_energy_feature else None
+        zero_pred = decoder(torch.zeros_like(observables), zero_positions, zero_energy).cpu().numpy()
 
-        random_pred = decoder(torch.randn_like(observables), positions).cpu().numpy()
+        random_energy = (
+            torch.randn(observables.shape[0], device=observables.device) if use_energy_feature else None
+        )
+        random_pred = decoder(torch.randn_like(observables), positions, random_energy).cpu().numpy()
 
     img_rec = blend_seams(
         stictch_patches(pred, image_size=image_size, patch_size=patch_size),
@@ -456,6 +470,7 @@ def train(
         "energy_loss_mode": energy_loss_mode,
         "energy_weight": energy_weight,
         "energy_margin": energy_margin,
+        "use_energy_feature": use_energy_feature,
         "eval_only_image": str(eval_only_image) if eval_only_image is not None else None,
         "train_image_paths": ([str(path) for path in train_image_paths] if train_image_paths else None),
         "zero_latent_uses_positions": zero_latent_uses_positions,
@@ -828,6 +843,16 @@ def parse_args():
     parser.add_argument("--energy-weight", type=float)
     parser.add_argument("--energy-margin", type=float)
     parser.add_argument(
+        "--no-energy-feature",
+        dest="use_energy_feature",
+        action="store_false",
+        default=None,
+        help=(
+            "Disable feeding the Hamiltonian energy into the decoder "
+            "(reverts to the old side-channel-only energy loss)."
+        ),
+    )
+    parser.add_argument(
         "--model-variant",
         choices=["standard", "symmetric"],
         default=None,
@@ -882,6 +907,7 @@ def main():
         "energy_loss_mode": "positive",
         "energy_weight": 0.01,
         "energy_margin": 0.25,
+        "use_energy_feature": True,
     }
     config.update(load_config(args.config))
 
@@ -904,6 +930,7 @@ def main():
         "energy_loss_mode",
         "energy_weight",
         "energy_margin",
+        "use_energy_feature",
     ]:
         value = getattr(args, key, None)
         if value is not None:

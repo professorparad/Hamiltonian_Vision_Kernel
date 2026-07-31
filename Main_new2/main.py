@@ -41,6 +41,13 @@ def parse_args():
     )
     parser.add_argument("--energy-weight", type=float, default=defaults.energy_weight)
     parser.add_argument("--energy-margin", type=float, default=defaults.energy_margin)
+    parser.add_argument(
+        "--no-energy-feature",
+        dest="use_energy_feature",
+        action="store_false",
+        default=defaults.use_energy_feature,
+        help="Disable feeding the Hamiltonian energy into the decoder.",
+    )
     return parser.parse_args()
 
 
@@ -60,6 +67,7 @@ def main():
         energy_loss_mode=args.energy_loss_mode,
         energy_weight=args.energy_weight,
         energy_margin=args.energy_margin,
+        use_energy_feature=args.use_energy_feature,
     )
     result = run_main2(config)
     print("Main_new2 HVK run complete.")

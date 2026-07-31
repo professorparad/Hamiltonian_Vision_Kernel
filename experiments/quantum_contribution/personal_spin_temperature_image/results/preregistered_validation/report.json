@@ -1,0 +1,84 @@
+{
+  "preregistration": "C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\experiments\\quantum_contribution\\personal_spin_temperature_image\\results\\preregistered_validation\\preregistration.json",
+  "n_heldout_masks": 30,
+  "frozen_configuration": {
+    "image": "C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Main\\data\\monalisa.jpg",
+    "image_shape": [
+      24,
+      24
+    ],
+    "patch_shape": [
+      2,
+      3
+    ],
+    "stride": 1,
+    "observed_fraction": 0.55,
+    "field_strength": 2.0,
+    "coupling_J": 0.7,
+    "temperature": 1.25,
+    "classical_Gamma": 0.0,
+    "quantum_Gamma": 0.35,
+    "heldout_seeds": [
+      101,
+      103,
+      107,
+      109,
+      113,
+      127,
+      131,
+      137,
+      139,
+      149,
+      151,
+      157,
+      163,
+      167,
+      173,
+      179,
+      181,
+      191,
+      193,
+      197,
+      199,
+      211,
+      223,
+      227,
+      229,
+      233,
+      239,
+      241,
+      251,
+      257
+    ]
+  },
+  "classical_ising": {
+    "mean_psnr_db": 19.668762839169986,
+    "std_psnr_db": 0.4860679733294928
+  },
+  "quantum": {
+    "mean_psnr_db": 19.763753067852406,
+    "std_psnr_db": 0.5154679154382812
+  },
+  "paired_quantum_minus_classical": {
+    "mean_psnr_db": 0.09499022868241257,
+    "std_psnr_db": 0.056595203627621424,
+    "median_psnr_db": 0.08899578691143795,
+    "bootstrap_95pct_ci_psnr_db": [
+      0.07568452513601495,
+      0.11542898399716361
+    ],
+    "positive_masks": 30,
+    "negative_masks": 0,
+    "paired_ttest_statistic": 9.193056594382332,
+    "paired_ttest_pvalue_two_sided": 4.295553033339783e-10,
+    "wilcoxon_statistic": 0.0,
+    "wilcoxon_pvalue_two_sided": 1.862645149230957e-09
+  },
+  "gaussian_baseline": {
+    "mean_psnr_db": 21.75663825992118,
+    "std_psnr_db": 0.5938093042835842,
+    "quantum_minus_gaussian_mean_psnr_db": -1.9928851920687742
+  },
+  "preregistered_positive_result": true,
+  "interpretation": "This held-out test isolates the contribution of Gamma within an exact simulation of small quantum Gibbs systems. It does not establish computational quantum advantage."
+}

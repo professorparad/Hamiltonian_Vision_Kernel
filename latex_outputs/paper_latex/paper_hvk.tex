@@ -59,12 +59,14 @@ HVK treats each spatial patch as a finite spin state, compresses it as a matrix 
 &\rightarrow \text{Reconstruction}.
 \end{aligned}
 \end{equation}
+Three of these design choices warrant explicit motivation rather than being left implicit in the pipeline above. \emph{Why MPS features}: treated as an amplitude-encoded quantum state, a patch of $n$ sites has a coefficient tensor with $2^{n}$ entries; matrix-product-state factorization instead represents it as a chain of small tensors bounded by a fixed bond dimension $\chi$, a compact, singular-value-controlled compression whose entanglement-entropy profile is already known to track image compressibility \cite{Latorre2005,Stoudenmire2016}, and whose local expectations and correlations are cheap classical features rather than requiring a full state-preparation circuit. \emph{Why a Pauli-correlator latent space rather than a raw quantum state}: handing the classical decoder a fixed vector of measured Pauli expectation values, instead of full state tomography, keeps the quantum-to-classical interface at $O(\text{qubits})$ rather than exponential readout cost and follows the same measured-observable-as-feature pattern used by quantum-enhanced feature maps generally \cite{Havlicek2019}; it is also what makes the interpretability diagnostics of Sections~\ref{sec:regularizer_inert} and~\ref{sec:phase_transition} possible, since a full state vector would not expose a comparably compact, physically meaningful summary. \emph{Why a grid rather than chain interaction topology for HVK2D}: aligning the six-qubit interaction graph with the $2\times3$ patch-neighbor adjacency, rather than an arbitrary linear chain, is what makes the $D_4$ group-pooling construction of Section~\ref{sec:d4} well-defined in the first place --- the pooling operator averages over the spatial symmetries of the square, which requires a latent structure that itself respects the patch grid's two-dimensional adjacency. HVK1D's chain topology is retained as the ungridded control this comparison needs (Section~\ref{sec:topology}), not because a chain is separately motivated for 2D image data.
+
 Two executed preprocessing configurations share this pipeline. For the $256\times256$ \textit{Monalisa}/HVK1D benchmark, sixteen non-overlapping $64\times64$ patches are $\ell_2$-normalized, reshaped as 12-site spin states, and sequentially SVD-compressed to MPS bond dimension $\chi=4$. Their 24 local $X/Z$ expectations, 11 nearest-neighbor $ZZ$ correlations, and 11 bipartite entropies form a 46-D feature vector. For the native $32\times32$ HVK2D multi-dataset experiments, sixteen $8\times8$ patches are represented by six-site MPSs, giving 12 local expectations, five nearest-neighbor $ZZ$ terms, and five entropies (22 dimensions). A learned linear layer compresses either MPS feature vector to six circuit angles. HVK1D then measures 27 observables (six local $Z$, six local $X$, and five each of $ZZ$, $XX$, and $YY$); HVK2D measures 19 (six local $Z$, six local $X$, and seven grid-edge $ZZ$ terms). The respective Fourier positional vectors have dimension eight and four. In both configurations, a two-hidden-layer MLP (128 and 256 units) maps the observable and positional vectors to one grayscale patch. Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits (rebuilt in Qiskit and numerically verified against the training-time PennyLane circuit as part of the hardware pilot of Section~\ref{sec:hardware_pilot}); complete Hamiltonian, loss, positional-encoding, and measurement definitions are retained in the companion supplement.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{figures/hvk1d_ansatz.pdf}\\[4pt]
-\includegraphics[width=0.95\textwidth]{figures/hvk2d_ansatz.pdf}
+\includegraphics[width=0.99\textwidth]{figures/hvk1d_ansatz.pdf}\\[4pt]
+\includegraphics[width=0.99\textwidth]{figures/hvk2d_ansatz.pdf}
 \caption{The HVK1D (top) and HVK2D (bottom) variational ansätze, exactly as executed (encoding $R_X$ rotations, positional $R_Y$ rotations, then two entangling layers of $R_Z$-$R_Y$-$R_Z$ single-qubit rotations with a CNOT ring for HVK1D or fixed grid-edge CNOTs for HVK2D). Both circuits were rebuilt gate-for-gate in Qiskit and validated against the original PennyLane training circuit before use in the hardware pilot of Section~\ref{sec:hardware_pilot}.}
 \label{fig:hvk_ansatz}
 \end{figure*}
@@ -99,7 +101,7 @@ All image-reconstruction results in Sections~\ref{sec:sameset_results}--\ref{sec
 
 \subsection{Reconstruction Across Six Real Image Datasets}
 \label{sec:sameset_results}
-For each image, we trained a fresh HVK2D model using nonoverlapping $8\times8$ patches (16 patches/image, 80--100 optimization steps). The sample covers CIFAR-10 \cite{Krizhevsky2009}, MNIST \cite{LeCun1998}, Fashion-MNIST \cite{Xiao2017}, and the PathMNIST, BloodMNIST, and PneumoniaMNIST subsets of MedMNIST v2 \cite{Yang2023}. Table~\ref{tab:sameset_multi_dataset} reports mean PSNR between $26.6$ and $41.6$~dB (SSIM $0.89$--$1.00$). This is a same-set fitting result across varied image structures, not a held-out generalization claim; the companion study provides the latter evaluation (Section~\ref{sec:ablation_relationship}).
+For each image, we trained a fresh HVK2D model using nonoverlapping $8\times8$ patches (16 patches/image, 80--100 optimization steps). The sample covers CIFAR-10 \cite{Krizhevsky2009}, MNIST \cite{LeCun1998}, Fashion-MNIST \cite{Xiao2017}, and the PathMNIST, BloodMNIST, and PneumoniaMNIST subsets of MedMNIST v2 \cite{Yang2023}. Table~\ref{tab:sameset_multi_dataset} reports mean PSNR between $25.8$ and $41.6$~dB (SSIM $0.91$--$1.00$). This is a same-set fitting result across varied image structures, not a held-out generalization claim; the companion study provides the latter evaluation (Section~\ref{sec:ablation_relationship}).
 
 \begin{table}[t]
 \centering
@@ -111,11 +113,11 @@ For each image, we trained a fresh HVK2D model using nonoverlapping $8\times8$ p
 \toprule
 Dataset & $n$ images & PSNR (dB) & SSIM \\
 \midrule
-CIFAR-10 & 3 & $37.52\pm5.61$ & $0.9978\pm0.0016$ \\
-MNIST & 3 & $26.58\pm2.01$ & $0.9813\pm0.0130$ \\
-Fashion-MNIST & 3 & $33.22\pm1.34$ & $0.9972\pm0.0012$ \\
-PathMNIST & 3 & $34.97\pm1.11$ & $0.8907\pm0.0597$ \\
-BloodMNIST & 2 & $33.07\pm4.68$ & $0.9707\pm0.0273$ \\
+CIFAR-10 & 3 & $37.75\pm2.38$ & $0.9986\pm0.0003$ \\
+MNIST & 3 & $25.77\pm2.23$ & $0.9783\pm0.0116$ \\
+Fashion-MNIST & 3 & $34.55\pm3.05$ & $0.9980\pm0.0006$ \\
+PathMNIST & 3 & $36.86\pm2.11$ & $0.9118\pm0.0627$ \\
+BloodMNIST & 2 & $36.57\pm2.36$ & $0.9922\pm0.0063$ \\
 PneumoniaMNIST & 2 & $41.60\pm0.98$ & $0.9985\pm0.0006$ \\
 \bottomrule
 \end{tabular}%
@@ -124,7 +126,7 @@ PneumoniaMNIST & 2 & $41.60\pm0.98$ & $0.9985\pm0.0006$ \\
 
 \subsection{Scope and Adaptation Across Images}
 \label{sec:no_generalization}
-A model optimized on one image alone does not transfer zero-shot to a structurally different image: on \textit{Monalisa}, zero-shot transfer to a second image reaches only $7.78$~dB PSNR ($\mathrm{SSIM}=0.0196$), while extending training to include the second image recovers $28.31$~dB ($\mathrm{SSIM}=0.9862$). This confirms that the per-image results above measure per-image optimization and reconstruction capability, not held-out generalization --- consistent with how we scope every claim in this paper, and precisely the distinction the companion supplementary study's held-out protocol is designed to test (Section~\ref{sec:ablation_relationship}).
+A model optimized on one image alone does not transfer zero-shot to a structurally different image: on \textit{Monalisa}, zero-shot transfer to a second image reaches only $8.31$~dB PSNR ($\mathrm{SSIM}=0.1044$), while extending training to include the second image recovers $28.63$~dB ($\mathrm{SSIM}=0.9858$). This confirms that the per-image results above measure per-image optimization and reconstruction capability, not held-out generalization --- consistent with how we scope every claim in this paper, and precisely the distinction the companion supplementary study's held-out protocol is designed to test (Section~\ref{sec:ablation_relationship}).
 
 \subsection{A Real Hardware Reconstruction Pilot}
 \label{sec:hardware_pilot}
@@ -156,14 +158,14 @@ CIFAR mean $\pm$ std (4 images) & -- & $42.69\pm3.84$ & $29.56\pm2.03$ \\
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/ibm_hardware_reconstruction_monalisa.pdf}
+\includegraphics[width=0.96\textwidth]{figures/ibm_hardware_reconstruction_monalisa.pdf}
 \caption{\textit{Monalisa} reconstructed from real IBM Quantum hardware measurements (right) against the same trained checkpoint's noiseless-simulator replay (center) and ground truth (left). The hardware image is visibly noisier and exhibits patch-boundary banding, while the subject remains recognizable.}
 \label{fig:hardware_reconstruction_monalisa}
 \end{figure*}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/ibm_hardware_reconstruction_cifar.pdf}
+\includegraphics[width=0.96\textwidth]{figures/ibm_hardware_reconstruction_cifar.pdf}
 \caption{Four CIFAR-10 images reconstructed from real IBM Quantum hardware measurements (bottom row) against noiseless-simulator replays of the same trained HVK2D checkpoints (middle row) and ground truth (top row).}
 \label{fig:hardware_reconstruction_cifar}
 \end{figure*}
@@ -289,7 +291,7 @@ Freeze classical & $6.0973\times10^{-2}$ & 12.17 & $-0.9025$ \\
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{figures/full_ablation_metric_comparison.pdf}
+\includegraphics[width=0.96\textwidth]{figures/full_ablation_metric_comparison.pdf}
 \caption{Restricted pair-correlation diagnostic summary (mean $\pm$ std over five seeds). The entangling observable feature map dominates every control on this deliberately favorable task.}
 \label{fig:hvk_pair_diagnostic}
 \end{figure*}
@@ -314,6 +316,8 @@ The threshold is computed per run from that run's own trace; it is not a fixed g
 
 Table~\ref{tab:phase_transition_corrected} reports the result across all six datasets (two images $\times$ two seeds each, 24 runs total). Detection is not universal: MNIST triggers in all four runs, BloodMNIST and PneumoniaMNIST in three of four, and CIFAR-10, Fashion-MNIST, and PathMNIST in two of four, for an overall descriptive rate of $16/24$ ($66.7\%$). Because the threshold is selected from the same trajectory it evaluates and the sample contains only two seeds per image, these rates are exploratory summaries rather than inferential evidence for dataset-specific transition probabilities.
 
+\paragraph{A negative control: does the detector fire without a Hamiltonian?} The rate above says nothing about whether detection is actually driven by the learned Hamiltonian, so we ran the direct control this requires: the identical protocol applied to a \emph{classical-replacement} variant, in which the VQC is replaced by a fixed classical map and the Hamiltonian energy is identically zero throughout training, alongside matched Hamiltonian-on runs (\textit{Monalisa} and CIFAR-10 \textit{cat}, two seeds each, full 200-epoch budget). Table~\ref{tab:phase_transition_onoff} reports the result: all four Hamiltonian-on runs register a detection, but so do all four Hamiltonian-off runs. The detector does not distinguish a Hamiltonian-driven change from one this median-plus-two-standard-deviation threshold would find in a change-magnitude trace regardless of whether any physical energy term is present in the model at all. This sharpens, rather than merely repeats, the caveats already stated above: the $16/24$ rate should be read as a property of this specific descriptive threshold applied to this specific summary statistic, with no demonstrated dependence on the Hamiltonian term whose dynamics it is nominally tracking.
+
 \begin{table}[t]
 \centering
 \caption{Corrected, noise-free training-dynamics diagnostic across all six datasets (2 images $\times$ 2 seeds/dataset).}
@@ -331,6 +335,30 @@ BloodMNIST & 4 & 3/4 & 96.0 & $0.0033\pm0.0012$ \\
 PneumoniaMNIST & 4 & 3/4 & 103.0 & $0.0036\pm0.0008$ \\
 \midrule
 Total & 24 & $16/24$ & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Phase-transition detector, on/off control (200 epochs, two seeds/image). ``On'' is the standard Hamiltonian-regularized model; ``off'' is the classical-replacement variant with energy identically zero. The detector fires in every case tested, in both conditions.}
+\label{tab:phase_transition_onoff}
+\scriptsize
+\begin{tabular}{llccc}
+\toprule
+Image & Seed & Hamiltonian & Detected & Critical epoch \\
+\midrule
+Monalisa & 0 & On & Yes & 4 \\
+Monalisa & 0 & Off & Yes & 8 \\
+Monalisa & 1 & On & Yes & 162 \\
+Monalisa & 1 & Off & Yes & 23 \\
+CIFAR cat & 0 & On & Yes & 97 \\
+CIFAR cat & 0 & Off & Yes & 6 \\
+CIFAR cat & 1 & On & Yes & 105 \\
+CIFAR cat & 1 & Off & Yes & 1 \\
+\midrule
+Total & \multicolumn{2}{c}{On} & 4/4 & -- \\
+Total & \multicolumn{2}{c}{Off} & 4/4 & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -375,15 +403,15 @@ Table~\ref{tab:finite_size_phase_transition} summarizes per-run detections: each
 
 \subsection{A Second, Orthogonal Size Axis: MPS Bond Dimension}
 \label{sec:bond_dimension_phase_transition}
-Qubit count $N$ is a quantum circuit-width parameter; a second, purely classical size parameter enters before the circuit. We test whether the detected change epoch depends on MPS compression fidelity, holding $N=6$ fixed and varying $\chi\in\{1,2,4,8\}$ on CIFAR-10 (\textit{cat}), with two seeds each.
+Qubit count $N$ is a quantum circuit-width parameter; a second, purely classical size parameter enters before the circuit. We test whether the detected change epoch depends on MPS compression fidelity, holding $N=6$ fixed and varying $\chi$ on CIFAR-10. An initial two-seed, single-image ($\textit{cat}$) pass at $\chi\in\{1,2,4,8\}$ suggested richer compression might reduce initialization sensitivity ($\chi=4,8$ appeared to agree tightly); we extended $\chi\in\{4,6,8\}$ to five images (two seeds each, ten runs per $\chi$) to test whether that held up with more data. $\chi=1,2$ remain at their original one-image, two-seed scope.
 
-All eight runs trigger, but the two seeds disagree sharply at $\chi=1$ and $\chi=2$ and agree closely at $\chi=4$ and $\chi=8$. The trajectories separate into qualitatively different optimization paths at low $\chi$ and similar rising paths at higher $\chi$. With only two seeds per setting, this is a hypothesis-generating observation that richer compression may reduce initialization sensitivity; it is not sufficient to estimate a population variance trend or establish a general relationship between bond dimension and optimization dynamics.
+All 34 runs trigger. The extended data both sharpens and revises the original two-seed reading. It sharpens the qualitative claim: at $n=10$, $\chi=4$, $\chi=6$, and $\chi=8$ now show visually near-identical ensemble-mean trajectories and overlapping $\pm$one-std bands throughout training (Figure~\ref{fig:bond_dimension_phase_transition}, Table~\ref{tab:bond_dimension_phase_transition}), while $\chi=1$ and $\chi=2$ remain clearly distinct from each other and from the $\chi\geq4$ group. It revises the quantitative claim: the original $\chi=4$/$\chi=8$ standard deviations ($4.0$/$2.0$ epochs) reflected only two seeds on one image and were misleadingly tight; at five images the true spread is far larger ($\mathrm{std}\approx60$ epochs for each of $\chi=4,6,8$), comparable to $\chi=1,2$'s spread rather than smaller than it. Read together, richer compression does not reduce run-to-run variance in this diagnostic --- the apparent tight agreement at $\chi=4,8$ was a small-sample artifact --- but it does produce indistinguishable \emph{mean} dynamics across $\chi\geq4$, a genuinely different and better-supported finding than the original two-seed pass suggested.
 
-This is a different measurement from, but worth reading alongside, the companion supplementary study's single-seed finding that MPS bond dimension is non-monotonic for \emph{final reconstruction quality}: under a fixed step budget, $\chi=1$ and $\chi=2$ outperform the default $\chi=4$ on PSNR, with $\chi=8$ only partially recovering. Taken together, the two results suggest bond dimension may trade off \emph{where} training ends up (reconstruction quality) against \emph{how reproducibly it gets there} (seed-to-seed agreement in training dynamics), rather than acting as a simple compression-fidelity knob on either axis --- a connection neither single result establishes on its own.
+This is a different measurement from, but worth reading alongside, the companion supplementary study's single-seed finding that MPS bond dimension is non-monotonic for \emph{final reconstruction quality}: under a fixed step budget, $\chi=1$ and $\chi=2$ outperform the default $\chi=4$ on PSNR, with $\chi=8$ only partially recovering. The two results together suggest bond dimension has separable effects on \emph{where} training ends up (reconstruction quality, non-monotonic) versus \emph{the shape of the training-dynamics trace} (converges once $\chi\geq4$) --- a connection neither single result establishes on its own.
 
 \begin{table}[t]
 \centering
-\caption{MPS bond-dimension comparison of the order-parameter diagnostic, HVK1D, $N=6$ fixed, CIFAR-10 cat (2 seeds per $\chi$).}
+\caption{MPS bond-dimension comparison of the order-parameter diagnostic, HVK1D, $N=6$ fixed. $\chi=1,2$: CIFAR-10 \textit{cat}, 2 seeds. $\chi=4,6,8$: 5 CIFAR-10 images, 2 seeds each (10 runs).}
 \label{tab:bond_dimension_phase_transition}
 \scriptsize
 \begin{tabular}{lcccc}
@@ -392,8 +420,9 @@ $\chi$ (MPS bond dim.) & $n$ & Detected & Mean $t_c$ & Std $t_c$ \\
 \midrule
 1 & 2 & 2/2 & 88.5 & 86.5 \\
 2 & 2 & 2/2 & 52.0 & 50.0 \\
-4 & 2 & 2/2 & 101.0 & 4.0 \\
-8 & 2 & 2/2 & 95.0 & 2.0 \\
+4 & 10 & 10/10 & 73.8 & 60.9 \\
+6 & 10 & 10/10 & 73.3 & 61.4 \\
+8 & 10 & 10/10 & 72.5 & 60.1 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -401,11 +430,11 @@ $\chi$ (MPS bond dim.) & $n$ & Detected & Mean $t_c$ & Std $t_c$ \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/bond_dimension_phase_transition.pdf}
-\caption{Order parameter $M_z(t)$ vs epoch, HVK1D, $N=6$ fixed, MPS bond dimension $\chi\in\{1,2,4,8\}$, two seeds each. Dashed lines mark detected change epochs and solid lines mark per-$\chi$ means. The two-seed patterns are descriptive and not a population-level variance estimate.}
+\caption{Ensemble-mean order parameter $M_z(t)$ vs epoch ($\pm$one std, shaded), HVK1D, $N=6$ fixed. $\chi=1,2$: 1 image $\times$ 2 seeds. $\chi=4,6,8$: 5 images $\times$ 2 seeds (10 runs each). The $\chi\geq4$ curves are visually near-identical throughout training, while $\chi=1,2$ remain distinct from each other and from the $\chi\geq4$ group.}
 \label{fig:bond_dimension_phase_transition}
 \end{figure}
 
-As an execution check, we also replayed trained checkpoints across all four bond dimensions on real \texttt{ibm\_marrakesh} hardware and the IonQ ideal simulator at 256, 512, and 1024 shots. All checkpoint circuits completed and produced non-degenerate order parameters, but the single-patch, single-seed replay cannot confirm the cross-seed pattern above. The companion supplement reports the complete twelve-job audit trail, the hardware curves, and a three-basis $R_{ES}$ replay; it also documents why $\chi=1$ is excluded from the ratio because its product-state entropy reaches the numerical floor.
+As an execution check, we also replayed trained checkpoints across the original four bond dimensions ($\chi\in\{1,2,4,8\}$, predating the $\chi=6$ / five-image simulator extension above) on real \texttt{ibm\_marrakesh} hardware and the IonQ ideal simulator at 256, 512, and 1024 shots. All checkpoint circuits completed and produced non-degenerate order parameters, but the single-patch, single-seed replay cannot confirm the cross-seed pattern above. The companion supplement reports the complete twelve-job audit trail, the hardware curves, and a three-basis $R_{ES}$ replay; it also documents why $\chi=1$ is excluded from the ratio because its product-state entropy reaches the numerical floor.
 
 \subsection{Energy-to-Entanglement Ratio as an Orthogonal Diagnostic}
 \label{sec:critical_temperature}
@@ -491,11 +520,17 @@ Whether a quantum feature map or kernel offers any advantage over a classical mo
 
 \subsection{Relationship to the Component-Wise Ablation Study}
 \label{sec:ablation_relationship}
-The results above establish what HVK is and several of its provable or verified properties. A separate, equally important question --- whether its feature map improves reconstruction on real, \emph{held-out} images under a resource-matched multi-seed protocol --- is answered in the companion document, \textit{Supplementary Material for the Hamiltonian Vision Kernel: Resource-Matched Ablations, Validation, and Reproducibility}. On held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB against HVK2D's $18.12\pm1.54$~dB; after aggregating held-out images within each split, the HVK2D-minus-control difference is $-0.68$~dB (bootstrap 95\% CI $[-0.91,-0.46]$~dB; Wilcoxon $p=0.0625$, $n=5$ seeds), with the same numerical direction on five further real datasets. Thus the tested HVK map is informative but is not shown to outperform the simpler maps on ordinary held-out reconstruction. We report this as a rigorous complement: it delineates the tested boundary of the positive entanglement and symmetry results and records the provenance checks that prevented exploratory artifacts from becoming claims.
+The results above establish what HVK is and several of its provable or verified properties. A separate, equally important question --- whether its feature map improves reconstruction on real, \emph{held-out} images under a resource-matched multi-seed protocol --- is answered in the companion document, \textit{Supplementary Material for the Hamiltonian Vision Kernel: Resource-Matched Ablations, Validation, and Reproducibility}. On held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB against HVK2D's $18.12\pm1.54$~dB; after aggregating held-out images within each split, the HVK2D-minus-control difference is $-0.68$~dB (bootstrap 95\% CI $[-0.91,-0.46]$~dB; Wilcoxon $p=0.0625$, $n=5$ seeds), with the same numerical direction on five further real datasets. Thus the tested HVK map is informative but is not shown to outperform the simpler maps on ordinary held-out reconstruction. We report this as a rigorous complement: it delineates the tested boundary of the positive entanglement and symmetry results and records the provenance checks that prevented exploratory artifacts from becoming claims. A matched-budget, multi-seed rerun of the component-ablation table (240 steps, 3 seeds/variant, replacing an earlier table whose per-seed provenance could not be recovered) reaches the same conclusion on ordinary per-image reconstruction: a plain classical-replacement control statistically ties or slightly exceeds the quantum baseline, while only a circuit-free random-VQC control performs clearly worse; full results are in the companion supplement.
+
+\subsection{HVK as a Representative Instance of a Broader Design Pattern}
+\label{sec:representativeness}
+The boundary reported in Section~\ref{sec:ablation_relationship} raises an immediate question: is it a property of HVK's particular implementation choices, or of the broader class of architectures HVK instantiates? HVK combines three ingredients that recur, individually, throughout the hybrid quantum-vision literature rather than being idiosyncratic to this codebase: matrix-product-state compression of structured input into a classical or hybrid feature vector \cite{Stoudenmire2016,Han2018,Cirac2021,Guala2023}; a Pauli-correlator (measured-observable) latent space handed to a classical decoder rather than a raw quantum state, in the spirit of quantum-enhanced feature maps \cite{Havlicek2019}; and a physically motivated auxiliary regularizer alongside a separate task loss \cite{Shi2022}. HVK is not a minimal or contrived combination of these three choices assembled to produce a particular result; each is independently well-motivated and widely used, and HVK's specific instantiation (six-qubit VQC, $19$--$27$-D Pauli-correlator vector, graph-Hamiltonian energy term) sits well within the parameter ranges typical of this literature rather than at an unusual extreme.
+
+This matters for how the held-out result (Section~\ref{sec:ablation_relationship}) and the inert-regularizer result (Section~\ref{sec:regularizer_inert}) should be read. Per the data-dependent framing of Section~\ref{sec:dequant} \cite{Huang2021PowerData}, whether any instance of this design pattern outperforms a resource-matched classical alternative is a property of the specific data and target, not of the pattern's architectural motivation. Because HVK is a representative rather than idiosyncratic instance of ``MPS feature compression + Pauli-correlator latent + physics-informed regularizer,'' the boundary measured here --- representationally necessary only where the target has genuine nonlocal structure a linear or local classical readout cannot represent, and the regularizer inert precisely when the reconstruction loss is already well-constrained --- is evidence about where this whole pattern class can be expected to help, not merely a report of one implementation's shortcomings. We do not claim this boundary transfers unchanged to every dataset, patch size, or qubit count; we claim only that nothing about HVK's specific engineering choices explains away the result, which is the failure mode this section is written to rule out.
 
 \subsection{Topology Alignment as an Inductive Bias}
 \label{sec:topology}
-Aligning the latent interaction graph with image-patch adjacency (HVK2D vs.\ HVK1D) is a plausible architectural inductive bias: on \textit{Monalisa}, 2D HVK exceeds its 1D counterpart by $5.98$~dB ($40.70$ vs.\ $34.72$~dB). The companion supplementary study tests this hypothesis more directly under matched held-out conditions. Its real-circuit subset (3 seeds, 3 held-out CIFAR-10 images) gives an HVK1D-minus-HVK2D mean PSNR difference of $0.16$~dB; after averaging images within seed, the bootstrap 95\% CI is $[-0.38,0.46]$~dB and the seed-level Wilcoxon test gives $p=0.50$. HVK2D completes the matched 90-step runs in roughly half the wall-clock time. A broader five-seed surrogate comparison across CIFAR-10, Fashion-MNIST, and PathMNIST likewise finds numerically small topology differences (at most $0.07$~dB in mean PSNR). At the tested scale, topology therefore appears to be primarily a resource-cost choice rather than a reliable accuracy advantage; these tests do not establish formal equivalence.
+Aligning the latent interaction graph with image-patch adjacency (HVK2D vs.\ HVK1D) is a plausible architectural inductive bias. The companion supplementary study tests this hypothesis directly under matched held-out conditions. Its real-circuit subset (3 seeds, 3 held-out CIFAR-10 images) gives an HVK1D-minus-HVK2D mean PSNR difference of $0.16$~dB; after averaging images within seed, the bootstrap 95\% CI is $[-0.38,0.46]$~dB and the seed-level Wilcoxon test gives $p=0.50$. HVK2D completes the matched 90-step runs in roughly half the wall-clock time. A broader five-seed surrogate comparison across CIFAR-10, Fashion-MNIST, and PathMNIST likewise finds numerically small topology differences (at most $0.07$~dB in mean PSNR). At the tested scale, topology therefore appears to be primarily a resource-cost choice rather than a reliable accuracy advantage; these tests do not establish formal equivalence.
 
 \subsection{Architectural Differentiation Matrix}
 Table~\ref{tab:differentiation} contrasts HVK's structural properties against reference frameworks. Its distinguishing features --- a Pauli-correlator latent space, 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy diagnostic --- are documented and scoped in the preceding sections.
@@ -525,6 +560,7 @@ Evaluated role & Reconstruction & Reconstruction & Compression & Reconstruction 
     \item The entanglement-necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a task deliberately constructed to require nonlocal structure; it does not by itself establish an advantage on ordinary natural-image reconstruction (see Section~\ref{sec:dequant}).
     \item The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, single-trial, unmitigated pilot, not a statistically resolved hardware benchmark.
     \item The original exploratory training-dynamics traces were withdrawn after a provenance audit (Section~\ref{sec:phase_transition}); the corrected, noise-free multi-seed replacement is a small-sample diagnostic (2 images $\times$ 2 seeds/dataset, 24 runs across six datasets) with mixed, not universal, detection ($16/24$), and should be read at that scope.
+    \item The change-point detector's negative control (Table~\ref{tab:phase_transition_onoff}) fires on a classical-replacement variant with the Hamiltonian energy identically zero exactly as often as on the Hamiltonian-regularized model (4/4 vs.\ 4/4). The diagnostic should therefore be read as a property of the descriptive threshold applied to the change-magnitude trace, with no demonstrated sensitivity to the Hamiltonian term itself.
     \item The matched real-circuit topology comparison uses only 3 seeds and 3 held-out images per topology; the broader five-seed comparison is surrogate-based. These results support a resource-cost interpretation but do not establish formal equivalence of the topologies.
 \end{itemize}
 

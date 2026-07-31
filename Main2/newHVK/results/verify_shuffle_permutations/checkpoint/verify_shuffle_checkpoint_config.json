@@ -1,0 +1,16 @@
+{
+  "steps": 240,
+  "seed": 42,
+  "device": "cpu",
+  "image_path": "C:\\Users\\HP\\Desktop\\HVK\\Hamiltonian_Vision_Kernel\\Main_new\\data\\monalisa.jpg",
+  "image_size": 256,
+  "patch_size": 64,
+  "positional_dim": 8,
+  "mps_bond_dim": 4,
+  "qubit_count": 6,
+  "observable_set": "full",
+  "use_energy_feature": true,
+  "feature_mode": "mps",
+  "baseline_psnr_from_training_run_db": 33.411011516504104,
+  "baseline_ssim_from_training_run": 0.993840691262865
+}

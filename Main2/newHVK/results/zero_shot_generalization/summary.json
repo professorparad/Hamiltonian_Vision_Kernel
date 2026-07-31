@@ -1,0 +1,20 @@
+{
+  "protocol": "Fresh rerun, 2026-07-29 -- see script docstring. Second image is Main/data/handofgod_micheal_angelo.jpg, chosen because it is the only other image bundled alongside monalisa.jpg in this repo's data directories and was otherwise unused by any committed script. This does NOT reproduce the original manuscript's 7.78/28.31 dB numbers -- no source for that original run was found; these are new, freshly-verified numbers under a documented protocol.",
+  "epochs_per_stage": 100,
+  "seed": 0,
+  "monalisa_same_image_sanity_check": {
+    "mse": 0.00012142414198024198,
+    "psnr": 39.1569495670041,
+    "ssim": 0.9982061982154846
+  },
+  "second_image_zero_shot": {
+    "mse": 0.1476159393787384,
+    "psnr": 8.308667454229873,
+    "ssim": 0.10443594306707382
+  },
+  "second_image_multi_image_training": {
+    "mse": 0.001371194259263575,
+    "psnr": 28.62901013664292,
+    "ssim": 0.9858271479606628
+  }
+}

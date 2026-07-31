@@ -1,0 +1,60 @@
+{
+  "final_total_loss": 1.357068231300218e-05,
+  "final_reconstruction_loss": 1.3570424016506877e-05,
+  "final_energy_loss": 2.5805347192431327e-08,
+  "reconstruction_metrics": {
+    "mse": 0.0004518980858847499,
+    "psnr": 33.44959498216157,
+    "ssim": 0.9938904610684626
+  },
+  "comparison_metrics": {
+    "quantum_reconstruction": {
+      "mse": 0.0004518980858847499,
+      "psnr": 33.44959498216157,
+      "ssim": 0.9938904610684626
+    },
+    "mps_baseline": {
+      "mse": 0.002155316760763526,
+      "psnr": 26.664888937899136,
+      "ssim": 0.9703435390081457
+    },
+    "random_latent": {
+      "mse": 0.034576885402202606,
+      "psnr": 14.612141294414103,
+      "ssim": 0.4691277287685641
+    },
+    "zero_latent": {
+      "mse": 0.04486168920993805,
+      "psnr": 13.481243776379587,
+      "ssim": 0.07808239155343184
+    }
+  },
+  "mse": 0.0004518980858847499,
+  "psnr": 33.44959498216157,
+  "ssim": 0.9938904610684626,
+  "mean_energy": 1.9151073502143845e-05,
+  "std_energy": 0.00015962208271957934,
+  "phase_transition": {
+    "detected": false,
+    "critical_epoch": -1,
+    "max_susceptibility": 0.0,
+    "order_parameter_jump": 0.0,
+    "susceptibility_baseline": 0.0,
+    "susceptibility_spread": 0.0,
+    "susceptibility_threshold": 0.0,
+    "proof": "No epoch order-parameter rows were available."
+  },
+  "media": {},
+  "model_variant": "standard",
+  "ablation_mode": "baseline",
+  "feature_mode": "mps",
+  "mps_bond_dim": 4,
+  "qubit_count": 6,
+  "observable_set": "full",
+  "energy_loss_mode": "positive",
+  "energy_weight": 0.01,
+  "energy_margin": 0.25,
+  "seed": 42,
+  "eval_only_image": null,
+  "train_image_paths": null
+}
