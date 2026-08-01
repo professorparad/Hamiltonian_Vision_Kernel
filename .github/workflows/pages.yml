@@ -31,7 +31,7 @@ jobs:
       - name: Stage canonical paper
         run: |
           mkdir -p docs/assets/papers
-          cp paper_hvk.pdf docs/assets/papers/paper_hvk.pdf
+          cp latex_outputs/paper_latex/paper_hvk.pdf docs/assets/papers/paper_hvk.pdf
 
       - name: Validate static site files
         run: |
