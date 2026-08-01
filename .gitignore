@@ -86,3 +86,4 @@ Main2/newHVK/results/scaling_study/scaling_study*.json.tmp
 
 # Local secrets - never commit
 .env.local
+.claude/settings.local.json
