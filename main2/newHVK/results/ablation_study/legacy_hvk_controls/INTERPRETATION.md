@@ -9,13 +9,17 @@ interpretation here after it is run.
 Experiments 1, 2, 3, 4, and 7 are complete. Together, they give a more nuanced
 picture than the initial sanity checks alone:
 
-- Shuffling observables across patch positions causes only a small
-  reconstruction drop in the verified Exp-1 run.
+- **Updated 2026-07-31:** Shuffling observables across patch positions causes
+  a *large* reconstruction drop (~16 dB, independently verified twice under
+  two architecture variants — see the shuffle-observables folder's
+  `INTERPRETATION.md` "2026-07-31 resolution" section). The originally
+  reported 0.301 dB figure came from an unrecoverable, unauditable script and
+  is retired.
 - Replacing observables with zeros while keeping real positions also causes a
   large reconstruction drop.
-- Therefore, the decoder is not reconstructing from position alone, but the
-  current shuffle control does not prove strong observable-position
-  load-bearing behavior.
+- Therefore, the decoder is not reconstructing from position alone, and the
+  shuffle control now supports strong observable-position load-bearing
+  behavior, consistent in magnitude with the zero-observable control.
 - Freezing the classical decoder/projections makes reconstruction fail, so the
   classical trainable stack is necessary.
 - Freezing the quantum parameters still reconstructs well, so trained quantum
@@ -89,17 +93,25 @@ vectors across patches while keeping positional encodings fixed.
 | Single-run PSNR drop | 0.19 dB |
 | Five-permutation mean PSNR drop | 0.301 +/- 0.054 dB |
 
-**Interpretation:** The shuffle code path does feed `observables[perm]` to the
-decoder while keeping positions fixed, and a post-training verification confirms
-five non-identity permutations. However, the reconstruction changes only
-slightly. Exp 1 therefore does not support the older large-degradation
-interpretation.
+**Interpretation (superseded 2026-07-31 — see below):** The shuffle code path
+does feed `observables[perm]` to the decoder while keeping positions fixed,
+and a post-training verification confirms five non-identity permutations.
+However, the reconstruction changes only slightly.
 
 **Metric note:** SSIM was backfilled from the saved reconstruction arrays for
 this completed run. Future reruns will write SSIM directly into `metrics.json`.
 
-**Conclusion:** Exp 1 is weak or negative evidence for observable-position
-load-bearing behavior. Do not cite it as a 12.5 dB shuffle degradation.
+**Conclusion (superseded):** ~~Exp 1 is weak or negative evidence for
+observable-position load-bearing behavior.~~ **2026-07-31 update:** the
+original 0.301 dB (and single-run 0.19 dB) figures above came from a script
+that was never committed and is unrecoverable/unauditable. An independently
+rebuilt, explicitly safeguarded verifier
+(`Main2/newHVK/verify_shuffle_permutations.py`) reproduces a mean shuffle
+drop of ~16 dB twice, under two architecture variants — consistent with
+Exp 2's zero-observable drop below, not with the figures in this row. The
+~16 dB figure is now the adopted result; see
+`eval_controls/shuffle-observables/INTERPRETATION.md` for the full
+resolution writeup. Do not cite the 0.301 dB or 12.5 dB figures.
 
 ### Exp 2 — Zero Observables with Real Positions
 
@@ -153,7 +165,7 @@ checkpoint.
 
 | Experiment | Normal MSE | Perturbed MSE | MSE Ratio | Normal PSNR | Perturbed PSNR | PSNR Drop | Perturbed SSIM | Meaning |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
-| Exp 1: shuffled observables | 0.0005977100 | 0.0006248252 | 1.05x | 32.24 dB | 32.04 dB | 0.19 dB | 0.9916 | Observable-position pairing only weakly affects this run |
+| Exp 1: shuffled observables (superseded row) | 0.0005977100 | 0.0006248252 | 1.05x | 32.24 dB | 32.04 dB | 0.19 dB | 0.9916 | Superseded — see resolution above; adopted result is a ~16 dB drop, not 0.19 dB |
 | Exp 2: zero observables | 0.0006213221 | 0.0294627398 | 47.42x | 32.07 dB | 15.31 dB | 16.76 dB | 0.8337 | Positions alone are insufficient |
 | Exp 2: random latent | 0.0006213221 | 0.0715787932 | 115.20x | 32.07 dB | 11.45 dB | 20.61 dB | 0.1217 | Decoder output is near noise floor without real observables |
 
@@ -163,7 +175,8 @@ checkpoint.
 
 - The zero-latent control shows that a nonzero latent channel matters.
 - Real positions alone are not enough for high-quality reconstruction.
-- The current shuffle control shows only a small observable-position sensitivity.
+- The shuffle control (adopted ~16 dB result, 2026-07-31) shows a large
+  observable-position sensitivity, consistent with the zero-latent control.
 
 ### Not Yet Proven
 

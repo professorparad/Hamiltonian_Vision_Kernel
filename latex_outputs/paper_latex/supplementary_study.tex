@@ -7,14 +7,14 @@
 \usepackage{float}
 
 \title{Supplementary Material for the Hamiltonian Vision Kernel:\\ Resource-Matched Ablations, Validation, and Reproducibility}
-\author{Sparsho~Chakraborty and Siddhartha~Patra}
+\author{Sparsho~Chakraborty and Dr.~Siddhartha~Patra}
 \date{}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This supplementary material accompanies the main manuscript, \textit{Hamiltonian Vision Kernel: Symmetry, Entangling Correlators, and Real-Hardware Replay in Hybrid Quantum Image Reconstruction}. The main paper introduces HVK as a new framework and establishes its provable $D_4$ symmetry, scoped nonlocal representational capability, and real IBM Quantum hardware execution. Here we strengthen that framework through resource-matched multi-seed controls, held-out evaluation, leakage auditing, and complete hardware methodology. On ordinary held-out reconstruction, simple local/raw feature maps match or exceed the tested HVK feature map under the same fitted readout, a direction that also holds when a single HVK2D model is trained end-to-end by gradient descent across 150 images and evaluated on 50 held-out images never seen during training. The entangling observable channel separates only on the restricted task constructed to require nonlocal correlations, while $D_4$ pooling supplies a distinct feature-level symmetry guarantee rather than a demonstrated reconstruction advantage. We also document why an earlier multi-seed Monalisa freeze table could not be reproduced from retained artifacts, and report its replacement: a fresh, matched-budget rerun of the same nine-variant comparison, which reaches the same conclusion as the held-out result above. The available training-dynamics traces remain excluded pending a reproducible rerun. This task-dependent result sharpens HVK's design scope without changing its architectural contribution.
+This supplementary material accompanies the main manuscript, \textit{Hamiltonian Vision Kernel: Symmetry-Pooled Quantum Correlator Features with Hardware Validation}. The main paper introduces HVK as a new hybrid quantum--classical architecture and establishes a feature-level, numerically verified $D_4$-equivariance construction, a scoped nonlocal representational capability, and real IBM Quantum hardware execution. Here we strengthen that framework through resource-matched multi-seed controls, held-out evaluation, leakage auditing, and complete hardware methodology. On ordinary held-out reconstruction, simple local/raw feature maps match or exceed the tested HVK feature map under the same fitted readout, a direction that also holds when a single HVK2D model is trained end-to-end by gradient descent across 150 images and evaluated on 50 held-out images never seen during training. The entangling observable channel separates only on the restricted task constructed to require nonlocal correlations, while $D_4$ pooling supplies a distinct feature-level symmetry guarantee rather than a demonstrated reconstruction advantage. We also document why an earlier multi-seed Monalisa freeze table could not be reproduced from retained artifacts, and report its replacement: a fresh, matched-budget rerun of the same nine-variant comparison, which reaches the same conclusion as the held-out result above. The available training-dynamics traces remain excluded pending a reproducible rerun. This task-dependent result sharpens HVK's design scope without changing its architectural contribution.
 \end{abstract}
 
 \tableofcontents
@@ -92,7 +92,9 @@ The clearest new result is that a plain \emph{classical-replacement} (the VQC sw
 
 \subsection{A Reproducibility Note on the Shuffle-Observables Ablation}
 \label{sec:shuffle_reproducibility}
-A companion legacy diagnostic permutes the observable vector across patches at evaluation time, keeping positional encodings fixed, to test whether the decoder's use of observables is position-bound rather than order-invariant. As originally documented, this gave only a small effect: a single run measured a $0.19$~dB PSNR drop, and a repeated verification over five non-identity permutations gave a mean drop of $0.301\pm0.054$~dB (range $0.236$--$0.366$~dB) --- treated at the time as weak evidence for observable-position load-bearing behavior, explicitly not to be conflated with an earlier, discredited $\approx$12.5~dB figure for the same ablation. As with Table~\ref{tab:hamiltonian_controls} above, the script that produced this $0.301$~dB number was never committed to the repository and could not be recovered. We rebuilt an independent verifier (\texttt{Main2/newHVK/verify\_shuffle\_permutations.py}) that reproduces the exact safeguards the original documentation called for (permutation confirmed non-identity; the permuted tensor confirmed to be the exact object reaching the decoder, not a discarded copy) and ran it twice, under two architecture variants, for a like-for-like check: the current default checkpoint (\texttt{use\_energy\_feature=True}) gives a mean shuffle-induced drop of $15.70\pm0.79$~dB (baseline $33.41$~dB), and a legacy-equivalent checkpoint (\texttt{use\_energy\_feature=False}) gives $16.18\pm0.51$~dB (baseline $33.45$~dB) --- both far closer in magnitude to the discredited $\approx$12.5~dB figure than to the originally documented $0.301$~dB. \textbf{This discrepancy is not resolved.} Two explanations remain undistinguished: either the original, unrecoverable verification script had an undetected bug in one of the two safeguards it claimed to check, or some other unrecoverable difference between the original and rebuilt protocol explains the gap. We report both numbers rather than adopt one, and neither the $0.301$~dB nor the $\approx$16~dB figure should be treated as a settled measurement of this ablation.
+A companion legacy diagnostic permutes the observable vector across patches at evaluation time, keeping positional encodings fixed, to test whether the decoder's use of observables is position-bound rather than order-invariant. An early, since-superseded write-up of this diagnostic reported only a small effect (a single-run $0.19$~dB drop; a five-permutation mean of $0.301\pm0.054$~dB), but that write-up's generating script was never committed to the repository (the referenced path lies inside a gitignored directory) and cannot be recovered or audited, for the same reason Table~\ref{tab:hamiltonian_controls}'s original protocol cannot be recovered (\S\ref{sec:hamiltonian_followup}). We therefore rebuilt an independent verifier (\texttt{Main2/newHVK/verify\_shuffle\_permutations.py}) with explicit safeguards the original write-up described but left no runnable code to check: a forward pre-hook confirms the decoder's actually-received tensor is bit-for-bit \texttt{observables[perm]} rather than a stale unpermuted copy, and every sampled permutation is asserted non-identity. We ran this verifier twice, under two architecture variants, as a like-for-like check: the current default checkpoint (\texttt{use\_energy\_feature=True}) gives a mean shuffle-induced drop of $15.70\pm0.79$~dB (baseline $33.41$~dB) over five permutations, and a legacy-equivalent checkpoint (\texttt{use\_energy\_feature=False}) gives $16.18\pm0.51$~dB (baseline $33.45$~dB) over five permutations.
+
+\textbf{Resolution.} We adopt the $\approx$16~dB figure as the ablation's reported result and retire the $0.301$~dB figure. Three considerations drive this: (1) the $0.301$~dB number's generating script is permanently unrecoverable and was never independently auditable, while the $\approx$16~dB number comes from a verifier whose two specific failure modes --- an identity permutation, and the decoder silently receiving a discarded unpermuted copy (the exact bug pattern that would manufacture a spuriously small drop) --- are checked and asserted against on every run; (2) the $\approx$16~dB figure reproduces independently under two different decoder input configurations, agreeing with each other to within $0.5$~dB despite the architecture difference, which a stale-cache or one-off measurement artifact would not be expected to do; and (3) $\approx$16~dB is consistent with, rather than contradicting, a separately measured zero-observable control (observables replaced with zeros, real positions kept; \path{Main2/newHVK/results/ablation_study/legacy_hvk_controls/eval_controls/zero-latent-positions/}), which costs $16.76$~dB. A shuffle drop of the same order as a full-deletion drop is the coherent reading: the decoder's use of observables is position-bound, and scrambling which patch receives which observable's content is roughly as damaging as removing that content outright. A $0.301$~dB shuffle drop sitting next to a $16.76$~dB deletion drop, by contrast, would have been the internally surprising pairing. We cannot fully rule out that some undocumented difference between the original and rebuilt training protocol, rather than a bug in the original script, explains the gap, so we do not retroactively edit the original write-up's own numbers in place; we instead supersede its conclusion here. Downstream interpretation should read this ablation as showing that shuffling observable--position pairing degrades reconstruction substantially, not as weak or negative evidence for observable-position load-bearing behavior.
 
 \subsection{Held-Out Reconstruction Under Resource-Matched Controls}
 \label{sec:holdout_headline}
@@ -148,6 +150,33 @@ Random VQC & 5 & $6.97$ & $[5.76,8.06]$ & $0.0625$ \\
 \caption{Real held-out CIFAR validation and shot-noise robustness. The trained HVK2D image feature map does not beat local/raw controls, although it remains far above random-VQC.}
 \label{fig:hvk_real_cifar}
 \end{figure}
+
+\subsubsection{A TOST Equivalence Test: What Licenses the Word ``Competitive''}
+\label{sec:tost_equivalence}
+Table~\ref{tab:hvk_real_cifar_stats}'s tests all ask a difference question --- can we reject ``no difference'' between HVK2D and a control --- and a failure to reject that null is not evidence that the two are close; it is simply an inconclusive result. Calling HVK2D ``competitive'' requires the complementary question: is the HVK2D-minus-control gap, whichever sign it takes, safely inside a margin small enough not to matter in practice? We answer this with a Two One-Sided Tests (TOST) equivalence test \cite{Schuirmann1987TOST,Lakens2017TOST} at a declared margin of $\pm1$~dB, applied to the same five seed-level paired differences underlying Table~\ref{tab:hvk_real_cifar_stats} (paired $t$-tests against $-1$~dB and $+1$~dB; equivalence requires both one-sided $p<0.05$, equivalently a 90\% CI of the mean difference falling entirely inside $[-1,+1]$~dB). This margin is a declared choice, not derived from the data: $\pm1$~dB is a small fraction of the $\sim$3--7~dB gaps separating HVK2D from the random-VQC and strict-classical-random-feature controls, so it distinguishes ``practically tied'' from ``clearly different'' at a scale set by this study's own weakest and strongest comparisons.
+
+\begin{table}[H]
+\centering
+\caption{TOST equivalence test ($\delta=1$~dB margin, $\alpha=0.05$), same five seed-level paired differences as Table~\ref{tab:hvk_real_cifar_stats}. Equivalence requires the 90\% CI to fall entirely inside $[-1,+1]$~dB.}
+\label{tab:tost_equivalence}
+\scriptsize
+\begin{tabular}{lcccl}
+\toprule
+Control & Mean $\Delta$PSNR (dB) & 90\% CI (dB) & TOST $p$ & Verdict \\
+\midrule
+Raw-linear classical & $-0.68$ & $[-0.96,-0.40]$ & $0.034$ & Equivalent \\
+Local observables only & $-0.68$ & $[-0.96,-0.40]$ & $0.034$ & Equivalent \\
+No entanglement & $-0.34$ & $[-0.69,+0.02]$ & $0.008$ & Equivalent \\
+ZZ-only observables & $-0.44$ & $[-0.61,-0.27]$ & $0.001$ & Equivalent \\
+Quadratic classical & $-0.21$ & $[-0.46,+0.03]$ & $0.001$ & Equivalent \\
+Shuffled pair observables & $-0.19$ & $[-0.35,-0.02]$ & $0.000$ & Equivalent \\
+Strict classical random features & $+2.27$ & $[+1.92,+2.63]$ & $0.999$ & Not equivalent (HVK2D wins) \\
+Random VQC & $+6.97$ & $[+5.56,+8.39]$ & $1.000$ & Not equivalent (HVK2D wins) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Six of the eight controls are statistically equivalent to HVK2D within $\pm1$~dB: local-observables-only, raw-linear-classical, no-entanglement, ZZ-only, quadratic-classical, and shuffled-pair-observables. This is the evidence that licenses ``competitive with resource-matched classical baselines'' rather than either ``beats'' or ``loses to'' them --- the earlier Wilcoxon/bootstrap result already showed HVK2D does not measurably exceed these controls, and TOST now shows the gap is also small enough, in a pre-declared and data-independent sense, not to matter. The remaining two controls, strict classical random features and random-VQC, are correctly flagged \emph{not} equivalent: HVK2D exceeds both by a wide, practically meaningful margin (mean $\Delta=+2.27$ and $+6.97$~dB respectively, both TOST $p>0.99$, i.e.\ strongly rejected as equivalent because the gap is real and favors HVK2D), consistent with the earlier finding that the observable channel carries real information relative to a degenerate readout. Reproduction script: \path{Main2/newHVK/run_tost_equivalence.py}; raw per-seed differences and full statistics in \path{Main2/newHVK/results/q1_validation/tost_equivalence.json}.
 
 The same numerical direction holds beyond CIFAR-10. Table~\ref{tab:multi_dataset_reconstruction} extends the held-out protocol to five further real datasets (400 cached images each, three stratified split seeds, identical protocol for every feature map); local/raw controls have equal or higher mean PSNR on every dataset. For inference, held-out differences are averaged within split seed. Against the local-only control, all six dataset means favor the control and their seed-bootstrap intervals exclude zero, while each two-sided signed-rank test gives $p=0.25$, the minimum attainable nonzero value at $n=3$ seeds. We therefore report a recurring numerical direction rather than a dataset-wise significance claim. Table~\ref{tab:multi_dataset_classification} shows the same mean-performance pattern on a downstream image-classification diagnostic using image-level pooled features, and Table~\ref{tab:wisconsin_diagnostic} on a tabular cross-domain sanity check (Wisconsin Breast Cancer).
 
@@ -286,7 +315,7 @@ $q=6$ & 1 & $29.46$ & $0.9733$ \\
 
 \begin{table}[H]
 \centering
-\caption{Capacity and feature-bottleneck sweeps (single-seed; directional, not statistically resolved).}
+\caption{Capacity and feature-bottleneck sweeps (single-seed; directional, not statistically resolved). The $q=6$/$\chi=4$ rows share their baseline run with Table~\ref{tab:hamiltonian_controls}'s legacy-baseline row and carry the same reproducibility caveat (\S\ref{sec:hamiltonian_followup}); the within-sweep comparisons here (across $q$ or $\chi$ at fixed protocol) are unaffected since every row in this table comes from that same original, unrepeated protocol.}
 \label{tab:capacity_ablation}
 \scriptsize
 \begin{tabular}{lcccc}
@@ -328,7 +357,7 @@ Raw/local controls & 32 & 2112 & 0 & 6/4 \\
 \end{tabular}
 \end{table}
 
-The same-set CIFAR-10 and \textit{Monalisa} results (Table~\ref{tab:cifar10}) are capacity and positioning diagnostics rather than generalization evidence: HVK2D reaches $34.50$~dB mean PSNR on the five-image native-resolution CIFAR-10 subset, and $40.70$~dB on the $256\times256$ \textit{Monalisa} target, exceeding a 1D control by $5.98$~dB. The high-capacity MLP and CNN baselines remain stronger in pure same-set pixel accuracy (MLP best-case PSNR exceeds $100$~dB, a memorization signature), and neither same-set result should be read against the held-out finding above.
+The same-set CIFAR-10 results (Table~\ref{tab:cifar10}) are a capacity and positioning diagnostic rather than generalization evidence: HVK2D reaches $34.50$~dB mean PSNR on the five-image native-resolution CIFAR-10 subset. The high-capacity MLP and CNN baselines remain stronger in pure same-set pixel accuracy (MLP best-case PSNR exceeds $100$~dB, a memorization signature), and this same-set result should not be read against the held-out finding above. (An earlier draft additionally quoted a same-set \textit{Monalisa} PSNR and a 1D-vs-2D topology gap here; neither figure is reproducible from any retained table in this document, the same provenance gap documented in Section~\ref{sec:component_provenance}, so we do not repeat them. The topology question is instead answered by the held-out, resource-matched comparison of Section~\ref{sec:topology_comparison}.)
 
 \begin{figure}[H]
 \centering
@@ -377,7 +406,7 @@ Table~\ref{tab:hamiltonian_controls} shows the Hamiltonian energy term is, if an
 
 \begin{table}[H]
 \centering
-\caption{Hamiltonian and observable-sector controls (single-seed). The energy objective is diagnostically useful but does not improve reconstruction accuracy.}
+\caption{Hamiltonian and observable-sector controls (single-seed), \emph{as originally reported}. \textbf{Not independently reproducible} for three of six rows (\S\ref{sec:hamiltonian_followup}, Table~\ref{tab:hamiltonian_reproducibility} below gives the adopted fresh reproduction); retained here only for provenance.}
 \label{tab:hamiltonian_controls}
 \scriptsize
 \begin{tabular}{p{0.28\textwidth}cccp{0.25\textwidth}}
@@ -396,7 +425,7 @@ ZZ-only observables & $5.1503\times10^{-4}$ & 32.88 & 0.9930 & Nearest-neighbor 
 
 \subsection{A Reproducibility Note on Table~\ref{tab:hamiltonian_controls}, and an Energy-as-Decoder-Feature Follow-Up}
 \label{sec:hamiltonian_followup}
-While investigating whether the energy term could be made to actively help reconstruction rather than merely act as a diagnostic (motivated by the conditional-value reading above), we found that Table~\ref{tab:hamiltonian_controls}'s absolute PSNR values are not independently reproducible from the current codebase and documented protocol. Re-running the unmodified legacy-signed-energy, no-energy-loss, and contrastive configurations at the documented protocol (\textit{Monalisa}, $256\times256$/patch=64, \texttt{model\_variant=standard}, 200 steps, seed 42, in an environment matching the paper's stated package versions exactly) reproduces PSNR values 6--12~dB \emph{higher} than published, across every variant tested, not only a new one (Table~\ref{tab:hamiltonian_reproducibility}). The script that generated Table~\ref{tab:hamiltonian_controls}'s original numbers is referenced only in commit messages and was never actually committed to the repository (the referenced path lies inside a gitignored directory, and \texttt{git cat-file} confirms no corresponding blob exists in any commit), so the original protocol could not be recovered to explain the gap directly; a shorter-step rerun ruled out step count alone as the explanation. Rather than block on an unrecoverable protocol, we adopt this fresh, same-environment reproduction as the baseline for the remainder of this section, disclosing the gap here explicitly rather than silently revising Table~\ref{tab:hamiltonian_controls}'s historical values. The qualitative finding is unchanged under the new environment: removing the energy loss still improves PSNR (here $38.63\rightarrow44.56$~dB) exactly as it does in Table~\ref{tab:hamiltonian_controls} ($32.24\rightarrow33.30$~dB) --- only the absolute PSNR scale differs between the two protocols, not the sign or approximate size of the effect. We also reran the remaining two observable-sector rows from Table~\ref{tab:hamiltonian_controls} (no observable noise, ZZ-only) at the identical protocol; unlike the three variants above, these land within $1$~dB of the published values ($32.75$ vs.\ $32.72$~dB, and $32.11$ vs.\ $32.88$~dB, respectively) rather than 6--12~dB higher. We do not have a confirmed explanation for why these two rows reproduce so much more closely than the other three under the same rerun protocol; we report the observation plainly rather than speculate.
+While investigating whether the energy term could be made to actively help reconstruction rather than merely act as a diagnostic (motivated by the conditional-value reading above), we found that Table~\ref{tab:hamiltonian_controls}'s absolute PSNR values are not independently reproducible from the current codebase and documented protocol. Re-running the unmodified legacy-signed-energy, no-energy-loss, and contrastive configurations at the documented protocol (\textit{Monalisa}, $256\times256$/patch=64, \texttt{model\_variant=standard}, 200 steps, seed 42, in an environment matching the paper's stated package versions exactly) reproduces PSNR values 6--12~dB \emph{higher} than published, across every variant tested, not only a new one (Table~\ref{tab:hamiltonian_reproducibility}). The script that generated Table~\ref{tab:hamiltonian_controls}'s original numbers is referenced only in commit messages and was never actually committed to the repository (the referenced path lies inside a gitignored directory, and \texttt{git cat-file} confirms no corresponding blob exists in any commit), so the original protocol could not be recovered to explain the gap directly; a shorter-step rerun ruled out step count alone as the explanation. Rather than block on an unrecoverable protocol, we adopt this fresh, same-environment reproduction as the baseline for the remainder of this section, disclosing the gap here explicitly rather than silently revising Table~\ref{tab:hamiltonian_controls}'s historical values. The qualitative finding is unchanged under the new environment: removing the energy loss still improves PSNR (here $38.63\rightarrow44.56$~dB) exactly as it does in Table~\ref{tab:hamiltonian_controls} ($32.24\rightarrow33.30$~dB) --- only the absolute PSNR scale differs between the two protocols, not the sign or approximate size of the effect. We also reran the remaining two observable-sector rows from Table~\ref{tab:hamiltonian_controls} (no observable noise, ZZ-only) at the identical protocol; unlike the three variants above, these land within $1$~dB of the published values ($32.75$ vs.\ $32.72$~dB, and $32.11$ vs.\ $32.88$~dB, respectively) rather than 6--12~dB higher. We do not have a confirmed explanation for why these two rows reproduce so much more closely than the other three under the same rerun protocol; we report the observation plainly rather than speculate. One consequence deserves stating directly: because all eight rows of Table~\ref{tab:hamiltonian_reproducibility} were measured in one identical fresh environment, they are directly comparable to \emph{each other} even where three of them are not comparable to Table~\ref{tab:hamiltonian_controls}. Under this fresh, internally consistent comparison, no-observable-noise ($32.75$~dB) and ZZ-only ($32.11$~dB) are now clearly \emph{below} the legacy signed-energy baseline ($38.63$~dB) --- the opposite ordering from Table~\ref{tab:hamiltonian_controls}, where these two configurations sat close to or above its legacy baseline ($32.24$~dB). We have no explanation for this reversal either. Table~\ref{tab:hamiltonian_controls}'s ``noise is not essential'' and ``ZZ largely sufficient'' interpretations should therefore be read as specific to its own unreproducible protocol, not as confirmed findings; the main text does not repeat them for this reason.
 
 \begin{table}[H]
 \centering
@@ -452,6 +481,227 @@ The main paper's restricted pair-correlation result remains supported by the fiv
 
 The associated training-trajectory material does not meet the same evidentiary standard and is excluded. The per-variant curves previously produced by \path{run_newhvk_suite.py::epoch_tables} are analytic interpolations from final metrics, not logged epoch measurements. Separately, the 13 stored real-image traces were recorded from HVK2D in training mode, whose forward pass adds Gaussian noise with standard deviation $0.01$ to every observable; their maximum one-step changes therefore mix optimizer dynamics with injected jitter. Neither source supports a training-reorganization comparison. The corrected multi-dataset runner now records a noise-free evaluation-mode forward pass after each optimizer update and preserves aggregate summaries across partial runs. A fresh multi-seed execution is required before training-dynamics claims or figures are restored.
 
+\subsection{Training-Dynamics Diagnostics: Full Protocol}
+\label{sec:phase_transition_supp_intro}
+The main paper summarizes, and scopes as non-headline, an exploratory training-dynamics change-point diagnostic and reports that its own negative control undercuts it. This subsection group gives the full protocol, tables, and figures behind that summary: the corrected multi-seed change-point result and its on/off Hamiltonian control, its qubit-count and MPS-bond-dimension sensitivity checks, the energy-to-entanglement-ratio diagnostic, and their real-hardware and IonQ-simulator replays.
+
+\subsection{Training-Dynamics Checkpoints Across System Sizes, Replayed on Real Hardware}
+\label{sec:checkpoint_hardware_finite_size}
+The finite-size comparison of Section~\ref{sec:finite_size_phase_transition} is a noiseless-simulator result. Using the same gate-for-gate checkpoint-replay methodology validated for the main paper's hardware reconstruction pilot, we extend it with a genuinely real-hardware complement: we trained fresh HVK1D checkpoints at $N\in\{4,6,8\}$ on two images (\textit{Monalisa}, CIFAR-10 \textit{cat}) for 200 real gradient-descent epochs, saved each checkpoint's exact learned parameters at eight epoch labels ($0,5,10,25,50,100,150,200$, matching the labels used elsewhere in this study), rebuilt each checkpoint's circuit for one representative patch, and executed all $48$ resulting circuits ($2$ images $\times$ $3$ system sizes $\times$ $8$ epoch labels) on \texttt{ibm\_fez} at $256$, $512$, and $1024$ shots. This is a single-patch, single-seed probe --- a lighter circuit budget than the full multi-patch reconstruction pilot --- so it is a hardware-validation complement to Section~\ref{sec:finite_size_phase_transition}'s multi-seed simulator study, not a replacement for it: real device noise and single-patch/single-seed variance are both present in every point.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/checkpoint_hardware_order_parameter.pdf}
+\caption{Order parameter $M_z(t)$ vs epoch from real trained HVK1D checkpoints ($N=4,6,8$), circuits rebuilt gate-for-gate and executed on real IBM Quantum hardware (\texttt{ibm\_fez}, 1024 shots), one representative patch per image.}
+\label{fig:checkpoint_hardware_order_parameter}
+\end{figure}
+
+Figure~\ref{fig:checkpoint_hardware_order_parameter} shows the resulting curves are noisier and less structured than their noiseless-simulator counterparts in Figure~\ref{fig:finite_size_phase_transition}, as expected from single-shot-budget hardware measurement of a single patch rather than a change-magnitude trace averaged over multiple images and seeds. We do not apply the descriptive detection rule to these single-patch hardware traces; the figure establishes executable, non-degenerate hardware measurements across epochs, not independent confirmation of the detected change epochs in Table~\ref{tab:finite_size_phase_transition}. The same checkpoints were replayed on the IonQ simulator at the same three shot budgets (Section~\ref{sec:ionq_simulator}); full per-shot data are archived alongside this submission.
+
+\subsection{Cross-Platform Replay on the IonQ Cloud Simulator}
+\label{sec:ionq_simulator}
+To test software-stack portability separately from device noise, we submitted the same checkpoint circuits through Qiskit to IonQ Quantum Cloud's ideal simulator (\texttt{ionq\_simulator}), with no hardware noise model enabled \cite{IonQBackends}. At each of 256, 512, and 1024 shots, one job contained 48 circuits spanning two images, $N\in\{4,6,8\}$, and eight epochs. All circuits completed, and the mean absolute $M_z$ deviation from the independently sampled 1024-shot trace decreased from $0.0257$ (256 shots) to $0.0213$ (512 shots). A separate 48-circuit, three-basis job reproduced the decreasing $R_{ES}(t)$ shape at 1024 shots.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/checkpoint_ionq_order_parameter.pdf}
+\caption{Order parameter $M_z(t)$ vs epoch from the same real trained HVK1D checkpoints as Figure~\ref{fig:checkpoint_hardware_order_parameter} ($N=4,6,8$), replayed on the IonQ ideal cloud simulator (\texttt{ionq\_simulator}, 1024 shots) instead of real IBM hardware.}
+\label{fig:checkpoint_ionq_order_parameter}
+\end{figure}
+
+Figure~\ref{fig:checkpoint_ionq_order_parameter} shows this simulator trace directly, rather than only the summary deviation statistics above: a noiseless, shot-sampling-only analogue of Figure~\ref{fig:checkpoint_hardware_order_parameter}'s hardware traces, same checkpoints and circuits, no device noise. As above, we do not apply the descriptive detection rule of Eq.~\ref{eq:critical_epoch} to these single-patch traces. This is an ideal cloud-simulator portability check, not an IonQ-QPU result. The corresponding IonQ $R_{ES}(t)$ replay is shown alongside its own hardware counterpart in Section~\ref{sec:checkpoint_hardware_energy_entanglement}.
+
+\subsection{Training-Dynamics Change-Point Diagnostic: A Corrected Multi-Seed Result}
+\label{sec:phase_transition}
+We test for abrupt changes in the learned representation during optimization. This is an exploratory change-point diagnostic on a magnetization-style summary, not a thermodynamic phase transition, a singularity, or an infinite-system claim. An earlier version was withdrawn after the provenance audit above: the restricted-diagnostic trajectories previously shown were analytic interpolations produced for visualization rather than measurements from saved checkpoints, and the original multi-dataset traces were recorded during training, where HVK2D's training-mode forward pass deliberately adds Gaussian observable noise that confounds parameter evolution with injected jitter. The corrected runner evaluates a separate, noise-free forward pass in evaluation mode immediately after every optimizer update and tracks the resulting global order parameter $M_z(t)$, the mean of the $N$ local-$Z$ observables over all $P$ patches at optimizer step (epoch) $t$:
+\begin{equation}
+M_z(t) = \frac{1}{P N}\sum_{p=1}^{P}\sum_{i=1}^{N}\langle Z_i\rangle_p(t).
+\label{eq:order_parameter}
+\end{equation}
+Detection uses the change magnitude $\mathcal{X}(t)=|M_z(t)-M_z(t-\Delta t)|$ (identically defined on $R_{ES}(t)$ in place of $M_z(t)$ for the energy-to-entanglement-ratio diagnostic of Section~\ref{sec:critical_temperature}), a per-run adaptive threshold $\theta$, and a detected change epoch $t_c$:
+\begin{align}
+\theta &= \operatorname{median}_t\big(\mathcal{X}(t)\big) + 2\operatorname{std}_t\big(\mathcal{X}(t)\big), \\
+t_c &= \begin{cases}
+\displaystyle\operatorname*{arg\,max}_t \mathcal{X}(t) & \text{if } \max_t \mathcal{X}(t) > \theta > 0, \\
+\text{not detected} & \text{otherwise.}
+\end{cases}
+\label{eq:critical_epoch}
+\end{align}
+The threshold is computed per run from that run's own trace; it is not a fixed global constant or a null-calibrated statistical test. Thus ``detected'' means only that a run's sharpest observed change exceeds this descriptive within-run threshold. It does not supply a $p$-value, control a false-positive rate, or establish a physical transition.
+
+Table~\ref{tab:phase_transition_corrected} reports the result across all six datasets (two images $\times$ two seeds each, 24 runs total). Detection is not universal: MNIST triggers in all four runs, BloodMNIST and PneumoniaMNIST in three of four, and CIFAR-10, Fashion-MNIST, and PathMNIST in two of four, for an overall descriptive rate of $16/24$ ($66.7\%$). Because the threshold is selected from the same trajectory it evaluates and the sample contains only two seeds per image, these rates are exploratory summaries rather than inferential evidence for dataset-specific transition probabilities.
+
+\paragraph{A negative control: does the detector fire without a Hamiltonian?} The rate above says nothing about whether detection is actually driven by the learned Hamiltonian, so we ran the direct control this requires: the identical protocol applied to a \emph{classical-replacement} variant, in which the VQC is replaced by a fixed classical map and the Hamiltonian energy is identically zero throughout training, alongside matched Hamiltonian-on runs (\textit{Monalisa} and CIFAR-10 \textit{cat}, two seeds each, full 200-epoch budget). Table~\ref{tab:phase_transition_onoff} reports the result: all four Hamiltonian-on runs register a detection, but so do all four Hamiltonian-off runs. The detector does not distinguish a Hamiltonian-driven change from one this median-plus-two-standard-deviation threshold would find in a change-magnitude trace regardless of whether any physical energy term is present in the model at all. This sharpens, rather than merely repeats, the caveats already stated above: the $16/24$ rate should be read as a property of this specific descriptive threshold applied to this specific summary statistic, with no demonstrated dependence on the Hamiltonian term whose dynamics it is nominally tracking. This on/off result is the reason the main paper does not report this diagnostic as a headline finding.
+
+\begin{table}[H]
+\centering
+\caption{Corrected, noise-free training-dynamics diagnostic across all six datasets (2 images $\times$ 2 seeds/dataset).}
+\label{tab:phase_transition_corrected}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Dataset & $n$ & Detected & Mean $t_c$ & Mean $\mathcal{X}_{\max}$ \\
+\midrule
+CIFAR-10 & 4 & 2/4 & 64.0 & $0.0036\pm0.0009$ \\
+MNIST & 4 & 4/4 & 98.75 & $0.0023\pm0.0012$ \\
+Fashion-MNIST & 4 & 2/4 & 45.0 & $0.0027\pm0.0011$ \\
+PathMNIST & 4 & 2/4 & 54.5 & $0.0038\pm0.0015$ \\
+BloodMNIST & 4 & 3/4 & 96.0 & $0.0033\pm0.0012$ \\
+PneumoniaMNIST & 4 & 3/4 & 103.0 & $0.0036\pm0.0008$ \\
+\midrule
+Total & 24 & $16/24$ & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Phase-transition detector, on/off control (200 epochs, two seeds/image). ``On'' is the standard Hamiltonian-regularized model; ``off'' is the classical-replacement variant with energy identically zero. The detector fires in every case tested, in both conditions.}
+\label{tab:phase_transition_onoff}
+\scriptsize
+\begin{tabular}{llccc}
+\toprule
+Image & Seed & Hamiltonian & Detected & Critical epoch \\
+\midrule
+Monalisa & 0 & On & Yes & 4 \\
+Monalisa & 0 & Off & Yes & 8 \\
+Monalisa & 1 & On & Yes & 162 \\
+Monalisa & 1 & Off & Yes & 23 \\
+CIFAR cat & 0 & On & Yes & 97 \\
+CIFAR cat & 0 & Off & Yes & 6 \\
+CIFAR cat & 1 & On & Yes & 105 \\
+CIFAR cat & 1 & Off & Yes & 1 \\
+\midrule
+Total & \multicolumn{2}{c}{On} & 4/4 & -- \\
+Total & \multicolumn{2}{c}{Off} & 4/4 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{System-Size Sensitivity of the Detected Change Epoch}
+\label{sec:finite_size_phase_transition}
+Every result above is measured at a single, fixed system size (HVK2D's six-qubit grid). We therefore ask whether the descriptive change epoch depends on circuit width. HVK2D's grid topology is fixed at six qubits by construction, so this comparison uses HVK1D's parameterized chain topology. We reran the corrected protocol from Section~\ref{sec:phase_transition} at $N=4$, $N=6$, and $N=8$ qubits on two datasets (CIFAR-10 and MNIST), one image and two seeds each (four runs per size, 200 epochs). Three sizes and four runs per size are insufficient for finite-size scaling or critical-exponent analysis; the experiment is a sensitivity check on the diagnostic only.
+
+All twelve runs register a detection under the same threshold rule (Table~\ref{tab:finite_size_phase_transition}), but the detected epoch is not monotonic in $N$: $10.0\pm12.7$ at $N=4$, $85.0\pm50.1$ at $N=6$, and $61.0\pm65.2$ at $N=8$. Three of the four $N=8$ traces stay near $M_z\approx0$ and trigger on small early changes, whereas one MNIST run develops a late excursion at $t_c=172$ that dominates the variance. The result therefore shows instability of this heuristic across width and initialization, not a scaling law or evidence of a critical point.
+
+\begin{table}[H]
+\centering
+\caption{Finite-size comparison of the order-parameter diagnostic, HVK1D, CIFAR-10 + MNIST (1 image $\times$ 2 seeds per dataset per $N$).}
+\label{tab:finite_size_phase_transition}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+$N$ (qubits) & $n$ & Detected & Mean $t_c$ & Std $t_c$ \\
+\midrule
+4 & 4 & 4/4 & 10.0 & 12.7 \\
+6 & 4 & 4/4 & 85.0 & 50.1 \\
+8 & 4 & 4/4 & 61.0 & 65.2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/finite_size_phase_transition.pdf}
+\caption{Order parameter $M_z(t)$ vs epoch, HVK1D, $N=4$ (blue), $N=6$ (red), and $N=8$ (green), four runs each. Dashed lines mark within-run detected change epochs; solid lines mark per-$N$ means. Most $N=8$ traces stay near zero, while one late outlier drives much of the variance.}
+\label{fig:finite_size_phase_transition}
+\end{figure}
+
+Table~\ref{tab:finite_size_phase_transition} summarizes per-run detections: each run's own change magnitude is thresholded independently, then the resulting change epochs are averaged, giving a non-monotonic mean ($10.0\to85.0\to61.0$). A complementary view averages the change-magnitude \emph{traces themselves} across the four runs at each $N$ before locating a peak, rather than averaging four independently-detected peak locations. This ensemble-mean view (Figure~\ref{fig:finite_size_mean_susceptibility}) shows the peak of $\langle|\Delta M_z(t)|\rangle$ shifting later with $N$: epoch $3$ at $N=4$, epoch $96$ at $N=6$, epoch $163$ at $N=8$ --- monotonic, in contrast to Table~\ref{tab:finite_size_phase_transition}. We report both because they are not the same statistic and can disagree: per-run thresholding is sensitive to whichever single epoch happens to cross that run's own noisy threshold, while the ensemble mean suppresses run-to-run idiosyncrasy at the cost of blurring together events that do not align in time across runs. The $N=4$ peak at epoch $3$ sits at the very start of training, where curves are dominated by initialization transients rather than a mid-training reorganization, and should be read with that caveat; $N=6$ produces the sharpest, best-separated peak of the three (Figure~\ref{fig:finite_size_mean_susceptibility}), while $N=8$'s peak is broad and comparable in height to its own baseline fluctuation. With four runs per $N$, the shaded $\pm$one-std bands in Figure~\ref{fig:finite_size_mean_susceptibility} are wide enough that we treat the monotonic peak-shift as a second exploratory observation alongside Table~\ref{tab:finite_size_phase_transition}'s non-monotonic one, not as a resolution of it.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/finite_size_mean_susceptibility.pdf}
+\caption{Ensemble-mean change magnitude $\langle|\Delta M_z(t)|\rangle$ vs epoch, averaged across the four runs at each $N$ before peak-finding (shaded: $\pm$one std across runs), $N=4$ (blue), $N=6$ (red), $N=8$ (green). Dashed vertical lines mark each curve's peak epoch. The peak shifts monotonically later with $N$ (epochs $3$, $96$, $163$), a different statistic from the per-run-averaged epochs in Table~\ref{tab:finite_size_phase_transition}.}
+\label{fig:finite_size_mean_susceptibility}
+\end{figure}
+
+\subsection{A Second, Orthogonal Size Axis: MPS Bond Dimension}
+\label{sec:bond_dimension_phase_transition}
+Qubit count $N$ is a quantum circuit-width parameter; a second, purely classical size parameter enters before the circuit. We test whether the detected change epoch depends on MPS compression fidelity, holding $N=6$ fixed and varying $\chi$ on CIFAR-10. An initial two-seed, single-image ($\textit{cat}$) pass at $\chi\in\{1,2,4,8\}$ suggested richer compression might reduce initialization sensitivity ($\chi=4,8$ appeared to agree tightly); we extended $\chi\in\{4,6,8\}$ to five images (two seeds each, ten runs per $\chi$) to test whether that held up with more data. $\chi=1,2$ remain at their original one-image, two-seed scope.
+
+All 34 runs trigger. The extended data both sharpens and revises the original two-seed reading. It sharpens the qualitative claim: at $n=10$, $\chi=4$, $\chi=6$, and $\chi=8$ now show visually near-identical ensemble-mean trajectories and overlapping $\pm$one-std bands throughout training (Figure~\ref{fig:bond_dimension_phase_transition}, Table~\ref{tab:bond_dimension_phase_transition}), while $\chi=1$ and $\chi=2$ remain clearly distinct from each other and from the $\chi\geq4$ group. It revises the quantitative claim: the original $\chi=4$/$\chi=8$ standard deviations ($4.0$/$2.0$ epochs) reflected only two seeds on one image and were misleadingly tight; at five images the true spread is far larger ($\mathrm{std}\approx60$ epochs for each of $\chi=4,6,8$), comparable to $\chi=1,2$'s spread rather than smaller than it. Read together, richer compression does not reduce run-to-run variance in this diagnostic --- the apparent tight agreement at $\chi=4,8$ was a small-sample artifact --- but it does produce indistinguishable \emph{mean} dynamics across $\chi\geq4$, a genuinely different and better-supported finding than the original two-seed pass suggested.
+
+This is a different measurement from, but worth reading alongside, this document's own single-seed finding (Table~\ref{tab:capacity_ablation} above) that MPS bond dimension is non-monotonic for \emph{final reconstruction quality}: under a fixed step budget, $\chi=1$ and $\chi=2$ outperform the default $\chi=4$ on PSNR, with $\chi=8$ only partially recovering. The two results together suggest bond dimension has separable effects on \emph{where} training ends up (reconstruction quality, non-monotonic) versus \emph{the shape of the training-dynamics trace} (converges once $\chi\geq4$) --- a connection neither single result establishes on its own.
+
+\begin{table}[H]
+\centering
+\caption{MPS bond-dimension comparison of the order-parameter diagnostic, HVK1D, $N=6$ fixed. $\chi=1,2$: CIFAR-10 \textit{cat}, 2 seeds. $\chi=4,6,8$: 5 CIFAR-10 images, 2 seeds each (10 runs).}
+\label{tab:bond_dimension_phase_transition}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+$\chi$ (MPS bond dim.) & $n$ & Detected & Mean $t_c$ & Std $t_c$ \\
+\midrule
+1 & 2 & 2/2 & 88.5 & 86.5 \\
+2 & 2 & 2/2 & 52.0 & 50.0 \\
+4 & 10 & 10/10 & 73.8 & 60.9 \\
+6 & 10 & 10/10 & 73.3 & 61.4 \\
+8 & 10 & 10/10 & 72.5 & 60.1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/bond_dimension_phase_transition.pdf}
+\caption{Ensemble-mean order parameter $M_z(t)$ vs epoch ($\pm$one std, shaded), HVK1D, $N=6$ fixed. $\chi=1,2$: 1 image $\times$ 2 seeds. $\chi=4,6,8$: 5 images $\times$ 2 seeds (10 runs each). The $\chi\geq4$ curves are visually near-identical throughout training, while $\chi=1,2$ remain distinct from each other and from the $\chi\geq4$ group.}
+\label{fig:bond_dimension_phase_transition}
+\end{figure}
+
+As an execution check, we also replayed trained checkpoints across the original four bond dimensions ($\chi\in\{1,2,4,8\}$, predating the $\chi=6$ / five-image simulator extension above) on real \texttt{ibm\_marrakesh} hardware and the IonQ ideal simulator at 256, 512, and 1024 shots. All checkpoint circuits completed and produced non-degenerate order parameters, but the single-patch, single-seed replay cannot confirm the cross-seed pattern above. Section~\ref{sec:supp_bond_dimension_hardware} below reports the complete twelve-job audit trail, the hardware curves, and a three-basis $R_{ES}$ replay; it also documents why $\chi=1$ is excluded from the ratio because its product-state entropy reaches the numerical floor.
+
+\subsection{Energy-to-Entanglement Ratio as an Orthogonal Diagnostic}
+\label{sec:critical_temperature}
+The learned Heisenberg energy provides a second scalar view of training. We define the signed energy-to-entanglement ratio
+\begin{align}
+R_{ES}(t)&=\frac{H(t)}{S},\\
+H(t)&=\sum_i\Bigl[J_x^{(i)}\langle X_iX_{i+1}\rangle
+J_y^{(i)}\langle Y_iY_{i+1}\rangle \nonumber\\
+&\hspace{3.0em}+J_z^{(i)}\langle Z_iZ_{i+1}\rangle\Bigr].
+\end{align}
+where $S=\sum_i S_i$ is the fixed sum of von Neumann bond entropies from the classical MPS decomposition. This ratio has units of energy per entropy unit and is \emph{not} a thermodynamic temperature: no Gibbs state is fitted, no derivative $\partial S/\partial E$ is evaluated, and its negative sign reflects the learned signed Hamiltonian. The bond correspondence is clean only for HVK1D at six sites, so we track $R_{ES}(t)$ there on two CIFAR-10 images over four seeds and apply the same descriptive change-threshold rule to $|\Delta R_{ES}(t)|$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/critical_temperature_traces.pdf}
+\caption{Signed energy-to-entanglement ratio $R_{ES}(t)=H(t)/S$ across training, HVK1D, two CIFAR-10 images $\times$ four seeds. The increasingly negative traces reflect the learned signed energy at fixed $S$; they are not temperature or cooling curves.}
+\label{fig:critical_temperature}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/critical_temperature_susceptibility.pdf}
+\caption{Change magnitude $|\Delta R_{ES}(t)|$ vs epoch. The dotted line is the descriptive within-run threshold; a dashed vertical line marks the maximum when it exceeds that threshold.}
+\label{fig:critical_temperature_susceptibility}
+\end{figure}
+
+All eight $R_{ES}$ traces become more negative as learned signed energy decreases at fixed $S$, and four of eight exceed the descriptive change threshold. Broad peaks occur around epochs 100--180 in every run, but their threshold status depends on within-run scale. The small sample and data-dependent threshold preclude an inferential claim; the result shows only that energy- and magnetization-based summaries can both exhibit nonuniform changes during optimization.
+
+\subsection{Energy-to-Entanglement Ratio, Replayed on Real Hardware}
+\label{sec:checkpoint_hardware_energy_entanglement}
+Using the same checkpoint-replay methodology as Section~\ref{sec:checkpoint_hardware_finite_size}, we measure $R_{ES}(t)$ itself from real hardware rather than from simulation. The $R_{ES}$ construction requires $N=6$ (Section~\ref{sec:critical_temperature}), so this replay is single-size: we trained fresh HVK1D checkpoints at $N=6$ on the same two images (\textit{Monalisa}, CIFAR-10 \textit{cat}) for 200 real gradient-descent epochs, saved each checkpoint's learned $J_x^{(i)},J_y^{(i)},J_z^{(i)}$ couplings and projected per-qubit angles at the same eight epoch labels, and measured all three Pauli bases needed to reconstruct $\langle X_iX_{i+1}\rangle$, $\langle Y_iY_{i+1}\rangle$, $\langle Z_iZ_{i+1}\rangle$ per bond ($2$ images $\times$ $8$ epoch labels $\times$ $3$ bases $=48$ circuits) on \texttt{ibm\_marrakesh} at $256$, $512$, and $1024$ shots. Hardware-measured bond correlators are combined with each checkpoint's own learned couplings and the fixed, classically-computed bond entropy $S$ to obtain $R_{ES}(t)$; this is a single-patch, single-seed probe, the same limitation noted in Section~\ref{sec:checkpoint_hardware_finite_size}.
+
+As a cross-platform check of the three-basis measurement path, the same 48 circuits were also executed as one 1024-shot job on the IonQ ideal cloud simulator (job identifier retained in the archive). Since this execution used an ideal simulator rather than an IonQ QPU, it supports software-stack portability and estimator reproducibility only.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/checkpoint_hardware_energy_entanglement_ratio.pdf}
+\caption{$R_{ES}(t)=H(t)/S$ from real trained HVK1D checkpoints ($N=6$), Pauli bond correlators measured on real IBM Quantum hardware (\texttt{ibm\_marrakesh}), one representative patch per image, at three shot budgets.}
+\label{fig:checkpoint_hardware_energy_entanglement}
+\end{figure}
+
+Figure~\ref{fig:checkpoint_hardware_energy_entanglement} shows the three shot budgets track each other closely for both images, more closely than the order-parameter hardware traces of Figure~\ref{fig:checkpoint_hardware_order_parameter} track across shot budgets --- consistent with $R_{ES}$ summing correlators over multiple bonds and bases, which averages down some of the shot noise visible in the single-qubit order-parameter measurement. As in Section~\ref{sec:checkpoint_hardware_finite_size}, we do not apply the descriptive detection rule to these single-patch traces; the result establishes that hardware-measured bond correlators, combined with a checkpoint's own learned couplings, reproduce a monotonically decreasing $R_{ES}(t)$ consistent in shape with the noiseless-simulator traces of Figure~\ref{fig:critical_temperature}, across three independent shot budgets on real hardware.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/checkpoint_ionq_energy_entanglement_ratio.pdf}
+\caption{$R_{ES}(t)=H(t)/S$ from the same $N=6$ real trained checkpoints as Figure~\ref{fig:checkpoint_hardware_energy_entanglement}, Pauli bond correlators measured instead on the IonQ ideal cloud simulator (1024 shots, the only shot budget submitted for this diagnostic).}
+\label{fig:checkpoint_ionq_energy_entanglement}
+\end{figure}
+
+Figure~\ref{fig:checkpoint_ionq_energy_entanglement} shows the resulting IonQ traces preserve the same monotonically decreasing shape as the IBM replay above and the noiseless-simulator traces of Figure~\ref{fig:critical_temperature}, for both images. As above, we do not apply the descriptive detection rule of Eq.~\ref{eq:critical_epoch} to these single-patch traces; this is an ideal cloud-simulator portability check, not an IonQ-QPU result.
+
 \section{HVK1D versus HVK2D: A Direct Topology Comparison}
 \label{sec:topology_comparison}
 The main paper introduces both the HVK1D (6-qubit chain) and HVK2D ($2\times3$ grid) topologies, but until now the only direct comparison was the same-set CIFAR-10 fit of Table~\ref{tab:cifar10}. Here we compare the two topologies directly under matched conditions --- identical qubit count (6, native to both), identical feature width, identical decoder architecture and step budget --- on held-out generalization rather than same-set fitting, on two evidence bases: a fast analytic-surrogate sweep at full statistical scope, and a smaller real-trained-circuit confirmation subset. The two topologies are close in parameter count by construction (HVK1D: 53{,}787; HVK2D: 52{,}755) but not identical, since their circuit structures differ (chain vs. grid connectivity, 27 vs. 19 measured observables); we report this honestly rather than forcing an artificial match.
@@ -479,7 +729,7 @@ The two topologies give close held-out reconstruction means at this scale. Acros
 
 \subsection{Surrogate Sweep: Full Statistical Scope}
 \label{sec:topology_surrogate}
-To reach the seed and dataset breadth a held-out comparison needs, we extend the existing analytic-surrogate held-out framework (already used for Tables~\ref{tab:hvk_real_cifar}--\ref{tab:multi_dataset_classification}) with an HVK1D-equivalent feature map. The existing HVK2D surrogate (\texttt{real\_newhvk\_features}) is a closed-form proxy built from six index-pairs of the local-observable block, standing in for the grid circuit's pairwise $ZZ$ correlators. The new HVK1D surrogate is not a relabeled copy: it iterates the chain topology's actual five nearest-neighbor bonds (vs.\ the grid's seven-edge pattern) and adds a second, distinct pair-type term reflecting HVK1D's extra $XX$/$YY$ measurement channels that the 2D grid circuit does not have (it measures only $Z$, $X$, $ZZ$). Both surrogates share the same local/positional input convention, so the comparison is apples-to-apples. We run the full held-out reconstruction and downstream-classification battery (5 seeds, stratified splits) across CIFAR-10, Fashion-MNIST, and PathMNIST.
+To reach the seed and dataset breadth a held-out comparison needs, we extend the analytic-surrogate held-out framework used above (Tables~\ref{tab:hvk_real_cifar}--\ref{tab:multi_dataset_classification}) with an HVK1D-equivalent feature map. The HVK2D surrogate used there (\texttt{real\_newhvk\_features}) is a closed-form proxy built from six index-pairs of the local-observable block, standing in for the grid circuit's pairwise $ZZ$ correlators. The new HVK1D surrogate is not a relabeled copy: it iterates the chain topology's actual five nearest-neighbor bonds (vs.\ the grid's seven-edge pattern) and adds a second, distinct pair-type term reflecting HVK1D's extra $XX$/$YY$ measurement channels that the 2D grid circuit does not have (it measures only $Z$, $X$, $ZZ$). Both surrogates share the same local/positional input convention, so the comparison is apples-to-apples. We run the full held-out reconstruction and downstream-classification battery (5 seeds, stratified splits) across CIFAR-10, Fashion-MNIST, and PathMNIST.
 
 \begin{table}[H]
 \centering
@@ -784,7 +1034,10 @@ We distill this ablation study into concrete guidance for evaluating hybrid quan
 \section{Conclusion}
 The resource-matched, multi-seed study delineates the tested operating regime of HVK. Under a shared fitted readout, simple local/raw maps match or exceed the HVK2D pair-observable map on ordinary held-out reconstruction. The entangling observable channel separates on the restricted target constructed to require nonlocal correlations; separately, $D_4$ pooling enforces equivariance to numerical precision but does not improve held-out reconstruction accuracy in the tested experiment. On held-out CIFAR-10, local-observable and raw-linear controls reach $18.80\pm1.42$~dB compared with HVK2D's $18.12\pm1.54$~dB; seed-level inference gives a $-0.68$~dB HVK2D-minus-control difference (bootstrap 95\% CI $[-0.91,-0.46]$~dB; Wilcoxon $p=0.0625$, $n=5$). The same numerical direction appears on five further real datasets. These results motivate task-aligned HVK variants and strengthen the framework's evidentiary scope. The leakage and provenance audits contribute a transferable validation protocol, and Section~\ref{sec:hardware_methodology} provides the complete hardware-pilot methodology.
 
-\begin{thebibliography}{6}
+\begin{thebibliography}{9}
+\bibitem{IonQBackends} IonQ, ``Backends,'' \textit{IonQ Quantum Cloud Documentation}. [Online]. Available: \url{https://docs.ionq.com/user-manual/backends}. Accessed: Jul. 24, 2026.
+\bibitem{Schuirmann1987TOST} D. J. Schuirmann, ``A comparison of the two one-sided tests procedure and the power approach for assessing the equivalence of average bioavailability,'' \textit{Journal of Pharmacokinetics and Biopharmaceutics}, vol. 15, no. 6, pp. 657--680, 1987, doi: 10.1007/BF01068419.
+\bibitem{Lakens2017TOST} D. Lakens, ``Equivalence tests: A practical primer for $t$ tests, correlations, and meta-analyses,'' \textit{Social Psychological and Personality Science}, vol. 8, no. 4, pp. 355--362, 2017, doi: 10.1177/1948550617697177.
 \bibitem{Krizhevsky2009} A. Krizhevsky, ``Learning multiple layers of features from tiny images,'' University of Toronto, Technical Report, 2009.
 \bibitem{LeCun1998} Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, ``Gradient-based learning applied to document recognition,'' \textit{Proceedings of the IEEE}, vol. 86, no. 11, pp. 2278--2324, 1998, doi: 10.1109/5.726791.
 \bibitem{Xiao2017} H. Xiao, K. Rasul, and R. Vollgraf, ``Fashion-MNIST: A novel image dataset for benchmarking machine learning algorithms,'' arXiv:1708.07747, 2017.

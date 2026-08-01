@@ -8,12 +8,12 @@ authors:
     affiliation: "School of Basic Sciences, Department of Physics, Indian Institute of Technology Bhubaneswar, Odisha, India"
   - family-names: Patra
     given-names: Siddhartha
-    affiliation: "Centre for Quantum Engineering, Research and Education (CQuERE), TCG CREST, Kolkata, India"
+    affiliation: "Assistant Professor, Centre for Quantum Engineering, Research and Education (CQuERE), TCG CREST, Kolkata, India"
 license: Apache-2.0
 repository-code: "https://github.com/professorparad/Hamiltonian_Vision_Kernel"
 preferred-citation:
   type: article
-  title: "Hamiltonian Vision Kernel: Symmetry, Entangling Correlators, and Real-Hardware Replay in Hybrid Quantum Image Reconstruction"
+  title: "Hamiltonian Vision Kernel: Symmetry-Pooled Quantum Correlator Features with Hardware Validation"
   authors:
     - family-names: Chakraborty
       given-names: Sparsho

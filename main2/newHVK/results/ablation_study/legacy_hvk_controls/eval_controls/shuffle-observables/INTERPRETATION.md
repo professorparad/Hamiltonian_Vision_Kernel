@@ -58,3 +58,32 @@ difference between the original checkpoint/protocol and this rebuild's
 (different training script entirely, since the original is unrecoverable)
 explains the gap. Do not cite either the 0.301 dB or the ~16 dB number as
 settled until this is investigated further.
+
+## 2026-07-31 resolution: adopt ~16 dB, retire 0.301 dB
+
+This is now resolved for manuscript purposes (paper + supplement + combined
+report all updated). **The ~16 dB figure is adopted; the 0.301 dB figure is
+retired as unreliable.** Reasoning:
+
+1. The 0.301 dB script is permanently unrecoverable and was never
+   independently auditable. The ~16 dB verifier explicitly checks and asserts
+   against the exact two failure modes that would manufacture a spuriously
+   small drop (identity permutation; decoder silently receiving a discarded
+   unpermuted copy) — precisely the class of bug (a) above describes, and the
+   class this document itself already anticipated. Absent recoverable code,
+   "verifiable and audited" outranks "unauditable and unrecoverable."
+2. The ~16 dB figure reproduces independently under two different decoder
+   input configurations (`use_energy_feature=True` and `=False`), agreeing to
+   within 0.5 dB despite the architecture difference — not the behavior
+   expected of a one-off artifact.
+3. ~16 dB is consistent with, not contradicted by, the separately measured
+   Exp 2 zero-observable control (16.76 dB drop, see
+   `../zero-latent-positions/`): scrambling which patch gets which
+   observable's content is roughly as damaging as deleting that content
+   outright, which is the coherent reading. A 0.301 dB shuffle drop sitting
+   next to a 16.76 dB deletion drop would have been the surprising pairing.
+
+Downstream interpretation changes accordingly: this ablation now reads as
+showing observable-position pairing **is** load-bearing (large degradation
+under shuffle), not as weak/negative evidence against it. The cross-experiment
+"Current Bottom Line" in `../../INTERPRETATION.md` has been updated to match.
