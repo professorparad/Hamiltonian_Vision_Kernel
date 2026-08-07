@@ -46,7 +46,30 @@ Keep producing **no new simulations** — this is writing/cleanup only.
   QCAE authors + Phys. Rev. A 109, 032623 (2024), the ~10 author-less entries; audit all author lists.
 - **4d. Final build:** recompile all three PDFs clean, proofread the rendered pages.
 
-## 5. Submission packet (supervisor + student)
+## 5. Shorten the supplementary Material
+- **Problem:** the supplement is **1049 lines, 30 tables, 23 figures** — a dumping ground, not a
+  companion. It reads as "broad but not deep" (the exact reviewer criticism), and most of the bulk is
+  the training-dynamics ("phase-transition") material — which the main paper already concludes is
+  unreliable, because its own check shows the detector fires whether the Hamiltonian is switched on or
+  off, so it isn't actually measuring the physics it claims to. A supplement should
+  *support the paper's claims*, not run a second paper.
+- **Keep (load-bearing — these back main-text claims):** held-out + multi-dataset "competitive" result;
+  TOST; leakage audit + resource-matching + the design-guidelines box; dataset-level generalization
+  (real trained model); hardware-pilot methodology + job IDs; exact circuit/Hamiltonian definitions;
+  D4 output-level experiment; reproducibility/artifact map.
+- **Cut or compress hard (bloat / self-disowned / redundant):**
+  - Shuffle reproducibility note → **cut** (same as Task 1).
+  - Thermodynamic apparatus (finite-size, χ bond-dimension sweep, $R_{ES}$ simulator+hardware+IonQ
+    replays, checkpoint bond-dimension replays): collapse to **one** compact subsection — the
+    change-point diagnostic, its negative control, and a **single** sensitivity figure. Move all the
+    per-shot IBM/IonQ replay figures and job tables to the machine-readable archive; cite job IDs in
+    one compact table, don't reproduce every plot.
+  - Energy-as-decoder-feature follow-up (2/3 seeds, disowned) → **one sentence**, not a table.
+  - Any Hamiltonian-controls / number table duplicated between main and supplement → keep **once**.
+- **Target:** aim to roughly halve it (≈500 lines, ≤15 tables, ≤10 figures). Every retained table/figure
+  must map to a claim the reader needs; if it doesn't, it goes to the archive.
+
+## 6. Submission packet (supervisor + student)
 - Confirm venue (**IEEE TQE** or **Quantum Machine Intelligence**), APC/waiver, length.
 - Cover letter, author-contribution statement, ORCIDs, 2–3 suggested reviewers (drafts exist).
 
@@ -56,5 +79,5 @@ Keep producing **no new simulations** — this is writing/cleanup only.
 **1 → 2 → 3 → 4 → 5.** Tasks 1 and 2 gate a clean, self-consistent draft; do them first.
 
 ## Owners
-- **Student:** 1, 2, 4b, 4c, 4d.
-- **Supervisor:** 3 (claim wording), 4a, 5 (venue + packet).
+- **Student:** 1, 2, 3, 4a, 4b, 4c, 4d.
+- **Supervisor:** 5
