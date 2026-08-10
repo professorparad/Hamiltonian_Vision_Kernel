@@ -8,6 +8,10 @@ The publication is maintained as exactly three authoritative LaTeX documents:
 
 The duplicate mirror copies (`experiments/manuscript_skeleton.tex`, `project_artifacts/manuscript_skeleton.tex`) and stale independent drafts (`latex_outputs/hvk_methodology_outputs.tex`, `latex_outputs/papers/newhvk_paper.tex`) have been removed to keep a single source of truth; they remain in git history if needed.
 
+`hvk_combined_report.tex` / `.pdf` have likewise been removed. That file was a *text-copied* merge of all three documents above (it used no `\input`), so every edit to `paper_hvk.tex` silently made it stale -- which is how contradictory numbers entered the manuscript set. If a combined PDF is ever needed again, generate it on demand via `\input` of the three sources; never commit a copied merge.
+
+**Rule:** the `.tex` files are the source of truth; the `.pdf` files are builds. Recompile them -- never hand-edit a PDF, and never edit prose in a generated copy.
+
 The one exception is `Main2/newHVK/paper_latex/newhvk_q1_validation_report.tex` — a separate addendum document actively wired into that sub-project's own build scripts (`run_newhvk_suite.py`, `scripts/run_q1_validation_suite.sh`). It is not part of this manuscript and should be left alone.
 
 Recommended build commands, run from this directory:
