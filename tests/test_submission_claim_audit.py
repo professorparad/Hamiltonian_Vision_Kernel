@@ -65,6 +65,43 @@ class SubmissionClaimAuditTests(unittest.TestCase):
             claim["artifact_value"]["second_image_multi_image_training"],
         )
 
+    def test_tost_equivalence_matches_artifact(self):
+        claim = self.claims["tost_equivalence"]
+        records = load_json(claim["source"])
+        self.assertEqual(len(records), claim["n_controls_total"])
+        equivalent = [row for row in records if row["equivalent_at_1db"]]
+        self.assertEqual(len(equivalent), claim["n_controls_equivalent"])
+        headline = next(row for row in records if row["control"] == claim["headline_control"])
+        self.assertEqual(headline["mean_diff_db"], claim["headline_artifact_value_db"])
+        self.assertEqual(headline["tost_p_value"], claim["headline_tost_p"])
+        self.assertEqual(headline["delta_margin_db"], claim["margin_db"])
+        # Every control HVK2D is NOT equivalent to must be one it is ahead of,
+        # never one it loses to -- otherwise "competitive" would be unsupported.
+        for row in records:
+            if not row["equivalent_at_1db"]:
+                self.assertGreater(row["mean_diff_db"], 0.0)
+
+    def test_no_transition_claims_in_manuscripts(self):
+        """The change-point/critical-temperature material was withdrawn (see
+        withdrawn_claims). Any surviving mention must be an explicit disclaimer."""
+        banned = ("critical temperature", "change-point", "critical epoch", "phase transition")
+        for name in ("paper_hvk.tex", "supplementary_study.tex", "cover_letter.tex"):
+            text = (ROOT / "latex_outputs/paper_latex" / name).read_text(encoding="utf-8")
+            lowered = text.lower()
+            for phrase in banned:
+                for idx, line in enumerate(lowered.splitlines(), start=1):
+                    if phrase not in line:
+                        continue
+                    negated = any(
+                        marker in line
+                        for marker in ("no transition", "no critical", "not a transition",
+                                       "is not claimed", "no sharp", "rather than a transition")
+                    )
+                    self.assertTrue(
+                        negated,
+                        f"{name}:{idx} mentions '{phrase}' without a disclaimer: {line.strip()[:160]}",
+                    )
+
     def test_hamiltonian_controls_extension_matches_artifact(self):
         claim = self.claims["hamiltonian_controls_extension"]
         records = {row["ablation_mode"]: row for row in load_json(claim["source"])}

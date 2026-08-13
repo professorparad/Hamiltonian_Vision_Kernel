@@ -5,9 +5,11 @@ type: software
 authors:
   - family-names: Chakraborty
     given-names: Sparsho
+    orcid: "https://orcid.org/0009-0004-1667-7208"
     affiliation: "School of Basic Sciences, Department of Physics, Indian Institute of Technology Bhubaneswar, Odisha, India"
   - family-names: Patra
     given-names: Siddhartha
+    # orcid: TODO -- supervisor to supply
     affiliation: "Assistant Professor, Centre for Quantum Engineering, Research and Education (CQuERE), TCG CREST, Kolkata, India"
 license: Apache-2.0
 repository-code: "https://github.com/professorparad/Hamiltonian_Vision_Kernel"
@@ -17,6 +19,7 @@ preferred-citation:
   authors:
     - family-names: Chakraborty
       given-names: Sparsho
+      orcid: "https://orcid.org/0009-0004-1667-7208"
     - family-names: Patra
       given-names: Siddhartha
   year: 2026

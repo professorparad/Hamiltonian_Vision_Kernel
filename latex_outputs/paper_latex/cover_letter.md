@@ -69,9 +69,11 @@ Sincerely,
 Sparsho Chakraborty<br>
 School of Basic Sciences, Department of Physics, Indian Institute of Technology
 Bhubaneswar, Odisha, India<br>
-<!-- FILL: email, ORCID -->
+sparshochakraborty123@gmail.com, 25ph05023@iitbbs.ac.in<br>
+ORCID: 0009-0004-1667-7208
 
 Siddhartha Patra<br>
 Centre for Quantum Engineering, Research and Education (CQuERE), TCG CREST, Kolkata,
 India<br>
-<!-- FILL: email, ORCID -->
+siddhartha.patra@tcgcrest.org<br>
+<!-- FILL: ORCID (supervisor to supply) -->

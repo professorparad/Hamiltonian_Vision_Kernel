@@ -87,3 +87,6 @@ Main2/newHVK/results/scaling_study/scaling_study*.json.tmp
 # Local secrets - never commit
 .env.local
 .claude/
+
+# Assembled submission bundle (regenerate from latex_outputs/paper_latex)
+submission_bundle/
