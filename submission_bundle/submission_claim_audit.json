@@ -1,0 +1,121 @@
+{
+  "purpose": "Machine-readable provenance for numerical headline claims in paper_hvk.tex",
+  "claim_boundary": "These records support symmetry verification, a restricted representational result, TOST-backed competitiveness, and scoped hardware feasibility; they do not establish broad quantum advantage. No claim of a training-dynamics transition, critical epoch, or critical temperature is made anywhere -- see withdrawn_claims.",
+  "claims": {
+    "d4_equivariance": {
+      "manuscript_value": 9.57e-17,
+      "artifact_value": 9.573879468686641e-17,
+      "unit": "mean equivariance error",
+      "n_images": 1000,
+      "n_nonidentity_transforms": 7,
+      "n_evaluations": 7000,
+      "source": "main2/newHVK/results/extended_validation/d4_equivariance/d4_equivariance_summary.json"
+    },
+    "restricted_pair_diagnostic": {
+      "manuscript_mean_r2": 0.974,
+      "artifact_mean_r2": 0.9735224984535916,
+      "strongest_non_entangling_control_r2": 0.019056047538188837,
+      "n_seeds": 5,
+      "scope": "Leakage-audited synthetic distant-product target with a fixed linear-readout protocol",
+      "source": "main2/newHVK/results/full_ablation_suite/full_ablation_summary.json"
+    },
+    "hardware_reconstruction": {
+      "n_images": 5,
+      "backend": "ibm_fez",
+      "shots_per_measurement_basis": 256,
+      "minimum_hardware_psnr_db": 25.89595775307302,
+      "maximum_hardware_psnr_db": 31.5209513556915,
+      "monalisa_source": "IBM_Cloud/outputs/hardware_reconstruction/hardware_reconstruction_report.json",
+      "cifar_source": "IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/summary.json"
+    },
+    "topology_comparison": {
+      "manuscript_value_db": 0.16,
+      "artifact_value_db": 0.15803376055509055,
+      "unit": "paired HVK1D-minus-HVK2D held-out PSNR difference",
+      "n_seeds": 3,
+      "n_held_out_images": 3,
+      "n_image_seed_pairs": 9,
+      "scope": "Real-trained-circuit topology comparison, 90-step budget, CIFAR-10 native 32x32, held-out (no retraining) on 3 unseen images",
+      "source": "Main2/newHVK/results/topology_comparison/real_circuit_confirmation.json",
+      "verified": "2026-07-28: recomputed directly from the raw per-run held_out_metrics in the source file; matches the manuscript's 0.16 dB to 2 decimal places."
+    },
+    "sameset_multi_dataset": {
+      "manuscript_table": "tab:sameset_multi_dataset (Table II)",
+      "rows": {
+        "cifar10": {"n_images": 3, "mean_psnr_db": 37.75101904451436, "mean_ssim": 0.9986463189125061},
+        "mnist": {"n_images": 3, "mean_psnr_db": 25.765525329173247, "mean_ssim": 0.9782591660817465},
+        "fashion-mnist": {"n_images": 3, "mean_psnr_db": 34.55401603298506, "mean_ssim": 0.9979587197303772},
+        "pathmnist": {"n_images": 3, "mean_psnr_db": 36.85889191351664, "mean_ssim": 0.9117725292841593},
+        "bloodmnist": {"n_images": 2, "mean_psnr_db": 36.571000121950775, "mean_ssim": 0.9921788275241852},
+        "pneumoniamnist": {"n_images": 2, "mean_psnr_db": 41.603948147362644, "mean_ssim": 0.9985133111476898}
+      },
+      "source": "Main2/newHVK/results/full_dataset_sameset/summary.json",
+      "verified": "2026-07-29: previously only pneumoniamnist had a matching artifact (see known_gaps history below). Reran the other five datasets at the paper's own stated per-dataset n via `python Main2/newHVK/run_full_dataset_sameset.py --datasets cifar10 mnist fashion-mnist pathmnist --images-per-dataset 3` then `--datasets bloodmnist --images-per-dataset 2`, merged into one summary.json, and updated Table II in paper_hvk.tex to match these real values exactly."
+    },
+    "zero_shot_generalization": {
+      "manuscript_table": "tab:generalization_controls",
+      "previously_reported_unsourced": {"zero_shot_psnr_db": 7.78, "zero_shot_ssim": 0.0196, "multi_image_psnr_db": 28.31, "multi_image_ssim": 0.9862},
+      "artifact_value": {
+        "second_image_zero_shot": {"mse": 0.1476159393787384, "psnr": 8.308667454229873, "ssim": 0.10443594306707382},
+        "second_image_multi_image_training": {"mse": 0.001371194259263575, "psnr": 28.62901013664292, "ssim": 0.9858271479606628}
+      },
+      "second_image": "Main/data/handofgod_micheal_angelo.jpg",
+      "source": "Main2/newHVK/results/zero_shot_generalization/summary.json",
+      "verified": "2026-07-29: no script for the original numbers was ever found despite an exhaustive search. Rebuilt the described protocol from scratch (Main2/newHVK/run_zero_shot_generalization.py) using the only other image bundled alongside monalisa.jpg in the repo's data directories, previously unused by any committed script. Fresh result lands within 0.5 dB of the previously reported unsourced figures at both stages -- strong evidence of a close protocol match, though this is an independent rerun, not literal recovered code. paper_hvk.tex and supplementary_study.tex both updated with the new numbers plus this note."
+    },
+    "tost_equivalence": {
+      "manuscript_claim": "HVK2D is 'competitive with resource-matched classical baselines' -- the word 'competitive' is licensed by this TOST result and by nothing else. Never stated as 'beats'.",
+      "manuscript_table": "tab:tost_equivalence (supplementary_study.tex); summarized in paper_hvk.tex Section sec:ablation_relationship",
+      "margin_db": 1.0,
+      "alpha": 0.05,
+      "n_seeds": 5,
+      "n_controls_total": 8,
+      "n_controls_equivalent": 6,
+      "n_controls_not_equivalent_hvk_ahead": 2,
+      "headline_manuscript_value_db": -0.68,
+      "headline_artifact_value_db": -0.6759369581077737,
+      "headline_control": "raw-linear-classical",
+      "headline_ci90_db": [-0.9549797048675421, -0.3968942113480052],
+      "headline_tost_p": 0.034259665897203084,
+      "scope": "Pre-declared +/-1 dB equivalence margin on five seed-level paired held-out CIFAR-10 PSNR differences. Equivalence is a claim of practical tie, not of superiority; the two non-equivalent controls (strict classical random features, random-VQC) are ones HVK2D exceeds.",
+      "source": "Main2/newHVK/results/q1_validation/tost_equivalence.json"
+    },
+    "holdout_cifar_headline": {
+      "manuscript_claim": "On ordinary held-out CIFAR-10 reconstruction the simple classical controls are numerically AHEAD of HVK2D. This is a negative result for HVK and is reported in the abstract, results, and conclusion rather than buried.",
+      "manuscript_table": "tab:hvk_real_cifar / tab:hvk_real_cifar_stats (supplementary_study.tex)",
+      "control_psnr_db": 18.80,
+      "hvk2d_psnr_db": 18.12,
+      "mean_difference_db": -0.68,
+      "bootstrap_ci95_db": [-0.91, -0.46],
+      "wilcoxon_p": 0.0625,
+      "n_seeds": 5,
+      "n_heldout_reconstructions": 20,
+      "direction": "control_wins",
+      "source": "Main2/newHVK/results/q1_validation/"
+    },
+    "hamiltonian_controls_extension": {
+      "manuscript_table": "tab:hamiltonian_reproducibility (extends tab:hamiltonian_controls)",
+      "rows": {
+        "no_observable_noise": {"published_original_db": 32.72, "fresh_rerun_db": 32.74812062164801, "gap_db": 0.03},
+        "zz_only_observables": {"published_original_db": 32.88, "fresh_rerun_db": 32.11327352489989, "gap_db": 0.77}
+      },
+      "source": "Main2/newHVK/results/hamiltonian_reproducibility_extension/summary.json",
+      "verified": "2026-07-29: reran the two Table hamiltonian_controls rows that had zero artifact (no-observable-noise, ZZ-only) at the same protocol as the existing tab:hamiltonian_reproducibility table (Monalisa, 200 steps, seed 42, energy_loss_mode=linear). Unlike the other three legacy rows in that table (which reproduce 6-12 dB higher than published), these two land within 1 dB of the original published values -- an unexplained but plainly-reported contrast, added to supplementary_study.tex's reproducibility note and table."
+    }
+  },
+  "withdrawn_claims": {
+    "training_dynamics_transition": {
+      "status": "WITHDRAWN 2026-08-13 -- removed from the manuscript, not merely rescoped.",
+      "what_was_claimed": "An exploratory change-point / 'critical epoch' / 'critical temperature' diagnostic over a magnetization-style order parameter M_z(t) and an energy-to-entanglement ratio R_ES(t), including finite-size and bond-dimension sweeps and IBM/IonQ hardware replays of the same diagnostic.",
+      "why_withdrawn": "No sharp transition exists in any trace -- only smooth drift plus run-to-run fluctuation. The apparent 'detection' was an artifact of a within-run median+2sigma threshold computed from the very trace it scored. The negative control is decisive: applied to a classical-replacement variant whose Hamiltonian energy is identically zero throughout training, the rule fires in 4/4 cases, exactly as often as the Hamiltonian-regularized model's 4/4. The rule therefore has no demonstrated sensitivity to the Hamiltonian term at all.",
+      "what_was_retained": "Two tables (tab:phase_transition_corrected, tab:phase_transition_onoff) documenting the descriptive tally and the disqualifying negative control, and one R_ES trace figure recaptioned as a plain interpretability readout. No transition language survives in either document except explicit disclaimers.",
+      "removed_from_manuscript": ["abstract change-point sentences", "introduction change-point paragraph", "finite-size phase-transition section", "bond-dimension phase-transition section", "checkpoint hardware/IonQ order-parameter replay sections", "critical-temperature susceptibility figure", "critical-epoch equation and all detected-t_c language"],
+      "figures_deleted": 27
+    }
+  },
+  "known_gaps": {
+    "table_i_sameset_five_datasets": "RESOLVED 2026-07-29 -- see the sameset_multi_dataset claim above. Historical note (as of 2026-07-28, before the rerun): paper_hvk.tex Table II reported same-set PSNR/SSIM for 6 datasets but only PneumoniaMNIST (41.60+/-0.98 dB) had a matching artifact; the other five had no source file, and Main2/newHVK/results/multi_dataset_validation/ used a different (held-out) protocol that did not reproduce them.",
+    "zero_shot_generalization": "RESOLVED 2026-07-29 -- see the zero_shot_generalization claim above.",
+    "hamiltonian_controls_no_obs_noise_zz_only": "RESOLVED 2026-07-29 -- see the hamiltonian_controls_extension claim above. The `contrastive+no-energy` row (33.33 dB) is the one row in tab:hamiltonian_controls that still has no artifact of any kind."
+  }
+}
