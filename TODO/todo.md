@@ -1,52 +1,132 @@
-# TODO — Finish the paper for IEEE TQE
+# TODO — Round 2: Project Completion → Submission
 
-**Target:** IEEE Transactions on Quantum Engineering.
-**Framing A:** our architecture, honestly characterized, hardware pilot as the centerpiece.
-Do **A → B → C → D**. A and B gate submission. In the meeting, say **done / not done / blocked** per task.
+**Thesis (locked):** HVK is a *new hybrid quantum–classical image-reconstruction
+architecture* that **works**, is **competitive** with resource-matched classical
+baselines (TOST equivalence at ±1 dB — *not* "beats"), runs on **real hardware**, and
+adds **capabilities** classical maps don't (entanglement-sensitive channel, interpretable
+Hamiltonian diagnostics). **No quantum advantage claimed.**
+
+**Venue:** IEEE TQE, traditional (non-OA) route = free to publish + arXiv preprint = free to read.
+
+**No new simulations.** Science is locked (`results-core-map.md` — all rows backed except
+R10's one disclosed row). Everything below is *cut / reframe / verify / package.*
+
+**Order:** §1 → §2 → §3 → §4 → §5 → §6. §1 gates the rest. Report **done / not done / blocked** per item.
 
 ---
 
-## A. Verify before shipping (do first)
-- [x] **A0** — Fill `results-core-map.md`: for every paper table/figure, give the script + command + params + artifact. Every `FILL:` is a task; a row with no source doesn't ship. **Done 2026-07-29.** File exists at `TODO/results-core-map.md`, all 14 rows (R1-R14) filled with verified findings: R3/R4/R5/R9/R12/R13 backed with exact recomputed values (R13 fully resolved 2026-07-29 by regenerating the missing HVK2D row); R6/R7/R8 backed from earlier verification; R1/R2/R14 genuinely no source (documented, not hidden); R10 partial (reproducibility gap already disclosed in the paper); R11 resolved by deletion (claim removed, not produced). See that file for full per-row detail.
-- [x] **A1** — Table I (map R1): only PneumoniaMNIST has a source file. Re-run the other 5 datasets into one summary, or delete those rows. **Done 2026-07-29.** Backed up the original PneumoniaMNIST-only `summary.json` first, then reran the other 5 datasets at the paper's own stated per-dataset $n$ (cifar10/mnist/fashion-mnist/pathmnist at $n=3$, bloodmnist at $n=2$), merged all 6 into the final `summary.json`. New numbers: CIFAR-10 $37.75\pm2.38$, MNIST $25.77\pm2.23$, Fashion-MNIST $34.55\pm3.05$, PathMNIST $36.86\pm2.11$, BloodMNIST $36.57\pm2.36$, PneumoniaMNIST $41.60\pm0.98$ (unchanged, re-verified). Table II in `paper_hvk.tex` updated with these real numbers (both the table and the summary range sentence "$25.8$-$41.6$ dB, SSIM $0.91$-$1.00$"); `hvk_combined_report.tex` regenerated from the updated source via the existing extraction/assembly scripts so it doesn't go stale. Both recompile clean, 2-pass, no errors (paper: 14 pages; combined report: 74 pages).
-- [x] **A2** — "Monalisa 40.70 vs 34.72 dB" (§V-D) is backed by no file. Reproduce it or delete the sentence. **Done 2026-07-28: deleted.** Closest candidate file gave a different number and a much smaller gap (30.99/32.84 dB, 1.86 dB) than the unsourced claim (5.98 dB) — reproducing the exact claimed number wasn't feasible, and the sentence was also in tension with the paper's own rigorous follow-on result in the same paragraph (multi-seed held-out topology difference of only 0.16 dB). Removed the unsourced sentence; the paragraph now leads directly with the sourced, rigorous comparison. Compiles clean.
-- [x] **A3** — Zero-shot 7.78 / 28.31 dB (§IV-B) has no source. Point to a file or re-run. **Done 2026-07-29 — rebuilt from scratch.** No original script was ever found. Wrote `Main2/newHVK/run_zero_shot_generalization.py`: train on Monalisa alone, zero-shot eval on a second image, extend training to include it — using `Main/data/handofgod_micheal_angelo.jpg` as the second image (the only other image bundled alongside monalisa.jpg in the repo's data dirs, unused by any committed script). Fresh result: $8.31\to28.63$~dB, within $0.5$~dB of the previously reported unsourced $7.78/28.31$~dB at both stages — strong evidence of a close protocol match, though this is an independent rerun, not literal recovered code. Both `paper_hvk.tex` and `supplementary_study.tex` updated with the new numbers plus an explicit reproducibility note; both recompile clean. Old narrative copies in `project_artifacts/results.md`/`report_2.md` not updated (out of scope — those are historical snapshots, not the submission documents).
+## §1 — Remove all transition/change-point DETECTION *(DECIDED)*
+No sharp transition exists anywhere — only smooth drift + fluctuations. "Detection" is a
+within-run median+2σ threshold artifact. **Delete every change-point / critical-epoch /
+"critical temperature" claim, table, figure, threshold.** Keep only: (i) the on/off
+negative-control table (the honest disproof), and (ii) one clean $R_{ES}$ trace reframed
+as a plain interpretability readout.
 
-## B. Commit missing evidence
-- [x] **B1** — `run_core_multiseed_240.py` is **not in the repo at all** (not just untracked). Locate it or confirm the current paper no longer needs it; if needed, rebuild + commit. **Rebuilt and run to completion 2026-07-29** — `Main2/newHVK/run_core_multiseed_240.py`, driving `Main_new/src/training/training.py::train()`'s existing `ablation_mode` kwarg rather than reimplementing training. Scoped down from the spec's 5 seeds to **3 seeds** (documented explicitly: `"scope_reduced": true` in the summary JSON) after the full-scope run proved too slow given repeated interruptions — 240-step VQC-backed runs cost ~9 min each on this CPU-only machine. Full results: `Main2/newHVK/results/core_multiseed_240/{runs.csv,summary.csv,summary.json}`. **Headline finding**: baseline (quantum) $33.42\pm0.02$ dB; `classical-replacement` (no VQC at all) **significantly beats** it at $33.50\pm0.01$ dB (gap $0.081$ dB vs.\ pooled std $0.019$ dB); `classical-matched` loses to baseline significantly ($33.22\pm0.19$ dB); `random-VQC` far worse ($28.09\pm0.23$ dB, gap $5.32$ dB); `freeze-quantum` ties baseline, gap **not significant** ($0.026$ vs.\ pooled std $0.043$ dB). All 4 comparisons and the significance rule are in `summary.json`. **2026-07-29: written into both papers**, per instruction. `supplementary_study.tex` gets the full treatment: new \S3.2 "A Fresh, Matched-Budget Rerun of the Nine-Variant Table" with both result tables and discussion, replacing the excluded legacy table this section already flagged as lost; abstract updated to stop saying "pending reproducible reruns" since the rerun is now done. `paper_hvk.tex`'s \S"Relationship to the Component-Wise Ablation Study" gets one summary sentence pointing to the supplement. Both compile clean, 2-pass, no undefined refs; visually proofread.
-- [x] **B2** — `verify_shuffle_permutations.py` is also **absent**. Same: locate/rebuild or confirm unused, then commit. **Script rebuilt and committed 2026-07-29 — but the "underlying finding is safe" assessment above turned out to be wrong.** Independent re-verification (both the current-default checkpoint AND a legacy-equivalent `use_energy_feature=False` checkpoint, for a like-for-like check) gives a mean shuffle-PSNR drop of **15.70±0.79 dB and 16.18±0.51 dB respectively** — not the documented 0.301±0.054 dB, and much closer in magnitude to the *stale* ~12.5 dB number this file's Task 1 (see `experiments/todo.md`) says must not be cited. Both new runs pass the exact safeguards the original Task 1 called for (permutation confirmed non-identity; permuted tensor confirmed to reach the decoder, not a discarded copy). Not resolved: whether the original 0.301 dB verification had an undetected bug in one of those two checks (unrecoverable, script never committed), or some other protocol difference explains the gap. See `Main2/newHVK/results/ablation_study/legacy_hvk_controls/eval_controls/shuffle-observables/INTERPRETATION.md` for the full writeup. **Do not cite either number as settled. Written into the manuscript 2026-07-29**: this finding previously existed only in `INTERPRETATION.md`, not in either paper — added a new subsection "A Reproducibility Note on the Shuffle-Observables Ablation" to `supplementary_study.tex` (right after the B1 rerun subsection), disclosing both the 0.301 dB and ~16 dB numbers plainly, unresolved. Compiles clean.
-- [x] **B3** — Narrow `.gitignore` so result CSV/JSON are tracked (`experiments/quantum_contribution/results/` is currently ignored; ignore media only). **Done 2026-07-28.** Root cause was worse than described: the root `.gitignore` (not this dir's own `.gitignore`) blanket-ignored the *entire* `experiments/quantum_contribution/` tree, not just `results/`. Replaced with `experiments/quantum_contribution/**/*.png` and `**/*.npy` only; verified via `git check-ignore` that `.py`/`.json`/`.csv`/`.md` are now trackable and media stays ignored.
+**Main paper (`paper_hvk.tex`):**
+> **Senior-author standing review (2026-08-13):** the main text is otherwise APPROVED — do
+> NOT rewrite abstract, contributions, results, discussion, or conclusion beyond the specific
+> edits below. It is internally consistent and correctly scoped. Touch only what's listed.
+- [ ] **1a-abstract** *(MANDATORY, corresponding-author decision)* — **Remove the
+  phase-transition/change-point material from the ABSTRACT entirely** (~lines 24–25: the two
+  sentences beginning "A companion supplementary study additionally reports an exploratory
+  training-dynamics change-point diagnostic..." through "...whether or not the Hamiltonian term
+  is present."). The abstract must not mention the change-point diagnostic, its negative
+  control, $M_z$, or $R_{ES}$ at all. Keep the existing "interpretable Hamiltonian energy
+  diagnostic" phrase already present elsewhere in the abstract — that one clause is the only
+  Hamiltonian-diagnostic mention the abstract carries.
+- [ ] **1a-intro** — In the Introduction, cut/trim the standalone paragraph that re-summarizes
+  the change-point diagnostic (~line 52, "The companion supplementary document additionally
+  reports an exploratory training-dynamics change-point diagnostic..."). Reduce to at most one
+  sentence, or fold into the existing supplement-pointer sentence.
+- [ ] **1a** — Tighten §5.3 (`sec:phase_transition`, ~line 283) to ~3 sentences: tracked
+  $M_z$/$R_{ES}$; no sharp transition, only drift+fluctuations; on/off control fires on/off
+  alike → **no** transition claim. Drop the size/bond-dim sentence.
+- [ ] **1b** — Merge/cut the redundant Discussion paragraph (~line 309) and the two
+  phase-transition bullets in §Limitations (~lines 355–356) down to one bullet. No dangling `\ref`.
 
-## C. Rewrite for Framing A
-- [x] **C1** — Remove every "existing HVK"; state it is our architecture. **Verified 2026-07-28: zero occurrences in paper_hvk.tex.** Already satisfied — this rewrite must have happened in an earlier pass not reflected in this checklist.
-- [x] **C2** — Add one §II paragraph: why MPS features, why Pauli latent, why grid topology. **Done 2026-07-28.** Added after the pipeline equation in `sec:architecture`: three motivated sub-points (MPS compression vs. exponential amplitude encoding; Pauli-correlator latent vs. full state tomography, tied to the interpretability diagnostics; grid vs. chain topology as the precondition for $D_4$ pooling). Compiles clean.
-- [x] **C3** — Retitle: drop "Physics-Informed" and "Provable Symmetry"; keep hardware. **Verified 2026-07-28: `paper_hvk.tex`'s actual title/pdftitle already reads "Hamiltonian Vision Kernel: Symmetry, Entangling Correlators, and Real-Hardware Replay in Hybrid Quantum Image Reconstruction"** — no "Physics-Informed"/"Provable Symmetry", hardware kept. This was already done, just not reflected here. Found and fixed one stale consequence: `supplementary_study.tex`'s abstract still named the *old* title in prose — corrected to match.
-- [ ] **C4** — Move the hardware pilot to lead Results; make D4 / entanglement / phase "additional diagnostics". **Assessed 2026-07-28, left as-is by judgment call.** Results order is: same-set reconstruction → scope/adaptation → hardware pilot **and four more hardware subsections** (finite-size hardware replay, IonQ, noise/shot tradeoff, hardware anchors) → D4 symmetry → entanglement necessity → phase-transition diagnostics. Hardware already gets ~5 subsections and leads well before D4/entanglement/phase-transition; a literal "hardware absolutely first" reorder would require rewriting several forward/backward-referencing transition sentences in a heavily cross-referenced document for marginal benefit over the current structure. Not marked done — a full reorder was deliberately not attempted; flag if you want it anyway.
-- [x] **C5** — Delete "advantage" / "significantly" wording not backed by a test. **Verified 2026-07-28: no violations found.** Grepped every "advantage"/"significant" occurrence in `paper_hvk.tex` — all are explicit hedged non-claims ("we make no hardware-advantage claim", "does not by itself establish an advantage"), not unbacked positive claims.
-- [x] **C6** — Add the **representativeness paragraph**: argue HVK is a representative instance of the "MPS features + Pauli-correlator latent + physics regularizer" design pattern, so its boundary is the pattern's boundary — not an idiosyncratic failure. *(Biggest rejection risk; do not skip.)* **Done 2026-07-28.** New subsection "HVK as a Representative Instance of a Broader Design Pattern" added to Discussion, right after the held-out ablation result and before the topology-alignment section, making exactly this argument with citations to the MPS-classifier/quantum-feature-map/Hamiltonian-regularizer literature already in the bibliography. Compiles clean, no undefined refs.
+**Supplement (`supplementary_study.tex`, bulk ~lines 478–697):**
+- [ ] **1c** — KEEP `tab:phase_transition_corrected` (16/24) + `tab:phase_transition_onoff`
+  (4/4 vs 4/4). Tighten surrounding prose.
+- [ ] **1d** — KEEP one figure: `critical_temperature_traces.pdf`, recaptioned as
+  interpretability readout (energy/entropy decreasing smoothly; *not* temperature, *not*
+  transition). Rename subsection off "critical temperature." Strip Eq. `critical_epoch` +
+  detected/t_c language.
+- [ ] **1e** — DELETE `critical_temperature_susceptibility.pdf` + its "detected @ t=" text.
+- [ ] **1f** — DELETE size/bond-dim apparatus: `sec:finite_size_phase_transition`,
+  `sec:bond_dimension_phase_transition` + figs (`finite_size_phase_transition.pdf`,
+  `finite_size_mean_susceptibility.pdf`, `bond_dimension_phase_transition.pdf`) + tables
+  (`tab:finite_size_phase_transition`, `tab:bond_dimension_phase_transition`) → one sentence.
+- [ ] **1g** — DELETE hardware/IonQ replays of the detection diagnostic:
+  `sec:checkpoint_hardware_finite_size`, `sec:ionq_simulator`,
+  `sec:checkpoint_hardware_energy_entanglement` + their figs
+  (`checkpoint_hardware_order_parameter.pdf`, `checkpoint_ionq_order_parameter.pdf`,
+  `checkpoint_hardware_energy_entanglement_ratio.pdf`,
+  `checkpoint_ionq_energy_entanglement_ratio.pdf`, `contrastive_order_parameter_curve.pdf`,
+  bond-dim replay figs ~936/963). Real hardware story = the reconstruction pilot (stays).
+- [ ] **1h** — Fix all dangling `\ref`/`\label`/`figures/*.pdf`; `git rm` unused figures.
+  2-pass compile of BOTH docs clean, zero undefined refs.
 
-## D. Submission hygiene
-- [x] **D1** — Keep one `.tex`; delete stray tex/pdf copies. **Compile `paper_hvk.pdf` and proofread the rendered paper.** **Done 2026-07-28.** `.tex` was already singular (one copy each of paper_hvk/supplementary_study/literature_review). Found and `git rm`'d two stale, tracked root-level PDF duplicates (`paper_hvk.pdf`, `supplementary_study.pdf`, both from 2026-07-23, predating the recent restructuring) — canonical copies live in `latex_outputs/paper_latex/`. Compiled both `paper_hvk.tex` and `supplementary_study.tex` cleanly (2-pass, zero errors/undefined refs) and visually proofread the rendered PDF pages around every edit made today (title page, new §II design-rationale paragraph, new representativeness subsection, the corrected topology paragraph) — all render cleanly.
-- [x] **D2** — Write `REPRODUCE.md`: one script per table/figure. **Done 2026-07-28.** Added at repo root: one row per table/figure cluster mapping to its driver script + output directory, for both `paper_hvk.tex` and `supplementary_study.tex`, plus an explicit "Known gaps" section (Table II's 5 unsourced datasets, the zero-shot table's missing artifact, B1/B2's in-progress rebuild) rather than glossing over them.
-- [x] **D3** — Add Table I + topology to `submission_claim_audit.json` (after A1/A2). **Partially done 2026-07-28 — topology added, Table I could not be, honestly.** Added a fully verified `topology_comparison` claim (recomputed 0.15803 dB directly from `Main2/newHVK/results/topology_comparison/real_circuit_confirmation.json`'s raw per-run data — matches the manuscript's 0.16 dB). Table I could NOT be added the same way: direct investigation confirmed A1's original claim is correct as stated — `Main2/newHVK/results/full_dataset_sameset/summary.json` contains only the PneumoniaMNIST row, no matching source exists for the other 5 datasets. Recorded this as a `known_gaps` entry in the JSON instead of fabricating a mapping.
-- [ ] **D4** — *(Supervisor)* confirm TQE APC/waiver, article type, length.
-- [x] **D5** — Check every shared number agrees between `paper_hvk.tex` and `supplementary_study.tex` (held-out 18.80/18.12, leakage audit, hardware figures). **Done 2026-07-28, full pass (upgraded from the earlier spot-check).** Verified: held-out 18.80/18.12 (identical), all 6 values in the Hamiltonian-controls table (identical, only cosmetic wording differs in one column), restricted-pair-diagnostic $R^2=0.9735$ (identical, abstract rounds to 0.974 consistently), $D_4$ equivariance $9.57\times10^{-17}$ (stated consistently within paper_hvk.tex; not restated with a conflicting number in the supplement), phase-transition 16/24 (stated consistently, not contradicted elsewhere), topology 0.16 dB (identical). No mismatches found anywhere checked.
-- [~] **D6** — Make the repo release-ready and mint a citable snapshot (Zenodo DOI); confirm it runs from clean. *(Depends on B1–B3.)* **Feasible part done 2026-07-29** (actual Zenodo DOI minting is out of scope — needs a human with account access). Found and fixed: (1) **CI was actually failing** on this branch's latest push (`gh run list` showed the most recent CI run as `failure`) — root cause was 12 ruff lint errors (unsorted imports in `Main_new2/src/config.py`/`model.py`, 4 files with lines >120 chars in `Main_new/src/training/training.py` and `experiments/quantum_contribution/personal_spin_temperature_image/`). Fixed all 12 (8 auto-fixed, 4 manually wrapped); `ruff check .` now passes clean and the 14-test local suite (`python -m unittest discover -s tests`) passes. (2) **License metadata mismatch**: `pyproject.toml` declared `license = {text = "MIT"}` but the actual committed `LICENSE` file is Apache-2.0 (confirmed by reading the file's own header and copyright footer) — corrected to `Apache-2.0`. (3) Added `CITATION.cff` at repo root (paper title, both authors + affiliations from the paper's own author block, Apache-2.0, repo URL) so a future Zenodo release/GitHub "Cite this repository" button works — DOI field intentionally left unset. **Flagging, not fixing**: `.git` is **1.8 GB** (vs. ~37 MB of actual tracked file content) — large binary results (multi-MB GIFs, `.pt` checkpoints under `main2/newHVK/results/...`) appear duplicated across many commits in history, and the same content is separately tracked twice under both `main2/` and `Main2/` (Windows case-insensitivity artifact noted earlier this session) plus a third flattened copy under `order_parameter/`. Cleaning git history (e.g. `git filter-repo`/BFG) is a destructive, rewrite-history operation on a shared branch — did not attempt without explicit sign-off. Needs a decision.
-- [~] **D7** — Submission packet: cover letter, author-contribution statement, ORCIDs, 2–3 suggested reviewers. **Feasible part done 2026-07-29.** Wrote `latex_outputs/paper_latex/cover_letter.md` (addressed to IEEE TQE, summarizes the 4 headline results from the abstract, states scope fit, references the reproducibility map) and `latex_outputs/paper_latex/author_contributions.md` (CRediT-taxonomy draft, candidate=implementation/analysis/writing, supervisor=conceptualization/supervision/review — flagged explicitly as a starting draft since the true division of labor can only be confirmed by the authors). **Not done, correctly out of scope**: ORCIDs and suggested reviewers both need real human-supplied information (ORCID iDs are personal registered identifiers; suggested reviewers require domain judgment about who is active/appropriate and not conflicted) — left as clearly marked `<!-- FILL -->` placeholders in both files rather than fabricated.
+## §2 — Shorten the supplement HARD (this is a priority, not cleanup)
+`supplementary_study.tex` is ~1049 lines / 30 tables / 23 figures — too bloated to review.
+**Hard target: cut to ≤600 lines, ≤15 tables, ≤10 figures.** §1 already removes a large
+chunk (transition detection); this section finishes the job on everything else.
+- [ ] **2a** — Collapse the shuffle-observables note to ONE paragraph: 0.301 vs ~16 dB
+  unresolved, stated plainly; don't re-derive at length.
+- [ ] **2b** — Merge redundant ablation tables — **one table per distinct finding**, no
+  near-duplicate variants of the same sweep.
+- [ ] **2c** — Cut every figure not referenced by a surviving claim; cut long derivations
+  that a citation or one equation can replace.
+- [ ] **2d** — Merge tiny subsections; a subsection that carries one number becomes a sentence.
+- [ ] **2e** — Every retained item must back a *main-paper* claim or a *stated honest scope
+  limit*. If it does neither, cut it.
+- [ ] **2f** — Report the before/after counts (lines, tables, figures) so the cut is verifiable.
+- [ ] **2g** — After cuts, re-run the number cross-check (see §4c).
 
-## E. Fix the bibliography (`literature_review.tex` — verified against primary sources)
-- [x] **E1** — `Chakraborty2018`: change year **2018 → 2022** (IJIT 14(1), 475–489). **Done 2026-07-28.**
-- [x] **E2** — `West2024`: add the erratum **PRX Quantum 6, 020902 (2025)** + Comment (arXiv:2504.16950). **Done 2026-07-28.** Verified comment authorship via arXiv:2504.16950 — it's Z. Xiao and T. Li, not one of the original paper's authors.
-- [x] **E3** — `Larocca2025`: add vol/pages — **Nat. Rev. Phys. 7, 174–189 (2025)**. **Done 2026-07-28**, full author list added too.
-- [x] **E4** — `QCAE2023`: add authors (Wu, Fu, Zhu, Zhang, Xie, Li) + **Phys. Rev. A 109, 032623 (2024)**. **Done 2026-07-28**, verified against arXiv:2307.08446.
-- [x] **E5** — `QuantumImageRepClassification2025`: add authors (Parigi, Khosrojerdi, Caruso, Banchi) + **AVS Quantum Sci. 8(1), 013801 (2026)**. **Done 2026-07-28**, verified against arXiv:2507.22039.
-- [x] **E6** — `Guala2023`: **authors are wrong/fabricated** — replace with Guala, Zhang, Cruz, Riofrío, Klepsch, Arrazola. (vol/page 13, 4427 are correct.) **Done 2026-07-28**, verified against arXiv:2209.11058.
-- [x] **E7** — Add author names to the ~10 author-less entries. **Done 2026-07-29.** `QIPSystematicReview2025` resolved via the CrossRef API (ScienceDirect/ResearchGate/Semantic Scholar were all blocked or rate-limited across two sessions) — Farooq, Singh, and Kumar. Also caught and fixed a **wrong venue**: the entry said "Information Fusion" but the ScienceDirect PII prefix (`S1574013725`) maps to ISSN 1574-0137, which is *Computer Science Review*, not Information Fusion — corrected.
-- [x] **E8** — **Audit every remaining author list.** **Done 2026-07-29.** All 66 bibliography entries now checked against primary sources (13 earlier today + 52 by a dispatched background agent + QIPSystematicReview2025 above). **Found a second fabricated/misattributed citation**, confirming the Guala2023 case wasn't isolated: `West2025` was attributed to "M. West, M. Sevior, and M. Usman," but arXiv:2403.15031 (the actual paper at that ID, "Image Classification with Rotation-Invariant Variational Quantum Circuits") is by San Sebastian, Cañizo, and Orús — completely different authors. Fixed, spot-verified independently against the arXiv page myself (not just trusting the agent's report). 9 other entries also fixed: Chinni2023 (another fabricated author, "G. Chinni et al." → the real Castelano/Cunha/Luiz/de Souza Prado/Fanchini), Peruzzo2014 (wrong title), Stoudenmire2016 (incomplete title), Schatzki2024 (missing co-author), Han2018 (wrong initial), HuangExpGAN2020 (missing venue entirely), Craps2024 (author name split wrong), Shi2022 (wrong year), Cunningham2024 (missing vol/article number). 42 entries verified already correct, untouched. Full detail: `literature_review.tex` bibliography, compiled 2-pass clean.
-- [ ] **E9** — Confirm whether the lit-review is even part of the TQE submission; if not, these are lower priority than A–D. **Not resolved — needs the supervisor/project-owner.**
+## §3 — Reframe remaining diagnostics to match the thesis
+- [ ] **3a** — **D4 symmetry:** present as "exactly equivariant *by construction* (error
+  ~1e-16)" — a design-correctness check, not a quantum capability. Remove any "provable
+  symmetry" / advantage framing.
+- [ ] **3b** — **Entanglement necessity** (R²=0.9735 vs ≤0.02 controls): keep as the lead
+  "capability classical maps lack," on the *constructed nonlocal* target; state plainly it
+  does not transfer to natural-image reconstruction (that's the honest scope).
+- [ ] **3c** — **$R_{ES}$ trace** (from §1d): position as the interpretable-Hamiltonian
+  capability. One clean figure, honest caption.
+- [ ] **3d** — Confirm "competitive" is always TOST-backed (±1 dB), never "beats"; confirm
+  held-out CIFAR classical-wins result stays visible, not buried.
+
+## §4 — Consistency & hygiene
+- [ ] **4a** — Author line: drop "Dr." prefixes; names + affiliations final.
+- [ ] **4b** — Grep both docs for stray "advantage" / "significant" not backed by a test.
+- [ ] **4c** — Full number cross-check main ↔ supp (held-out 18.80/18.12, leakage
+  R²=0.9735, D4 9.57e-17, hardware 25.90–31.52 dB, TOST −0.68 dB / ±1 dB). Zero mismatches.
+- [ ] **4d** — Clean 2-pass compile of BOTH docs; proofread rendered pages around every
+  §1–§3 edit. Zero errors, zero undefined refs.
+- [ ] **4e** — Fold the fixed `literature_review.tex` references into the paper's intro/
+  discussion where cited (lit-review is *not* submitted standalone).
+
+## §5 — Reproducibility & repo release
+- [ ] **5a** — `REPRODUCE.md` + `results-core-map.md`: prune rows for deleted §1 results;
+  confirm every surviving table/figure maps to a script + artifact.
+- [ ] **5b** — Update `submission_claim_audit.json`: remove disproven transition claims,
+  keep verified ones.
+- [ ] **5c** — CI green on final branch (`ruff` clean, tests pass).
+- [ ] **5d** — *(Decision needed)* `.git` is 1.8 GB (duplicated binaries across `main2/`
+  + `Main2/` + history). Decide: leave as-is, or history-rewrite (BFG/filter-repo) before
+  the public release. Destructive — needs sign-off.
+- [ ] **5e** — *(Supervisor)* Mint Zenodo DOI from a tagged release; add DOI to `CITATION.cff`.
+
+## §6 — Submission packet
+- [ ] **6a** — `cover_letter.md`: confirm addressed to TQE, note arXiv plan, refresh the
+  headline results (now transition-free).
+- [ ] **6b** — `author_contributions.md`: authors confirm CRediT split (draft exists).
+- [ ] **6c** — *(Supervisor)* ORCID iDs for both authors → fill `<!-- FILL -->`.
+- [ ] **6d** — *(Supervisor)* 2–3 suggested reviewers (active, appropriate, non-conflicted).
+- [ ] **6e** — *(Supervisor)* Confirm TQE article type + length limit + free/non-OA route.
+- [ ] **6f** — Assemble final PDF(s) + source + REPRODUCE + cover letter into the submission bundle.
+- [ ] **6g** — Post preprint to arXiv (now, or on acceptance — group's call).
 
 ## Guardrails — do NOT undo
-- [x] Keep `cifar_nonlocal_advantage` **out** of the paper (label leak); no "quantum advantage". **Verified compliant 2026-07-28** — zero occurrences in `paper_hvk.tex`/`supplementary_study.tex`; code stays gated behind an opt-in flag in `run_newhvk_suite.py`.
-- [x] Keep the phase-transition claim at **16/24**; do not re-inflate. **Verified compliant 2026-07-29** — `paper_hvk.tex` still caveats at 16/24, unchanged.
-- [!] **The on/off control this guardrail asks for has now been built and run to completion (2026-07-29), and it FAILED.** `Main2/newHVK/run_phase_transition_onoff_control.py` -> `Main2/newHVK/results/phase_transition_onoff_control/summary.json`: full 2-image x 2-seed run at the real 200-epoch protocol. **All 4 Hamiltonian-on runs detected a change point; all 4 Hamiltonian-off (classical-replacement, energy identically 0) runs ALSO detected one.** `fires_only_when_hamiltonian_on: false`. This is exactly the failure mode `experiments/todo.md` Task 5 warned about ("a median+2sigma threshold on a tiny signal is a threshold artifact, not physics") and its own instruction is explicit: "if it fails that control, delete it." I have NOT deleted or trimmed the paper's phase-transition sections (Sections IV-J through IV-N, a substantial fraction of the Results) — that is a large structural cut affecting several pages, not a fix I'll make unilaterally. This needs a decision: add this negative-control finding as an explicit further caveat (keep the material, be more honest about it), or trim/remove per the guardrail's literal instruction. Flagging, not resolving.
-##
+- [x] `cifar_nonlocal_advantage` stays OUT (label leak); no "quantum advantage."
+- [x] Transition detection: **cut** (§1), not re-inflated. Don't re-add it as a claim.
+- [x] Held-out CIFAR: classical wins (18.80 vs 18.12) — keep honest, don't hide.
+- [x] "Competitive" = TOST at ±1 dB only, never "beats."
