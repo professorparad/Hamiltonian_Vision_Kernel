@@ -34,6 +34,27 @@ sits awkwardly next to "does not exceed classical controls."
 - `literature_review.tex:227` — Cotler "match or **beat** it": about a cited
   dequantization theorem, not about HVK.
 
-**Status:** manuscript content now clean of the "beats" wrinkle. Needs a 2-pass
-recompile of `paper_hvk.tex` + refresh of `submission_bundle/pdf/paper_hvk.pdf`
-before the bundle is final (student's compile step).
+**Status:** manuscript content now clean of the "beats" wrinkle.
+
+**PDFs regenerated (supervisor did this):** recompiled both docs and refreshed the
+bundle — `latex_outputs/paper_latex/{paper_hvk,supplementary_study}.pdf` and the
+copies in `submission_bundle/pdf/`. Verified via `pdftotext` that the paper PDF now
+renders "substantially outperforms a random-VQC …" (no "beats"). Both compiles were
+clean (2 passes, zero undefined refs).
+
+---
+
+## 2026-08-20 — New: `latex_outputs/compile_tex.py`
+
+Added a small module so PDF regeneration is one call, not a manual fight with
+MiKTeX:
+
+    from compile_tex import compile_tex
+    compile_tex("paper_latex/paper_hvk.tex")   # -> Path to the .pdf
+
+It encapsulates the three MiKTeX traps we hit today: (1) auto-install prompts hang
+under `nonstopmode`, (2) the filename DB is stale right after `mpm --install` (needs
+`initexmf --update-fndb`), (3) `latexmk` caches a failed run and refuses to rebuild.
+On a missing `.sty` it installs the providing package, refreshes the fndb, and
+retries once. **Rule for the student: after ANY LaTeX edit, run this to regenerate
+the PDF and re-copy into `submission_bundle/pdf/` before the bundle is called final.**
