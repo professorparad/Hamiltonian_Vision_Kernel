@@ -41,8 +41,10 @@ Senior-author critical-read pass; three fixes:
    $\pi(p)$, and the reconstruction loss $\mathcal{L}(\theta)=\sum_p\|x_p-\hat{x}_p\|^2
    + \lambda E(\Phi(x_p))$ (Eq. objective). Notation $\Phi$ is consistent with the D4
    section. Raises technical polish; the loss was previously only implicit.
-Recompiled: 23 pp, 0 undefined citations. (Considered but deferred to the student's
-pass: SSIM precision normalization, negative-$R^2$ footnote.)
+Recompiled: 24 pp, 0 undefined citations (the added problem-statement paragraph +
+display equation restored the page the Discussion trim had reclaimed). (Considered
+but deferred to the student's pass: SSIM precision normalization, negative-$R^2$
+footnote.)
 
 ### Assigned to student: re-prepare results-code map for the Springer manuscript
 Added task block F to `overleaf_docs/todo.md`:
