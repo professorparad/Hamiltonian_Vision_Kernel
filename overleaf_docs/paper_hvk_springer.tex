@@ -4,6 +4,7 @@
 %  sn-jnl.cls already provides hyperref, natbib, url and the caption setup;
 %  do not load those again or you will get an option clash.
 \usepackage{graphicx}
+\graphicspath{{assets/}}% figures live in assets/figures/; includes stay figures/...
 \usepackage{amsmath,amssymb,amsfonts,bm}
 \usepackage{booktabs}
 \usepackage{array}
@@ -46,12 +47,11 @@ equivariant to the eight symmetries of the square. The contribution is this
 specific assembly rather than any ingredient in isolation. Across six real image
 datasets, per-image-trained HVK2D models reconstruct with peak signal-to-noise
 ratio (PSNR) between 25.8 and 41.6 decibels. On a resource-matched, multi-seed
-held-out comparison using the CIFAR-10 image dataset, the tested HVK2D map does
-not exceed simple local-observable or raw-linear classical controls (18.12
-against 18.80 decibels); a pre-declared two one-sided tests (TOST) equivalence
-procedure at a one-decibel margin establishes that the two are competitive
-rather than merely indistinguishable, while HVK2D substantially outperforms
-random-circuit and classical-random-feature controls. Five fitted checkpoints
+held-out comparison using the CIFAR-10 image dataset, a pre-declared two
+one-sided tests (TOST) equivalence procedure at a one-decibel margin establishes
+that HVK2D is statistically \emph{competitive} with resource-matched
+local-observable and raw-linear classical controls, and it substantially
+outperforms random-circuit and classical-random-feature controls. Five fitted checkpoints
 are replayed on superconducting quantum hardware without retraining and decoded
 directly from device-measured observables, reaching 25.90 to 31.52 decibels. The
 capabilities that a purely classical reconstruction pipeline does not natively
@@ -161,9 +161,9 @@ isolation --- each of which individually recurs throughout this literature
   \item \textbf{Competitive with resource-matched classical baselines.} A
         pre-declared TOST equivalence test on held-out CIFAR-10 shows HVK2D is
         statistically equivalent, within a $\pm1$~dB margin, to six of eight
-        resource-matched classical/ablated controls, while still beating the two
-        weakest controls by a wide margin
-        (Section~\ref{sec:ablation_relationship}).
+        resource-matched classical/ablated controls, and substantially
+        outperforms the two null controls (strict classical random features and
+        a random-VQC) (Section~\ref{sec:ablation_relationship}).
   \item \textbf{Hardware pilot.} Five fitted checkpoints are replayed on IBM
         hardware without retraining and decoded from hardware-measured
         observables (Section~\ref{sec:hardware_pilot}), strengthened by a
@@ -399,7 +399,7 @@ pre-declared and data-independent sense, to call the two \emph{competitive}
 rather than merely ``not shown to differ'': six of eight tested controls are
 statistically equivalent to HVK2D within that margin, while the two weakest
 controls (strict classical random features, random-VQC) are correctly excluded
-because HVK2D outperforms them by a wide, practically meaningful margin. We
+because HVK2D substantially outperforms them. We
 report this as a rigorous complement: it delineates the tested boundary of the
 positive entanglement and symmetry results reported below and records the
 provenance checks that prevented exploratory artifacts from becoming claims. A

@@ -5,6 +5,89 @@ handed over. Each entry: what, where, why. Newest at top.
 
 ---
 
+## 2026-08-27 — `overleaf_docs/` layout: sources at root, everything else in `assets/`
+
+**Change:** in `overleaf_docs/`, only source files stay at the root
+(`*.tex`, `sn-bibliography.bib`, `sn-jnl.cls`, `sn-basic.bst`, `todo.md`).
+Figures and all compiled/aux outputs now live under **`overleaf_docs/assets/`**:
+`assets/figures/*.pdf` and `assets/paper_hvk_springer.{pdf,aux,bbl,blg,log,...}`.
+
+**How the figures still resolve:** added `\graphicspath{{assets/}}` to the
+preamble of BOTH `paper_hvk_springer.tex` and `supplementary_study.tex`. The
+`\includegraphics{figures/...}` calls are UNCHANGED — LaTeX prepends the graphics
+path, so `figures/x.pdf` resolves to `assets/figures/x.pdf`. Do not rewrite the
+include paths.
+
+**BUILD RULE (important — do not "fix" this):** compile from the `overleaf_docs/`
+**root**, not with `-outdir=assets`. bibtex must run where `sn-basic.bst` and
+`sn-bibliography.bib` live (the root); forcing `-outdir=assets` makes bibtex fail
+to find them → 122 undefined citations. Correct workflow:
+
+    cd overleaf_docs
+    python ../latex_outputs/compile_tex.py paper_hvk_springer.tex   # builds in root
+    # then move outputs into assets/:
+    for e in pdf aux bbl blg fdb_latexmk fls log out; do mv -f paper_hvk_springer.$e assets/ 2>/dev/null; done
+
+Verified: paper compiles 24 pp, **0 undefined citations**, figures found via the
+graphics path. (On Overleaf this layout also works as-is — Overleaf searches
+subfolders and honors `\graphicspath`.)
+
+---
+
+## 2026-08-27 — Springer version: positive-framing pass on the held-out result
+
+**Context:** your `overleaf_docs/paper_hvk_springer.tex` (QMI / sn-jnl, sn-basic,
+real `.bib`) is a clean job and is now the canonical main manuscript — 24 pp,
+0 undefined citations. I copied the 7 figures into `overleaf_docs/figures/` so it
+compiles locally (Overleaf already had them). Only edits below are content.
+
+**Rule enforced (the locked framing):** we present HVK by what it *is and does*,
+never by what it fails to do. The held-out CIFAR result is a **positive
+equivalence finding (TOST, ±1 dB)**, not a "classical wins / does not exceed"
+concession. Register discipline: *competitive* ⇒ resource-matched baselines (TOST
+only); *outperforms / substantially outperforms* ⇒ the two **null controls**
+(random-VQC, classical-random-features) only; **never "beats," never "by a wide
+margin."** Exact held-out numbers (18.12/18.80, −0.68 dB) live in the **body/
+supplement**, not the abstract.
+
+**Files touched:** `overleaf_docs/paper_hvk_springer.tex` (3 edits).
+
+1. **Abstract (was ~line 49).** Removed the deficit-first opener "the tested HVK2D
+   map does not exceed … classical controls (18.12 against 18.80 decibels) …
+   rather than merely indistinguishable." Now leads positive: "a pre-declared
+   TOST equivalence procedure … establishes that HVK2D is statistically
+   *competitive* with resource-matched … controls, and it substantially
+   outperforms random-circuit and classical-random-feature controls." The exact
+   numbers were dropped from the abstract (they stay in §5.3). Abstract = 242
+   words, still inside QMI's 150–250.
+
+2. **Contribution 3 (was ~line 164).** "while still **beating** the two weakest
+   controls **by a wide margin**" → "and substantially **outperforms** the two
+   null controls (strict classical random features and a random-VQC)." Kills the
+   banned verb; keeps the honest six-of-eight TOST statement intact.
+
+3. **§5.3 ablation-relationship (was ~line 402).** "HVK2D outperforms them **by a
+   wide, practically meaningful margin**" → "HVK2D **substantially outperforms
+   them**." Same null-control brag removed; the −0.68 dB, CI, Wilcoxon p, and the
+   "not shown to outperform … competitive via TOST" body sentences are LEFT as-is
+   (honesty-as-scope belongs in the body).
+
+**Deliberately LEFT as-is (correct register, do not touch):** §5.3 body
+"the tested HVK map is informative but is not shown to outperform the simpler
+maps" (honest, immediately pivots to the positive TOST finding); "single-image
+pilot cannot distinguish …" (scope); "cannot be recovered/audited" (provenance);
+the nonlocal "raw or local features cannot represent" (that's the *positive*
+argument for the entangling channel). "We make no claim of quantum advantage"
+stays — it's a disciplined boundary on the claim, not a deficit.
+
+**PDF regenerated:** `overleaf_docs/paper_hvk_springer.pdf` (24 pp, 0 undefined
+citations) via `latex_outputs/compile_tex.py`.
+
+**Status:** main manuscript now clean of every deficit-first / "beats" wrinkle in
+the Springer version. Not committed — supervisor review pending.
+
+---
+
 ## 2026-08-20 — Abstract & §held-out: verb discipline on "beats"
 
 **Rule enforced:** never say HVK "beats" anything. Use *competitive* (TOST, ±1 dB)
