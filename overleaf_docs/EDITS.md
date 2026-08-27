@@ -25,6 +25,20 @@ undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ## 2026-08-27
 
+### Assigned to student: re-prepare results-code map for the Springer manuscript
+Added task block F to `overleaf_docs/todo.md`:
+- **F1** — produce `overleaf_docs/RESULTS_MAP.md` re-targeting every row from the old
+  `paper_hvk.tex` §IV/§V labels to the current Springer section/table/figure IDs.
+  (Do not overwrite `TODO/results-core-map.md`.)
+- **F2** — real-hardware cross-check against the IBM Quantum account (only the student
+  has access): confirm each job ID exists, backend, shots, PSNR, and record the
+  instance/CRN + job IDs in the map. Supervisor verified all headline NUMBERS already
+  survive unchanged in the Springer paper (no drift), so this is re-mapping +
+  HW-provenance, not a re-run.
+- **F3** — close R10 (`contrastive+no-energy`, 33.33 dB, no artifact).
+- Reference punch-list items A1/A2/B1/B2 in that file marked DONE (verified by
+  supervisor; no bib edits needed).
+
 ### Cover letter re-targeted to QMI (`cover_letter.tex`)
 - Addressee "Editor-in-Chief, IEEE TQE" -> "Editor-in-Chief, *Quantum Machine
   Intelligence* (Springer)"; "Article in IEEE TQE" -> "research article in QMI".
