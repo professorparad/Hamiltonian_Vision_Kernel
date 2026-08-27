@@ -25,6 +25,25 @@ undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ## 2026-08-27
 
+### Main paper: Tier-1 quality enhancements (`paper_hvk_springer.tex`)
+Senior-author critical-read pass; three fixes:
+1. **Data-availability contradiction fixed.** The Statements block still said the
+   audit covers "the held-out comparison the tested HVK map **loses**" --- a
+   deficit-register phrase that survived the framing pass. Now: "the
+   resource-matched held-out comparison, on which the tested HVK map is competitive
+   with rather than superior to the classical controls." Matches the body register.
+2. **Author-contributions formatting fixed.** Was a broken `description` list with an
+   empty `\item[Author contributions]` label followed by dangling name items. Now one
+   clean CRediT paragraph (both authors), + "Both authors reviewed and approved."
+3. **Formal problem statement added to Sec. 2.** New `\paragraph{Problem statement.}`
+   with an explicit objective: patches $x_p$, MPS features, the Pauli-correlator map
+   $\Phi(x_p)\in\mathbb{R}^d$ ($d=27$/$19$), decoder $D_\theta$ with Fourier encoding
+   $\pi(p)$, and the reconstruction loss $\mathcal{L}(\theta)=\sum_p\|x_p-\hat{x}_p\|^2
+   + \lambda E(\Phi(x_p))$ (Eq. objective). Notation $\Phi$ is consistent with the D4
+   section. Raises technical polish; the loss was previously only implicit.
+Recompiled: 23 pp, 0 undefined citations. (Considered but deferred to the student's
+pass: SSIM precision normalization, negative-$R^2$ footnote.)
+
 ### Assigned to student: re-prepare results-code map for the Springer manuscript
 Added task block F to `overleaf_docs/todo.md`:
 - **F1** — produce `overleaf_docs/RESULTS_MAP.md` re-targeting every row from the old

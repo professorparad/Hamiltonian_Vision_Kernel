@@ -207,7 +207,25 @@ classical multi-layer perceptron (MLP). A learnable graph-Hamiltonian energy ter
 regularizes training; unlike parameterized Hamiltonian learning approaches that
 treat the Hamiltonian as the primary learned object \citep{Shi2022}, HVK's energy
 term is a diagnostic regularizer alongside a separate reconstruction objective.
-The shared pipeline is
+
+\paragraph{Problem statement.}
+Given an image $x$ partitioned into non-overlapping patches
+$\{x_p\}_{p=1}^{P}$, HVK learns a per-patch reconstruction map. Each patch is
+compressed to a classical MPS feature vector $\phi_{\mathrm{MPS}}(x_p)$, a learned
+linear layer sets the VQC rotation angles, and measuring a fixed set of Pauli
+observables yields the correlator feature map
+$\Phi(x_p)\in\mathbb{R}^{d}$ ($d=27$ for HVK1D, $19$ for HVK2D). A classical
+decoder $D_\theta$ maps $\Phi(x_p)$, together with a Fourier positional encoding
+$\pi(p)$, back to a reconstructed patch $\hat{x}_p=D_\theta\!\big(\Phi(x_p),\pi(p)\big)$.
+Training minimizes the pixel-reconstruction loss with the graph-Hamiltonian energy
+term $E(\cdot)$ as an auxiliary regularizer,
+\begin{equation}
+  \label{eq:objective}
+  \mathcal{L}(\theta)=\sum_{p=1}^{P}\big\|x_p-\hat{x}_p\big\|_2^{2}
+  \;+\;\lambda\,E\big(\Phi(x_p)\big),
+\end{equation}
+where $\lambda$ weights the diagnostic energy term (Section~\ref{sec:regularizer_inert}
+reports its effect). The shared pipeline is
 \begin{equation}
 \begin{aligned}
 \text{Image}
@@ -1027,16 +1045,21 @@ in this work.
         supporting this study are included in the accompanying repository. The
         file \texttt{project\_artifacts/submission\_claim\_audit.json} maps each
         numerical headline claim to its retained source artifact --- including
-        the held-out comparison the tested HVK map loses and the withdrawn
-        training-dynamics material --- and automated tests verify those mappings.
+        the resource-matched held-out comparison, on which the tested HVK map is
+        competitive with rather than superior to the classical controls, and the
+        withdrawn training-dynamics material --- and automated tests verify those
+        mappings.
         IBM Quantum job identifiers and reconstructed outputs are retained; as
         disclosed in the supplement, the raw account-usage service response was
         not serialized, so the reported quota change is an execution-log record
         rather than a repository-recomputable measurement.
 
-  \item[Author contributions] 
-  \item[\textbf{Sparsho Chakraborty} :]Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing -- original draft, Visualization.
-  \item[\textbf{Siddhartha Patra} :] Conceptualization, Supervision, Writing -- review \& editing, Resources.
+  \item[Author contributions.] \textbf{Sparsho Chakraborty:}
+        Conceptualization, Methodology, Software, Validation, Formal analysis,
+        Investigation, Data curation, Writing -- original draft, Visualization.
+        \textbf{Siddhartha Patra:} Conceptualization, Supervision, Writing --
+        review \& editing, Resources. Both authors reviewed and approved the
+        final manuscript.
 \end{description}
 
 % ============================== REFERENCES ==================================
