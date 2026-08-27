@@ -688,9 +688,16 @@ $17.74$~dB improvement over a no-entanglement control ($R^2=0.019$) and
 $18.52$~dB over random-VQC latents ($R^2=-0.173$); freezing the quantum circuit
 (features fixed, only readout trained) still reaches $R^2=0.853$, while a
 parameter-matched classical control ($R^2=-0.030$) and a frozen-classical control
-($R^2=-0.903$) fail outright. This is evidence that an entangling
-pair-observable channel is \emph{representationally necessary within the tested
-feature class and fixed linear-readout protocol} to fit this target.
+($R^2=-0.903$) fail outright. The mechanism is explicit under the fixed linear
+readout: a linear map of single-patch expectations $\{\langle O_i\rangle\}$ cannot
+form the cross-term $\langle O_i\rangle\langle O_j\rangle$ that the target depends
+on, whereas the entangling measurement supplies the joint correlator
+$\langle O_iO_j\rangle$ directly as a feature. This is therefore evidence that an
+entangling pair-observable channel is \emph{representationally necessary within
+the tested feature class and fixed linear-readout protocol} to fit this target; a
+sufficiently nonlinear classical readout could in principle recover the same
+cross-terms, which is why we scope the claim to the linear protocol rather than to
+classical models in general.
 
 \begin{table}[t]
   \centering
@@ -755,7 +762,11 @@ observable-sector controls and follow-up experiments, in the Supplementary
 Material). The legacy objective adds a signed mean energy to the reconstruction
 loss; because learned energy can go negative, the optimizer can lower total loss
 by driving energy down without improving reconstruction, and removing the term
-improves PSNR from $38.63$ to $44.56$~dB. A contrastive variant --- assigning
+improves PSNR from $38.63$ to $44.56$~dB. Structurally, the learned couplings
+enter only the energy term and never reach the decoder, so the Hamiltonian is a
+\emph{read-only} observable of the trained representation rather than an inductive
+bias on reconstruction; this is the precise sense in which we call it a diagnostic.
+A contrastive variant --- assigning
 lower energy to correct feature--position pairs than to shuffled pairs ---
 improves over the signed-energy baseline ($42.92$~dB) but remains below its own
 no-energy-loss counterpart ($44.56$~dB). We read this as a case where the
@@ -816,7 +827,14 @@ represent under a fixed linear readout, and that is precisely the regime in whic
 HVK's entangling channel separates. Natural image patches, at the resolution and
 patch size used in ordinary reconstruction, are a different regime ---
 low-entanglement, locally structured data where a linear or shallow classical
-readout is already close to sufficient. The companion supplementary study's
+readout is already close to sufficient. We stress that this is not a statement
+about the circuit's entangling power: the ansatz uses strongly-entangling layers
+and does generate an entangled state, but what the decoder consumes is the
+\emph{measured pair-observable channel}, and whether that channel carries
+task-relevant information is a property of the target, not of the circuit's
+entanglement per se. On these natural-image targets the pair observables add
+little beyond the local ones; on the constructed nonlocal target
+(Section~\ref{sec:entanglement_necessity}) they are necessary. The companion supplementary study's
 held-out comparisons (Section~\ref{sec:ablation_relationship}) characterize
 exactly this second regime; together, the results delineate where the tested
 entangling representation does and does not yield a measurable benefit.

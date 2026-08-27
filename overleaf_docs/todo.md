@@ -35,3 +35,44 @@ re-run of any simulation.
       (Everything else in results-core-map.md is already `backed`.)
 
   F4. When F1–F3 are done, note completion at the top of overleaf_docs/EDITS.md.
+
+---
+
+G. PHYSICS REVIEW — data-dependent items  (assigned to student, 2026-08-27)
+
+Context: supervisor did a full high-effort physics read of both manuscripts + the
+.bib. Six text/reference fixes were applied directly (order-parameter rename,
+R_ES-tracks-H clause, linear-readout mechanism, entangling-ansatz-vs-pair-observable
+clause, Hamiltonian-is-read-only in main text, and the Chakraborty2018 author-name
+correction — see EDITS.md). The three items below need code/data/citation-manager
+access the supervisor does not have, so they are yours:
+
+  G1. Fei2021 citation looks like a MISCITATION. The .bib cites "S.-M. Fei,
+      Physical Science & Biophysics Journal 5(1):000174 (2021)" for tensor-network
+      compressed sensing. The canonical, peer-reviewed paper on that exact topic is
+      Ran, Sun, Fei, Su, Lewenstein, "Tensor network compressed sensing with
+      unsupervised machine learning", Phys. Rev. Research 2, 033293 (2020)
+      (arXiv:1907.10290). Confirm which you actually meant to cite; if the intended
+      reference is the TNCS paper, replace the entry with the PRResearch one (much
+      stronger venue). Do NOT keep the "Physical Science & Biophysics Journal"
+      version unless you can confirm it is a real, intended, peer-reviewed source.
+
+  G2. Topology real-circuit absolute PSNR is very low (11.73 / 11.57 dB;
+      supplementary_study.tex Table tab:topology_real_circuit, 90-step budget). That
+      sits close to the random-latent floor (~11-15 dB elsewhere in the study). The
+      HVK1D-minus-HVK2D DIFFERENCE (0.16 dB) is fine and the reduced budget is
+      disclosed, but add ONE sentence stating whether 11.7 dB is meaningfully above
+      the random-VQC control AT THIS SAME 90-step budget (check the artifact / run a
+      matched random-VQC row if needed). If it is not clearly above the floor, say so
+      — otherwise a referee will ask whether the run simply did not train.
+
+  G3. The MPS bond-dimension NON-MONOTONICITY (chi=1,2 outperform chi=4 at 200
+      steps; supplementary_study.tex §Scaling, Fig capacity_scaling_sweeps) is
+      currently single-seed and reported only as a "directional diagnostic." It is
+      physically interesting: if real, it says the reconstruction target is
+      low-entanglement and chi=4 over-parameterizes (consistent with the
+      dequantization framing). Decide: either (a) confirm it survives multiple seeds
+      and add one interpretive sentence, or (b) keep it explicitly single-seed and
+      make no physical claim. Do not leave it ambiguous.
+
+  G4. When G1-G3 are done, note completion at the top of overleaf_docs/EDITS.md.

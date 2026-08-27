@@ -25,6 +25,33 @@ undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ## 2026-08-27
 
+### Physics review pass (both manuscripts + .bib) — 6 fixes applied, 3 sent to student
+Supervisor high-effort read. Applied directly (text/reference only, no numbers change):
+- **A1 (supplement):** renamed the "global order parameter" $M_z(t)$ to "global
+  magnetization summary" and added a sentence stating we avoid "order parameter"
+  since there is no symmetry breaking/transition. Fixes a term-of-art contradiction
+  with the paper's own no-transition proof.
+- **A2 (supplement):** added that $S$ (MPS bond entropy) is constant in $t$, so
+  $R_{ES}(t)$ tracks the learned energy $H(t)$ up to a fixed scale — pre-empts
+  "why divide by a constant?".
+- **A3 (main, entanglement-necessity):** added the explicit mechanism — a linear
+  readout of $\{\langle O_i\rangle\}$ cannot form $\langle O_i\rangle\langle O_j\rangle$,
+  while the entangling measurement supplies $\langle O_iO_j\rangle$ directly; scoped
+  the claim to the linear protocol (a nonlinear classical readout could recover it).
+- **A4 (main, §dequant):** added a clause distinguishing the circuit's entangling
+  power (strongly-entangling ansatz, genuinely entangled) from whether the measured
+  pair-observable channel carries task-relevant info (a property of the target).
+- **A5 (main, §regularizer_inert):** promoted from supplement — the learned couplings
+  enter only the energy term and never reach the decoder, so the Hamiltonian is a
+  read-only observable, not an inductive bias; that is the precise sense of "diagnostic."
+- **B1 (.bib):** corrected Chakraborty2018 author names to the verified
+  Sanjay Chakraborty, Sudhindu Bikash Mandal, Soharab Hossain Shaikh (were garbled).
+  Verified against the Springer record; bbl now renders "Mandal SB, Shaikh SH".
+Both recompiled: main 24 pp, supplement 26 pp, 0 undefined citations.
+Assigned to student as todo.md block G (need code/data/citation access): **G1** Fei2021
+likely-miscitation (→ Ran et al. PRResearch 2, 033293, 2020?), **G2** topology 11.7 dB
+vs random floor, **G3** bond-dim non-monotonicity (single-seed → confirm or scope).
+
 ### Main paper: Tier-1 quality enhancements (`paper_hvk_springer.tex`)
 Senior-author critical-read pass; three fixes:
 1. **Data-availability contradiction fixed.** The Statements block still said the
