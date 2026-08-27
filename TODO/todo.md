@@ -6,7 +6,11 @@ baselines (TOST equivalence at ±1 dB — *not* "beats"), runs on **real hardwar
 adds **capabilities** classical maps don't (entanglement-sensitive channel, interpretable
 Hamiltonian diagnostics). **No quantum advantage claimed.**
 
-**Venue:** IEEE TQE, traditional (non-OA) route = free to publish + arXiv preprint = free to read.
+**Venue:** Quantum Machine Intelligence (Springer, journal 42484). Subscription route
+= free to publish (no APC; OA optional ~EUR 2,890 but not required) + arXiv preprint
+= free to read. NOTE: IEEE TQE is NO LONGER the target — since Jan 2024 it is gold-OA
+with a mandatory ~USD 1,995 APC, so there is no free route there. Manuscript is
+formatted for QMI (`overleaf_docs/paper_hvk_springer.tex`, sn-jnl class).
 
 **No new simulations.** Science is locked (`results-core-map.md` — all rows backed except
 R10's one disclosed row). Everything below is *cut / reframe / verify / package.*
@@ -116,12 +120,14 @@ chunk (transition detection); this section finishes the job on everything else.
 - [ ] **5e** — *(Supervisor)* Mint Zenodo DOI from a tagged release; add DOI to `CITATION.cff`.
 
 ## §6 — Submission packet
-- [ ] **6a** — `cover_letter.md`: confirm addressed to TQE, note arXiv plan, refresh the
+- [ ] **6a** — `cover_letter.tex` (in `overleaf_docs/`): re-target to Quantum Machine
+  Intelligence (currently may still address TQE), note arXiv plan, refresh the
   headline results (now transition-free).
 - [ ] **6b** — `author_contributions.md`: authors confirm CRediT split (draft exists).
 - [ ] **6c** — *(Supervisor)* ORCID iDs for both authors → fill `<!-- FILL -->`.
 - [ ] **6d** — *(Supervisor)* 2–3 suggested reviewers (active, appropriate, non-conflicted).
-- [ ] **6e** — *(Supervisor)* Confirm TQE article type + length limit + free/non-OA route.
+- [ ] **6e** — *(Supervisor)* Confirm QMI article type + length limit + subscription
+  (free-to-publish) route. Abstract must be 150-250 words (currently 242, OK).
 - [ ] **6f** — Assemble final PDF(s) + source + REPRODUCE + cover letter into the submission bundle.
 - [ ] **6g** — Post preprint to arXiv (now, or on acceptance — group's call).
 
