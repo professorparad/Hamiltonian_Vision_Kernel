@@ -25,6 +25,20 @@ undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ## 2026-08-27
 
+### Cover letter re-targeted to QMI (`cover_letter.tex`)
+- Addressee "Editor-in-Chief, IEEE TQE" -> "Editor-in-Chief, *Quantum Machine
+  Intelligence* (Springer)"; "Article in IEEE TQE" -> "research article in QMI".
+- Scope paragraph rewritten from "fits TQE's scope (quantum-circuit design,
+  hybrid learning, hardware-validated evaluation)" to QMI's scope (quantum machine
+  learning, hybrid classical-quantum architectures, tensor-network methods for
+  structured data, hardware-validated).
+- Register fix: "still beating the two weakest controls by a wide margin" ->
+  "substantially outperforms the two null controls" (same rule as the manuscripts).
+- Closing: "IEEE's author-posting policy ... traditional (non-open-access) route"
+  -> "Springer Nature's self-archiving policy ... standard subscription route".
+- Compiles: 2 pp. STILL TO FILL (supervisor): suggested reviewers (line ~50),
+  Siddhartha Patra ORCID (line ~68).
+
 ### Reference punch-list (student's `todo.md`) — all verified, no bib edits needed
 - **West et al. 2024 erratum:** `sn-bibliography.bib` already has both `West2024`
   (PRX Quantum 5, 030320) and `West2024Erratum` (PRX Quantum 6, 020902, 2025, DOI
