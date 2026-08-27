@@ -782,6 +782,7 @@ thermodynamic transitions.
 
 \subsection{Task-dependent representational scope}
 \label{sec:dequant}
+\label{sec:representativeness}
 
 Whether a quantum feature map or kernel offers any advantage over a classical
 model is a property of the specific data and target, not a fixed property of the
@@ -802,47 +803,23 @@ held-out comparisons (Section~\ref{sec:ablation_relationship}) characterize
 exactly this second regime; together, the results delineate where the tested
 entangling representation does and does not yield a measurable benefit.
 
-\subsection{HVK as a representative instance of a broader design pattern}
-\label{sec:representativeness}
-
-The boundary reported in Section~\ref{sec:ablation_relationship} raises an
-immediate question: is it a property of HVK's particular implementation choices,
-or of the broader class of architectures HVK instantiates? HVK combines three
-ingredients that recur, individually, throughout the hybrid quantum-vision
-literature rather than being idiosyncratic to this codebase: matrix-product-state
-compression of structured input into a classical or hybrid feature vector
-\citep{Stoudenmire2016, Han2018, Cirac2021, Guala2023}; a Pauli-correlator
-(measured-observable) latent space handed to a classical decoder rather than a
-raw quantum state, in the spirit of quantum-enhanced feature maps
-\citep{Havlicek2019}; and a physically motivated auxiliary regularizer alongside
-a separate task loss \citep{Shi2022}. HVK is not a minimal or contrived
-combination of these three choices assembled to produce a particular result; each
-is independently well-motivated and widely used, and HVK's specific instantiation
-(six-qubit VQC, $19$--$27$-D Pauli-correlator vector, graph-Hamiltonian energy
-term) sits well within the parameter ranges typical of this literature rather
-than at an unusual extreme.
-
-This representativeness matters for ruling out an uncharitable alternative
-reading of the held-out result (Section~\ref{sec:ablation_relationship}) and the
-inert-regularizer result (Section~\ref{sec:regularizer_inert}): that HVK's
-specific implementation choices --- an unmotivated qubit count, an idiosyncratic
-latent width, or an unusual regularizer formulation --- rather than the design
-pattern itself, are responsible for tying classical baselines, and that a
-different, non-representative choice within the same pattern would have won.
-Because HVK's instantiation sits well within the ordinary parameter ranges of
-this literature rather than at an unusual extreme, that alternative reading is
-not supported: nothing about HVK's specific engineering choices explains away the
-result. Per the data-dependent framing of Section~\ref{sec:dequant}
-\citep{Huang2021PowerData}, whether any instance of this design pattern
-outperforms a resource-matched classical alternative is a property of the
-specific data and target, not of the pattern's architectural motivation, so we do
-not claim the measured boundary transfers unchanged to every dataset, patch size,
-or qubit count. What this section establishes is narrower and, we think, more
-useful: the architecture class HVK instantiates --- MPS feature compression, a
-Pauli-correlator latent space, and a physics-informed regularizer --- is sound
-and general, a fair and properly-scaled test of the pattern rather than a
-strawman version of it, so its measured behavior here is evidence worth taking at
-face value rather than dismissing as an idiosyncrasy of one implementation.
+This data-dependent reading also rules out an uncharitable alternative
+explanation of the held-out tie (Section~\ref{sec:ablation_relationship}) and the
+inert regularizer (Section~\ref{sec:regularizer_inert}): that some idiosyncratic
+implementation choice --- an unmotivated qubit count, an unusual latent width, or
+a peculiar regularizer formulation --- rather than the design pattern itself, is
+responsible, and a different choice within the same pattern would have won. HVK's
+three ingredients each recur individually throughout the hybrid quantum-vision
+literature --- MPS compression of structured input
+\citep{Stoudenmire2016, Han2018, Cirac2021, Guala2023}, a Pauli-correlator latent
+space handed to a classical decoder \citep{Havlicek2019}, and a physically
+motivated auxiliary regularizer alongside a task loss \citep{Shi2022} --- and its
+specific instantiation (six-qubit VQC, $19$--$27$-D correlator vector,
+graph-Hamiltonian term) sits well within the parameter ranges typical of that
+literature rather than at an unusual extreme. The tested pattern is therefore a
+fair, properly-scaled instance rather than a strawman, and its measured behavior
+is evidence worth taking at face value; we do not, however, claim the boundary
+transfers unchanged to every dataset, patch size, or qubit count.
 
 \subsection{Topology alignment as an inductive bias}
 \label{sec:topology}
@@ -860,15 +837,12 @@ differences (at most $0.07$~dB in mean PSNR). At the tested scale, topology
 therefore appears to be primarily a resource-cost choice rather than a reliable
 accuracy advantage; these tests do not establish formal equivalence.
 
-\subsection{Architectural differentiation matrix}
-\label{sec:differentiation}
-
-Table~\ref{tab:differentiation} contrasts HVK's structural properties against
-reference frameworks, including the three nearest hybrid-vision architecture
-families discussed above (register-based QAE, quantum-kernel vision, TN-circuit
-classifier). Its distinguishing features --- a Pauli-correlator latent space, 2D
-Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy
-diagnostic --- are documented and scoped in the preceding sections.
+Finally, Table~\ref{tab:differentiation} contrasts HVK's structural properties
+against reference frameworks, including the three nearest hybrid-vision
+architecture families discussed above (register-based QAE, quantum-kernel vision,
+TN-circuit classifier). Its distinguishing features --- a Pauli-correlator latent
+space, 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian
+energy diagnostic --- are documented and scoped in the preceding sections.
 
 \begin{table}[t]
   \centering

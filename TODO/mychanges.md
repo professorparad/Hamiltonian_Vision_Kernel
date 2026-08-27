@@ -5,6 +5,38 @@ handed over. Each entry: what, where, why. Newest at top.
 
 ---
 
+## 2026-08-27 — Main paper: Discussion trim (merge two overlapping subsections)
+
+**Why:** the Discussion had 8 subsections; two of them argued the same point twice
+in a slightly anxious/over-defensive register that undercut the confident positive
+framing. No results changed — this is prose tightening only.
+
+**Files touched:** `overleaf_docs/paper_hvk_springer.tex` (Discussion, Sec. 6).
+
+1. **Merged `\subsection{HVK as a representative instance of a broader design
+   pattern}` (~40 lines) INTO `\subsection{Task-dependent representational
+   scope}`** as a single appended paragraph (~15 lines). The kept idea: HVK's
+   three ingredients each recur individually in the literature and its
+   instantiation sits within normal parameter ranges, so the held-out tie is not a
+   hyperparameter/strawman artifact. Dropped the triple-repetition of "sits within
+   parameter ranges / not a strawman" and the "we think, more useful" hedging.
+   - **Label preserved:** `\label{sec:representativeness}` is referenced at lines
+     ~149 and ~960, so it was re-homed onto the merged subsection (now carries both
+     `\label{sec:dequant}` and `\label{sec:representativeness}`). Compile confirms
+     0 undefined refs, no multiply-defined warning.
+
+2. **Demoted `\subsection{Architectural differentiation matrix}`** (a 6-line
+   pointer to Table~\ref{tab:differentiation}) to a plain "Finally, Table X
+   contrasts…" lead-in paragraph on the table. `\label{sec:differentiation}` had
+   no inbound refs, so removed. Net: Discussion 8 -> 6 subsections.
+
+**Result:** paper recompiled, `overleaf_docs/assets/paper_hvk_springer.pdf` now
+**23 pp** (was 24), 0 undefined citations. Supplement was NOT further shortened —
+it already meets the round-2 target (604 lines / 15 tables / 8 figures, from
+~1049/30/23); cutting more would remove load-bearing rigor.
+
+---
+
 ## 2026-08-27 — `overleaf_docs/` layout: sources at root, everything else in `assets/`
 
 **Change:** in `overleaf_docs/`, only source files stay at the root
