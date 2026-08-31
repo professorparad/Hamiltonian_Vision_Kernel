@@ -18,10 +18,30 @@ bibtex's search for the `.bst`/`.bib`), then move outputs into `assets/`:
     for e in pdf aux bbl blg fdb_latexmk fls log out; do mv -f paper_hvk_springer.$e assets/; done
 
 **Current state:** `paper_hvk_springer.pdf` = 23 pp, 0 undefined citations,
-abstract 242 words (QMI wants 150-250). `supplementary_study.pdf` = 26 pp, 0
+abstract 242 words (QMI wants 150-250). `supplementary_study.pdf` = 27 pp, 0
 undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ---
+
+## 2026-08-31
+
+### Supplement: anchor-job identifiers added (partial F2)
+The main paper's Table `tab:hardware_anchors` reports four repeated-execution
+PSNRs on `ibm_marrakesh` / `ibm_kingston`, but the supplement carried job IDs only
+for the five `ibm_fez` pilot jobs --- so four real-hardware numbers in the main text
+had no identifier anywhere in the submission. Added §"Repeated-Execution Anchor Jobs"
+(`sec:supp_hardware_anchors`) with Table `tab:hardware_anchor_jobs`: the four job IDs,
+backends, shot counts, circuit counts and PSNRs, transcribed from the retained
+execution record `IBM_Cloud/outputs/hardware_robustness_study/real_hardware_anchors.json`
+(PSNRs match the main text exactly). Also noted in that section that the accompanying
+shot-budget sweep is a `FakeFez` calibrated-noise *simulation* with no job ID, and added
+the `hardware_robustness_study/` path to the artifact map.
+
+**This is not all of F2.** The account-side verification --- logging into IBM Quantum
+and confirming instance/CRN, job retrievability, backend and shots per job --- still
+needs doing by whoever holds the account; nothing here was checked against the service,
+only against the retained JSON. Supplement recompiled clean (2 passes, 27 pp, 0
+undefined refs); `assets/supplementary_study.pdf` refreshed.
 
 ## 2026-08-27
 

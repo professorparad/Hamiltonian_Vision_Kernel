@@ -75,6 +75,7 @@ main2/newHVK/datasets/
 # ignore only generated media (png/npy) so evidence isn't silently untracked.
 experiments/quantum_contribution/**/*.png
 experiments/quantum_contribution/**/*.npy
+experiments/quantum_contribution/**/*.pt
 Main/outputs/
 Main/experiments/
 Main2/outputs/
