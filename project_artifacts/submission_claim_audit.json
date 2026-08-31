@@ -12,7 +12,7 @@
       "source": "main2/newHVK/results/extended_validation/d4_equivariance/d4_equivariance_summary.json"
     },
     "restricted_pair_diagnostic": {
-      "manuscript_mean_r2": 0.974,
+      "manuscript_mean_r2": 0.9735,
       "artifact_mean_r2": 0.9735224984535916,
       "strongest_non_entangling_control_r2": 0.019056047538188837,
       "n_seeds": 5,

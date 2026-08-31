@@ -12,7 +12,7 @@ objective).
 
 | Section | Result | Script | Output |
 |---|---|---|---|
-| §II, Fig. 1 | HVK1D/HVK2D ansatz circuits | `IBM_Cloud/generate_ansatz_figures.py` (rebuilds the ansatz gate-for-gate in Qiskit from the real training circuit, `Main_new/src/quantum/circuit.py::VQC`; see script docstring for the verification method) | `latex_outputs/paper_latex/figures/hvk1d_ansatz.pdf`, `hvk2d_ansatz.pdf` |
+| §II, Fig. 1 | HVK1D/HVK2D ansatz circuits | `IBM_Cloud/generate_ansatz_figures.py` (rebuilds the ansatz gate-for-gate in Qiskit from the real training circuit, `Main_new/src/quantum/circuit.py::VQC`; see script docstring for the verification method) | `overleaf_docs/assets/figures/hvk1d_ansatz.pdf`, `hvk2d_ansatz.pdf` |
 | §IV-A, Table II | Same-set reconstruction, 6 datasets | `Main2/newHVK/run_full_dataset_sameset.py --datasets cifar10 mnist fashion-mnist pathmnist --images-per-dataset 3` then `--datasets bloodmnist --images-per-dataset 2` (script overwrites its output rather than merging, so run in batches and merge by hand; PneumoniaMNIST already present at n=2) | `Main2/newHVK/results/full_dataset_sameset/summary.json` |
 | §IV-B | Zero-shot / multi-image adaptation (8.31 / 28.63 dB) | `Main2/newHVK/run_zero_shot_generalization.py --epochs 100` | `Main2/newHVK/results/zero_shot_generalization/summary.json` |
 | §IV-C | Real IBM hardware reconstruction pilot | `IBM_Cloud/run_hvk_hardware_reconstruction.py` (Monalisa), `IBM_Cloud/run_hvk2d_cifar_hardware_reconstruction.py` (CIFAR) | `IBM_Cloud/outputs/hardware_reconstruction/`, `IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/` |

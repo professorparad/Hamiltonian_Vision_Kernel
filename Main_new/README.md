@@ -2,7 +2,7 @@
 
 This is a copy of `Main/` (the original HVK1D implementation) with two changes to the
 learned Heisenberg energy term, made to address a reviewer finding: the paper's own
-ablation (Table X, `latex_outputs/paper_latex/supplementary_study.tex`) shows that
+ablation (`overleaf_docs/supplementary_study.tex`, Hamiltonian-controls table) shows that
 removing the energy loss *improves* reconstruction (32.24 -> 33.30 dB), meaning the
 "Hamiltonian"/"physics-informed" framing was not earning its keep as a performance
 motivation.

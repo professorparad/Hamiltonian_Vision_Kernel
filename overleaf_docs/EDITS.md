@@ -17,13 +17,36 @@ bibtex's search for the `.bst`/`.bib`), then move outputs into `assets/`:
     python ../latex_outputs/compile_tex.py paper_hvk_springer.tex
     for e in pdf aux bbl blg fdb_latexmk fls log out; do mv -f paper_hvk_springer.$e assets/; done
 
-**Current state:** `paper_hvk_springer.pdf` = 23 pp, 0 undefined citations,
+**Current state:** `paper_hvk_springer.pdf` = 24 pp, 0 undefined citations,
 abstract 242 words (QMI wants 150-250). `supplementary_study.pdf` = 27 pp, 0
 undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ---
 
 ## 2026-08-31
+
+### Manuscript folders consolidated: `overleaf_docs/` is now the only copy
+`latex_outputs/paper_latex/` (IEEEtran `paper_hvk.tex`, the Aug-20 `paper_hvk_sn.tex`
+Springer snapshot, an Aug-13 supplement, a cover letter still addressed to IEEE TQE, and
+a 73-file figure archive) and `submission_bundle/` (the abandoned TQE bundle, IEEE
+sources) were deleted; both remain in git history. Every duplicate was older than its
+`overleaf_docs/` counterpart, so there is now one source per document.
+
+Live references retargeted rather than left dangling:
+- `.github/workflows/pages.yml` stages `overleaf_docs/assets/paper_hvk_springer.pdf`
+  (the Pages site would otherwise fail on a missing file).
+- The nine `IBM_Cloud/plot_*`/`generate_ansatz_figures.py` scripts now write figures to
+  `overleaf_docs/assets/figures/`.
+- `tests/test_submission_claim_audit.py` reads the Springer manuscript for both its
+  headline-string guard (now `R^2=0.9735`, the Springer rounding, instead of the IEEE
+  file's `0.974`) and its no-transition-claims scan; `submission_claim_audit.json`
+  updated to match. 19 tests pass.
+- `README.md`, `REPRODUCE.md`, `latex_outputs/README.md`, `project_artifacts/results.md`,
+  `Main_new/README.md`, `latex_outputs/compile_tex.py` docstring.
+
+`author_contributions.pdf` and `literature_review.pdf` had no build under
+`overleaf_docs/`; both were compiled into `assets/` so every source here has its PDF.
+`latex_outputs/` now holds only `compile_tex.py`, `images_latex/` and its README.
 
 ### Supplement: anchor-job identifiers added (partial F2)
 The main paper's Table `tab:hardware_anchors` reports four repeated-execution

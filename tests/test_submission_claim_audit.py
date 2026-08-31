@@ -42,9 +42,9 @@ class SubmissionClaimAuditTests(unittest.TestCase):
         self.assertEqual(max(values), claim["maximum_hardware_psnr_db"])
 
     def test_rounded_headlines_remain_in_manuscript(self):
-        manuscript = (ROOT / "latex_outputs/paper_latex/paper_hvk.tex").read_text(encoding="utf-8")
+        manuscript = (ROOT / "overleaf_docs/paper_hvk_springer.tex").read_text(encoding="utf-8")
         self.assertIn(r"9.57\times10^{-17}", manuscript)
-        self.assertIn(r"R^2=0.974", manuscript)
+        self.assertIn(r"R^2=0.9735", manuscript)
         self.assertIn(r"25.90$--$31.52", manuscript)
 
     def test_sameset_multi_dataset_matches_artifact(self):
@@ -85,8 +85,8 @@ class SubmissionClaimAuditTests(unittest.TestCase):
         """The change-point/critical-temperature material was withdrawn (see
         withdrawn_claims). Any surviving mention must be an explicit disclaimer."""
         banned = ("critical temperature", "change-point", "critical epoch", "phase transition")
-        for name in ("paper_hvk.tex", "supplementary_study.tex", "cover_letter.tex"):
-            text = (ROOT / "latex_outputs/paper_latex" / name).read_text(encoding="utf-8")
+        for name in ("paper_hvk_springer.tex", "supplementary_study.tex", "cover_letter.tex"):
+            text = (ROOT / "overleaf_docs" / name).read_text(encoding="utf-8")
             lowered = text.lower()
             for phrase in banned:
                 for idx, line in enumerate(lowered.splitlines(), start=1):

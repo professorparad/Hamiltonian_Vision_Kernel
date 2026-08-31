@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from run_ibm_hvk_probe import grid_edges  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_DIR = REPO_ROOT / "latex_outputs" / "paper_latex" / "figures"
+OUTPUT_DIR = REPO_ROOT / "overleaf_docs" / "assets" / "figures"
 N_QUBITS = 6
 N_LAYERS = 2
 

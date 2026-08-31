@@ -128,10 +128,16 @@ python Baselines\monalisa_comparisons\main.py --methods all --epochs 200 --devic
 Build the current paper PDF:
 
 ```powershell
-cd latex_outputs\paper_latex
-pdflatex -interaction=nonstopmode paper_hvk.tex
-pdflatex -interaction=nonstopmode paper_hvk.tex
+cd overleaf_docs
+pdflatex -interaction=nonstopmode paper_hvk_springer.tex
+bibtex paper_hvk_springer
+pdflatex -interaction=nonstopmode paper_hvk_springer.tex
+pdflatex -interaction=nonstopmode paper_hvk_springer.tex
 ```
+
+The manuscripts live in `overleaf_docs/` (Springer `sn-jnl` sources, figures and
+compiled PDFs under `overleaf_docs/assets/`). The supplement and the literature
+review use an inline `thebibliography` and need only two `pdflatex` passes.
 
 Run a fast smoke test:
 

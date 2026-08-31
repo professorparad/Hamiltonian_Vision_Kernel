@@ -1,7 +1,7 @@
 """Compile a LaTeX source to PDF, robustly, on MiKTeX.
 
     from compile_tex import compile_tex
-    pdf = compile_tex("paper_latex/paper_hvk.tex")   # -> Path to the .pdf
+    pdf = compile_tex("overleaf_docs/paper_hvk_springer.tex")  # -> Path to the .pdf
 
 Why this exists (the three sharp edges of MiKTeX we kept hitting):
 

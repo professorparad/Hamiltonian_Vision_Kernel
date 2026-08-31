@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 
 SWEEP_DIR = Path(__file__).resolve().parent / "outputs" / "checkpoint_bond_dimension_temperature_hardware_sweep"
 RESULTS_PATH = SWEEP_DIR / "ionq_ionq_simulator_shots1024.json"
-FIGURES_DIR = Path(__file__).resolve().parents[1] / "latex_outputs" / "paper_latex" / "figures"
+FIGURES_DIR = Path(__file__).resolve().parents[1] / "overleaf_docs" / "assets" / "figures"
 OUTPUT_PATHS = [
     FIGURES_DIR / "checkpoint_ionq_bond_dimension_r_es.pdf",
     SWEEP_DIR / "checkpoint_ionq_bond_dimension_r_es.png",

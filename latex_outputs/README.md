@@ -5,7 +5,10 @@ from the HVK project.
 
 It is not part of the runtime package. Treat it as the project writing area:
 
-- `paper_latex/`: LaTeX paper draft and compiled PDF artifacts.
+- `compile_tex.py`: LaTeX build helper used by the `overleaf_docs/` build rule.
+- The manuscripts themselves live in `overleaf_docs/` (sources at its root,
+  figures and compiled PDFs under `overleaf_docs/assets/`); the former
+  `paper_latex/` copy has been removed to keep one source per document.
 - `images_latex/`: figures copied or exported for paper use.
 
 ## Practical Notes
