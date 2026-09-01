@@ -23,6 +23,47 @@ undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ---
 
+## 2026-09-01
+
+### F1 done, F3 closed, F2 half done (item F, student)
+**F1 — `overleaf_docs/RESULTS_MAP.md` written.** One row per Springer table and figure:
+driver script, exact command, key parameters, retained artifact, status. All 8 tables and
+6 figures of the paper and all 15 tables and 8 figures of the supplement are covered, with
+numbering taken from the compiled PDFs' `.aux` `\newlabel` entries rather than guessed, and
+a `Prior ID` column carrying the old `R1`-`R14` IDs so it reads side by side with
+`TODO/results-core-map.md` (which is untouched, and was restored after being deleted --
+F1 and F3 both refer to it). Two items are `descriptive` (`tab:variants`,
+`tab:differentiation` -- definitions, nothing to reproduce); one is `partial`
+(`tab:hamiltonian_controls` / `tab:hamiltonian_reproducibility`, whose gap the supplement
+already discloses at length); everything else is `backed`, with the artifact value quoted
+against the printed one where it was recomputed.
+
+**F3 -- closed, no artifact needed.** R10's open row was `contrastive+no-energy` (33.33 dB).
+That value is not in either Springer manuscript: `33.33` appears nowhere in
+`paper_hvk_springer.tex` or `supplementary_study.tex`. What survives is §3.7's account of
+the *withdrawal*, which quotes `32.24 -> 33.30` and contrastive `32.84` precisely to say
+they are superseded and that three of the old table's six rows are not independently
+reproducible. Those are cited as history, not as results. Nothing to produce, nothing to
+cut; the row reopens only if a withdrawn value is ever promoted back into a claim.
+
+**F2 -- the map is ready, the account check is not done.** Every job identifier the
+manuscripts cite is now in one ledger in RESULTS_MAP.md -- 25 jobs (5 reconstruction
+pilot, 4 repeated-execution anchors, 16 archived replays) with backend, shots, circuit
+count and PSNR read back from the retained JSON, all marked `pending` in an `Account`
+column. `IBM_Cloud/verify_hardware_jobs.py` was written to close that column: it retrieves
+each job, compares backend/shots/status against what the manuscripts claim, prints the
+account's instance/CRN, and with `--write-map` rewrites the column in place.
+
+It has **not been run against the service**: this machine has no IBM Quantum credentials
+(no `~/.qiskit/qiskit-ibm.json`, no `IBM_QUANTUM_TOKEN`), so nothing below the `Account`
+column has been confirmed by anything except local artifacts. Whoever holds the account
+runs `python IBM_Cloud/verify_hardware_jobs.py --write-map` and records the instance/CRN
+line. The 16 IonQ rows are not IBM jobs and are skipped by design -- they need the IonQ
+console if provenance for them is wanted. The job-ID enumeration and the `--write-map`
+rewrite were both exercised offline (`--list`, and a dry run against a copy of the map).
+
+---
+
 ## 2026-08-31
 
 ### Manuscript folders consolidated: `overleaf_docs/` is now the only copy
