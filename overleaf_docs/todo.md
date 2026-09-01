@@ -1,3 +1,6 @@
+A. FIRST **undo** the wrong todo implementation.
+
+
 F. RESULTS ↔ CODE MAP — re-prepare for the Springer manuscript  (assigned to student, 2026-08-27)
 
 Context: the existing map `TODO/results-core-map.md` is written against the OLD
