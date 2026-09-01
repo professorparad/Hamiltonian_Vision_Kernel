@@ -69,7 +69,7 @@ different directories; copy the paths exactly as written.
 | Table 10 `tab:phase_transition_corrected` | 3.9 | R8 | `python Main2/newHVK/run_phase_transition_multi_dataset.py` | 6 datasets × 2 images × 2 seeds = 24 runs; noise-free evaluation-mode forward pass after every optimizer step | `Main2/newHVK/results/phase_transition_multi_dataset/summary.json` (+ per-dataset `*_eval_order_traces.json`) | `backed` — 16/24 |
 | Table 11 `tab:phase_transition_onoff` | 3.9 | — | `python Main2/newHVK/run_phase_transition_onoff_control.py` | Monalisa + CIFAR cat, 2 seeds each, 200 epochs; "off" = classical-replacement variant with energy identically zero | `Main2/newHVK/results/phase_transition_onoff_control/summary.json`, `raw_traces.json` | `backed` — 4/4 vs 4/4, the negative control the manuscript rests its no-transition statement on |
 | Fig. 5 `fig:critical_temperature` | 3.9 | R9 | `python Main2/newHVK/run_critical_temperature.py` | HVK1D, 2 CIFAR-10 images (cat, ship/hydrofoil) × 4 seeds | `Main2/newHVK/results/critical_temperature/critical_temperature_cifar10.json` | `backed` — 8 traces; the figure shows all of them, no threshold is marked |
-| Table 12 `tab:topology_real_circuit` | 4.1 | — | `python Main2/newHVK/run_topology_comparison.py` | 2 training images, overlapping 8×8 patches at stride 4 (49/image), 90-step budget, 3 seeds; held out on 3 unseen CIFAR-10 classes | `Main2/newHVK/results/topology_comparison/real_circuit_confirmation.json` | `backed` (absolute PSNR is low at this budget — see G2) |
+| Table 12 `tab:topology_real_circuit` | 4.1 | — | `python Main2/newHVK/run_topology_comparison.py` | 2 training images, overlapping 8×8 patches at stride 4 (49/image), 90-step budget, 3 seeds; held out on 3 unseen CIFAR-10 classes | `Main2/newHVK/results/topology_comparison/real_circuit_confirmation.json` | `backed`, **but below its own floor**: the matched random-VQC control (`python Main2/newHVK/run_topology_random_vqc_control.py` → `random_vqc_control.json`) reaches 12.74 dB (HVK1D) / 12.64 dB (HVK2D) at the same 90-step budget, ~1 dB above the trained runs. Only the 1D-vs-2D difference is readable here; §4.1 says so |
 | Fig. 6 `fig:topology_comparison_summary` | 4.2 | — | `python Main2/newHVK/run_topology_comparison_surrogate.py` (+ the real-circuit run above for the left panels) | 5 seeds, stratified splits, CIFAR-10 / Fashion-MNIST / PathMNIST | `Main2/newHVK/results/topology_comparison/surrogate_paired_stats.json`, `surrogate_manifest.json` | `backed` |
 | Table 13 `tab:d4_symmetry_experiment` | 5 | — | `python Main2/newHVK/run_d4_symmetry_experiment.py` | 5 seeds, 20 train / 10 held-out images per seed, 5 modes incl. the pooled *classical* baseline; output consistency over all 8 D₄ transforms | `Main2/newHVK/results/d4_symmetry_experiment/d4_symmetry_experiment_summary.json` | `backed` |
 | Fig. 7 `fig:d4_symmetry_experiment_summary` | 5 | — | same as Table 13 | same | same | `backed` |
@@ -169,6 +169,6 @@ ever promoted back into a claim, this row reopens.
 - Main paper: 8 tables + 6 figures — all mapped (2 `descriptive`, 1 `partial`, 4 device-side pending).
 - Supplement: 15 tables + 8 figures — all mapped (1 `partial`, 2 device-side pending).
 - Open: the `Account` column above (F2), and the two physics-review items that need data
-  rather than mapping — G2 (is 11.7 dB in Table 12 above the random-VQC floor at the same
-  90-step budget?) and G3 (is the χ non-monotonicity in Fig. 2 multi-seed or explicitly
-  single-seed?).
+  rather than mapping. **G2 and G3 are now closed** (see `EDITS.md`, 2026-09-01): the
+  random-VQC floor was measured and Table 12 sits ~1 dB below it, and the χ sweep is
+  labelled single-seed with no mechanism claimed.

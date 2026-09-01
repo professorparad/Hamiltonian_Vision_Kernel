@@ -18,12 +18,63 @@ bibtex's search for the `.bst`/`.bib`), then move outputs into `assets/`:
     for e in pdf aux bbl blg fdb_latexmk fls log out; do mv -f paper_hvk_springer.$e assets/; done
 
 **Current state:** `paper_hvk_springer.pdf` = 24 pp, 0 undefined citations,
-abstract 242 words (QMI wants 150-250). `supplementary_study.pdf` = 26 pp, 0
+abstract 242 words (QMI wants 150-250). `supplementary_study.pdf` = 27 pp, 0
 undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ---
 
 ## 2026-09-01
+
+### G1-G3 done (item G, student) --- one of them changes what the supplement claims
+**G1 -- confirmed a miscitation, replaced with the primary source.** The `.bib` entry
+`Fei2021` was S.-M. Fei, "Compressed Sensing Based on Tensor Network Machine Learning",
+*Phys Sci & Biophys J* 5(1):000174 (2021). Retrieved and read: it is a **3-page Mini
+Review** in a Medwin Publishers journal, and its own reference [9] is
+Ran, Sun, Fei, Su, Lewenstein, *Tensor network compressed sensing with unsupervised
+machine learning*, **Phys. Rev. Research 2, 033293 (2020)** (arXiv:1907.10290) --- i.e. it
+is a short summary, by one co-author, of exactly the paper the supervisor identified.
+The citation sits in the intro's tensor-network list, where the primary source is what
+belongs. `Fei2021` is deleted and replaced by `Ran2020TNCS` (author list, title, volume,
+article number, year and DOI verified against arXiv and the journal listing); the single
+`\citep` in `paper_hvk_springer.tex` now points at it. Paper rebuilds with 0 undefined
+citations and renders as "Ran et al. 2020".
+
+**G2 -- the answer is no, and the supplement now says so.** The question was whether the
+11.73 / 11.57 dB in `tab:topology_real_circuit` is meaningfully above the random-VQC
+floor at the same 90-step budget. The artifact had no such control, so one was run:
+`Main2/newHVK/run_topology_random_vqc_control.py`, identical protocol (same two training
+images, same overlapping 8x8 patches at stride 4, same 90 steps, same per-topology
+learning rate, same three held-out images and seeds) with the observable vector replaced
+by resampled noise --- the study's own `random-vqc`, which costs no QNode calls.
+
+Result: the floor is **12.74 +/- 2.21 dB (HVK1D)** and **12.64 +/- 2.12 dB (HVK2D)**. The
+trained circuits sit about **1 dB below their own floor** (-1.01 and -1.08 dB on the
+means), negative in all six seed-level comparisons (two-sided Wilcoxon p = 0.031). At 90
+steps neither model has trained far enough for its latent to beat an input-independent
+predictor. A paragraph in Section 4.1 now states this plainly: the absolute PSNRs in that
+table are not reconstruction quality, only the 1D-vs-2D difference is meaningful, and
+even that compares two runs measured before either clears the floor --- the full-scope
+surrogate sweep, not this subset, is what carries the topology conclusion. Artifact:
+`Main2/newHVK/results/topology_comparison/random_vqc_control.json`.
+
+**G3 -- decided (b): explicitly single-seed, no physical claim.** The chi non-monotonicity
+paragraph in Section 3.6 previously ended "bond dimension is therefore a coupled
+optimization hyperparameter here, not a monotonic compression-fidelity knob" --- a
+mechanism inferred from one seed. Rewritten to attach no mechanism: it is a single-seed
+observation at one budget on one image, the seed-level variance on the neighbouring q=4
+axis (+/-1.64 dB) is of the same order as the chi gaps themselves, the
+chi=4-over-parameterizes-a-low-entanglement-target reading is named as interesting but
+explicitly not tested, and confirming it would need the same sweep over several seeds at
+a matched budget (roughly 12 real-circuit runs, not run). The interrupted follow-up
+reached only chi=1 and chi=2 at a shorter budget and cannot settle it either.
+
+**Also fixed while here:** eight driver scripts hardcoded
+`REPO_ROOT = Path(r"c:\Users\HP\Desktop\HVK\Hamiltonian_Vision_Kernel")`, so every
+command RESULTS_MAP.md cites from them only ran on one Windows machine. All eight now
+derive the repo root from `__file__`.
+
+---
+
 
 ### F1 done, F3 closed, F2 half done (item F, student)
 **F1 — `overleaf_docs/RESULTS_MAP.md` written.** One row per Springer table and figure:

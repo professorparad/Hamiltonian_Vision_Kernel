@@ -58,11 +58,6 @@ Cohen T, Welling M (2016) Group equivariant convolutional networks. In:
 Cong I, Choi S, Lukin MD (2019) Quantum convolutional neural networks. Nature
   Physics 15(12):1273--1278. \doi{10.1038/s41567-019-0648-8}
 
-\bibitem[{Fei(2021)}]{Fei2021}
-Fei SM (2021) Compressed sensing based on tensor network machine learning.
-  Physical Science \& Biophysics Journal 5(1):000174.
-  \doi{10.23880/psbj-16000174}
-
 \bibitem[{Guala et~al.(2023)Guala, Zhang, Cruz, Riofr{\'i}o, Klepsch, and
   Arrazola}]{Guala2023}
 Guala D, Zhang S, Cruz E, et~al (2023) Practical overview of image
@@ -162,6 +157,11 @@ Nguyen QT, Schatzki L, Braccia P, et~al (2024) Theory for equivariant quantum
 \bibitem[{Preskill(2018)}]{Preskill2018}
 Preskill J (2018) Quantum computing in the {NISQ} era and beyond. Quantum 2:79.
   \doi{10.22331/q-2018-08-06-79}
+
+\bibitem[{Ran et~al.(2020)Ran, Sun, Fei, Su, and Lewenstein}]{Ran2020TNCS}
+Ran SJ, Sun ZZ, Fei SM, et~al (2020) Tensor network compressed sensing with
+  unsupervised machine learning. Physical Review Research 2(3):033293.
+  \doi{10.1103/PhysRevResearch.2.033293}
 
 \bibitem[{Romero et~al.(2017)Romero, Olson, and Aspuru-Guzik}]{Romero2017}
 Romero J, Olson JP, Aspuru-Guzik A (2017) Quantum autoencoders for efficient

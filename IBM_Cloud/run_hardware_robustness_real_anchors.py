@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 from qiskit import transpile
 
-REPO_ROOT = Path(r"c:\Users\HP\Desktop\HVK\Hamiltonian_Vision_Kernel")
+REPO_ROOT = Path(__file__).resolve().parents[1]
 MAIN_DIR = REPO_ROOT / "Main"
 for p in (MAIN_DIR, REPO_ROOT):
     if str(p) not in sys.path:

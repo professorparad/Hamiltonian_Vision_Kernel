@@ -27,7 +27,7 @@ import torch.nn as nn
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 
-REPO_ROOT = Path(r"c:\Users\HP\Desktop\HVK\Hamiltonian_Vision_Kernel")
+REPO_ROOT = Path(__file__).resolve().parents[1]
 MAIN_DIR = REPO_ROOT / "Main"
 for p in (MAIN_DIR, REPO_ROOT):
     if str(p) not in sys.path:

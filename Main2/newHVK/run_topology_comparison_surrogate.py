@@ -25,7 +25,7 @@ from pathlib import Path
 
 import numpy as np
 
-REPO_ROOT = Path(r"c:\Users\HP\Desktop\HVK\Hamiltonian_Vision_Kernel")
+REPO_ROOT = Path(__file__).resolve().parents[2]
 NEWHVK_DIR = REPO_ROOT / "Main2" / "newHVK"
 for p in (NEWHVK_DIR, REPO_ROOT):
     if str(p) not in sys.path:

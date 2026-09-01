@@ -31,7 +31,7 @@ import numpy as np
 import torch
 import torch.optim as optim
 
-REPO_ROOT = Path(r"c:\Users\HP\Desktop\HVK\Hamiltonian_Vision_Kernel")
+REPO_ROOT = Path(__file__).resolve().parents[2]
 BENCH_ROOT = REPO_ROOT / "Baselines" / "cifar10_comparisons"
 MAIN_DIR = REPO_ROOT / "Main"
 for p in (BENCH_ROOT, MAIN_DIR, REPO_ROOT):
