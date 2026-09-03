@@ -10,6 +10,7 @@
 \usepackage{array}
 \usepackage{tabularx}
 \usepackage{ragged2e}
+\usepackage{xcolor}% revision marking; remove with the \color{red} blocks
 
 % ---- column types used by the differentiation matrices (Tables 5 and 6) ------
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
@@ -72,8 +73,8 @@ hardware. We make no claim of quantum advantage.}
 \label{sec:intro}
 
 Hybrid quantum--classical models for vision tasks are increasingly proposed as a
-route to representations with favorable inductive bias, exploiting entanglement,
-physically motivated regularizers, or tensor-network structure that classical
+route to representations with favourable inductive bias, exploiting entanglement,
+physically motivated regularisers, or tensor-network structure that classical
 convolutional pipelines do not natively expose
 \citep{Cerezo2021, Tilly2022, Preskill2018}. The variational quantum eigensolver
 and its descendants exploit the local decomposability of physically relevant
@@ -110,7 +111,7 @@ spirit of group-equivariant classical vision \citep{Cohen2016, Bronstein2021}
 and the equivariant-quantum-neural-network line that formalizes
 symmetry-embedding constructions for variational circuits
 \citep{Meyer2023, Nguyen2024EQNN, Schatzki2024, West2024, West2024Erratum}; and a
-\emph{learnable Hamiltonian energy diagnostic} (full nearest-neighbor
+\emph{learnable Hamiltonian energy diagnostic} (full nearest-neighbour
 $XX/YY/ZZ$ sectors in HVK1D and grid-edge $ZZ$ terms in HVK2D).
 Table~\ref{tab:differentiation} contrasts these properties against classical,
 adversarial, and standard quantum autoencoder baselines.
@@ -133,7 +134,7 @@ feature space and read out a scalar kernel (state-overlap) value consumed by a
 classical kernel method; HVK instead reads out an explicit vector of local and
 pairwise Pauli expectation values as a latent representation for a trained
 decoder, and adds enforced group-equivariant pooling and a Hamiltonian
-regularizer that a kernel construction has no analogue for.
+regulariser that a kernel construction has no analogue for.
 \emph{Tensor-network (TN) circuit classifiers}
 \citep{Guala2023, Stoudenmire2016, Han2018} use MPS structure either as a
 standalone classical model or as a template for a shallow quantum circuit trained
@@ -194,19 +195,21 @@ Section~\ref{sec:phase_transition}, which we report as an interpretability
 readout rather than as evidence of a transition. We keep that analysis in a
 companion document so the architecture-level contributions above and the
 generalization question do not obscure each other;
-Section~\ref{sec:ablation_relationship} summarizes its central finding and how it
+Section~\ref{sec:ablation_relationship} summarises its central finding and how it
 relates to the results here.
 
 \section{Hamiltonian Vision Kernel: Architecture}
 \label{sec:architecture}
 
-HVK treats each spatial patch as a finite spin state, compresses it as a matrix
-product state (MPS), measures a fixed set of Pauli observables from a variational
-quantum circuit (VQC), and decodes those observables back into pixels with a
-classical multi-layer perceptron (MLP). A learnable graph-Hamiltonian energy term
-regularizes training; unlike parameterized Hamiltonian learning approaches that
-treat the Hamiltonian as the primary learned object \citep{Shi2022}, HVK's energy
-term is a diagnostic regularizer alongside a separate reconstruction objective.
+\color{blue}
+HVK treats each spatial patch as a finite spin state and compresses it as a
+matrix product state (MPS). A variational quantum circuit (VQC) then measures a
+fixed set of Pauli observables, which a classical multi-layer perceptron (MLP)
+decodes back into pixels. A learnable graph-Hamiltonian energy term regularises
+training. Parameterised Hamiltonian learning approaches treat the Hamiltonian as
+the primary learned object \citep{Shi2022}; in HVK it is instead a diagnostic
+regulariser alongside a separate reconstruction objective.
+
 
 \paragraph{Problem statement.}
 Given an image $x$ partitioned into non-overlapping patches
@@ -214,11 +217,23 @@ $\{x_p\}_{p=1}^{P}$, HVK learns a per-patch reconstruction map. Each patch is
 compressed to a classical MPS feature vector $\phi_{\mathrm{MPS}}(x_p)$, a learned
 linear layer sets the VQC rotation angles, and measuring a fixed set of Pauli
 observables yields the correlator feature map
-$\Phi(x_p)\in\mathbb{R}^{d}$ ($d=27$ for HVK1D, $19$ for HVK2D). A classical
+$\Phi(x_p)\in\mathbb{R}^{d}$ ($d=27$ for HVK1D, $19$ for HVK2D). {\color{red}%
+With $n=6$ qubits, bond set $\mathcal{E}$, and $c$ measured pair channels per bond,
+\begin{equation}
+  \label{eq:obs_dim}
+  d=2n+c\lvert\mathcal{E}\rvert=
+  \begin{cases}
+    2(6)+3(5)=27, & \text{HVK1D ($ZZ,XX,YY$ on a 5-bond chain)},\\
+    2(6)+1(7)=19, & \text{HVK2D ($ZZ$ on 7 grid edges)},\\
+    2(6)+1(5)=17, & \text{$ZZ$-only ablation control}.
+  \end{cases}
+\end{equation}
+All reported HVK1D and HVK2D results use $d=27$ and $d=19$.}
+A classical
 decoder $D_\theta$ maps $\Phi(x_p)$, together with a Fourier positional encoding
 $\pi(p)$, back to a reconstructed patch $\hat{x}_p=D_\theta\!\big(\Phi(x_p),\pi(p)\big)$.
-Training minimizes the pixel-reconstruction loss with the graph-Hamiltonian energy
-term $E(\cdot)$ as an auxiliary regularizer,
+Training minimises the pixel-reconstruction loss with the graph-Hamiltonian energy
+term $E(\cdot)$ as an auxiliary regulariser,
 \begin{equation}
   \label{eq:objective}
   \mathcal{L}(\theta)=\sum_{p=1}^{P}\big\|x_p-\hat{x}_p\big\|_2^{2}
@@ -236,57 +251,91 @@ reports its effect). The shared pipeline is
 \end{aligned}
 \end{equation}
 
-Three of these design choices warrant explicit motivation rather than being left
-implicit in the pipeline above. \emph{Why MPS features}: treated as an
-amplitude-encoded quantum state, a patch of $n$ sites has a coefficient tensor
-with $2^{n}$ entries; matrix-product-state factorization instead represents it as
-a chain of small tensors bounded by a fixed bond dimension $\chi$, a compact,
-singular-value-controlled compression whose entanglement-entropy profile is
-already known to track image compressibility
-\citep{Latorre2005, Stoudenmire2016}, and whose local expectations and
-correlations are cheap classical features rather than requiring a full
-state-preparation circuit. \emph{Why a Pauli-correlator latent space rather than
-a raw quantum state}: handing the classical decoder a fixed vector of measured
-Pauli expectation values, instead of full state tomography, keeps the
-quantum-to-classical interface at $O(\text{qubits})$ rather than exponential
-readout cost and follows the same measured-observable-as-feature pattern used by
-quantum-enhanced feature maps generally \citep{Havlicek2019}; it is also what
-makes the interpretability diagnostics of Section~\ref{sec:regularizer_inert} and
-the training-dynamics diagnostics reported in the companion Supplementary
-Material possible, since a full state vector would not expose a comparably
-compact, physically meaningful summary. \emph{Why a grid rather than chain
-interaction topology for HVK2D}: aligning the six-qubit interaction graph with
-the $2\times3$ patch-neighbor adjacency, rather than an arbitrary linear chain,
-is what makes the $D_4$ group-pooling construction of Section~\ref{sec:d4}
-well-defined in the first place --- the pooling operator averages over the
-spatial symmetries of the square, which requires a latent structure that itself
-respects the patch grid's two-dimensional adjacency. HVK1D's chain topology is
-retained as the ungridded control this comparison needs
-(Section~\ref{sec:topology}), not because a chain is separately motivated for 2D
-image data.
 
-Two executed preprocessing configurations share this pipeline. For the
-$256\times256$ \textit{Monalisa}/HVK1D benchmark, sixteen non-overlapping
-$64\times64$ patches are $\ell_2$-normalized, reshaped as 12-site spin states,
-and sequentially SVD-compressed to MPS bond dimension $\chi=4$. Their 24 local
-$X/Z$ expectations, 11 nearest-neighbor $ZZ$ correlations, and 11 bipartite
-entropies form a 46-D feature vector. For the native $32\times32$ HVK2D
-multi-dataset experiments, sixteen $8\times8$ patches are represented by six-site
-MPSs, giving 12 local expectations, five nearest-neighbor $ZZ$ terms, and five
-entropies (22 dimensions). A learned linear layer compresses either MPS feature
-vector to six circuit angles. HVK1D then measures 27 observables (six local $Z$,
-six local $X$, and five each of $ZZ$, $XX$, and $YY$); HVK2D measures 19 (six
-local $Z$, six local $X$, and seven grid-edge $ZZ$ terms). The respective Fourier
-positional vectors have dimension eight and four, following the established use
-of Fourier positional encoding as a spatial inductive bias in classical
-generative vision models \citep{Xu2021}. In both configurations, a
-two-hidden-layer MLP (128 and 256 units) maps the observable and positional
-vectors to one grayscale patch. Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D
-and HVK2D ansatz circuits (rebuilt in Qiskit and numerically verified against the
-training-time PennyLane circuit as part of the hardware pilot of
-Section~\ref{sec:hardware_pilot}); complete Hamiltonian, loss,
-positional-encoding, and measurement definitions are retained in the companion
+\paragraph{Why MPS features.}
+Treated as an amplitude-encoded quantum state, a patch of $n$ sites has a
+coefficient tensor with $2^{n}$ entries. Matrix-product-state factorisation
+instead represents it as a chain of small tensors bounded by a fixed bond
+dimension $\chi$. This is a compact, singular-value-controlled compression whose
+entanglement-entropy profile is already known to track image compressibility
+\citep{Latorre2005, Stoudenmire2016}, and whose local expectations and
+correlations are cheap classical features that do not require a full
+state-preparation circuit.
+
+
+\paragraph{Why a Pauli-correlator latent space rather than a raw quantum state.}
+Handing the classical decoder a fixed vector of measured Pauli expectation
+values, instead of full state tomography, keeps the quantum-to-classical
+interface at $O(\text{qubits})$ rather than exponential readout cost. It also
+follows the measured-observable-as-feature pattern used by quantum-enhanced
+feature maps generally \citep{Havlicek2019}. This choice is what makes the
+interpretability diagnostics of Section~\ref{sec:regularizer_inert} and the
+training-dynamics diagnostics of the companion Supplementary Material possible,
+since a full state vector would not expose a comparably compact, physically
+meaningful summary.
+
+
+
+\paragraph{Why a grid rather than a chain interaction topology for HVK2D.}
+Aligning the six-qubit interaction graph with the $2\times3$ patch-neighbour
+adjacency, rather than an arbitrary linear chain, is what makes the $D_4$
+group-pooling construction of Section~\ref{sec:d4} well defined in the first
+place. The pooling operator averages over the spatial symmetries of the square,
+which requires a latent structure that itself respects the patch grid's
+two-dimensional adjacency. HVK1D's chain topology serves the complementary role
+in this design: it is the ungridded control against which the grid's
+contribution is measured (Section~\ref{sec:topology}).
+
+
+
+\begin{table}[t]
+	\centering
+	\caption{The two executed configurations. Both use six qubits and the same
+		decoder; they differ in patch size and in the measured observable set.}
+	\label{tab:configurations}
+	\begin{tabular}{@{}l c c@{}}
+		\toprule
+		& HVK1D                 & HVK2D                  \\
+		\midrule
+		Benchmark                     & \textit{Monalisa}     & multi-dataset          \\
+		Image size                    & $256\times256$        & $32\times32$ (native)  \\
+		Patch size                    & $64\times64$          & $8\times8$             \\
+		MPS sites                     & 12                    & 6                      \\
+		Local $X/Z$ expectations      & 24                    & 12                     \\
+		Nearest-neighbour $ZZ$        & 11                    & 5                      \\
+		Bipartite entropies           & 11                    & 5                      \\
+		MPS feature vector            & 46-D                  & 22-D                   \\
+		\midrule
+		Measured observables          & 27-D                  & 19-D                   \\
+		\quad local $Z$, local $X$    & 6, 6                  & 6, 6                   \\
+		\quad pair terms              & 5 each $ZZ,XX,YY$     & 7 grid-edge $ZZ$       \\
+		Fourier positional vector     & 8-D                   & 4-D                    \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Two preprocessing configurations were executed, one per topology. Both follow the
+same three stages. Each image is first divided into sixteen non-overlapping
+patches. Every patch is then $\ell_2$-normalised and sequentially SVD-compressed
+to a matrix product state of bond dimension $\chi=4$. Finally, the local
+expectations, nearest-neighbour correlations and bipartite entropies of that
+state are read off as the classical MPS feature vector. The two configurations
+differ only in the sizes involved, which Table~\ref{tab:configurations} lists in
+full.
+\color{green}
+The remaining stages are common to both. A learned linear layer compresses the
+MPS feature vector to six circuit angles, one per qubit. After the circuit is
+executed, a two-hidden-layer MLP (128 and 256 units) maps the measured
+observables together with the Fourier positional vector back to a single
+greyscale patch. The positional encoding follows established use as a spatial
+inductive bias in classical generative vision models \citep{Xu2021}.
+Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits.
+These were rebuilt in Qiskit for the hardware pilot of
+Section~\ref{sec:hardware_pilot}, and numerically verified against the
+training-time PennyLane circuit before use. The complete Hamiltonian, loss,
+positional-encoding and measurement definitions are retained in the companion
 supplement.
+\color{blue}
 
 \begin{figure}[t]
   \centering
@@ -302,8 +351,8 @@ supplement.
   \label{fig:hvk_ansatz}
 \end{figure}
 
-Table~\ref{tab:variants} summarizes the tested variants. HVK1D uses a linear
-6-qubit chain (5 nearest-neighbor bonds, 27-D observable vector); HVK2D arranges
+Table~\ref{tab:variants} summarises the tested variants. HVK1D uses a linear
+6-qubit chain (5 nearest-neighbour bonds, 27-D observable vector); HVK2D arranges
 the same 6 qubits on a $2\times3$ lattice matching patch-boundary adjacency
 (19-D latent signature); a symmetric HVK1D variant adds a
 $\mathrm{U}(1)$-preserving coupling constraint; and a $D_4$-pooled HVK2D variant
@@ -313,6 +362,7 @@ $\Phi_{D_4}(x)=\tfrac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx)$, which is equivarian
 by construction. The IBM Cloud circuit probe reported in the supplement confirms
 both HVK1D and HVK2D compile to depth-18, 6-qubit circuits on a Heron-class
 basis.
+\color{black}
 
 \begin{table}[t]
   \centering
@@ -335,7 +385,7 @@ basis.
 
 All image-reconstruction results in
 Sections~\ref{sec:sameset_results}--\ref{sec:hardware_pilot} use the single-image
-\textit{Monalisa} protocol developed for HVK: a fresh model is optimized directly
+\textit{Monalisa} protocol developed for HVK: a fresh model is optimised directly
 on its target image, with no held-out split. They therefore measure per-image
 fitting and reconstruction capability, including hardware replay of those fitted
 checkpoints. The symmetry and restricted-entanglement diagnostics use the
@@ -355,7 +405,7 @@ are given in the companion supplementary document.
 \label{sec:sameset_results}
 
 For each image, we trained a fresh HVK2D model using nonoverlapping $8\times8$
-patches (16 patches/image, 80--100 optimization steps). The sample covers
+patches (16 patches/image, 80--100 optimisation steps). The sample covers
 CIFAR-10 \citep{Krizhevsky2009}, MNIST \citep{LeCun1998}, Fashion-MNIST
 \citep{Xiao2017}, and the PathMNIST, BloodMNIST, and PneumoniaMNIST subsets of
 MedMNIST~v2 \citep{Yang2023}. Table~\ref{tab:sameset_multi_dataset} reports mean
@@ -387,12 +437,12 @@ claim; the companion study provides the latter evaluation
 \subsection{Scope and adaptation across images}
 \label{sec:no_generalization}
 
-A model optimized on one image alone does not transfer zero-shot to a
+A model optimised on one image alone does not transfer zero-shot to a
 structurally different image: on \textit{Monalisa}, zero-shot transfer to a
 second image reaches only $8.31$~dB PSNR ($\mathrm{SSIM}=0.1044$), while
 extending training to include the second image recovers $28.63$~dB
 ($\mathrm{SSIM}=0.9858$). This confirms that the per-image results above measure
-per-image optimization and reconstruction capability, not held-out
+per-image optimisation and reconstruction capability, not held-out
 generalization; this is how we scope every claim in this paper, and it is
 precisely the distinction the held-out protocol of
 Section~\ref{sec:ablation_relationship} is designed to test.
@@ -442,7 +492,7 @@ image-reconstruction pilot executed on real IBM Quantum hardware
 compiled-circuit feasibility probe documented in the supplement. For five images
 --- the full 16-patch \textit{Monalisa} benchmark and four native-resolution
 CIFAR-10 images (\textit{cat}, \textit{ship}$\times2$, \textit{airplane}), each
-optimized directly on its own target image following the same per-image protocol
+optimised directly on its own target image following the same per-image protocol
 as every result in this paper --- we took an already-trained HVK1D/HVK2D
 checkpoint's exact learned parameters, rebuilt its measurement circuits
 gate-for-gate in Qiskit, verified the translation against the original PennyLane
@@ -496,7 +546,7 @@ documented in the supplement.
   \includegraphics[width=\textwidth]{figures/ibm_hardware_reconstruction_monalisa.pdf}
   \caption{\textit{Monalisa} reconstructed from real IBM Quantum hardware
            measurements (right) against the same trained checkpoint's
-           noiseless-simulator replay (center) and ground truth (left). The
+           noiseless-simulator replay (centre) and ground truth (left). The
            hardware image is visibly noisier and exhibits patch-boundary banding,
            while the subject remains recognizable.}
   \label{fig:hardware_reconstruction_monalisa}
@@ -702,7 +752,7 @@ classical models in general.
 \begin{table}[t]
   \centering
   \caption{HVK2D restricted pair-correlation diagnostic across five seeds.
-           Deliberately favorable to pair-observable structure; evidence for
+           Deliberately favourable to pair-observable structure; evidence for
            entanglement-necessity under a matched linear readout.}
   \label{tab:hvk_pair_diagnostic}
   \begin{tabular}{@{}l r r r@{}}
@@ -725,7 +775,7 @@ classical models in general.
   \includegraphics[width=0.9\textwidth]{figures/full_ablation_metric_comparison.pdf}
   \caption{Restricted pair-correlation diagnostic summary (mean $\pm$ std over
            five seeds). The entangling observable feature map dominates every
-           control on this deliberately favorable task.}
+           control on this deliberately favourable task.}
   \label{fig:hvk_pair_diagnostic}
 \end{figure}
 
@@ -740,7 +790,7 @@ within-run median-plus-$2\sigma$ threshold crossing rather than a calibrated
 statistical test. The negative control settles the reading: the identical
 protocol applied to a classical-replacement variant, with the Hamiltonian energy
 identically zero throughout training, crosses that threshold in all $4/4$ tested
-cases --- exactly as often as the Hamiltonian-regularized model's $4/4$ --- so we
+cases --- exactly as often as the Hamiltonian-regularised model's $4/4$ --- so we
 make no transition claim and report these traces solely as an interpretability
 readout on the learned energy and entanglement (full protocol and tables in the
 companion Supplementary Material).
@@ -748,7 +798,7 @@ companion Supplementary Material).
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{Why the physics-informed regularizer was inert}
+\subsection{Why the physics-informed regulariser was inert}
 \label{sec:regularizer_inert}
 
 Table~\ref{tab:hamiltonian_controls} shows the Hamiltonian energy term is, if
@@ -760,7 +810,7 @@ and cannot be recovered or audited, so those earlier numbers are superseded here
 rather than cited (full account of the discrepancy, plus additional
 observable-sector controls and follow-up experiments, in the Supplementary
 Material). The legacy objective adds a signed mean energy to the reconstruction
-loss; because learned energy can go negative, the optimizer can lower total loss
+loss; because learned energy can go negative, the optimiser can lower total loss
 by driving energy down without improving reconstruction, and removing the term
 improves PSNR from $38.63$ to $44.56$~dB. Structurally, the learned couplings
 enter only the energy term and never reach the decoder, so the Hamiltonian is a
@@ -770,11 +820,11 @@ A contrastive variant --- assigning
 lower energy to correct feature--position pairs than to shuffled pairs ---
 improves over the signed-energy baseline ($42.92$~dB) but remains below its own
 no-energy-loss counterpart ($44.56$~dB). We read this as a case where the
-reconstruction loss already dominates the optimization signal at this model scale
-and dataset size: a physically motivated regularizer has room to help when it
+reconstruction loss already dominates the optimisation signal at this model scale
+and dataset size: a physically motivated regulariser has room to help when it
 resolves an otherwise underdetermined objective, and here the pixel-fidelity loss
 alone is sufficiently informative that the extra term mostly adds noise to the
-gradient. This does not mean Hamiltonian regularization is never useful; its
+gradient. This does not mean Hamiltonian regularisation is never useful; its
 value is conditional on the reconstruction loss being under-constrained, a
 condition this patch-level pixel task does not meet. The Supplementary Material
 additionally reports a root-cause fix (bounding the couplings and using a
@@ -795,7 +845,7 @@ result here.
     \toprule
     Experiment                      & PSNR (dB) & Interpretation \\
     \midrule
-    Legacy baseline, signed energy  & 38.63     & Standard energy-regularized run \\
+    Legacy baseline, signed energy  & 38.63     & Standard energy-regularised run \\
     No energy loss                  & 44.56     & Removing energy improves PSNR \\
     Contrastive Hamiltonian core    & 42.92     & Stronger objective helps modestly
                                                   vs.\ baseline, still below
@@ -835,25 +885,25 @@ task-relevant information is a property of the target, not of the circuit's
 entanglement per se. On these natural-image targets the pair observables add
 little beyond the local ones; on the constructed nonlocal target
 (Section~\ref{sec:entanglement_necessity}) they are necessary. The companion supplementary study's
-held-out comparisons (Section~\ref{sec:ablation_relationship}) characterize
+held-out comparisons (Section~\ref{sec:ablation_relationship}) characterise
 exactly this second regime; together, the results delineate where the tested
 entangling representation does and does not yield a measurable benefit.
 
 This data-dependent reading also rules out an uncharitable alternative
 explanation of the held-out tie (Section~\ref{sec:ablation_relationship}) and the
-inert regularizer (Section~\ref{sec:regularizer_inert}): that some idiosyncratic
+inert regulariser (Section~\ref{sec:regularizer_inert}): that some idiosyncratic
 implementation choice --- an unmotivated qubit count, an unusual latent width, or
-a peculiar regularizer formulation --- rather than the design pattern itself, is
+a peculiar regulariser formulation --- rather than the design pattern itself, is
 responsible, and a different choice within the same pattern would have won. HVK's
 three ingredients each recur individually throughout the hybrid quantum-vision
 literature --- MPS compression of structured input
 \citep{Stoudenmire2016, Han2018, Cirac2021, Guala2023}, a Pauli-correlator latent
 space handed to a classical decoder \citep{Havlicek2019}, and a physically
-motivated auxiliary regularizer alongside a task loss \citep{Shi2022} --- and its
+motivated auxiliary regulariser alongside a task loss \citep{Shi2022} --- and its
 specific instantiation (six-qubit VQC, $19$--$27$-D correlator vector,
 graph-Hamiltonian term) sits well within the parameter ranges typical of that
 literature rather than at an unusual extreme. The tested pattern is therefore a
-fair, properly-scaled instance rather than a strawman, and its measured behavior
+fair, properly-scaled instance rather than a strawman, and its measured behaviour
 is evidence worth taking at face value; we do not, however, claim the boundary
 transfers unchanged to every dataset, patch size, or qubit count.
 
@@ -968,7 +1018,7 @@ energy diagnostic --- are documented and scoped in the preceding sections.
         interpretability readout, not evidence of a transition: the threshold's
         negative control fires on a classical-replacement variant with the
         Hamiltonian energy identically zero exactly as often as on the
-        Hamiltonian-regularized model (4/4 vs.\ 4/4, full table in the
+        Hamiltonian-regularised model (4/4 vs.\ 4/4, full table in the
         Supplementary Material), so the readout has no demonstrated sensitivity
         to the Hamiltonian term itself.
   \item The matched real-circuit topology comparison uses only 3 seeds and 3
@@ -1069,7 +1119,7 @@ in this work.
         mappings.
         IBM Quantum job identifiers and reconstructed outputs are retained; as
         disclosed in the supplement, the raw account-usage service response was
-        not serialized, so the reported quota change is an execution-log record
+        not serialised, so the reported quota change is an execution-log record
         rather than a repository-recomputable measurement.
 
   \item[Author contributions.] \textbf{Sparsho Chakraborty:}
