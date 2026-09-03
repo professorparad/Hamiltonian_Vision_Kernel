@@ -393,7 +393,7 @@ second image reaches only $8.31$~dB PSNR ($\mathrm{SSIM}=0.1044$), while
 extending training to include the second image recovers $28.63$~dB
 ($\mathrm{SSIM}=0.9858$). This confirms that the per-image results above measure
 per-image optimization and reconstruction capability, not held-out
-generalization --- consistent with how we scope every claim in this paper, and
+generalization; this is how we scope every claim in this paper, and it is
 precisely the distinction the held-out protocol of
 Section~\ref{sec:ablation_relationship} is designed to test.
 
@@ -559,7 +559,7 @@ ceiling to a calibrated-noise simulation at the same 256-shot budget already
 costs $8.68$~dB on average, before any real device is involved. Second, more
 shots does not reliably recover it: increasing to 4096 shots per basis changes
 PSNR by only $-0.05$~dB on average across the five checkpoints, with individual
-images ranging from a $1.33$~dB gain to a $0.96$~dB loss --- at this circuit size
+images ranging from a $1.33$~dB gain to a $0.96$~dB loss. At this circuit size
 and shot range, shot count is not a lever that reliably improves reconstruction
 quality. Comparing the 256-shot noisy simulation directly against the
 real-hardware point isolates what the calibration snapshot does \emph{not}
@@ -610,7 +610,7 @@ shots.
 
 \textit{Monalisa} reproduces almost exactly across backends at matched shots
 ($25.94$ vs.\ $25.90$~dB, \texttt{ibm\_marrakesh} vs.\ \texttt{ibm\_fez}), and
-gains only $0.16$~dB from quadrupling shots to 1024 --- consistent with the
+gains only $0.16$~dB from quadrupling shots to 1024, consistent with the
 simulated finding above that shot count is not a reliable lever. The CIFAR
 \textit{cat} point is the more informative one: on \texttt{ibm\_kingston} at the
 original 256-shot budget it reaches $28.93$~dB, $2.59$~dB below the
@@ -618,7 +618,7 @@ original 256-shot budget it reaches $28.93$~dB, $2.59$~dB below the
 backend recovers to $31.24$~dB, within $0.28$~dB of the original. This is real
 job-to-job and backend-to-backend variation of a magnitude comparable to the
 unmodeled residual identified by the simulator comparison
-(Section~\ref{sec:hardware_robustness}) --- direct evidence, not merely a
+(Section~\ref{sec:hardware_robustness}). This is direct evidence, not merely a
 simulated bound, that a single 256-shot execution on a single backend is not yet
 a stable estimate of this pipeline's hardware performance, and that repeated
 execution matters at least as much as backend choice or shot count individually.
@@ -734,7 +734,7 @@ classical models in general.
 
 Beyond the results above, we tracked two exploratory training-dynamics readouts:
 a magnetization-style statistic $M_z(t)$ and a signed energy-to-entanglement
-ratio $R_{ES}(t)$. Neither exhibits a sharp transition --- both drift smoothly
+ratio $R_{ES}(t)$. Neither exhibits a sharp transition: both drift smoothly
 over training with run-to-run fluctuations, and any apparent onset is a
 within-run median-plus-$2\sigma$ threshold crossing rather than a calibrated
 statistical test. The negative control settles the reading: the identical
@@ -774,9 +774,9 @@ reconstruction loss already dominates the optimization signal at this model scal
 and dataset size: a physically motivated regularizer has room to help when it
 resolves an otherwise underdetermined objective, and here the pixel-fidelity loss
 alone is sufficiently informative that the extra term mostly adds noise to the
-gradient. This does not mean Hamiltonian regularization is never useful --- only
-that its value is conditional on the reconstruction loss being under-constrained,
-a condition this patch-level pixel task does not meet. The Supplementary Material
+gradient. This does not mean Hamiltonian regularization is never useful; its
+value is conditional on the reconstruction loss being under-constrained, a
+condition this patch-level pixel task does not meet. The Supplementary Material
 additionally reports a root-cause fix (bounding the couplings and using a
 positive/squared energy loss, which stops the term from hurting but does not make
 it help) and an exploratory decoder-feature variant that improves 2 of 3 seeds
@@ -825,7 +825,7 @@ Section~\ref{sec:entanglement_necessity} is constructed so that the relevant
 structure is a genuine distant-element product raw or local features cannot
 represent under a fixed linear readout, and that is precisely the regime in which
 HVK's entangling channel separates. Natural image patches, at the resolution and
-patch size used in ordinary reconstruction, are a different regime ---
+patch size used in ordinary reconstruction, are a different regime:
 low-entanglement, locally structured data where a linear or shallow classical
 readout is already close to sufficient. We stress that this is not a statement
 about the circuit's entangling power: the ansatz uses strongly-entangling layers
