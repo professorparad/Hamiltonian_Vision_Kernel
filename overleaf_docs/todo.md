@@ -36,69 +36,115 @@ Only open items live here. Completed work is recorded in `EDITS.md` and git hist
 
 ---
 
-## I. TO DO NEXT (assigned to student, 2026-09-03)
+## I. QUESTION FOR YOU — please answer before editing anything (2026-09-03)
 
-  Supervisor audit finding. I re-derived the held-out statistics from the raw
-  artifacts. Everything checks out -- the TOST t-statistics, p-values and 90% CIs
-  all recompute exactly from `tost_equivalence.json`, the hardware PSNRs all
-  recompute from their stored MSEs, and `tab:hvk_pair_diagnostic` matches
-  `full_ablation_summary.json` to 5 s.f. Good work. One presentation problem:
+  First, the good news. I re-derived the held-out statistics from the raw artifacts
+  rather than reading them off the manuscript, and everything checks out: the TOST
+  t-statistics, p-values and 90% CIs all recompute exactly from
+  `tost_equivalence.json`, every hardware PSNR recomputes from its stored MSE, and
+  `tab:hvk_pair_diagnostic` matches `full_ablation_summary.json` to 5 significant
+  figures. The bibliography is also clean (48 entries, 48 cited, no orphans, no
+  undefined keys). That is careful work.
 
-  I1. MERGE THE DUPLICATED CONTROL. `raw-linear-classical` and
-      `local-observables-only` are THE SAME FEATURE MAP, not two controls. The base
-      patch descriptor is exactly 26-D (12 stats + 6 low-freq block means + 8 Fourier
-      position channels, see `real_patch_base_features` in
-      `Main2/newHVK/run_newhvk_suite.py`), so
+  One thing I want you to confirm before either of us touches the text.
+
+  I1. WERE `raw-linear-classical` AND `local-observables-only` MEANT TO BE TWO
+      SEPARATE CONTROLS?
+
+      As the code currently stands they compute the same thing. The base patch
+      descriptor from `real_patch_base_features` (in
+      `Main2/newHVK/run_newhvk_suite.py`) is exactly 26-D — 12 intensity/gradient
+      statistics, 6 low-frequency block means, 8 Fourier position channels — and:
 
           real_raw_linear_features(base)    = select_same_width(base, 32)
           real_local_observables_only(base) = select_same_width(base[:, :26], 32)
 
-      are identical, both zero-padded 26 -> 32. They are bit-identical in all 20
-      held-out cells and carry identical seed-difference vectors in
-      `tost_equivalence.json`.
+      Since `base` has 26 columns, `base[:, :26]` is all of `base`, so both return
+      the same vector zero-padded 26 -> 32. I checked this against the data too: they
+      are bit-identical in all 20 held-out cells of `real_cifar_holdout.csv`, and
+      they carry identical seed-difference vectors in `tost_equivalence.json`.
 
-      You already spotted this -- supplement line ~79 says "(identical by
-      construction here)" -- so this is a presentation fix, NOT a re-run. Nothing
-      downstream changes and no headline number moves. In `supplementary_study.tex`:
+      I can see two readings and I do not know which is yours:
 
-        (a) Merge the two rows into one in all three tables: `tab:hvk_real_cifar`
-            (lines ~90-91), `tab:hvk_real_cifar_stats` (~112-113), and
-            `tab:tost_equivalence` (~145-146). Label the merged row something like
-            "Raw-linear / local-observables control".
-        (b) Add a short note under each of those tables giving the reason (the 26-D
-            descriptor, zero-padded to the shared 32-D width), so a referee who sees
-            the merge understands it immediately.
-        (c) Line ~157: "Six of the eight controls are statistically equivalent" is
-            now a double-count. The true numbers are FIVE of SEVEN distinct controls
-            (5 equivalent + 2 not-equivalent = 7). Fix the sentence and drop the
-            duplicated name from the list that follows it.
-        (d) Line ~79: promote "(identical by construction here)" from a parenthetical
-            to an explicit clause stating the mechanism.
-        (e) Line ~593 (conclusion): singularize "local-observable and raw-linear
-            controls" to the one merged control.
+        (A) They were MEANT to differ. `local-observables-only` was supposed to be a
+            strict subset — local statistics only, WITHOUT the 8 positional channels,
+            i.e. `base[:, :18]` — and the `[:, :26]` slice is a bug that silently
+            turned it into a copy of the raw control. If so this is a real (small)
+            code fix plus a re-run of that one control, and the held-out /
+            TOST / multi-dataset tables gain a genuinely distinct row. Nothing else
+            in the paper moves.
 
-      Then the same count fix in `paper_hvk_springer.tex`: the abstract (~line 53),
-      the contributions bullet (~163, "six of eight"), and the two body passages
-      (~408 and ~418, "six of eight tested controls"). Keep the register rules --
-      still "competitive," still TOST-only, no "beats."
+        (B) They were always the same map, kept as two rows only because they came
+            from two different naming conventions in the harness. You did already
+            note "(identical by construction here)" at supplement line ~79, which
+            points this way. If so, no code changes — it is purely a presentation
+            fix: merge the rows so a referee does not read two identical lines as a
+            copy-paste error.
 
-      Watch out: both .tex files are CRLF. A careless regex edit can mangle line
-      endings or silently match nothing -- check `git diff` before you commit.
+      TELL ME WHICH IT IS. Do not start editing until we have settled it, because
+      (A) and (B) lead to different work and I do not want you re-running anything
+      unnecessarily. If you are unsure, say so and we will look at it together —
+      "I do not remember" is a perfectly fine answer here.
 
-  I2. ONE HONESTY CLAUSE ON RESOURCE-MATCHING. Section ~line 29 says every control
-      has "identical feature width (32-D)". True for what the readout sees, but this
-      control's real descriptor is 26-D plus 6 zeros. Add a clause saying matching is
-      on the width the readout sees and narrower descriptors are zero-padded, which
-      adds no information and leaves the 2112 readout parameter count unchanged.
-      (`tab:resource_capacity` is already correct -- it uses a single "Raw/local
-      controls" row -- so no change needed there.)
+      Either way, please also check the same question for the multi-dataset section
+      (~line 159), which reports "the local-only control" on five further datasets.
+      If (A) holds, is that row the same collapsed map?
 
-  I3. RECOMPILE BOTH and confirm 0 errors / 0 undefined citations / 0 undefined
-      references before committing. I test-applied these edits locally to check they
-      are safe: main paper stays at 24 pp, supplement goes 27 -> 28 pp (the three added
-      notes push it over a page break). Both compiled with 0 errors / 0 undefined. If
-      you land somewhere different, something else changed -- check before committing.
-      Record the change at the top of `EDITS.md`.
+  I2. ONE THING THAT NEEDS SAYING WHICHEVER WAY I1 GOES. The methods section (~line
+      29) says every retained control has "identical feature width (32-D)". That is
+      true of what the readout sees, but this control's real descriptor is 26-D plus
+      6 zeros. Worth one clause noting that matching is on the readout-facing width
+      and narrower descriptors are zero-padded — which adds no information and leaves
+      the 2112 readout parameter count unchanged. (`tab:resource_capacity` is already
+      correct: it uses a single "Raw/local controls" row.)
+
+  ---
+
+  REFERENCE — exactly where this shows up (line numbers are current as of this
+  commit; table numbers are as rendered in the compiled supplement PDF).
+
+  `overleaf_docs/supplementary_study.tex` — the two identical rows:
+
+    | Table | Label                      | Caption (short)                  | Duplicate rows |
+    |-------|----------------------------|----------------------------------|----------------|
+    | 2     | `tab:hvk_real_cifar`       | Held-out CIFAR-10 validation layer | lines 90, 91 |
+    | 3     | `tab:hvk_real_cifar_stats` | Seed-level paired tests          | lines 112, 113 |
+    | 4     | `tab:tost_equivalence`     | TOST equivalence test            | lines 145, 146 |
+
+    In Table 2 the order is "Local observables only" then "Raw-linear classical";
+    in Tables 3 and 4 it is the other way round. Both rows carry identical numbers
+    in all three.
+
+  Related, in the same file:
+
+    - line  29  — the "identical feature width (32-D)" methods sentence (item I2).
+    - line  79  — prose: "Local-observables-only and raw-linear-classical controls
+                  (identical by construction here)". Your existing disclosure.
+    - line 157  — "Six of the eight controls are statistically equivalent ..." — the
+                  count that double-counts if reading (B) is right.
+    - line 159  — multi-dataset paragraph, "Against the local-only control ...",
+                  referring to Table 5 (`tab:multi_dataset_reconstruction`).
+                  This is the one I ask you to check separately.
+    - line 238  — Table 8 (`tab:resource_capacity`). Already correct: it uses one
+                  merged "Raw/local controls" row. No change needed.
+    - line 593  — conclusion, repeats "local-observable and raw-linear controls".
+
+  `overleaf_docs/paper_hvk_springer.tex` — the same count, four places:
+
+    - line  53  — abstract: "resource-matched local-observable and raw-linear
+                  classical controls".
+    - line 163  — contributions bullet: "... to six of eight resource-matched
+                  classical/ablated controls".
+    - line 408  — body: "local-observable and raw-linear controls reach 18.80 dB".
+    - line 417  — body: "six of eight tested controls are statistically equivalent".
+
+  Source of truth for the numbers, if you want to re-derive any of this yourself:
+    - `Main2/newHVK/results/q1_validation/real_cifar_holdout.csv`  (per-seed, per-image)
+    - `Main2/newHVK/results/q1_validation/tost_equivalence.json`   (seed_diffs_db)
+    - `Main2/newHVK/run_newhvk_suite.py`                           (the feature maps)
+
+  Note: both .tex files are CRLF. A careless regex edit can mangle the line endings
+  or silently match nothing — always check `git diff` before committing.
 
 ---
 
