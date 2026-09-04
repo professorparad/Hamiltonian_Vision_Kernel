@@ -49,8 +49,8 @@ datasets, per-image-trained HVK2D models reconstruct with peak signal-to-noise
 ratio (PSNR) between 25.8 and 41.6 decibels. On a resource-matched, multi-seed
 held-out comparison using the CIFAR-10 image dataset, a pre-declared two
 one-sided tests (TOST) equivalence procedure at a one-decibel margin establishes
-that HVK2D is statistically \emph{competitive} with resource-matched
-local-observable and raw-linear classical controls, and it substantially
+that HVK2D is statistically \emph{competitive} with a resource-matched
+raw/local linear classical control, and it substantially
 outperforms random-circuit and classical-random-feature controls. Five fitted checkpoints
 are replayed on superconducting quantum hardware without retraining and decoded
 directly from device-measured observables, reaching 25.90 to 31.52 decibels. The
@@ -160,8 +160,8 @@ isolation --- each of which individually recurs throughout this literature
         (Section~\ref{sec:sameset_results}).
   \item \textbf{Competitive with resource-matched classical baselines.} A
         pre-declared TOST equivalence test on held-out CIFAR-10 shows HVK2D is
-        statistically equivalent, within a $\pm1$~dB margin, to six of eight
-        resource-matched classical/ablated controls, and substantially
+        statistically equivalent, within a $\pm1$~dB margin, to five of seven
+        distinct resource-matched classical/ablated controls, and substantially
         outperforms the two null controls (strict classical random features and
         a random-VQC) (Section~\ref{sec:ablation_relationship}).
   \item \textbf{Hardware pilot.} Five fitted checkpoints are replayed on IBM
@@ -405,8 +405,8 @@ question is whether HVK's feature map improves reconstruction on real,
 \emph{held-out} images under a resource-matched multi-seed protocol. That
 question is answered in the companion document, \textit{Supplementary Material
 for the Hamiltonian Vision Kernel: Resource-Matched Ablations, Validation, and
-Reproducibility}. On held-out CIFAR-10, local-observable and raw-linear controls
-reach $18.80\pm1.42$~dB against HVK2D's $18.12\pm1.54$~dB; after aggregating
+Reproducibility}. On held-out CIFAR-10, the raw/local linear control reaches
+$18.80\pm1.42$~dB against HVK2D's $18.12\pm1.54$~dB; after aggregating
 held-out images within each split, the HVK2D-minus-control difference is
 $-0.68$~dB (bootstrap 95\% CI $[-0.91,-0.46]$~dB; Wilcoxon $p=0.0625$, $n=5$
 seeds), with the same numerical direction on five further real datasets. Thus the
@@ -414,8 +414,8 @@ tested HVK map is informative but is not shown to outperform the simpler maps on
 ordinary held-out reconstruction. A TOST equivalence test at a declared
 $\pm1$~dB margin (companion supplement) confirms this gap is small enough, in a
 pre-declared and data-independent sense, to call the two \emph{competitive}
-rather than merely ``not shown to differ'': six of eight tested controls are
-statistically equivalent to HVK2D within that margin, while the two weakest
+rather than merely ``not shown to differ'': five of seven distinct tested controls
+are statistically equivalent to HVK2D within that margin, while the two weakest
 controls (strict classical random features, random-VQC) are correctly excluded
 because HVK2D substantially outperforms them. We
 report this as a rigorous complement: it delineates the tested boundary of the

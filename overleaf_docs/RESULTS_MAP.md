@@ -19,7 +19,7 @@ Run every command from the repository root unless the row says otherwise.
 | Status | Meaning |
 |---|---|
 | `backed` | Driver, parameters and artifact all present, and the artifact reproduces the printed number. |
-| `backed (device-side pending)` | Same, but a real-hardware row whose job has not yet been re-confirmed against the IBM Quantum account (see §F2 below). |
+| `backed (device-side unverifiable)` | Same, but a real-hardware row whose job cannot be re-confirmed against the IBM Quantum account: the submitting account has been closed (see §F2 below). The artifact still reproduces the printed number. |
 | `descriptive` | No measurement — a definitions/architecture table with nothing to reproduce. |
 | `partial` | Some rows of the item lack an artifact; the gap is disclosed in the manuscript itself. |
 
@@ -35,11 +35,11 @@ different directories; copy the paths exactly as written.
 | Fig. 1 `fig:hvk_ansatz` | 2 | R14 | `python IBM_Cloud/generate_ansatz_figures.py` | `n_qubits=6`, `n_layers=2`; HVK1D = CNOT ring (range 1 then 2), HVK2D = `grid_edges()` (same 7 edges both layers) | `overleaf_docs/assets/figures/hvk1d_ansatz.pdf`, `hvk2d_ansatz.pdf` | `backed` — generator written 2026-07-29; no original existed despite the caption's claim |
 | Table 1 `tab:variants` | 2 | — | — | — | — | `descriptive` (variant/topology/latent-dim/symmetry definitions) |
 | Table 2 `tab:sameset_multi_dataset` | 4.1 | R1 | `python Main2/newHVK/run_full_dataset_sameset.py --datasets cifar10 mnist fashion-mnist pathmnist --images-per-dataset 3` then the same with `--datasets bloodmnist --images-per-dataset 2` (the script overwrites its output path rather than merging, so batch and merge by hand) | `--images-per-dataset` 3 for cifar10/mnist/fashion-mnist/pathmnist, 2 for bloodmnist/pneumoniamnist (matches the table's own *n* column); `--epochs` 100 default; patch 8×8; χ=4 | `Main2/newHVK/results/full_dataset_sameset/summary.json` | `backed` — all 6 rows fresh-run, exact match (2026-07-29) |
-| Table 3 `tab:hardware_pilot_summary` | 4.4 | R3 | `python IBM_Cloud/run_hvk_hardware_reconstruction.py --shots 256` (Monalisa) and `python IBM_Cloud/run_hvk2d_cifar_hardware_reconstruction.py --shots 256` (4 CIFAR) | `--max-patches 16`, `--shots 256`, backend `ibm_fez`; no retraining, decoder unchanged | `IBM_Cloud/outputs/hardware_reconstruction/hardware_reconstruction_report.json`; `IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/summary.json` | `backed (device-side pending)` — recomputed from raw JSON: 25.896→25.90, 31.521→31.52, CIFAR mean 29.564±2.029→29.56±2.03 |
-| Fig. 2 `fig:hardware_reconstruction_monalisa` | 4.4 | R3 | same as Table 3 (Monalisa driver) | 16 patches, 3 measurement bases (Z, X, Y) | `IBM_Cloud/outputs/hardware_reconstruction/` | `backed (device-side pending)` |
-| Fig. 3 `fig:hardware_reconstruction_cifar` | 4.4 | R3 | same as Table 3 (CIFAR driver) | 4 images × 16 patches, 2 bases (Z, X) | `IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/` | `backed (device-side pending)` |
+| Table 3 `tab:hardware_pilot_summary` | 4.4 | R3 | `python IBM_Cloud/run_hvk_hardware_reconstruction.py --shots 256` (Monalisa) and `python IBM_Cloud/run_hvk2d_cifar_hardware_reconstruction.py --shots 256` (4 CIFAR) | `--max-patches 16`, `--shots 256`, backend `ibm_fez`; no retraining, decoder unchanged | `IBM_Cloud/outputs/hardware_reconstruction/hardware_reconstruction_report.json`; `IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/summary.json` | `backed (device-side unverifiable)` — recomputed from raw JSON: 25.896→25.90, 31.521→31.52, CIFAR mean 29.564±2.029→29.56±2.03 |
+| Fig. 2 `fig:hardware_reconstruction_monalisa` | 4.4 | R3 | same as Table 3 (Monalisa driver) | 16 patches, 3 measurement bases (Z, X, Y) | `IBM_Cloud/outputs/hardware_reconstruction/` | `backed (device-side unverifiable)` |
+| Fig. 3 `fig:hardware_reconstruction_cifar` | 4.4 | R3 | same as Table 3 (CIFAR driver) | 4 images × 16 patches, 2 bases (Z, X) | `IBM_Cloud/outputs/hvk2d_cifar_hardware_reconstruction/` | `backed (device-side unverifiable)` |
 | Fig. 4 `fig:hardware_robustness_shot_sweep` | 4.5 | R4 | `python IBM_Cloud/run_hardware_robustness_simulator_sweep.py` | shots {256, 512, 1024, 4096}, 3 repeats, 5 checkpoints, `FakeFez` calibrated-noise simulator against the ideal statevector; **no QPU time** | `IBM_Cloud/outputs/hardware_robustness_study/simulator_sweep.json` (65 rows) | `backed` — recomputed: 8.677→8.68 dB; 4096-vs-256 delta −0.046→−0.05 dB |
-| Table 4 `tab:hardware_anchors` | 4.6 | R5 | `python IBM_Cloud/run_hardware_robustness_real_anchors.py` | backends `ibm_marrakesh`, `ibm_kingston`; shots 256 / 1024; the same two checkpoints as the pilot (Monalisa, CIFAR cat) | `IBM_Cloud/outputs/hardware_robustness_study/real_hardware_anchors.json` | `backed (device-side pending)` — 25.942→25.94, 26.103→26.10, 28.926→28.93, 31.237→31.24 |
+| Table 4 `tab:hardware_anchors` | 4.6 | R5 | `python IBM_Cloud/run_hardware_robustness_real_anchors.py` | backends `ibm_marrakesh`, `ibm_kingston`; shots 256 / 1024; the same two checkpoints as the pilot (Monalisa, CIFAR cat) | `IBM_Cloud/outputs/hardware_robustness_study/real_hardware_anchors.json` | `backed (device-side unverifiable)` — 25.942→25.94, 26.103→26.10, 28.926→28.93, 31.237→31.24 |
 | Table 5 `tab:d4_equivariance` | 4.7 | R6 | `python main2/newHVK/run_extended_validation.py` (lowercase `main2`) | 1000 cached CIFAR images × 7 non-identity transforms = 7000 evaluations | `main2/newHVK/results/extended_validation/d4_equivariance/d4_equivariance_summary.json` | `backed` — 9.573879468686641e-17 → printed 9.57e-17; driver inferred from the output directory (the historical map left it `confirm`) |
 | Fig. 5 `fig:d4_equivariance` | 4.7 | R6 | same as Table 5 | same | same | `backed` |
 | Table 6 `tab:hvk_pair_diagnostic` | 4.8 | R7 | `python main2/newHVK/run_newhvk_suite.py` (full-ablation-suite mode) | 5 seeds; leakage-audited synthetic distant-product target; fixed linear readout | `main2/newHVK/results/full_ablation_suite/full_ablation_summary.json` | `backed` — 0.9735224984535916 → printed 0.9735 |
@@ -75,70 +75,107 @@ different directories; copy the paths exactly as written.
 | Fig. 7 `fig:d4_symmetry_experiment_summary` | 5 | — | same as Table 13 | same | same | `backed` |
 | §5.1 real-circuit D₄ confirmation (in-text numbers) | 5.1 | — | same driver, real-circuit mode | 4 trained HVK2D checkpoints replayed with the real PennyLane forward pass, no retraining | `Main2/newHVK/results/d4_symmetry_experiment/d4_real_circuit_confirmation.json` | `backed` — 0.2777 → 5.39e-8 equivariance error; 4.355e-2 → 1.46e-15 output consistency |
 | Fig. 8 `fig:ibm_circuit_summary` | 7.2 | R13 | `python IBM_Cloud/run_ibm_hvk_probe.py --variant both --dry-run` | builds both circuits and records `depth` / `count_ops` without submitting; `optimization_level=1`, `ibm_fez` basis | `IBM_Cloud/outputs/circuits_summary.json` | `backed` — HVK1D depth 18 / cx 10, HVK2D depth 18 / cx 14 |
-| Table 14 (unlabeled, §7.4 job identifiers) | 7.4 | R3 | same drivers as Table 3 of the paper | 176 circuits across 5 jobs, `SamplerV2`, 256 shots/circuit | the two hardware-pilot output directories | `backed (device-side pending)` — see §F2 |
-| Table 15 `tab:replay_job_ledger` | 7.5 | — | `python IBM_Cloud/run_checkpoint_bond_dimension_hardware_sweep.py`, `python IBM_Cloud/run_checkpoint_bond_dimension_temperature_hardware_sweep.py`, `python IBM_Cloud/run_ionq_system_size_shots_sweep.py` | 16 jobs: IonQ ideal simulator + `ibm_marrakesh`, 256/512/1024 shots | `IBM_Cloud/outputs/checkpoint_bond_dimension_hardware_sweep/`, `IBM_Cloud/outputs/checkpoint_bond_dimension_temperature_hardware_sweep/` | `backed (device-side pending)` — auditability only; no claim rests on these |
+| Table 14 (unlabeled, §7.4 job identifiers) | 7.4 | R3 | same drivers as Table 3 of the paper | 176 circuits across 5 jobs, `SamplerV2`, 256 shots/circuit | the two hardware-pilot output directories | `backed (device-side unverifiable)` — see §F2 |
+| Table 15 `tab:replay_job_ledger` | 7.5 | — | `python IBM_Cloud/run_checkpoint_bond_dimension_hardware_sweep.py`, `python IBM_Cloud/run_checkpoint_bond_dimension_temperature_hardware_sweep.py`, `python IBM_Cloud/run_ionq_system_size_shots_sweep.py` | 16 jobs: IonQ ideal simulator + `ibm_marrakesh`, 256/512/1024 shots | `IBM_Cloud/outputs/checkpoint_bond_dimension_hardware_sweep/`, `IBM_Cloud/outputs/checkpoint_bond_dimension_temperature_hardware_sweep/` | `backed (device-side unverifiable)` — auditability only; no claim rests on these |
 
 ---
 
 ## F2. Hardware provenance ledger
 
 Every job identifier printed in the manuscripts, with the backend, shot count and PSNR
-read back from the retained JSON. **The `Account` column is the open half of F2**: it
-needs the IBM Quantum account, which is not configured on this machine (no
-`~/.qiskit/qiskit-ibm.json`, no `IBM_QUANTUM_TOKEN`), so nothing below has been
-confirmed against the service — only against local artifacts.
+read back from the retained JSON. **The `Account` column could not be closed, and cannot
+be.** Checked 2026-09-04 with a valid IBM Cloud API key:
+
+- The jobs were submitted through `channel="ibm_quantum_platform"` (see
+  `IBM_Cloud/run_hvk_hardware_reconstruction.py`), so they ran under an IBM Cloud instance.
+- That instance lived in the account used for the runs, an **IIT Bhubaneswar trial that is
+  now `CANCELED`** (`12586c7ca151474297be30db083c3bcb`).
+- The student's remaining active account (`059312687e3b4f8484a4d6cd7c311a3d`)
+  authenticates fine but holds **no Qiskit Runtime instance** — the resource controller
+  returns `rows_count: 0` — and an IBM Cloud API key cannot be re-scoped to another
+  account (IAM refuses with `BXNIM0413E`).
+- Creating a fresh instance would not help: job history is scoped to the instance that
+  submitted the job.
+
+**Consequence.** Every value below is backed by a retained local artifact and was
+recomputed from it; none carries a second, service-side confirmation, and none now can.
+That is a limit on provenance, not on the results, and it is recorded here rather than
+worked around.
 
 ### Reconstruction pilot — paper Table 3, supplement §7.4
 
 | Image | Backend | Shots | Job ID | Circuits | PSNR (dB) | Account |
 |---|---|---|---|---|---|---|
-| Monalisa (HVK1D) | `ibm_fez` | 256 | `d9ecu34inv1c73aq3qt0` | 48 (Z, X, Y) | 25.896 | pending |
-| CIFAR cat (HVK2D) | `ibm_fez` | 256 | `d9edfo2neu4c739ob2ig` | 32 (Z, X) | 31.521 | pending |
-| CIFAR ship / hydrofoil | `ibm_fez` | 256 | `d9edg5cjeosc73filhng` | 32 (Z, X) | 26.440 | pending |
-| CIFAR ship / sea boat | `ibm_fez` | 256 | `d9edgakjeosc73filhug` | 32 (Z, X) | 31.196 | pending |
-| CIFAR airplane | `ibm_fez` | 256 | `d9edgdphtsac739e4kdg` | 32 (Z, X) | 29.099 | pending |
+| Monalisa (HVK1D) | `ibm_fez` | 256 | `d9ecu34inv1c73aq3qt0` | 48 (Z, X, Y) | 25.896 | not retrievable (account closed) |
+| CIFAR cat (HVK2D) | `ibm_fez` | 256 | `d9edfo2neu4c739ob2ig` | 32 (Z, X) | 31.521 | not retrievable (account closed) |
+| CIFAR ship / hydrofoil | `ibm_fez` | 256 | `d9edg5cjeosc73filhng` | 32 (Z, X) | 26.440 | not retrievable (account closed) |
+| CIFAR ship / sea boat | `ibm_fez` | 256 | `d9edgakjeosc73filhug` | 32 (Z, X) | 31.196 | not retrievable (account closed) |
+| CIFAR airplane | `ibm_fez` | 256 | `d9edgdphtsac739e4kdg` | 32 (Z, X) | 29.099 | not retrievable (account closed) |
 
 ### Repeated-execution anchors — paper Table 4
 
 | Image | Backend | Shots | Job ID | Circuits | PSNR (dB) | Account |
 |---|---|---|---|---|---|---|
-| Monalisa (HVK1D) | `ibm_marrakesh` | 256 | `d9gqm58gk0ls73f219m0` | 48 | 25.942 | pending |
-| Monalisa (HVK1D) | `ibm_kingston` | 1024 | `d9gqnk0gk0ls73f21bkg` | 48 | 26.103 | pending |
-| CIFAR cat (HVK2D) | `ibm_kingston` | 256 | `d9gqqi0gk0ls73f21glg` | 32 | 28.926 | pending |
-| CIFAR cat (HVK2D) | `ibm_kingston` | 1024 | `d9gqr8chonhs73ac3fmg` | 32 | 31.237 | pending |
+| Monalisa (HVK1D) | `ibm_marrakesh` | 256 | `d9gqm58gk0ls73f219m0` | 48 | 25.942 | not retrievable (account closed) |
+| Monalisa (HVK1D) | `ibm_kingston` | 1024 | `d9gqnk0gk0ls73f21bkg` | 48 | 26.103 | not retrievable (account closed) |
+| CIFAR cat (HVK2D) | `ibm_kingston` | 256 | `d9gqqi0gk0ls73f21glg` | 32 | 28.926 | not retrievable (account closed) |
+| CIFAR cat (HVK2D) | `ibm_kingston` | 1024 | `d9gqr8chonhs73ac3fmg` | 32 | 31.237 | not retrievable (account closed) |
 
 ### Replay ledger — supplement Table 15 (auditability only, no claim rests on these)
 
 | Campaign | Platform | Backend | Shots | Job ID | Account |
 |---|---|---|---|---|---|
-| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 256 | `019f903b-62c0-74db-adec-a33847ae8a1c` | pending |
-| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 512 | `019f903d-09d4-7548-87f1-2a55185ee9b5` | pending |
-| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 1024 | `019f903e-cac2-708f-911f-67b2b6d7471c` | pending |
-| R_ES, three-basis | IonQ ideal sim. | `ionq_simulator` | 1024 | `019f9046-7ba6-7320-9766-552d88d490bf` | pending |
-| Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 256 | `d9hqu0jsbqfc73eqgr80` | pending |
-| Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 512 | `d9hr3d8gk0ls73f3elsg` | pending |
-| Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 1024 | `d9hr43l0k0jc738il8ug` | pending |
-| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 256 | `019f9571-21d0-7339-9111-d31a308440a1` | pending |
-| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 512 | `019f9573-1ed9-768c-9768-465fe75a409b` | pending |
-| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 1024 | `019f9574-a981-71dd-94b0-9d8fb8968f49` | pending |
-| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 256 | `d9hr44shonhs73adgq40` | pending |
-| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 512 | `d9hr5u50k0jc738ilbs0` | pending |
-| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 1024 | `d9hrb8shonhs73adh8mg` | pending |
-| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 256 | `019f957f-dfbe-70fc-b6aa-b2398317f049` | pending |
-| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 512 | `019f9584-4ba3-7224-ab7b-e81e32e6c1e2` | pending |
-| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 1024 | `019f9586-4eb6-7596-ba47-dc6132c7f943` | pending |
+| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 256 | `019f903b-62c0-74db-adec-a33847ae8a1c` | IonQ — not IBM-retrievable |
+| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 512 | `019f903d-09d4-7548-87f1-2a55185ee9b5` | IonQ — not IBM-retrievable |
+| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 1024 | `019f903e-cac2-708f-911f-67b2b6d7471c` | IonQ — not IBM-retrievable |
+| R_ES, three-basis | IonQ ideal sim. | `ionq_simulator` | 1024 | `019f9046-7ba6-7320-9766-552d88d490bf` | IonQ — not IBM-retrievable |
+| Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 256 | `d9hqu0jsbqfc73eqgr80` | not retrievable (account closed) |
+| Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 512 | `d9hr3d8gk0ls73f3elsg` | not retrievable (account closed) |
+| Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 1024 | `d9hr43l0k0jc738il8ug` | not retrievable (account closed) |
+| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 256 | `019f9571-21d0-7339-9111-d31a308440a1` | IonQ — not IBM-retrievable |
+| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 512 | `019f9573-1ed9-768c-9768-465fe75a409b` | IonQ — not IBM-retrievable |
+| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 1024 | `019f9574-a981-71dd-94b0-9d8fb8968f49` | IonQ — not IBM-retrievable |
+| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 256 | `d9hr44shonhs73adgq40` | not retrievable (account closed) |
+| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 512 | `d9hr5u50k0jc738ilbs0` | not retrievable (account closed) |
+| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 1024 | `d9hrb8shonhs73adh8mg` | not retrievable (account closed) |
+| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 256 | `019f957f-dfbe-70fc-b6aa-b2398317f049` | IonQ — not IBM-retrievable |
+| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 512 | `019f9584-4ba3-7224-ab7b-e81e32e6c1e2` | IonQ — not IBM-retrievable |
+| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 1024 | `019f9586-4eb6-7596-ba47-dc6132c7f943` | IonQ — not IBM-retrievable |
 
-### How to close the `Account` column
+### The `Account` column: what was tried, and how to redo it if access returns
 
-With the account configured (`QiskitRuntimeService.save_account(...)`, or
-`IBM_QUANTUM_TOKEN` in the environment), run
-`python IBM_Cloud/verify_hardware_jobs.py --write-map`. It reads every job ID in this
-file, retrieves each one from the service, and rewrites the `Account` column with
-`ok` / a mismatch note, filling the instance/CRN line below. The IonQ rows are **not**
-IBM jobs and are not retrievable through that service — verify those in the IonQ console
-if provenance for them is wanted.
+**Step 1 — check the credential.** A token from the retired `quantum.ibm.com` platform
+will not work: the `ibm_quantum` channel is gone, and `qiskit-ibm-runtime` now refuses to
+even load accounts saved under it (`accounts/management.py`, "don't load legacy accounts").
+The current platform is <https://quantum.cloud.ibm.com> and wants an **IBM Cloud API key**
+on the `ibm_quantum_platform` channel, plus an instance CRN.
 
-- **Instance / CRN:** _to be recorded when the account check is run._
+```
+export IBM_QUANTUM_TOKEN='<IBM Cloud API key>'
+python IBM_Cloud/check_ibm_credentials.py --save
+```
+
+That reports four things separately — key present, IBM Cloud accepts it, which
+instances/CRNs it reaches, and whether one ledger job actually retrieves — so a dead key
+is never mistaken for a job that has aged out of the service. `--save` writes the working
+credential to `~/.qiskit/qiskit-ibm.json` so step 2 needs no environment variable.
+
+**Step 2 — run the sweep.** With the account configured, run
+`python IBM_Cloud/verify_hardware_jobs.py --write-map` (add `--instance <CRN>` if the key
+reaches more than one instance). It reads every job ID in this file, retrieves each one
+from the service, and rewrites the `Account` column with `ok` / a mismatch note, filling
+the instance/CRN line below. The IonQ rows are **not** IBM jobs and are not retrievable
+through that service — verify those in the IonQ console if provenance for them is wanted.
+
+**If a job does not come back** while the account is otherwise healthy, that is a
+provenance finding, not a failure to be tidied away: leave the ledger's backend / shots /
+PSNR untouched (the local artifacts still back them) and record the reason in the
+`Account` column — e.g. `not retrievable (service retention)`. Retrieval is a *second*
+line of evidence; losing it weakens provenance without invalidating the numbers.
+
+- **Instance / CRN:** _unrecoverable._ The submitting account is closed, and no CRN was
+  serialized into the run artifacts at submission time. (Lesson for future campaigns:
+  record `service.active_account()["instance"]` into the output JSON alongside the job ID.)
 - **Quota note:** the pilot's meter reading (19 → 35 s of a 600 s monthly allowance) was
   recorded contemporaneously but the raw service response was never serialized, so it is
   an execution-log record, not a recomputable artifact. The manuscript says so in §7.4.
@@ -166,9 +203,11 @@ ever promoted back into a claim, this row reopens.
 
 ## Coverage
 
-- Main paper: 8 tables + 6 figures — all mapped (2 `descriptive`, 1 `partial`, 4 device-side pending).
-- Supplement: 15 tables + 8 figures — all mapped (1 `partial`, 2 device-side pending).
-- Open: the `Account` column above (F2), and the two physics-review items that need data
-  rather than mapping. **G2 and G3 are now closed** (see `EDITS.md`, 2026-09-01): the
+- Main paper: 8 tables + 6 figures — all mapped (2 `descriptive`, 1 `partial`, 4 device-side unverifiable).
+- Supplement: 15 tables + 8 figures — all mapped (1 `partial`, 2 device-side unverifiable).
+- Closed as unverifiable: the `Account` column above (F2) — the submitting IBM Cloud
+  account is canceled, so service-side confirmation is permanently out of reach; the
+  artifacts still back every number. Still open: the two physics-review items that need
+  data rather than mapping. **G2 and G3 are now closed** (see `EDITS.md`, 2026-09-01): the
   random-VQC floor was measured and Table 12 sits ~1 dB below it, and the χ sweep is
   labelled single-seed with no mechanism claimed.

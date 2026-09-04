@@ -19,6 +19,9 @@ Requires a configured account -- either a saved one::
 
 or ``IBM_QUANTUM_TOKEN`` in the environment. Read-only: it retrieves jobs, never submits.
 
+If the account will not open, run ``python IBM_Cloud/check_ibm_credentials.py`` first --
+it separates a dead key from a good key that simply cannot see the jobs.
+
 The IonQ replay jobs in the supplement's Table 15 ran on IonQ's cloud, not IBM's, so they
 are listed as ``skipped (IonQ)`` -- they are not retrievable through this service and
 must be checked in the IonQ console if provenance for them is wanted.
@@ -151,15 +154,22 @@ def _shots_of(job) -> int | None:
     return None
 
 
-def verify(jobs: list[dict]) -> list[dict]:
+def verify(jobs: list[dict], instance: str | None = None) -> list[dict]:
     from qiskit_ibm_runtime import QiskitRuntimeService
 
     token = os.environ.get("IBM_QUANTUM_TOKEN")
-    service = (
-        QiskitRuntimeService(channel="ibm_quantum_platform", token=token)
-        if token
-        else QiskitRuntimeService()
-    )
+    instance = instance or os.environ.get("IBM_QUANTUM_INSTANCE")
+    try:
+        service = (
+            QiskitRuntimeService(channel="ibm_quantum_platform", token=token, instance=instance)
+            if token
+            else QiskitRuntimeService(instance=instance)
+        )
+    except Exception as exc:  # noqa: BLE001 - an unusable account is a setup problem, not a result
+        print(f"Could not open the IBM Quantum account -- {type(exc).__name__}: {exc}\n")
+        print("Diagnose it before re-running this sweep; the preflight says which step fails:")
+        print("    python IBM_Cloud/check_ibm_credentials.py")
+        raise SystemExit(2) from None
 
     account = service.active_account() or {}
     print("Account")
@@ -253,6 +263,11 @@ def main() -> int:
         help="rewrite the Account column of overleaf_docs/RESULTS_MAP.md in place",
     )
     parser.add_argument(
+        "--instance",
+        help="instance CRN to query (default: IBM_QUANTUM_INSTANCE, else whatever the "
+        "account resolves to); `python IBM_Cloud/check_ibm_credentials.py` lists them",
+    )
+    parser.add_argument(
         "--list",
         action="store_true",
         help="list the jobs that would be checked and exit (no account needed)",
@@ -266,7 +281,7 @@ def main() -> int:
         print(f"\n{len(jobs)} jobs")
         return 0
 
-    results = verify(jobs)
+    results = verify(jobs, args.instance)
     bad = report(results)
     if args.write_map:
         write_map(results)
