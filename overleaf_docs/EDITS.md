@@ -23,6 +23,65 @@ undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ---
 
+## 2026-09-05
+
+### H1 re-tested with a live instance, then the whole hardware campaign re-executed
+**Why this went further than H1 asked.** H1 asked for the ledger's job identifiers to be
+confirmed against the service. They cannot be, and now that is established rather than
+inferred: an `open` plan Qiskit Runtime instance was created in the active account
+(TCG CREST, `059312687e3b4f8484a4d6cd7c311a3d`) and a live IBM Cloud API key issued
+against it, which closes the two gaps that made the 2026-09-04 attempt inconclusive --
+there is now both a valid key *and* an instance. `IBM_Cloud/verify_hardware_jobs.py`
+still reports **all 15 IBM identifiers as `RuntimeJobNotFound`** ("25 jobs, 15 needing
+attention"). The accounts API confirms the cause directly: the IBMid
+`25ph05023@iitbbs.ac.in` reaches exactly `IIT bhubaneswar [CANCELED]` and
+`TCG CREST [ACTIVE]`. No credential can revive those jobs -- a key works only in the
+account that created it, a `CANCELED` account cannot issue one, and the submitting
+instance no longer exists. §F2 of `RESULTS_MAP.md` records this.
+
+**What was then run, at the supervisor's request, to obtain records that do resolve.**
+The full hardware campaign was re-executed under the new instance:
+`python IBM_Cloud/run_provenance_campaign.py --stage all` (new driver). **25 of 25 jobs
+completed and every identifier retrieves** -- 15 IBM (`ibm_fez`, `ibm_marrakesh`,
+`ibm_kingston`; verified `DONE`) and 10 IonQ (`ionq_simulator`). QPU cost: **196 s of the
+600 s monthly allowance**, 404 s left. The instance CRN is serialized next to every job
+id, which is the one field the 2026-07 campaign failed to record; the new ledger lives in
+`IBM_Cloud/outputs/provenance_campaign/` (`ledger.json`, `.md`, `.tex`) and is summarised
+in the new §F4 of `RESULTS_MAP.md`.
+
+**Neither manuscript was edited, and the new numbers must not be substituted into the old
+tables.** A job identifier and a PSNR are a matched pair. Re-execution on hardware
+recalibrated months later returns different values -- Monalisa/`ibm_fez` gives 26.533 dB
+where Table 3 prints 25.896 -- so pairing a new identifier with an old PSNR would produce
+a table that contradicts itself as soon as anyone retrieves the job, which (unlike
+before) they now can. `ledger.tex` therefore holds a *separate* table with each id beside
+the value its own job returned and the printed value in its own column.
+
+**One substantive observation for the supervisor.** Across the nine reconstruction jobs
+the re-run deltas span **-2.66 dB to +4.74 dB** on identical circuits replayed from
+identical checkpoints, seven of nine higher than printed. That is device calibration
+drift between campaigns, and it puts a number on a variation the manuscripts currently
+leave implicit: the single-point hardware PSNRs in Sections 4.4 and 4.6 carry roughly
++/-2-3 dB of device-and-day spread. Worth one sentence in Section 4.6; it supports the
+robustness argument rather than weakening it.
+
+**Code changes.** `IBM_Cloud/run_hvk_hardware_reconstruction.py` and
+`run_hardware_robustness_simulator_sweep.py`: the HVK1D checkpoint path said `Main2/` but
+the checkpoint is under `main2/` -- harmless on Windows, fatal on this case-sensitive
+filesystem, and it blocked every replay until fixed. New:
+`IBM_Cloud/run_provenance_campaign.py` (drives the 25 jobs, records the CRN, emits the
+ledger) and `IBM_Cloud/write_f4_section.py` (regenerates §F4 from the ledger so the two
+cannot drift). No retained artifact under `IBM_Cloud/outputs/` was modified; all new
+output is confined to `outputs/provenance_campaign/`.
+
+**Environment.** This ran in the repository venv,
+`Hamiltonian_Vision_Kernel/.venv` -- `qiskit` 2.4.1, `qiskit-ibm-runtime` 0.47.0,
+`qiskit-ionq` 1.1.1 (installed for this campaign) -- not the
+`/home/adminpc/Desktop/HVK/.venv` with `qiskit` 2.5.2 / runtime 0.49.0 used on
+2026-09-04. Different environment; noted so the log does not imply continuity.
+
+---
+
 ## 2026-09-04
 
 ### H1 closed -- as a negative result: the account that ran the jobs no longer exists

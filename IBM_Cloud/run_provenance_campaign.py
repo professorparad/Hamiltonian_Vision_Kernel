@@ -42,6 +42,7 @@ import argparse
 import importlib
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -296,10 +297,17 @@ def stage_sweep(root: Path, args: argparse.Namespace, name: str) -> None:
         if not job_ids:
             continue
         provider = "ionq" if path.name.startswith("ionq") else "ibm"
+        # Not every sweep writes `shots` into its rows, but all of them encode it in the
+        # filename (…_shots512.json). The shot count is part of the provenance record, so
+        # fall back to the filename rather than logging a blank.
+        shots = rows[0].get("shots")
+        if shots is None:
+            match = re.search(r"shots(\d+)", path.stem)
+            shots = int(match.group(1)) if match else None
         append_ledger(root, {
             "stage": name, "label": campaign, "provider": provider, "utc": utc_now(),
             "account": context if provider == "ibm" else {}, "n_circuits": len(rows),
-            "backend": rows[0].get("backend") or path.stem, "shots": rows[0].get("shots"),
+            "backend": rows[0].get("backend") or path.stem, "shots": shots,
             "job_id": sorted(job_ids)[0], "artifact": str(path.relative_to(REPO_ROOT)),
             "paper_table": "supplement Table 15",
         })

@@ -217,9 +217,6 @@ their tables.** A job identifier and a PSNR are a matched pair: the values below
 identifier with an old PSNR would produce a table that contradicts itself the moment
 anyone retrieves the job -- which, unlike before, they now can.
 
-> **Campaign in progress.** 15/15 IBM and 3/10 IonQ jobs recorded so far; the remaining
-> sweeps are still training locally. This block regenerates as they land.
-
 - **Instance / CRN:** `crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::`
 - **Driver:** `python IBM_Cloud/run_provenance_campaign.py --stage all`
 - **Artifacts:** `IBM_Cloud/outputs/provenance_campaign/` (`ledger.json`, `ledger.md`, `ledger.tex`, plus each stage's raw output)
@@ -245,12 +242,19 @@ anyone retrieves the job -- which, unlike before, they now can.
 | Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 1024 | `dae1aujdd5gc73d7v8q0` |
 | Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 256 | `dae1af51ierc738lgbtg` |
 | Bond-dim. order parameter | IBM hardware | `ibm_marrakesh` | 512 | `dae1ame42tqs73au2mig` |
-| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | -- | `dae20f3dd5gc73d801q0` |
-| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | -- | `dae1vge42tqs73au3eo0` |
-| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | -- | `dae1vv5nj4cs73aehka0` |
-| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | -- | `01a071e3-bf9f-77b7-8956-dc89b5b5391c` |
-| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | -- | `01a071df-a49d-77f2-9739-7a9f6942d881` |
-| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | -- | `01a071e2-f30d-7392-b419-238534a01b10` |
+| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 1024 | `dae20f3dd5gc73d801q0` |
+| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 256 | `dae1vge42tqs73au3eo0` |
+| Bond-dim. R_ES | IBM hardware | `ibm_marrakesh` | 512 | `dae1vv5nj4cs73aehka0` |
+| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 1024 | `01a071e3-bf9f-77b7-8956-dc89b5b5391c` |
+| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 256 | `01a071df-a49d-77f2-9739-7a9f6942d881` |
+| Bond-dim. R_ES | IonQ ideal sim. | `ionq_simulator` | 512 | `01a071e2-f30d-7392-b419-238534a01b10` |
+| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 1024 | `01a07203-e1a4-74de-8755-22b3ef19a693` |
+| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 256 | `01a07202-6c3e-729f-827f-813a138a00dc` |
+| Order parameter, cross-platform | IonQ ideal sim. | `ionq_simulator` | 512 | `01a07202-f1e2-7579-b528-cc04e448eadf` |
+| R_ES, three-basis | IonQ ideal sim. | `ionq_simulator` | 1024 | `01a07210-0cdd-704e-bd90-17948570dc0b` |
+| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 1024 | `01a0723c-5083-76cf-aabc-afd22e220dae` |
+| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 256 | `01a07239-3681-7468-a1e9-54773377b419` |
+| Bond-dim. order parameter | IonQ ideal sim. | `ionq_simulator` | 512 | `01a0723a-d7e8-72e8-a3f2-d5e57dd13b66` |
 
 **What this does and does not establish.** It establishes that these circuits run on
 real hardware under an account the student controls, and that the identifiers resolve.
