@@ -1,0 +1,24 @@
+\begin{table}[H]
+\centering
+\caption{Re-execution of the reconstruction pilot and repeated-execution anchors under a live IBM Quantum instance (2026-09-05). These are new jobs on new hardware calibration, not a retrieval of the identifiers in Tables~3 and~4: each PSNR is the value its own job returned, and the originals are unrecoverable (the submitting account is closed).}
+\label{tab:reexecution_ledger}
+\scriptsize
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lllccc}
+\toprule
+Image & Backend & Job ID & Shots & PSNR (dB) & Originally printed (dB) \\
+\midrule
+Monalisa (HVK1D) & \texttt{ibm\_fez} & \texttt{dae0igjdd5gc73d7ue5g} & 256 & 26.533 & 25.896 \\
+CIFAR cat & \texttt{ibm\_fez} & \texttt{dae0k3t1ierc738lfjrg} & 256 & 33.619 & 31.521 \\
+CIFAR ship (hydrofoil) & \texttt{ibm\_fez} & \texttt{dae0k83dd5gc73d7ugsg} & 256 & 26.609 & 26.440 \\
+CIFAR ship (sea boat) & \texttt{ibm\_fez} & \texttt{dae0kc51ierc738lfk40} & 256 & 31.431 & 31.196 \\
+CIFAR airplane & \texttt{ibm\_fez} & \texttt{dae0kg51ierc738lfkag} & 256 & 31.466 & 29.099 \\
+Monalisa (HVK1D) & \texttt{ibm\_marrakesh} & \texttt{dae0kqlnj4cs73aeg3ug} & 256 & 23.281 & 25.942 \\
+Monalisa (HVK1D) & \texttt{ibm\_kingston} & \texttt{dae0kvjdd5gc73d7uhp0} & 1024 & 28.000 & 26.103 \\
+CIFAR cat (HVK2D) & \texttt{ibm\_kingston} & \texttt{dae0l751ierc738lflc0} & 256 & 33.666 & 28.926 \\
+CIFAR cat (HVK2D) & \texttt{ibm\_kingston} & \texttt{dae0lbt1ierc738lflgg} & 1024 & 33.037 & 31.237 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+% instance CRN: crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::

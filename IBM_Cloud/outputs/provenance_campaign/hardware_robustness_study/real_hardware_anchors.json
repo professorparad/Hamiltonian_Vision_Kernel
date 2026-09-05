@@ -1,0 +1,46 @@
+[
+  {
+    "mode": "real_hardware",
+    "backend": "ibm_marrakesh",
+    "shots": 256,
+    "job_id": "dae0kqlnj4cs73aeg3ug",
+    "n_circuits": 48,
+    "mse": 0.004697439726442099,
+    "psnr": 23.281387836897117,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "real_hardware",
+    "backend": "ibm_kingston",
+    "shots": 1024,
+    "job_id": "dae0kvjdd5gc73d7uhp0",
+    "n_circuits": 48,
+    "mse": 0.0015847934409976006,
+    "psnr": 28.00027334885236,
+    "topology": "HVK1D",
+    "image_name": "monalisa"
+  },
+  {
+    "mode": "real_hardware",
+    "backend": "ibm_kingston",
+    "shots": 256,
+    "job_id": "dae0l751ierc738lflc0",
+    "n_circuits": 32,
+    "mse": 0.0004298856947571039,
+    "psnr": 33.66647006595996,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  },
+  {
+    "mode": "real_hardware",
+    "backend": "ibm_kingston",
+    "shots": 1024,
+    "job_id": "dae0lbt1ierc738lflgg",
+    "n_circuits": 32,
+    "mse": 0.0004969197907485068,
+    "psnr": 33.037137063301145,
+    "topology": "HVK2D",
+    "image_name": "0000_cat_domestic_cat_s_000907"
+  }
+]

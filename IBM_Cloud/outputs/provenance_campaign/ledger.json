@@ -1,0 +1,181 @@
+{
+  "campaign": "provenance re-submission",
+  "compiled_utc": "2026-09-05T13:13:39+00:00",
+  "instance_crn": [
+    "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::"
+  ],
+  "n_jobs": 9,
+  "jobs": [
+    {
+      "stage": "pilot",
+      "label": "Monalisa (HVK1D)",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:23:44+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 600
+      },
+      "n_circuits": 48,
+      "backend": "ibm_fez",
+      "shots": 256,
+      "job_id": "dae0igjdd5gc73d7ue5g",
+      "psnr_db": 26.533241811876156,
+      "paper_table": "paper Table 3",
+      "paper_psnr_db": 25.896
+    },
+    {
+      "stage": "pilot",
+      "label": "0000_cat_domestic_cat_s_000907",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:25:46+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 594
+      },
+      "n_circuits": 32,
+      "backend": "ibm_fez",
+      "shots": 256,
+      "job_id": "dae0k3t1ierc738lfjrg",
+      "psnr_db": 33.61935299006998,
+      "paper_table": "paper Table 3",
+      "paper_psnr_db": 31.521
+    },
+    {
+      "stage": "pilot",
+      "label": "0001_ship_hydrofoil_s_000078",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:25:46+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 594
+      },
+      "n_circuits": 32,
+      "backend": "ibm_fez",
+      "shots": 256,
+      "job_id": "dae0k83dd5gc73d7ugsg",
+      "psnr_db": 26.60851300005088,
+      "paper_table": "paper Table 3",
+      "paper_psnr_db": 26.44
+    },
+    {
+      "stage": "pilot",
+      "label": "0002_ship_sea_boat_s_001456",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:25:46+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 594
+      },
+      "n_circuits": 32,
+      "backend": "ibm_fez",
+      "shots": 256,
+      "job_id": "dae0kc51ierc738lfk40",
+      "psnr_db": 31.431107070811212,
+      "paper_table": "paper Table 3",
+      "paper_psnr_db": 31.196
+    },
+    {
+      "stage": "pilot",
+      "label": "0003_airplane_jetliner_s_001705",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:25:46+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 594
+      },
+      "n_circuits": 32,
+      "backend": "ibm_fez",
+      "shots": 256,
+      "job_id": "dae0kg51ierc738lfkag",
+      "psnr_db": 31.465908468503688,
+      "paper_table": "paper Table 3",
+      "paper_psnr_db": 29.099
+    },
+    {
+      "stage": "anchors",
+      "label": "monalisa (HVK1D)",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:26:29+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 578
+      },
+      "n_circuits": 48,
+      "backend": "ibm_marrakesh",
+      "shots": 256,
+      "job_id": "dae0kqlnj4cs73aeg3ug",
+      "psnr_db": 23.281387836897117,
+      "paper_table": "paper Table 4",
+      "paper_psnr_db": 25.942
+    },
+    {
+      "stage": "anchors",
+      "label": "monalisa (HVK1D)",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:27:00+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 578
+      },
+      "n_circuits": 48,
+      "backend": "ibm_kingston",
+      "shots": 1024,
+      "job_id": "dae0kvjdd5gc73d7uhp0",
+      "psnr_db": 28.00027334885236,
+      "paper_table": "paper Table 4",
+      "paper_psnr_db": 26.103
+    },
+    {
+      "stage": "anchors",
+      "label": "0000_cat_domestic_cat_s_000907 (HVK2D)",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:27:19+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 578
+      },
+      "n_circuits": 32,
+      "backend": "ibm_kingston",
+      "shots": 256,
+      "job_id": "dae0l751ierc738lflc0",
+      "psnr_db": 33.66647006595996,
+      "paper_table": "paper Table 4",
+      "paper_psnr_db": 28.926
+    },
+    {
+      "stage": "anchors",
+      "label": "0000_cat_domestic_cat_s_000907 (HVK2D)",
+      "provider": "ibm",
+      "utc": "2026-09-05T12:27:43+00:00",
+      "account": {
+        "channel": "ibm_quantum_platform",
+        "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/059312687e3b4f8484a4d6cd7c311a3d:8809ab96-1e5e-43f0-bcfb-efd5c437f9c7::",
+        "url": "https://cloud.ibm.com",
+        "usage_remaining_seconds": 578
+      },
+      "n_circuits": 32,
+      "backend": "ibm_kingston",
+      "shots": 1024,
+      "job_id": "dae0lbt1ierc738lflgg",
+      "psnr_db": 33.037137063301145,
+      "paper_table": "paper Table 4",
+      "paper_psnr_db": 31.237
+    }
+  ]
+}

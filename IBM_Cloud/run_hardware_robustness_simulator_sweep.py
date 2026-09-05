@@ -47,7 +47,7 @@ N_REPEATS = 3  # repeated noisy-sim executions per shot count, for a reproducibi
 # HVK1D (Monalisa)
 # ---------------------------------------------------------------------------
 HVK1D_CHECKPOINT_DIR = (
-    REPO_ROOT / "Main2" / "newHVK" / "results" / "ablation_study"
+    REPO_ROOT / "main2" / "newHVK" / "results" / "ablation_study"
     / "legacy_hvk_controls" / "eval_controls" / "shared-baseline-seed-42"
 )
 HVK1D_IMAGE_PATH = MAIN_DIR / "data" / "monalisa.jpg"

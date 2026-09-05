@@ -1,0 +1,66 @@
+[
+  {
+    "stem": "0000_cat_domestic_cat_s_000907",
+    "n_patches": 16,
+    "qiskit_statevector_vs_cached_max_abs_error": 9.423130838293048e-06,
+    "measurement_bases": [
+      "Z",
+      "X"
+    ],
+    "planned_circuits": 32,
+    "psnr_simulator_db": 44.8473464060053,
+    "mse_simulator": 3.275407652836293e-05,
+    "backend": "ibm_fez",
+    "job_id": "dae0k3t1ierc738lfjrg",
+    "psnr_hardware_db": 33.61935299006998,
+    "mse_hardware": 0.00043457496212795377
+  },
+  {
+    "stem": "0001_ship_hydrofoil_s_000078",
+    "n_patches": 16,
+    "qiskit_statevector_vs_cached_max_abs_error": 7.759813483998457e-06,
+    "measurement_bases": [
+      "Z",
+      "X"
+    ],
+    "planned_circuits": 32,
+    "psnr_simulator_db": 36.56056131616613,
+    "mse_simulator": 0.00022077193716540933,
+    "backend": "ibm_fez",
+    "job_id": "dae0k83dd5gc73d7ugsg",
+    "psnr_hardware_db": 26.60851300005088,
+    "mse_hardware": 0.002183477394282818
+  },
+  {
+    "stem": "0002_ship_sea_boat_s_001456",
+    "n_patches": 16,
+    "qiskit_statevector_vs_cached_max_abs_error": 7.894473248448719e-06,
+    "measurement_bases": [
+      "Z",
+      "X"
+    ],
+    "planned_circuits": 32,
+    "psnr_simulator_db": 42.56615795453967,
+    "mse_simulator": 5.538398545468226e-05,
+    "backend": "ibm_fez",
+    "job_id": "dae0kc51ierc738lfk40",
+    "psnr_hardware_db": 31.431107070811212,
+    "mse_hardware": 0.0007192656048573554
+  },
+  {
+    "stem": "0003_airplane_jetliner_s_001705",
+    "n_patches": 16,
+    "qiskit_statevector_vs_cached_max_abs_error": 7.140524136861615e-06,
+    "measurement_bases": [
+      "Z",
+      "X"
+    ],
+    "planned_circuits": 32,
+    "psnr_simulator_db": 46.79495518610462,
+    "mse_simulator": 2.091724491037894e-05,
+    "backend": "ibm_fez",
+    "job_id": "dae0kg51ierc738lfkag",
+    "psnr_hardware_db": 31.465908468503688,
+    "mse_hardware": 0.0007135249325074255
+  }
+]
