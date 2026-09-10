@@ -383,20 +383,24 @@ basis.
 \section{Experimental Setup}
 \label{sec:protocol}
 
+\color{green}
 All image-reconstruction results in
 Sections~\ref{sec:sameset_results}--\ref{sec:hardware_pilot} use the single-image
 \textit{Monalisa} protocol developed for HVK: a fresh model is optimised directly
-on its target image, with no held-out split. They therefore measure per-image
-fitting and reconstruction capability, including hardware replay of those fitted
-checkpoints. The symmetry and restricted-entanglement diagnostics use the
-separate protocols stated in their respective sections; the exploratory
-training-dynamics material is addressed only as a provenance audit and is not
-retained as evidence. Held-out generalization and component necessity are
-evaluated under the resource-matched statistical protocol of the companion
-supplementary study (Section~\ref{sec:ablation_relationship}). All settings
-report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings
+on its target image, with no held-out split. These results therefore measure
+per-image fitting and reconstruction capability. The hardware pilot replays the
+resulting fitted checkpoints on real devices without retraining. The symmetry
+and restricted-entanglement diagnostics use the separate protocols stated in
+their respective sections. The training-dynamics
+readouts of Section~\ref{sec:phase_transition} are reported as an
+interpretability diagnostic, with their scope set by the negative control given
+there. Held-out generalisation and component necessity are evaluated under the
+resource-matched statistical protocol of the companion supplementary study
+(Section~\ref{sec:ablation_relationship}). All settings report MSE and
+PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings
 additionally report SSIM. Full implementation settings and environment versions
 are given in the companion supplementary document.
+\color{black}
 
 \section{Results}
 \label{sec:results}
