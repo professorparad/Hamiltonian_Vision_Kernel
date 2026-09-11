@@ -1,0 +1,13 @@
+{
+  "backend": "ibm_fez",
+  "job_id": "dae0igjdd5gc73d7ue5g",
+  "n_patches": 16,
+  "shots": 256,
+  "psnr_hardware_db": 26.533241811876156,
+  "psnr_simulator_db": 37.9946142224677,
+  "mse_hardware": 0.0022216509096324444,
+  "mse_simulator": 0.00015868598711676896,
+  "cached_baseline_psnr_db": 32.235,
+  "pennylane_vs_cached_max_abs_error": 0.0007906579362819688,
+  "qiskit_statevector_vs_cached_max_abs_error": 0.000789253250893629
+}

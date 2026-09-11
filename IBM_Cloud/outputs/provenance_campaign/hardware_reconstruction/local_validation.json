@@ -1,0 +1,12 @@
+{
+  "checkpoint": "monalisa_hvk1d",
+  "n_patches": 16,
+  "pennylane_vs_cached_max_abs_error": 0.0007906579362819688,
+  "qiskit_statevector_vs_cached_max_abs_error": 0.000789253250893629,
+  "measurement_bases": [
+    "Z",
+    "X",
+    "Y"
+  ],
+  "planned_circuits": 48
+}

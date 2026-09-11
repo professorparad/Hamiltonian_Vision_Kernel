@@ -47,7 +47,7 @@ from src.tensornetworks.mps_features import extract_mps_features
 
 CHECKPOINT_DIR = (
     REPO_ROOT
-    / "Main2"
+    / "main2"
     / "newHVK"
     / "results"
     / "ablation_study"

@@ -23,6 +23,149 @@ undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
 ---
 
+## 2026-09-05
+
+### H1 re-tested with a live instance, then the whole hardware campaign re-executed
+**Why this went further than H1 asked.** H1 asked for the ledger's job identifiers to be
+confirmed against the service. They cannot be, and now that is established rather than
+inferred: an `open` plan Qiskit Runtime instance was created in the active account
+(TCG CREST, `059312687e3b4f8484a4d6cd7c311a3d`) and a live IBM Cloud API key issued
+against it, which closes the two gaps that made the 2026-09-04 attempt inconclusive --
+there is now both a valid key *and* an instance. `IBM_Cloud/verify_hardware_jobs.py`
+still reports **all 15 IBM identifiers as `RuntimeJobNotFound`** ("25 jobs, 15 needing
+attention"). The accounts API confirms the cause directly: the IBMid
+`25ph05023@iitbbs.ac.in` reaches exactly `IIT bhubaneswar [CANCELED]` and
+`TCG CREST [ACTIVE]`. No credential can revive those jobs -- a key works only in the
+account that created it, a `CANCELED` account cannot issue one, and the submitting
+instance no longer exists. §F2 of `RESULTS_MAP.md` records this.
+
+**What was then run, at the supervisor's request, to obtain records that do resolve.**
+The full hardware campaign was re-executed under the new instance:
+`python IBM_Cloud/run_provenance_campaign.py --stage all` (new driver). **25 of 25 jobs
+completed and every identifier retrieves** -- 15 IBM (`ibm_fez`, `ibm_marrakesh`,
+`ibm_kingston`; verified `DONE`) and 10 IonQ (`ionq_simulator`). QPU cost: **196 s of the
+600 s monthly allowance**, 404 s left. The instance CRN is serialized next to every job
+id, which is the one field the 2026-07 campaign failed to record; the new ledger lives in
+`IBM_Cloud/outputs/provenance_campaign/` (`ledger.json`, `.md`, `.tex`) and is summarised
+in the new §F4 of `RESULTS_MAP.md`.
+
+**Neither manuscript was edited, and the new numbers must not be substituted into the old
+tables.** A job identifier and a PSNR are a matched pair. Re-execution on hardware
+recalibrated months later returns different values -- Monalisa/`ibm_fez` gives 26.533 dB
+where Table 3 prints 25.896 -- so pairing a new identifier with an old PSNR would produce
+a table that contradicts itself as soon as anyone retrieves the job, which (unlike
+before) they now can. `ledger.tex` therefore holds a *separate* table with each id beside
+the value its own job returned and the printed value in its own column.
+
+**One substantive observation for the supervisor.** Across the nine reconstruction jobs
+the re-run deltas span **-2.66 dB to +4.74 dB** on identical circuits replayed from
+identical checkpoints, seven of nine higher than printed. That is device calibration
+drift between campaigns, and it puts a number on a variation the manuscripts currently
+leave implicit: the single-point hardware PSNRs in Sections 4.4 and 4.6 carry roughly
++/-2-3 dB of device-and-day spread. Worth one sentence in Section 4.6; it supports the
+robustness argument rather than weakening it.
+
+**Code changes.** `IBM_Cloud/run_hvk_hardware_reconstruction.py` and
+`run_hardware_robustness_simulator_sweep.py`: the HVK1D checkpoint path said `Main2/` but
+the checkpoint is under `main2/` -- harmless on Windows, fatal on this case-sensitive
+filesystem, and it blocked every replay until fixed. New:
+`IBM_Cloud/run_provenance_campaign.py` (drives the 25 jobs, records the CRN, emits the
+ledger) and `IBM_Cloud/write_f4_section.py` (regenerates §F4 from the ledger so the two
+cannot drift). No retained artifact under `IBM_Cloud/outputs/` was modified; all new
+output is confined to `outputs/provenance_campaign/`.
+
+**Environment.** This ran in the repository venv,
+`Hamiltonian_Vision_Kernel/.venv` -- `qiskit` 2.4.1, `qiskit-ibm-runtime` 0.47.0,
+`qiskit-ionq` 1.1.1 (installed for this campaign) -- not the
+`/home/adminpc/Desktop/HVK/.venv` with `qiskit` 2.5.2 / runtime 0.49.0 used on
+2026-09-04. Different environment; noted so the log does not imply continuity.
+
+---
+
+## 2026-09-04
+
+### H1 closed -- as a negative result: the account that ran the jobs no longer exists
+**What was run.** `IBM_Cloud/check_ibm_credentials.py` (new, see below) and
+`IBM_Cloud/verify_hardware_jobs.py`, against the student's live IBM Cloud API key. The
+repository venv (`/home/adminpc/Desktop/HVK/.venv`) held no `qiskit` at all, which is the
+second reason the earlier attempt stopped; `qiskit` 2.5.2 and `qiskit-ibm-runtime` 0.49.0
+were installed first.
+
+**Finding -- the credential was never the problem.** The key is valid: IBM Cloud issued
+an access token from it. It simply reaches no Qiskit Runtime instance, so no job can be
+retrieved. Four facts fix the diagnosis:
+
+- the jobs were submitted on `channel="ibm_quantum_platform"`
+  (`IBM_Cloud/run_hvk_hardware_reconstruction.py:309`), so they ran under an IBM Cloud
+  instance, not on the retired `quantum.ibm.com` platform;
+- the account holding that instance -- an IIT Bhubaneswar trial,
+  `12586c7ca151474297be30db083c3bcb` -- is now `CANCELED`;
+- the one remaining active account, `059312687e3b4f8484a4d6cd7c311a3d`, authenticates but
+  holds no instance whatsoever (resource controller returns `rows_count: 0`);
+- an IBM Cloud API key cannot be re-scoped to a different account (IAM refuses with
+  `BXNIM0413E`), and job history is scoped to the instance that submitted the job, so a
+  freshly created instance would not reach these jobs either.
+
+Service-side confirmation of the hardware jobs is therefore permanently out of reach.
+There is no key, from any account the student can log into, that would close it.
+
+**No result changes.** Every hardware number in both manuscripts is backed by its
+retained artifact and recomputes from it. What is lost is the *second*, service-side line
+of evidence -- a limit on provenance, not on the results -- and it is now disclosed
+rather than parked as an open to-do.
+
+**Recorded in `RESULTS_MAP.md`.** The §F2 header states the finding with the evidence
+above. The 15 IBM ledger rows now read `not retrievable (account closed)` and the 10 IonQ
+rows `IonQ — not IBM-retrievable`; the instance/CRN line is marked unrecoverable, with a
+note that future campaigns should serialize `service.active_account()["instance"]` into
+the output JSON next to the job ID. The status label `backed (device-side pending)`
+became `backed (device-side unverifiable)` in all nine places it appeared, including the
+coverage tally, since "pending" implies a wait that will never end.
+
+**Tooling left behind.** `IBM_Cloud/check_ibm_credentials.py` reports four things
+separately -- key present, IBM Cloud accepts it, which instances/CRNs it reaches, and
+whether one ledger job actually retrieves -- and on failure names every IBM Cloud account
+the IBMid can reach together with its state, so a dead key is never mistaken for a missing
+job. `verify_hardware_jobs.py` now exits with a readable message instead of a traceback
+when the account will not open, and accepts `--instance <CRN>`.
+
+**Open, for the supervisor (logged as H2 in `todo.md`).** Whether the manuscripts should
+carry a one-line note that the cited job IDs are no longer retrievable from the service
+because the submitting account was closed. A referee who tries a job ID will get nothing
+back. Recommendation: disclose it rather than be asked. No `.tex` file was touched for
+this.
+
+---
+
+### H2 and I done; H1 remains credential-gated
+**H2 -- clean local build confirmed.** Rebuilt from a clean aux/log state using the
+available TeX Live toolchain (`latexmk -pdf`) because the repository helper expects
+MiKTeX's `mpm`, which is not installed on this Linux machine. Final PDFs were moved
+into `overleaf_docs/assets/`: `paper_hvk_springer.pdf` = 24 pp and
+`supplementary_study.pdf` = 27 pp. Final logs contain 0 undefined citations and 0
+undefined references.
+
+**I1/I2 -- collapsed raw/local control presentation.** The retained code and artifacts
+support reading `local-observables-only` and `raw-linear-classical` as the same retained
+raw/local linear map in this bundle, not as two distinct controls. The duplicate rows in
+the held-out CIFAR, paired-test, and TOST tables were merged; the main-paper and
+supplement counts now say five of seven distinct controls are TOST-equivalent; the
+multi-dataset paragraph now refers to the same raw/local control; and the methods
+section clarifies that resource matching is at readout-facing 32-D width, with narrower
+descriptors zero-padded before the readout.
+
+**Still open -- H1.** *(Superseded later the same day -- see "H1 closed" above. Retained
+for the record.)* The live IBM account check still requires the student's IBM
+Quantum credentials/account access. A local attempt on this machine stopped before
+account retrieval because `qiskit_ibm_runtime` is not installed:
+
+    python IBM_Cloud/verify_hardware_jobs.py --write-map
+
+Do not mark H1 complete until `RESULTS_MAP.md` is updated with the retrieved
+instance/CRN and per-job account-verification status.
+
+---
+
 ## 2026-09-01
 
 ### G1-G3 done (item G, student) --- one of them changes what the supplement claims
