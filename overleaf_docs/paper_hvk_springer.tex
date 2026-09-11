@@ -71,7 +71,7 @@ hardware. We make no claim of quantum advantage.}
   Quantum hardware validation}
 
 \maketitle
-
+\tableofcontents
 % ================================ BODY ======================================
 \section{Introduction}
 \label{sec:intro}
@@ -458,7 +458,7 @@ directly.
 
 \subsection{Competitive with resource-matched classical baselines}
 \label{sec:ablation_relationship}
-
+\color{green}
 The results above measure per-image fitting. A separate question is whether
 HVK's feature map improves reconstruction on real, \emph{held-out} images under
 a resource-matched multi-seed protocol. That question is answered in the
@@ -485,8 +485,9 @@ provenance checks that prevented exploratory artifacts from becoming claims.
 
 A matched-budget, multi-seed rerun of the component-ablation table reaches the
 same conclusion on ordinary per-image reconstruction. The rerun uses 240 steps
-and 3 seeds per variant, and replaces an earlier table whose per-seed provenance
-could not be recovered. A plain classical-replacement control ties or slightly
+and 3 seeds per variant. {\color{red}\textbf{It replaces an earlier table that
+we withdrew, because the repository does not retain the per-seed records needed
+to reproduce it.}} A plain classical-replacement control ties or slightly
 exceeds the quantum baseline, and only a circuit-free random-VQC control
 performs clearly worse. This rerun uses a descriptive pooled-standard-deviation
 comparison rule at 3 seeds rather than a calibrated test, and full results are in
@@ -494,33 +495,35 @@ the companion supplement. Section~\ref{sec:dequant} discusses why this
 ties-with-classical result and the entanglement-necessity result of
 Section~\ref{sec:entanglement_necessity} are not in tension.
 
+
 \subsection{A real hardware reconstruction pilot}
 \label{sec:hardware_pilot}
 
-Every result above is a noiseless-simulator result, a limitation we flagged
-rather than left implicit. We report a first step past it: a small but complete
-image-reconstruction pilot executed on real IBM Quantum hardware
-(\texttt{ibm\_fez}, a 156-qubit Heron-class processor), beyond the
-compiled-circuit feasibility probe documented in the supplement. For five images
---- the full 16-patch \textit{Monalisa} benchmark and four native-resolution
-CIFAR-10 images (\textit{cat}, \textit{ship}$\times2$, \textit{airplane}), each
-optimised directly on its own target image following the same per-image protocol
-as every result in this paper --- we took an already-trained HVK1D/HVK2D
-checkpoint's exact learned parameters, rebuilt its measurement circuits
-gate-for-gate in Qiskit, verified the translation against the original PennyLane
-simulator to within numerical noise ($\leq 7.9\times10^{-4}$ maximum absolute
-error per observable across every patch; full validation numbers in the companion
-supplementary document), and then executed the same circuits on real hardware
-with 256 shots per measurement basis, a fixed per-basis shot budget rather than
-an adaptive shadow-tomography-style estimation scheme \citep{Huang2020Shadows}.
-The hardware-measured observables were decoded by the same trained classical
-decoder, with no retraining and no simulator involved anywhere in the
-reconstruction path.
+The results above are noiseless-simulator results. We now report a small but
+complete image-reconstruction pilot executed on real IBM Quantum hardware
+(\texttt{ibm\_fez}, a 156-qubit Heron-class processor), going beyond the
+compiled-circuit feasibility probe documented in the supplement.
 
-Reconstructions from real, noisy hardware measurements retain recognizable image
+The pilot covers five images. These are the full 16-patch \textit{Monalisa}
+benchmark and four native-resolution CIFAR-10 images (\textit{cat},
+\textit{ship}$\times2$, \textit{airplane}), each optimised directly on its own
+target image following the same per-image protocol as every result in this
+paper. For each image we took an already-trained HVK1D/HVK2D checkpoint's exact
+learned parameters and rebuilt its measurement circuits gate-for-gate in Qiskit.
+We verified the translation against the original PennyLane simulator to within
+numerical noise, at most $7.9\times10^{-4}$ maximum absolute error per
+observable across every patch, with full validation numbers in the companion
+supplementary document. We then executed the same circuits on real hardware with
+256 shots per measurement basis. This is a fixed per-basis shot budget, rather
+than an adaptive shadow-tomography-style estimation scheme
+\citep{Huang2020Shadows}. The hardware-measured observables were decoded by the
+same trained classical decoder, with no retraining and no simulator involved
+anywhere in the reconstruction path.
+
+Reconstructions from real, noisy hardware measurements retain recognisable image
 structure. \textit{Monalisa} reaches $25.90$~dB PSNR from hardware measurements,
 against a $37.99$~dB noiseless-simulator replay of the identical circuit
-(Figure~\ref{fig:hardware_reconstruction_monalisa}); the four CIFAR-10 images
+(Figure~\ref{fig:hardware_reconstruction_monalisa}). The four CIFAR-10 images
 average $29.56\pm2.03$~dB on hardware against $42.69\pm3.84$~dB in simulation
 (Figure~\ref{fig:hardware_reconstruction_cifar},
 Table~\ref{tab:hardware_pilot_summary}). The observed gap is consistent with
@@ -560,7 +563,7 @@ documented in the supplement.
            measurements (right) against the same trained checkpoint's
            noiseless-simulator replay (centre) and ground truth (left). The
            hardware image is visibly noisier and exhibits patch-boundary banding,
-           while the subject remains recognizable.}
+           while the subject remains recognisable.}
   \label{fig:hardware_reconstruction_monalisa}
 \end{figure}
 
@@ -574,26 +577,33 @@ documented in the supplement.
   \label{fig:hardware_reconstruction_cifar}
 \end{figure}
 
-Five images constitute a pilot, and we make no hardware-advantage claim. The
-narrower result is that the trained HVK observable channel remains visually and
-quantitatively informative in these device executions under the reported circuit
-and shot budget. Full methodology --- exact gate sequences, per-basis measurement
-construction, job IDs, and pre-submission local-validation results --- is
-documented in the companion supplementary document.
+Five images constitute a pilot, and we make no hardware-advantage claim. What
+the pilot does establish is that the trained HVK observable channel survives
+execution on present-day hardware. The learned parameters, the measurement
+circuits and the classical decoder all transfer unchanged, and the decoded
+images remain quantitatively informative at 256 shots per basis on an
+unmitigated device. This is the sense in which HVK runs on real quantum
+hardware. The companion supplementary document gives the full methodology,
+covering exact gate sequences, per-basis measurement construction, job IDs, and
+pre-submission local-validation results.
 
-The companion Supplementary Material reports a further hardware-validation
-exercise built on this same checkpoint-replay methodology: fresh HVK1D
-checkpoints trained at $N\in\{4,6,8\}$, replayed epoch-by-epoch on real IBM
-Quantum hardware and on the IonQ cloud simulator \citep{IonQBackends}, in support
-of the training-dynamics diagnostic discussed in
-Section~\ref{sec:regularizer_inert} and the Supplementary Material. We keep it
-out of the main text because it is a single-patch, single-seed probe in service
-of a diagnostic whose own negative control (below) does not establish sensitivity
-to the Hamiltonian term it is meant to track.
+The same checkpoint-replay methodology supports a further hardware-validation
+exercise, reported in the companion Supplementary Material. Fresh HVK1D
+checkpoints were trained at $N\in\{4,6,8\}$ and replayed epoch-by-epoch on real
+IBM Quantum hardware and on the IonQ cloud simulator \citep{IonQBackends}. That
+exercise serves the training-dynamics diagnostic of
+Section~\ref{sec:regularizer_inert}. {\color{red}\textbf{It stays out of the
+main text because it is a single-patch, single-seed probe, and because the
+threshold it tracks fires equally with the Hamiltonian term present and absent
+(Section~\ref{sec:phase_transition}). We therefore treat it as an
+interpretability readout, on the same footing as the traces it supports.}}
+\color{black}
+
 
 \subsection{Noise/shot trade-off: a free simulator complement}
 \label{sec:hardware_robustness}
 
+\color{blue}
 The five-image pilot above used a single shot budget (256/basis) and one
 execution per image, which bounds how much it can say about noise sensitivity on
 its own. Real IBM Quantum time is a scarce free-tier resource, so we separate
@@ -604,6 +614,8 @@ quantum-processor time consumed), we replay the same already-trained
 checkpoints' circuits at four shot budgets (256/512/1024/4096 shots per basis,
 three repeated executions each) and compare against both the noiseless-simulator
 ceiling and the real-hardware point already reported above.
+
+
 
 \begin{figure}[t]
   \centering
@@ -616,38 +628,41 @@ ceiling and the real-hardware point already reported above.
 \end{figure}
 
 Two findings follow, averaged over the five checkpoints. First, shot noise
-accounts for only part of the noiseless-to-real gap: moving from the noiseless
+accounts for only part of the noiseless-to-real gap. Moving from the noiseless
 ceiling to a calibrated-noise simulation at the same 256-shot budget already
 costs $8.68$~dB on average, before any real device is involved. Second, more
-shots does not reliably recover it: increasing to 4096 shots per basis changes
+shots does not reliably recover it. Increasing to 4096 shots per basis changes
 PSNR by only $-0.05$~dB on average across the five checkpoints, with individual
 images ranging from a $1.33$~dB gain to a $0.96$~dB loss. At this circuit size
 and shot range, shot count is not a lever that reliably improves reconstruction
-quality. Comparing the 256-shot noisy simulation directly against the
-real-hardware point isolates what the calibration snapshot does \emph{not}
-capture: a further $4.24$~dB average gap (range $2.25$--$8.06$~dB across images),
-attributable to device effects a single calibration snapshot does not fully
-capture --- drift between calibration and execution, crosstalk, and correlated
-errors chief among them. The airplane image is the clear outlier ($8.06$~dB
-residual gap, roughly double any other image), which we report rather than
-exclude; a single-execution, five-image pilot cannot distinguish an
+quality.
+\color{green}
+
+Comparing the 256-shot noisy simulation directly against the real-hardware point
+isolates what the calibration snapshot does \emph{not} capture. That comparison
+leaves a further $4.24$~dB average gap, ranging from $2.25$ to $8.06$~dB across
+images. We attribute this residual to drift between calibration and execution,
+crosstalk, and correlated errors. The airplane image is the clear outlier, with
+an $8.06$~dB residual gap, roughly double any other image. We report it rather
+than exclude it, since a single-execution, five-image pilot cannot distinguish an
 image-specific effect from ordinary job-to-job variation. This calibrated-noise
 simulation is a free, repeatable complement to the pilot, not a substitute for
-it: it bounds how much of the observed hardware gap is attributable to modeled
-device noise versus unmodeled effects, using zero additional quantum-processor
-time.
+it. It bounds how much of the observed hardware gap is attributable to modelled
+device noise rather than unmodelled effects, using zero additional
+quantum-processor time.
+\color{black}
 
 \subsection{Real-hardware anchor points: repeated execution and a second backend}
 \label{sec:hardware_anchors}
 
 The simulated trade-off above is bounded, in turn, by whether it actually
-reflects real devices. We spent a small, explicitly quota-tracked slice of the
-free-tier IBM Quantum allowance (four jobs, well under $1\%$ of the monthly
-limit) confirming it directly: the same two checkpoints (\textit{Monalisa},
-CIFAR \textit{cat}) replayed with no retraining on \texttt{ibm\_marrakesh} and
-\texttt{ibm\_kingston} --- two backends distinct from the original pilot's
-\texttt{ibm\_fez} --- at the original 256-shot budget and, separately, at 1024
-shots.
+reflects real devices. We confirmed this directly on hardware, using a small,
+quota-tracked slice of the free-tier IBM Quantum allowance of four jobs, well
+under $1\%$ of the monthly limit. Two checkpoints, \textit{Monalisa} and CIFAR
+\textit{cat}, were replayed with no retraining on \texttt{ibm\_marrakesh} and
+\texttt{ibm\_kingston}. Both backends are distinct from the original pilot's
+\texttt{ibm\_fez}. We ran them at the original 256-shot budget and, separately,
+at 1024 shots.
 
 \begin{table}[t]
   \centering
@@ -674,15 +689,15 @@ shots.
 ($25.94$ vs.\ $25.90$~dB, \texttt{ibm\_marrakesh} vs.\ \texttt{ibm\_fez}), and
 gains only $0.16$~dB from quadrupling shots to 1024, consistent with the
 simulated finding above that shot count is not a reliable lever. The CIFAR
-\textit{cat} point is the more informative one: on \texttt{ibm\_kingston} at the
-original 256-shot budget it reaches $28.93$~dB, $2.59$~dB below the
-\texttt{ibm\_fez} pilot point, while its own 1024-shot execution on the same
-backend recovers to $31.24$~dB, within $0.28$~dB of the original. This is real
+\textit{cat} point is the more informative one. On \texttt{ibm\_kingston} at the
+original 256-shot budget it reaches $28.93$~dB, which is $2.59$~dB below the
+\texttt{ibm\_fez} pilot point. Its own 1024-shot execution on the same backend
+recovers to $31.24$~dB, within $0.28$~dB of the original. This is real
 job-to-job and backend-to-backend variation of a magnitude comparable to the
-unmodeled residual identified by the simulator comparison
-(Section~\ref{sec:hardware_robustness}). This is direct evidence, not merely a
-simulated bound, that a single 256-shot execution on a single backend is not yet
-a stable estimate of this pipeline's hardware performance, and that repeated
+unmodelled residual identified by the simulator comparison
+(Section~\ref{sec:hardware_robustness}). It provides direct evidence, not merely
+a simulated bound, that a single 256-shot execution on a single backend is not
+yet a stable estimate of this pipeline's hardware performance, and that repeated
 execution matters at least as much as backend choice or shot count individually.
 
 \subsection{Exact \texorpdfstring{$D_4$}{D4}-equivariant observable pooling}
@@ -696,18 +711,17 @@ of the square \emph{by construction}:
   \qquad
   \Phi_{D_4}(hx)=P_h\,\Phi_{D_4}(x)\ \ \forall\, h\in D_4,
 \end{equation}
-up to floating-point error. We verify this numerically over 7000 patch transforms
-of cached CIFAR images (Table~\ref{tab:d4_equivariance},
-Figure~\ref{fig:d4_equivariance}): the pooled map's equivariance error is
-$9.57\times10^{-17}\pm1.26\times10^{-17}$ (floating-point noise), while the
-original unpooled positional map is not measurably more symmetric than a
-local/raw control ($0.815\pm0.129$ vs.\ $0.837\pm0.131$) --- confirming the
-unpooled map is only $D_4$-\emph{motivated} by the patch grid's geometry, not
-empirically equivariant, and that only the explicit pooling construction delivers
-the property. This is currently a feature-grid-level construction and numerical
-diagnostic rather than a component of the trainable reconstruction pipeline;
-integrating it end-to-end (Section~\ref{sec:limitations}) is concrete future
-work.
+up to floating-point error. We verify this numerically over 7000 patch
+transforms of cached CIFAR images (Table~\ref{tab:d4_equivariance},
+Figure~\ref{fig:d4_equivariance}). The pooled map's equivariance error is
+$9.57\times10^{-17}\pm1.26\times10^{-17}$, which is floating-point noise. The
+unpooled positional map has an error of $0.815\pm0.129$, and the local/raw
+control has $0.837\pm0.131$. Both are of order one. The patch grid's geometry
+therefore makes the unpooled map $D_4$-\emph{motivated} only, and the explicit
+pooling construction is what delivers the property. This construction operates
+at the feature-grid level and serves here as a numerical diagnostic, rather
+than as a component of the trainable reconstruction pipeline. Integrating it
+end-to-end (Section~\ref{sec:limitations}) is concrete future work.
 
 \begin{table}[t]
   \centering
@@ -739,27 +753,35 @@ work.
 \subsection{Entanglement necessity in the nonlocal-structure protocol}
 \label{sec:entanglement_necessity}
 
-This diagnostic is deliberately constructed to reward pair-observable structure:
-the target is a fixed synthetic function of \emph{simulated} patch features not
-concatenated into any candidate's own input block (the companion supplement gives
-the leakage-audit procedure that rules out circularity), and every control
-receives the same raw inputs as HVK2D. Table~\ref{tab:hvk_pair_diagnostic} and
-Figure~\ref{fig:hvk_pair_diagnostic} report the result across five seeds: HVK2D's
-entangling observable channel reaches mean $R^2=0.9735$ ($32.77$~dB PSNR), a
-$17.74$~dB improvement over a no-entanglement control ($R^2=0.019$) and
-$18.52$~dB over random-VQC latents ($R^2=-0.173$); freezing the quantum circuit
-(features fixed, only readout trained) still reaches $R^2=0.853$, while a
-parameter-matched classical control ($R^2=-0.030$) and a frozen-classical control
-($R^2=-0.903$) fail outright. The mechanism is explicit under the fixed linear
-readout: a linear map of single-patch expectations $\{\langle O_i\rangle\}$ cannot
-form the cross-term $\langle O_i\rangle\langle O_j\rangle$ that the target depends
-on, whereas the entangling measurement supplies the joint correlator
-$\langle O_iO_j\rangle$ directly as a feature. This is therefore evidence that an
-entangling pair-observable channel is \emph{representationally necessary within
-the tested feature class and fixed linear-readout protocol} to fit this target; a
-sufficiently nonlinear classical readout could in principle recover the same
-cross-terms, which is why we scope the claim to the linear protocol rather than to
-classical models in general.
+The diagnostic tests whether an entangling pair-observable channel is needed to
+fit a target that depends on pair correlations. The target is a fixed synthetic
+function of \emph{simulated} patch features, and those features are not
+concatenated into any candidate's own input block. The companion supplement
+gives the leakage-audit procedure that rules out circularity. Every control
+receives the same raw inputs as HVK2D. {\color{red}\textbf{The task is by
+construction favourable to pair-observable structure, which is why we read it as
+a representational statement and not as a performance comparison.}}
+
+Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic}
+report the result across five seeds. HVK2D's entangling observable channel
+reaches mean $R^2=0.9735$, or $32.77$~dB PSNR. This is a $17.74$~dB improvement
+over a no-entanglement control ($R^2=0.019$) and $18.52$~dB over random-VQC
+latents ($R^2=-0.173$). Freezing the quantum circuit, so that features are fixed
+and only the readout is trained, still reaches $R^2=0.853$. A parameter-matched
+classical control ($R^2=-0.030$) and a frozen-classical control ($R^2=-0.903$)
+fail outright. {\color{red}\textbf{The raw-linear classical control
+($R^2=0.0133$) is in the table but is not named here; whether it should be
+depends on the duplicate-control question raised separately.}}
+
+The mechanism is explicit under the fixed linear readout. A linear map of
+single-patch expectations $\{\langle O_i\rangle\}$ cannot form the cross-term
+$\langle O_i\rangle\langle O_j\rangle$ that the target depends on. The entangling
+measurement supplies the joint correlator $\langle O_iO_j\rangle$ directly as a
+feature. An entangling pair-observable channel is therefore
+\emph{representationally necessary within the tested feature class and fixed
+linear-readout protocol} to fit this target. A sufficiently nonlinear classical
+readout could in principle recover the same cross-terms, which is why we scope
+the claim to the linear protocol rather than to classical models in general.
 
 \begin{table}[t]
   \centering
@@ -794,18 +816,21 @@ classical models in general.
 \subsection{A scoped training-dynamics diagnostic}
 \label{sec:phase_transition}
 
-Beyond the results above, we tracked two exploratory training-dynamics readouts:
-a magnetization-style statistic $M_z(t)$ and a signed energy-to-entanglement
-ratio $R_{ES}(t)$. Neither exhibits a sharp transition: both drift smoothly
-over training with run-to-run fluctuations, and any apparent onset is a
-within-run median-plus-$2\sigma$ threshold crossing rather than a calibrated
-statistical test. The negative control settles the reading: the identical
-protocol applied to a classical-replacement variant, with the Hamiltonian energy
-identically zero throughout training, crosses that threshold in all $4/4$ tested
-cases --- exactly as often as the Hamiltonian-regularised model's $4/4$ --- so we
-make no transition claim and report these traces solely as an interpretability
-readout on the learned energy and entanglement (full protocol and tables in the
-companion Supplementary Material).
+Beyond the results above, we tracked two exploratory training-dynamics readouts.
+These are a magnetisation-style statistic $M_z(t)$ and a signed
+energy-to-entanglement ratio $R_{ES}(t)$. Both drift smoothly over training with
+run-to-run fluctuations, and neither shows a sharp transition. Any apparent onset
+is a within-run median-plus-$2\sigma$ threshold crossing, rather than a
+calibrated statistical test.
+
+A negative control fixes the scope. We applied the identical protocol to a
+classical-replacement variant, in which the Hamiltonian energy is identically
+zero throughout training. That variant crosses the threshold in all $4/4$ tested
+cases, which is as often as the Hamiltonian-regularised model's $4/4$. The
+threshold therefore fires whether the Hamiltonian term is present or absent, and
+it does not track that term. We make no transition claim, and report these traces
+as an interpretability readout on the learned energy and entanglement. The
+companion Supplementary Material gives the full protocol and tables.
 
 \section{Discussion}
 \label{sec:discussion}

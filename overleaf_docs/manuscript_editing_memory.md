@@ -5,7 +5,7 @@ Working record of the section-by-section language pass on
 are settled and are not under review here. The purpose of this file is so the
 pass can be resumed after a break without re-deriving the decisions.
 
-Last updated: 2026-09-11.
+Last updated: 2026-09-11 (after Section 4.6).
 
 ---
 
@@ -29,11 +29,26 @@ Last updated: 2026-09-11.
      transfer reaches 8.31 dB. Extending training to include the second image
      recovers 28.63 dB."
 
-3. **No AI writing signatures.** No trailing em-dash appending an afterthought to
-   a complete sentence. No evenly weighted exhaustive lists where a clause plus
-   citations would do. No throat-clearing sentence announcing what the next
-   sentence will do. Avoid "in the spirit of", "it is worth noting", "crucial",
-   "comprehensive", "leverage", "robust" as filler.
+3. **No AI writing signatures.**
+   - No trailing em-dash appending an afterthought to a complete sentence.
+   - **No paired em-dashes either** (`text --- aside --- text`). This was
+     initially missed. The rule is: **no `---` in prose at all.** The only
+     permitted uses are numeric ranges (`$2$--$8$~dB`) and compound words
+     (`feature--position`). Recast as a plain sentence, or move the aside into a
+     clause after a comma.
+     - BAD: "Full methodology --- exact gate sequences, job IDs, and validation
+       results --- is documented in the supplement."
+     - GOOD: "The supplement gives the full methodology, covering exact gate
+       sequences, job IDs, and validation results."
+   - No evenly weighted exhaustive lists where a clause plus citations would do.
+   - No throat-clearing sentence announcing what the next sentence will do, and
+     no announcing a count before delivering it ("for two reasons", "three of
+     these choices warrant...").
+   - No double negatives. State the fact instead. "The threshold fires equally
+     with the term present and absent" beats "the control does not establish that
+     the diagnostic is sensitive to the term".
+   - Avoid "in the spirit of", "it is worth noting", "crucial", "comprehensive",
+     "leverage", "robust" as filler.
 
 4. **Positive framing, not defensive.** State what a result establishes, then
    scope it. Keep the limitation, but move it out of the lead. Do not disclaim
@@ -54,18 +69,18 @@ Last updated: 2026-09-11.
 | 3 Experimental Setup | 387-408 | **DONE** |
 | 4.1 Six real image datasets | 413-445 | **DONE** |
 | 4.2 Scope: no zero-shot transfer | 446-458 | **DONE** |
-| 4.3 Competitive with baselines | 459-496 | **DONE** |
-| 4.4 Hardware reconstruction pilot | 497-593 | next (longest, about 97 lines) |
-| 4.5 Noise/shot trade-off | 594-639 | pending |
-| 4.6 Real-hardware anchor points | 640-687 | pending |
-| 4.7 Exact D4 observable pooling | 688-738 | pending |
-| 4.8 Entanglement necessity | 739-793 | pending |
-| 4.9 Training-dynamics diagnostic | 794-809 | pending |
-| 5.1 Why regulariser was inert | 813-873 | pending |
-| 5.2 Task-dependent scope | 874-921 | pending |
-| 5.3 Topology alignment | 922-1005 | pending |
-| 5.4 Validated scope, next steps | 1006-1047 | pending |
-| 6 Conclusion | 1048-end | pending |
+| 4.3 Competitive with baselines | 459-498 | **DONE** |
+| 4.4 Hardware reconstruction pilot | 499-602 | **DONE** |
+| 4.5 Noise/shot trade-off | 603-654 | **DONE** |
+| 4.6 Real-hardware anchor points | 655-702 | **DONE** |
+| 4.7 Exact D4 observable pooling | 703-753 | next |
+| 4.8 Entanglement necessity | 754-808 | pending |
+| 4.9 Training-dynamics diagnostic | 809-824 | pending |
+| 5.1 Why regulariser was inert | 828-888 | pending |
+| 5.2 Task-dependent scope | 889-936 | pending |
+| 5.3 Topology alignment | 937-1020 | pending |
+| 5.4 Validated scope, next steps | 1021-1062 | pending |
+| 6 Conclusion | 1063-end | pending |
 
 Line numbers drift as edits land. Re-derive them by grepping for the section and
 subsection commands rather than trusting this table.
@@ -141,6 +156,54 @@ subsection commands rather than trusting this table.
 - Every number, CI, p-value, revision marker and cross-reference was diffed
   against HEAD and confirmed preserved.
 
+### Section 4.4, hardware reconstruction pilot
+
+- The opening apologised for the preceding sections and praised the group for
+  having been honest ("a limitation we flagged rather than left implicit"). It
+  now simply states that the results above are simulator results.
+- Split a 130-word sentence, the longest in the paper, into seven. It had carried
+  five stacked actions plus a parenthetical plus a dash clause.
+- `recognizable` to `recognisable`, twice, in prose and in a figure caption.
+- Split a semicolon splice joining the Monalisa and CIFAR results.
+- Removed a paired-dash construction around the methodology list.
+- Rewrote the closing so the section lands on its actual claim, "This is the
+  sense in which HVK runs on real quantum hardware", instead of trailing into a
+  methodology pointer.
+- The last paragraph ended on a double negative, "does not establish that the
+  diagnostic is sensitive to the Hamiltonian term". It now states the fact, that
+  the threshold fires equally with the term present and absent, which is also how
+  Section 4.9 puts it. **Marked red bold for the student**, who should decide
+  whether the paragraph earns its place at all. Note that `IonQBackends` is cited
+  nowhere else in the main paper, so cutting the paragraph removes that entry
+  from the main bibliography. That is correct behaviour, not a problem, but it
+  should be a deliberate choice.
+
+### Section 4.5, noise/shot trade-off
+
+- Removed four colon-then-loaded-clause constructions.
+- Removed a paired-dash construction listing device effects.
+- The same clause appeared twice with the same verb, "what the calibration
+  snapshot does not capture ... device effects a single calibration snapshot does
+  not fully capture". Now stated once.
+- Split into two paragraphs at the natural break, the two shot-budget findings
+  and then the residual-gap analysis.
+- `modeled` to `modelled`, `unmodeled` to `unmodelled`, including one instance
+  that had drifted into Section 4.6.
+- Paragraph 1 was already clean and was left untouched.
+
+### Section 4.6, real-hardware anchor points
+
+- Paragraph 1 was a single 60-word sentence with a colon, a paired dash and two
+  parentheticals, and had no main verb after the colon. It is now five plain
+  sentences.
+- Removed the colon construction in paragraph 2 and split its 45-word "while"
+  clause.
+- Two consecutive sentences both opened "This is". The second now reads "It
+  provides direct evidence". That repetition was introduced by the earlier
+  mechanical em-dash cleanup, which is worth remembering as a hazard of bulk
+  fixes.
+- "explicitly quota-tracked" to "quota-tracked".
+
 ---
 
 ## 4. Open items
@@ -154,11 +217,17 @@ subsection commands rather than trusting this table.
   form is the safe pattern.
 - The `\snew{}` revision markers (5 occurrences), present for the student review
   round.
+- Colour markup now stands at 19 occurrences, including two red-bold blocks
+  flagged for the student: the withdrawn-table sentence in Section 4.3, and the
+  closing of the last paragraph of Section 4.4.
 
 **Deferred to a single final sweep**
 
 - Remaining `-ization` and `-ized` forms in sections not yet reviewed.
 - `nonoverlapping` versus `non-overlapping`. The file currently uses both.
+- **Six paired-dash constructions remain**, down from eight. They sit in
+  Sections 4.9, 5.1, 5.2 (two) and 6 (two). Each will be taken with its own
+  section. To re-locate them, look for sentences containing two `---`.
 
 **Raised, not yet decided**
 
