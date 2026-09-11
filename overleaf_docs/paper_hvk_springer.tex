@@ -409,6 +409,7 @@ are given in the companion supplementary document.
 \section{Results}
 \label{sec:results}
 
+\color{blue}
 \subsection{Reconstruction across six real image datasets}
 \label{sec:sameset_results}
 
@@ -417,10 +418,8 @@ patches (16 patches/image, 80--100 optimisation steps). The sample covers
 CIFAR-10 \citep{Krizhevsky2009}, MNIST \citep{LeCun1998}, Fashion-MNIST
 \citep{Xiao2017}, and the PathMNIST, BloodMNIST, and PneumoniaMNIST subsets of
 MedMNIST~v2 \citep{Yang2023}. Table~\ref{tab:sameset_multi_dataset} reports mean
-PSNR between $25.8$ and $41.6$~dB (SSIM $0.91$--$1.00$). This is a same-set
-fitting result across varied image structures, not a held-out generalization
-claim; the companion study provides the latter evaluation
-(Section~\ref{sec:ablation_relationship}).
+PSNR between $25.8$ and $41.6$~dB (SSIM $0.91$--$1.00$). This establishes that
+the architecture fits varied image structures under a common protocol.
 
 \begin{table}[t]
   \centering
@@ -442,52 +441,57 @@ claim; the companion study provides the latter evaluation
   \end{tabular}
 \end{table}
 
-\subsection{Scope and adaptation across images}
+
+
+\subsection{Scope: models do not transfer zero-shot}
 \label{sec:no_generalization}
 
 A model optimised on one image alone does not transfer zero-shot to a
-structurally different image: on \textit{Monalisa}, zero-shot transfer to a
-second image reaches only $8.31$~dB PSNR ($\mathrm{SSIM}=0.1044$), while
-extending training to include the second image recovers $28.63$~dB
-($\mathrm{SSIM}=0.9858$). This confirms that the per-image results above measure
-per-image optimisation and reconstruction capability, not held-out
-generalization; this is how we scope every claim in this paper, and it is
-precisely the distinction the held-out protocol of
-Section~\ref{sec:ablation_relationship} is designed to test.
+structurally different image. On \textit{Monalisa}, zero-shot transfer to a
+second image reaches $8.31$~dB PSNR, with SSIM $0.1044$. Extending training to
+include the second image recovers $28.63$~dB, with SSIM $0.9858$. The per-image
+results above therefore measure per-image optimisation and reconstruction
+capability. Section~\ref{sec:ablation_relationship} tests the held-out case
+directly.
+
+\color{black}
 
 \subsection{Competitive with resource-matched classical baselines}
 \label{sec:ablation_relationship}
 
-The results above measure per-image fitting; a separate, equally important
-question is whether HVK's feature map improves reconstruction on real,
-\emph{held-out} images under a resource-matched multi-seed protocol. That
-question is answered in the companion document, \textit{Supplementary Material
-for the Hamiltonian Vision Kernel: Resource-Matched Ablations, Validation, and
-Reproducibility}. On held-out CIFAR-10, \snew{the raw/local linear control} reaches
-$18.80\pm1.42$~dB against HVK2D's $18.12\pm1.54$~dB; after aggregating
-held-out images within each split, the HVK2D-minus-control difference is
-$-0.68$~dB (bootstrap 95\% CI $[-0.91,-0.46]$~dB; Wilcoxon $p=0.0625$, $n=5$
-seeds), with the same numerical direction on five further real datasets. Thus the
-tested HVK map is informative but is not shown to outperform the simpler maps on
-ordinary held-out reconstruction. A TOST equivalence test at a declared
-$\pm1$~dB margin (companion supplement) confirms this gap is small enough, in a
-pre-declared and data-independent sense, to call the two \emph{competitive}
-rather than merely ``not shown to differ'': \snew{five of seven distinct} tested controls
-are statistically equivalent to HVK2D within that margin, while the two weakest
-controls (strict classical random features, random-VQC) are correctly excluded
-because HVK2D substantially outperforms them. We
-report this as a rigorous complement: it delineates the tested boundary of the
-positive entanglement and symmetry results reported below and records the
-provenance checks that prevented exploratory artifacts from becoming claims. A
-matched-budget, multi-seed rerun of the component-ablation table (240 steps, 3
-seeds/variant, replacing an earlier table whose per-seed provenance could not be
-recovered) reaches the same conclusion on ordinary per-image reconstruction: a
-plain classical-replacement control ties or slightly exceeds the quantum
-baseline, while only a circuit-free random-VQC control performs clearly worse;
-that rerun uses a descriptive pooled-standard-deviation comparison rule at 3
-seeds rather than a calibrated test, and full results are in the companion
-supplement. Section~\ref{sec:dequant} discusses why this ties-with-classical
-result and the entanglement-necessity result of
+The results above measure per-image fitting. A separate question is whether
+HVK's feature map improves reconstruction on real, \emph{held-out} images under
+a resource-matched multi-seed protocol. That question is answered in the
+companion document, \textit{Supplementary Material for the Hamiltonian Vision
+Kernel: Resource-Matched Ablations, Validation, and Reproducibility}.
+
+On held-out CIFAR-10, \snew{the raw/local linear control} reaches
+$18.80\pm1.42$~dB, against HVK2D's $18.12\pm1.54$~dB. Aggregating held-out
+images within each split gives an HVK2D-minus-control difference of $-0.68$~dB,
+with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$
+seeds. The same numerical direction holds on five further real datasets. The
+tested HVK map is therefore informative, but it is not shown to outperform the
+simpler maps on ordinary held-out reconstruction.
+
+A TOST equivalence test at a declared $\pm1$~dB margin confirms that this gap is
+small enough, in a pre-declared and data-independent sense, to call the two
+\emph{competitive} rather than merely ``not shown to differ''.
+\snew{Five of seven distinct} tested controls are statistically equivalent to
+HVK2D within that margin. The two weakest controls, strict classical random
+features and random-VQC, are correctly excluded, because HVK2D substantially
+outperforms them. We report this as a complement to the positive entanglement
+and symmetry results below. It delineates their tested boundary and records the
+provenance checks that prevented exploratory artifacts from becoming claims.
+
+A matched-budget, multi-seed rerun of the component-ablation table reaches the
+same conclusion on ordinary per-image reconstruction. The rerun uses 240 steps
+and 3 seeds per variant, and replaces an earlier table whose per-seed provenance
+could not be recovered. A plain classical-replacement control ties or slightly
+exceeds the quantum baseline, and only a circuit-free random-VQC control
+performs clearly worse. This rerun uses a descriptive pooled-standard-deviation
+comparison rule at 3 seeds rather than a calibrated test, and full results are in
+the companion supplement. Section~\ref{sec:dequant} discusses why this
+ties-with-classical result and the entanglement-necessity result of
 Section~\ref{sec:entanglement_necessity} are not in tension.
 
 \subsection{A real hardware reconstruction pilot}
