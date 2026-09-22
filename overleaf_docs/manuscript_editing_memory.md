@@ -1,12 +1,19 @@
 # Manuscript editing memory
 
-Working record of the section-by-section language pass on
-`main_paper.tex`. Scope is **language only**: code, results and physics
+Working record of the section-by-section language pass on `main_paper.tex` and
+`supplementary.tex`. Scope is **language only**: code, results and physics
 are settled and are not under review here. The purpose of this file is so the
 pass can be resumed in a fresh session without re-deriving the decisions.
 
-Last updated: 2026-09-22, after Section 4.9. **Sections 2, 3 and all of 4 are
-done.** Section 5 is next.
+Last updated: 2026-09-22, after the supplement annotation pass.
+
+`main_paper.tex`: **Sections 2, 3, 4, 5 and 6 are done.** Only the Introduction
+and the Abstract remain, both deferred by supervisor choice so they can be
+reconciled against the finished body.
+
+`supplementary.tex`: language pass **not started**. Twelve reviewer blocks have
+been inserted for the student; no wording changed. Section 6 of this file has
+the full survey and the agreed batch order.
 
 ---
 
@@ -26,11 +33,19 @@ done.** Section 5 is next.
 
 Editing mechanics that matter:
 
-- The `.tex` files are **CRLF**. Bash heredocs eat backslashes and apostrophes
-  and will corrupt LaTeX. The reliable method is to write a Python script with
-  the Write tool, build the old and new blocks by `"\r\n".join([...])` over a
-  list of `r"..."` raw strings, assert `d.count(old) == 1`, and `sys.exit` with
-  a loud failure otherwise. Never half-apply.
+- **Both `.tex` files are LF, not CRLF.** This entry previously said CRLF and
+  that was wrong; verified 2026-09-22 with a byte count on both files
+  (`main_paper.tex` 1045 LF / 0 CRLF, `supplementary.tex` 604 LF / 0 CRLF).
+  Write with `newline="\n"`, or the inserted lines become mixed endings.
+- Bash heredocs eat backslashes and apostrophes and will corrupt LaTeX. Inline
+  `python -c "..."` is just as bad: it mangled `\color` into a regex error three
+  times in one session. The reliable method is to write a Python script with the
+  Write tool, build the old and new blocks by `"\n".join([...])` over a list of
+  `r"..."` raw strings, assert `d.count(old) == 1`, and `sys.exit` with a loud
+  failure otherwise. Never half-apply.
+- When appending a block to the **start** of a paragraph, do not `lstrip()` the
+  joined string. It eats the blank line that separates the paragraph from a
+  preceding `\end{table}` and silently merges the two.
 - Compile with `pdflatex` twice, then confirm 0 errors and 0 undefined.
   Remove `.aux`, `.log`, `.out`, `.toc` afterwards.
 
@@ -97,8 +112,8 @@ Editing mechanics that matter:
 
 | Section | Lines | Status |
 |---|---|---|
-| Abstract | 39-62 | deferred to last, reconcile to the finished body |
-| 1 Introduction | 76-204 | **deferred to last** (supervisor choice) |
+| Abstract | 44 | **remaining**, reconcile to the finished body |
+| 1 Introduction | 76-204 | **remaining** (deferred by supervisor choice) |
 | 2 Architecture | 205-386 | **DONE** |
 | 3 Experimental Setup | 387-408 | **DONE** |
 | 4.1 Six real image datasets | 413-445 | **DONE** |
@@ -110,21 +125,24 @@ Editing mechanics that matter:
 | 4.7 Exact D4 observable pooling | 703-752 | **DONE** |
 | 4.8 Entanglement necessity | 753-815 | **DONE** |
 | 4.9 Training-dynamics diagnostic | 816-834 | **DONE** |
-| 5.1 Why regulariser was inert | 838-898 | **next** |
-| 5.2 Task-dependent scope | 899-946 | pending |
-| 5.3 Topology alignment | 947-1030 | pending |
-| 5.4 Validated scope, next steps | 1031-1072 | pending |
-| 6 Conclusion | 1073-end | pending |
+| 5.1 Why regulariser was inert | 829-861 | **DONE** |
+| 5.2 Task-dependent scope | 862-871 | **DONE** |
+| 5.3 Topology alignment | 872-940 | **DONE** |
+| 5.4 Validated scope | 941-953 | **DONE** |
+| 6 Conclusion | 954-end | **DONE** |
 
-Section 4 was swept as a whole after 4.9 landed and is clean: zero prose
-em-dashes, zero colon-then-clause constructions, zero US spellings outside
-LaTeX identifiers, across all 426 lines.
+Sections 4, 5 and 6 were swept as whole units after their last subsection
+landed and are clean: zero prose em-dashes, zero colon-then-clause
+constructions, zero US spellings outside LaTeX identifiers.
 
 Line numbers drift as edits land. Re-derive them rather than trusting this
 table.
 
 Commits so far: `98581ca` (sections 3, 4.1-4.3, and this file),
-`a76a59f` "checked sections 2, 3, 4" (the 4.4 through 4.9 work).
+`a76a59f` "checked sections 2, 3, 4" (the 4.4 through 4.9 work),
+`54088d4` (rename of `paper_hvk_springer.tex` to `main_paper.tex`, plus the
+reference updates in the workflow, README, tests and companion docs).
+The Section 5 and 6 work is **not yet committed**.
 
 ---
 
@@ -293,15 +311,115 @@ Commits so far: `98581ca` (sections 3, 4.1-4.3, and this file),
   the red-bold block in Section 4.4**, so the two places agree. If the student
   changes one, change both.
 
+### Section 5.1, why the regulariser was inert
+
+- Was one 31-line paragraph carrying five ideas. Now two paragraphs, the finding
+  and mechanism, then the read-only reading. 340 words down to about 140.
+- Removed the paired dash around the contrastive variant, and four
+  colon/semicolon-then-clause constructions.
+- The six-line provenance narrative about the superseded draft numbers is now one
+  clause. The table caption already carries the pointer to the full account.
+- Removed the double negative "This does not mean Hamiltonian regularisation is
+  never useful". The conditional sentence carries that content instead.
+- Dropped the hedge "if anything" from the lead, which was softening a 5.93 dB
+  effect the table states plainly.
+- The root-cause fix and the seed-sensitive decoder-feature variant were cut from
+  the main paper. Both remain in the Supplementary Material.
+- The closing `sec:phase_transition` paragraph ended on a prohibition, "must not
+  be read as thermodynamic transitions". It now states the positive scope.
+
+### Section 5.2, task-dependent representational scope
+
+- Was two breathless paragraphs, 431 words, the longest subsection in the
+  Discussion. Now three paragraphs, about 210 words.
+- Removed three paired dashes and four colon-then-clause constructions.
+- **The whole rebuttal framing of paragraph 2 was cut.** It had existed to answer
+  an accusation nobody made, naming "an uncharitable alternative explanation" and
+  defending the work as "not a strawman". Rule 4 forbids disclaiming motivations
+  nobody has claimed. The substantive point survives in positive form: the three
+  ingredients are standard in the literature, the instantiation is typical, so the
+  measured behaviour is evidence about the design pattern.
+- Removed "We stress that this is not a statement about...", throat-clearing plus
+  a negation lead.
+- All six citations, both `\ref` targets and the closing scope caveat kept.
+- The `\emph{measured pair-observable channel}` emphasis was dropped when the
+  sentence was restructured.
+
+### Section 5.3, topology alignment
+
+- The smallest repair in the Discussion. Two paragraphs, 179 words to about 120.
+- Removed the paired dash around the distinguishing-features list, and a semicolon
+  splice joining the resource-cost reading to the formal-equivalence caveat.
+- Dropped "Finally," which was sequencing filler and also misleading, since the
+  paragraph introduces the differentiation table rather than concluding topology.
+- The three hybrid-vision families were named in full in both the prose and the
+  table caption two lines apart. Now named once, in the caption.
+- Moved the wall-clock sentence next to the other cost claim, so the paragraph
+  ends on its conclusion.
+- **Raised, not acted on.** Paragraph 2 and `tab:differentiation` are about
+  architectural differentiation, not topology, and sit under a topology heading.
+  They would read more naturally at the end of 5.2, which `sec:representativeness`
+  already labels. Moving them is structural rather than language, so it was left.
+
+### Section 5.4, validated scope
+
+- **Retitled** from "Validated scope and next steps" to "Validated scope". The
+  subsection contained no next steps; all seven items were limitations. Next steps
+  live in the Conclusion. The label `sec:limitations` is unchanged.
+- Removed six colon/semicolon-then-clause constructions, the densest concentration
+  left in the paper at that point.
+- Every item had led with what the result is not. As a block of seven that read as
+  an apology. Each now states the scope positively, then the caveat.
+- `generalization` to `generalisation` twice in prose. The neighbouring
+  `\ref{sec:no_generalization}` label was left alone.
+- **Item 5 is now the third site** carrying the agreed negative-control wording,
+  "the threshold fires whether the Hamiltonian term is present or absent". It
+  replaced the double negative "has no demonstrated sensitivity to the Hamiltonian
+  term itself". Sections 4.4, 4.9 and 5.4 must now be changed together.
+
+### Section 6, Conclusion
+
+- Was three paragraphs, 653 words, the second-largest prose block in the paper.
+  Now three paragraphs, 269 words, a 60 per cent cut.
+- **The Conclusion had been re-deriving the Results.** It restated
+  $25.90$--$31.52$~dB, $R^2=0.9735$, $R^2\leq0.02$ and the $9.57\times10^{-17}$
+  equivariance error, and re-argued the TOST tie in full. Every one of those
+  numbers is established in Sections 4.3, 4.6, 4.7 and 4.8. They are replaced by
+  `\ref` pointers. A conclusion asserts, it does not re-prove.
+- Paragraph 2 had stated its capability list twice, four sentences apart, and then
+  closed by restating its own opening clause. Said once now.
+- Removed the defensive opening "If HVK ties classical baselines...", the
+  rebuttal "None of these is in tension with the tie-with-classical result", and
+  "We consider this carefully measured boundary a constructive contribution",
+  which asked the reader to credit the work rather than stating a finding.
+- Removed three paired dashes, including one in the back matter's Code
+  availability statement, and the double negative "does not natively expose".
+- Kept word for word: the TOST framing, "competitive with rather than superior",
+  "We make no claim of quantum advantage", and the four future-work items.
+- **Option A was chosen** over folding future work into 5.4. The Discussion ends
+  on scope and the Conclusion ends on outlook, which is what a referee expects.
+
+### Whole-file, this pass
+
+- The paper went from 26 pages to **25**. The "25 pages" figure in Section 5 of
+  this file had been stale since before the Section 4 work, and is now correct
+  again by coincidence rather than by having been maintained.
+- A `Tensor-tnetwork` typo at line 90 was introduced during the file rename, fixed,
+  then reappeared when the file was regenerated, and was fixed a second time. Worth
+  re-grepping after any regeneration of the manuscript from outside this loop.
+
 ---
 
 ## 4. Open items
 
 **Must be removed before arXiv or journal submission**
 
-- The `xcolor` package and **21 colour occurrences**: 6 `red`, 5 `black`,
-  4 `blue`, 4 `green`, 2 `studentgreen`.
-- The `\snew{}` revision markers, **5 occurrences**.
+- `main_paper.tex`: the `xcolor` package and **21 colour occurrences**: 6 `red`,
+  5 `black`, 4 `blue`, 4 `green`, 2 `studentgreen`.
+- `supplementary.tex`: the `xcolor` package, its three-line banner comment, and
+  the **12 `[SUPERVISOR: ...]` blocks** listed in Section 6. Added 2026-09-22.
+  Strip with a regex on `\{\\color\{red\}\\textbf\{\[SUPERVISOR:.*?\]\}\}`.
+- The `\snew{}` revision markers in the main paper, **5 occurrences**.
 - Note that the colour command is a *switch*, not a scope. The `\color{green}`
   opened at line 461 in Section 4.3 does not close until line 607 at the end of
   4.4, so both subsections render green in full and 4.5 then opens blue. This
@@ -309,27 +427,28 @@ Commits so far: `98581ca` (sections 3, 4.1-4.3, and this file),
   stripped. The braced form `{\color{red}\textbf{...}}` is the safe pattern and
   is what all six red blocks use.
 
-**Red-bold blocks awaiting the student, four in total**
+**Red-bold blocks awaiting the student, sixteen in total**
+
+In `main_paper.tex`, four:
 
 1. Section 4.3, the withdrawn nine-variant table.
 2. Section 4.4, the closing of the last paragraph.
 3. Section 4.8, the reframed "favourable by construction" disclaimer.
 4. Section 4.8, the unnamed raw-linear classical control.
 
+In `supplementary.tex`, twelve. See the table in Section 6 for the line numbers
+and the issue at each site.
+
 **Deferred to a single final sweep**
 
 - Remaining `-ization` and `-ized` forms in sections not yet reviewed.
 - `nonoverlapping` versus `non-overlapping`. The file currently uses both.
-- **Ten prose em-dashes remain.** An earlier note in this file said four, which
-  was a stale count carried forward without rechecking. The verified list, by
-  line number as of this update, is:
-  - Introduction: 132, 153
-  - Section 5.1: 856 (one paired construction spanning 856-857)
-  - Section 5.2: 932, 936, 939
-  - Section 5.3: 966
-  - Conclusion: 1080, 1109, 1152
-  Each will be taken with its own section. To re-locate, `grep -n '\-\-\-'` and
-  ignore the preamble banners at lines 3, 19, 43, 68 and the table cell at 554.
+- **Two prose em-dashes remain**, both in the Introduction, at lines 132 and
+  153. The other eight were removed with their own sections during the Section
+  5 and 6 pass. To re-locate, `grep -n '\-\-\-'` and ignore the preamble
+  banners at lines 3, 19, 43, 68 and the permitted table cell at 545.
+  Note the count in this file has twice been carried forward stale. Re-derive
+  it rather than trusting the number written here.
 
 **Raised, not yet decided**
 
@@ -365,8 +484,100 @@ Commits so far: `98581ca` (sections 3, 4.1-4.3, and this file),
   undefined references. The paper currently sits at **25 pages**.
 - Verify numbers survived every rewrite by extracting them from the edited range
   and comparing against the pre-edit text, not by eye.
-- The `.tex` files are **CRLF**. Edit scripts must match exact text including
-  line endings, and must fail loudly rather than half-applying.
+- Both `.tex` files are **LF**. See Section 0; the earlier CRLF claim was wrong.
+  Edit scripts must match exact text and must fail loudly rather than
+  half-applying.
 - Do not commit unless asked.
 - Build artifacts (`.aux`, `.log`, `.out`, `.toc`) are removed after each
   compile. Compiled PDFs belong in `assets/`, per the existing build rule.
+- `supplementary.tex` is **untracked in git** (`??`), a rename of the deleted
+  `supplementary_study.tex` that was never staged. So `git checkout --` cannot
+  restore it. Copy the file to the scratchpad before any scripted edit.
+
+---
+
+## 6. Supplementary material
+
+`supplementary.tex`, 604 lines, 11 sections, 22 tables, 10 figures. Compiles at
+**28 pages**, 0 errors, 0 undefined.
+
+### Language status: NOT started
+
+The only pass it has had is the early mechanical em-dash sweep (14 trailing-dash
+fixes), which rule 3 later overruled. Violation density is roughly what Section 4
+of the main paper looked like before its pass. Counted 2026-09-22:
+
+- **19 prose em-dash violations** out of 21 occurrences. Line 599 is a
+  bibliography title (`MedMNIST v2---A large-scale...`) and line 453 is a numeric
+  range (`8--13`); both stay. Many of the rest are paired parentheticals of the
+  kind the supervisor overruled, including the document's opening sentence and
+  five figure captions.
+- **~25 colon-then-loaded-clause constructions** out of 44 `: [a-z]` matches;
+  the remainder are `\scriptsize`, list intros and captions.
+- **~55 prose Indian-English substitutions**: `optimization` family (~18),
+  `generalization` (~7), `memorization` (6), `regulariser` family (7), plus
+  `normalization`, `standardization`, `canonicalized`, `magnetization`,
+  `dequantization`, `visualize`, `summarized`, `parameterizes`, `reorganization`,
+  `serialized`, `initialized`, `characterize`, `favors`, `center`.
+- **Zero `-iz` forms inside `\label{}`, `\ref{}`, `\path{}` or `\texttt{}`.**
+  Verified by grep. The rule-1 hazard does not apply to this file. But three
+  *section titles* carry `-iz` in visible prose while their labels do not, so the
+  titles change and the labels must not:
+  `\subsection{Adaptation Beyond Single-Image Optimization}`,
+  `\subsection{Dataset-Level Generalization...}` (label **is**
+  `sec:dataset_level_generalization`), and
+  `\subsection{The Physics-Informed Regularizer's Conditional Value}`.
+- Rule 4 is the worst category here, worse than in the main paper. The file
+  repeatedly asks the reader to credit the authors' honesty.
+
+### Proposed batch order, agreed but not yet run
+
+A: Indian English sweep (prose + three titles, labels untouched).
+B: Sections 1-2, lines 22-40. C: 3.1-3.3, lines 43-158. D: 3.4-3.7, lines
+177-283 excluding 283. E: 3.8-3.9, lines 288-375. F: Sections 4-6, lines
+376-453. G: Sections 7-11, lines 455-end.
+
+### Structural note
+
+The prose is written as **very long single physical lines**. Lines 283, 319, 375,
+401, 445, 453 and 532 are each one paragraph of 200-400 words on one line; line
+283 alone is ~370 words. One line is one whole argument, so re-derived line
+numbers are coarse and `sed -n` on a range is not a useful preview.
+
+### Reviewer annotation pass, 2026-09-22 (DONE)
+
+At supervisor request, **12 `{\color{red}\textbf{[SUPERVISOR: ...]}}` blocks**
+were inserted for the student. **No language was changed.** `xcolor` was not
+loaded in this file and was added, under a removable banner comment. Verified:
+stripping the 12 blocks and the banner returns the file to the original byte for
+byte apart from the single space each block adds; all 1304 numbers preserved; all
+labels, refs, paths and citations identical.
+
+Current block sites, by line:
+
+| Line | Issue |
+|---|---|
+| 28 | "a rigorous complement", the phrase already cut from main 4.3 |
+| 42 | whether main Section 3 should state seeds/budget/optimiser |
+| 158 | **count disagreement**, "five of seven" here vs "six of eight" in main |
+| 264 | "does not mean ... never useful", the double negative cut from main 5.1 |
+| 287 | provenance narrative, **held back** pending the main 4.3 red block |
+| 323 | fourth negative-control site |
+| 348 | same, in the `tab:phase_transition_onoff` caption |
+| 373 | "does not natively expose", the double negative cut from the Conclusion |
+| 382 | "we report this honestly" |
+| 386 | "we report this budget explicitly rather than silently shrinking scope" |
+| 405 | heading "and we say so" |
+| 449 | Std. error vs standard deviation, carried from main 4.7 |
+
+### Three cross-document agreements this pass established
+
+1. **The negative-control wording is now a FOUR-site invariant, not three.**
+   Main paper 4.4, 4.9, 5.4 carry "the threshold fires whether the Hamiltonian
+   term is present or absent". Supplement line 323 and the line 348 caption state
+   the same fact in different words. Change all four together.
+2. Supplement line 264 currently **contradicts** the agreed main-paper 5.1
+   wording, and line 373 contradicts the agreed Conclusion wording.
+3. Supplement line 158 says "five of the seven distinct controls", the corrected
+   count from block I of `todo.md`. The main paper still says "six of the eight".
+   The two documents disagree on a number. Flagged, not changed.
