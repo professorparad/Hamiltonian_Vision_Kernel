@@ -5,7 +5,7 @@
 > retained as manuscript evidence. In particular, its Monalisa component
 > attribution lacks reproducible per-seed artifacts, and its leakage verdict
 > predates the corrected restricted diagnostic. For submission claims and
-> current statistics, use `overleaf_docs/paper_hvk_springer.tex`,
+> current statistics, use `overleaf_docs/main_paper.tex`,
 > `overleaf_docs/supplementary_study.tex`, and their artifact map.
 
 > **Historical snapshot — superseded for submission.** This document records an
@@ -13,7 +13,7 @@
 > retained as manuscript evidence. In particular, its Monalisa component
 > attribution lacks reproducible per-seed artifacts, and its leakage verdict
 > predates the corrected restricted diagnostic. For submission claims and
-> current statistics, use `overleaf_docs/paper_hvk_springer.tex`,
+> current statistics, use `overleaf_docs/main_paper.tex`,
 > `overleaf_docs/supplementary_study.tex`, and their artifact map.
 
 Companion to `algorithm.md` (implementation), `report.md` (experiment spec), and

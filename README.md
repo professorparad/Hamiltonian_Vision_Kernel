@@ -129,10 +129,10 @@ Build the current paper PDF:
 
 ```powershell
 cd overleaf_docs
-pdflatex -interaction=nonstopmode paper_hvk_springer.tex
-bibtex paper_hvk_springer
-pdflatex -interaction=nonstopmode paper_hvk_springer.tex
-pdflatex -interaction=nonstopmode paper_hvk_springer.tex
+pdflatex -interaction=nonstopmode main_paper.tex
+bibtex main_paper
+pdflatex -interaction=nonstopmode main_paper.tex
+pdflatex -interaction=nonstopmode main_paper.tex
 ```
 
 The manuscripts live in `overleaf_docs/` (Springer `sn-jnl` sources, figures and

@@ -1,7 +1,7 @@
 # Results ↔ Code Map — Springer manuscripts
 
 Every table and figure in the canonical Springer sources
-(`overleaf_docs/paper_hvk_springer.tex`, `overleaf_docs/supplementary_study.tex`)
+(`overleaf_docs/main_paper.tex`, `overleaf_docs/supplementary_study.tex`)
 mapped to the driver script, the exact command, its key parameters, and the retained
 artifact. Numbering is taken from the compiled PDFs (the `.aux` `\newlabel` entries), so
 "Table 4" here is the number a reader sees.
@@ -28,7 +28,7 @@ different directories; copy the paths exactly as written.
 
 ---
 
-## A. Main paper — `paper_hvk_springer.tex`
+## A. Main paper — `main_paper.tex`
 
 | Item | § | Prior ID | Driver + command | Key parameters | Artifact | Status |
 |---|---|---|---|---|---|---|
@@ -271,7 +271,7 @@ between the campaigns, nothing more.
 
 The historical map lists this as the one row with no artifact of any kind. **It no longer
 needs one: the value is not in either Springer manuscript.** `33.33` does not appear in
-`paper_hvk_springer.tex` or `supplementary_study.tex`.
+`main_paper.tex` or `supplementary_study.tex`.
 
 What survives is §3.7's explicit account of the *withdrawal*, which quotes three of the
 old table's numbers (`32.24 → 33.30`, contrastive `32.84`) precisely to state that they

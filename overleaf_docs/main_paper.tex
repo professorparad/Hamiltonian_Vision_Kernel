@@ -327,18 +327,9 @@ state are read off as the classical MPS feature vector. The two configurations
 differ only in the sizes involved, which Table~\ref{tab:configurations} lists in
 full.
 \color{green}
-The remaining stages are common to both. A learned linear layer compresses the
-MPS feature vector to six circuit angles, one per qubit. After the circuit is
-executed, a two-hidden-layer MLP (128 and 256 units) maps the measured
-observables together with the Fourier positional vector back to a single
-greyscale patch. The positional encoding follows established use as a spatial
-inductive bias in classical generative vision models \citep{Xu2021}.
-Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits.
-These were rebuilt in Qiskit for the hardware pilot of
-Section~\ref{sec:hardware_pilot}, and numerically verified against the
-training-time PennyLane circuit before use. The complete Hamiltonian, loss,
-positional-encoding and measurement definitions are retained in the companion
-supplement.
+The remaining stages are common to both. A learned linear layer compresses the MPS feature vector to six circuit angles, one per qubit. After the circuit is executed, a two-hidden-layer MLP (128 and 256 units) maps the measured observables together with the Fourier positional vector back to a single greyscale patch. The positional encoding follows established use as a spatial inductive bias in classical generative vision models \citep{Xu2021}. Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits. These were rebuilt in Qiskit for the hardware pilot of
+Section~\ref{sec:hardware_pilot}, and numerically verified against the training-time PennyLane circuit before use. The complete Hamiltonian, loss,
+positional-encoding and measurement definitions are retained in the companion supplement.
 \color{blue}
 
 \begin{figure}[t]

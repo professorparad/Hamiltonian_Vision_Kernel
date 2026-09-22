@@ -14,10 +14,10 @@ paths stay `figures/...`.
 bibtex's search for the `.bst`/`.bib`), then move outputs into `assets/`:
 
     cd overleaf_docs
-    python ../latex_outputs/compile_tex.py paper_hvk_springer.tex
-    for e in pdf aux bbl blg fdb_latexmk fls log out; do mv -f paper_hvk_springer.$e assets/; done
+    python ../latex_outputs/compile_tex.py main_paper.tex
+    for e in pdf aux bbl blg fdb_latexmk fls log out; do mv -f main_paper.$e assets/; done
 
-**Current state:** `paper_hvk_springer.pdf` = 24 pp, 0 undefined citations,
+**Current state:** `main_paper.pdf` = 24 pp, 0 undefined citations,
 abstract 242 words (QMI wants 150-250). `supplementary_study.pdf` = 27 pp, 0
 undefined citations, self-contained `thebibliography` (does not use the `.bib`).
 
@@ -141,7 +141,7 @@ this.
 **H2 -- clean local build confirmed.** Rebuilt from a clean aux/log state using the
 available TeX Live toolchain (`latexmk -pdf`) because the repository helper expects
 MiKTeX's `mpm`, which is not installed on this Linux machine. Final PDFs were moved
-into `overleaf_docs/assets/`: `paper_hvk_springer.pdf` = 24 pp and
+into `overleaf_docs/assets/`: `main_paper.pdf` = 24 pp and
 `supplementary_study.pdf` = 27 pp. Final logs contain 0 undefined citations and 0
 undefined references.
 
@@ -179,7 +179,7 @@ is a short summary, by one co-author, of exactly the paper the supervisor identi
 The citation sits in the intro's tensor-network list, where the primary source is what
 belongs. `Fei2021` is deleted and replaced by `Ran2020TNCS` (author list, title, volume,
 article number, year and DOI verified against arXiv and the journal listing); the single
-`\citep` in `paper_hvk_springer.tex` now points at it. Paper rebuilds with 0 undefined
+`\citep` in `main_paper.tex` now points at it. Paper rebuilds with 0 undefined
 citations and renders as "Ran et al. 2020".
 
 **G2 -- the answer is no, and the supplement now says so.** The question was whether the
@@ -234,7 +234,7 @@ against the printed one where it was recomputed.
 
 **F3 -- closed, no artifact needed.** R10's open row was `contrastive+no-energy` (33.33 dB).
 That value is not in either Springer manuscript: `33.33` appears nowhere in
-`paper_hvk_springer.tex` or `supplementary_study.tex`. What survives is §3.7's account of
+`main_paper.tex` or `supplementary_study.tex`. What survives is §3.7's account of
 the *withdrawal*, which quotes `32.24 -> 33.30` and contrastive `32.84` precisely to say
 they are superseded and that three of the old table's six rows are not independently
 reproducible. Those are cited as history, not as results. Nothing to produce, nothing to
@@ -268,7 +268,7 @@ sources) were deleted; both remain in git history. Every duplicate was older tha
 `overleaf_docs/` counterpart, so there is now one source per document.
 
 Live references retargeted rather than left dangling:
-- `.github/workflows/pages.yml` stages `overleaf_docs/assets/paper_hvk_springer.pdf`
+- `.github/workflows/pages.yml` stages `overleaf_docs/assets/main_paper.pdf`
   (the Pages site would otherwise fail on a missing file).
 - The nine `IBM_Cloud/plot_*`/`generate_ansatz_figures.py` scripts now write figures to
   `overleaf_docs/assets/figures/`.
@@ -312,7 +312,7 @@ Assigned to student as todo.md block G (need code/data/citation access): **G1** 
 likely-miscitation (→ Ran et al. PRResearch 2, 033293, 2020?), **G2** topology 11.7 dB
 vs random floor, **G3** bond-dim non-monotonicity (single-seed → confirm or scope).
 
-### Main paper: Tier-1 quality enhancements (`paper_hvk_springer.tex`)
+### Main paper: Tier-1 quality enhancements (`main_paper.tex`)
 Senior-author critical-read pass; three fixes:
 1. **Data-availability contradiction fixed.** The Statements block still said the
    audit covers "the held-out comparison the tested HVK map **loses**" --- a
@@ -385,7 +385,7 @@ Added task block F to `overleaf_docs/todo.md`:
   terminology (quoted), and "ties ... rather than beating it" describing the
   internal energy-loss ablation (not an HVK-vs-classical claim).
 
-### Main paper — Discussion trim (`paper_hvk_springer.tex`)
+### Main paper — Discussion trim (`main_paper.tex`)
 - Merged `\subsection{HVK as a representative instance of a broader design pattern}`
   (~40 lines) into `\subsection{Task-dependent representational scope}` as one
   appended paragraph; re-homed `\label{sec:representativeness}` (cross-referenced in
@@ -394,7 +394,7 @@ Added task block F to `overleaf_docs/todo.md`:
   a lead-in paragraph on the table; unreferenced `\label{sec:differentiation}`
   removed. Discussion 8 -> 6 subsections. PDF 24 -> 23 pp.
 
-### Main paper — positive-framing pass (`paper_hvk_springer.tex`)
+### Main paper — positive-framing pass (`main_paper.tex`)
 - **Abstract:** led the held-out result with the positive TOST equivalence finding
   ("statistically competitive with resource-matched controls") instead of "does not
   exceed classical controls (18.12 vs 18.80)"; exact numbers moved to the body (Sec.
