@@ -1,2 +1,0 @@
-model,image,image_size,patch_size,epochs,mse,psnr,ssim
-CNN,monalisa.png,32,32,200,4.778931906912476e-05,43.206691575233265,0.999299572905042
