@@ -40,30 +40,26 @@
 \affil*[2]{\orgdiv{Centre for Quantum Engineering, Research and Education},
   \orgname{TCG CREST}, \orgaddress{\city{Kolkata}, \country{India}}}
 
-% ---- abstract: 230 words (QMI requires 150-250) ------------------------------
+% ---- abstract: 183 words (QMI requires 150-250) ------------------------------
 \abstract{We introduce the Hamiltonian Vision Kernel (HVK), a hybrid quantum--classical
 architecture for image reconstruction. HVK assembles matrix-product-state patch
 features, a variational quantum circuit exposing a Pauli-correlator latent
 space, two-dimensional Fourier positional encoding, a learnable Hamiltonian
 energy diagnostic, and a classical decoder into a single pipeline. Two
-instantiations, HVK1D and HVK2D, realise chain and grid interaction graphs;
-group-averaged observable pooling makes the HVK2D feature map exactly
+instantiations, HVK1D and HVK2D, realise chain and grid interaction graphs.
+Group-averaged observable pooling makes the HVK2D feature map exactly
 equivariant to the eight symmetries of the square. The contribution is this
 specific assembly rather than any ingredient in isolation. Across six real image
 datasets, per-image-trained HVK2D models reconstruct with peak signal-to-noise
 ratio (PSNR) between 25.8 and 41.6 decibels. On a resource-matched, multi-seed
-held-out comparison using the CIFAR-10 image dataset, a pre-declared two
-one-sided tests (TOST) equivalence procedure at a one-decibel margin establishes
-that HVK2D is statistically \emph{competitive} with \snew{a resource-matched
-raw/local linear classical control}, and it substantially
-outperforms random-circuit and classical-random-feature controls. Five fitted checkpoints
-are replayed on superconducting quantum hardware without retraining and decoded
-directly from device-measured observables, reaching 25.90 to 31.52 decibels. The
-capabilities that a purely classical reconstruction pipeline does not natively
-provide are an entangling observable channel that is representationally
-necessary on a leakage-audited task requiring distant-patch products, an
-interpretable Hamiltonian energy diagnostic, and native execution on quantum
-hardware. We make no claim of quantum advantage.}
+held-out comparison using CIFAR-10, a pre-declared TOST equivalence procedure at
+a one-decibel margin establishes that HVK2D is statistically \emph{competitive}
+with \snew{a resource-matched raw/local linear classical control}. Five fitted
+checkpoints are replayed on superconducting quantum hardware without retraining,
+reaching 25.90 to 31.52 decibels. HVK adds an entangling observable channel that
+is representationally necessary on a leakage-audited task requiring
+distant-patch products, an interpretable Hamiltonian energy diagnostic, and
+native hardware execution. We make no claim of quantum advantage.}
 
 % ---- keywords: 6 (QMI requires 4-6) -----------------------------------------
 \keywords{Quantum image processing, Tensor networks, Variational quantum
@@ -78,80 +74,75 @@ hardware. We make no claim of quantum advantage.}
 
 Hybrid quantum--classical models for vision tasks are increasingly proposed as a
 route to representations with favourable inductive bias, exploiting entanglement,
-physically motivated regularisers, or tensor-network structure that classical
-convolutional pipelines do not natively expose
+physically motivated regularisers, or tensor-network structure beyond what
+classical convolutional pipelines provide
 \citep{Cerezo2021, Tilly2022, Preskill2018}. The variational quantum eigensolver
 and its descendants exploit the local decomposability of physically relevant
 Hamiltonians to construct shallow, problem-aware circuits
-\citep{Cerezo2021, Tilly2022, Bauer2020}, and quantum image processing provides
+\citep{Cerezo2021, Tilly2022, Bauer2020}. Quantum image processing provides
 encodings that place pixel information directly into qubit registers, from
 flexible amplitude-style representations \citep{Le2011} to basis-encoded pixel
 values \citep{Zhang2013} and their processing primitives
-\citep{Chakraborty2018, Zhou2017, Yao2017}. Tensor-network methods, in parallel,
-have proven effective as compressed representations of structured classical
-data, including images
-\citep{Cirac2021, Latorre2005, Han2018, Stoudenmire2016, Ran2020TNCS, Guala2023},
-and more broadly other structured data such as particle-physics events
-\citep{Araz2022}. Related hybrid quantum architectures target adjacent imaging
-tasks, including quantum annealing-based tomographic reconstruction
-\citep{Haga2024}, adiabatic quantum computing for emission tomography
-\citep{Nau2023}, quantum neural compressive sensing for ghost imaging
-\citep{Zhai2025}, hybrid autoencoder-plus-quantum-SVM feature extraction for
-image classification \citep{Slabbert2024}, quantum convolutional networks and
-their classical-data variants \citep{Cong2019, Hur2022}, and quantum capsule
-networks \citep{Liu2022}. HVK focuses on the specific combination of a
-Pauli-correlator latent space, enforced group-equivariant pooling, and a
-physically motivated energy diagnostic.
+\citep{Chakraborty2018, Zhou2017, Yao2017}. Tensor-network methods have proven
+effective as compressed representations of structured classical data, including
+images
+\citep{Cirac2021, Latorre2005, Han2018, Stoudenmire2016, Ran2020TNCS, Guala2023}
+and particle-physics events \citep{Araz2022}. Related hybrid architectures target
+adjacent imaging tasks, including tomographic reconstruction
+\citep{Haga2024, Nau2023}, ghost imaging \citep{Zhai2025}, and quantum
+convolutional and capsule networks
+\citep{Slabbert2024, Cong2019, Hur2022, Liu2022}. HVK focuses on the specific
+combination of a Pauli-correlator latent space, enforced group-equivariant
+pooling, and a physically motivated energy diagnostic.
 
 We introduce the Hamiltonian Vision Kernel (HVK1D/HVK2D), which combines these
-ingredients into a single architecture with three properties studied jointly
-here: a \emph{Pauli-correlator latent space} (measured VQC observables, not a raw
-quantum state, form the representation handed to a classical decoder, in the
-spirit of quantum-enhanced feature maps \citep{Havlicek2019}); an \emph{exact,
-numerically-verified $D_4$-equivariant observable-pooling construction},
-group-averaging the observable grid over the eight symmetries of the square
-rather than merely motivating symmetry through architecture choices, in the
-spirit of group-equivariant classical vision \citep{Cohen2016, Bronstein2021}
-and the equivariant-quantum-neural-network line that formalizes
-symmetry-embedding constructions for variational circuits
-\citep{Meyer2023, Nguyen2024EQNN, Schatzki2024, West2024, West2024Erratum}; and a
-\emph{learnable Hamiltonian energy diagnostic} (full nearest-neighbour
-$XX/YY/ZZ$ sectors in HVK1D and grid-edge $ZZ$ terms in HVK2D).
+ingredients into a single architecture with three properties studied jointly.
+The first is a \emph{Pauli-correlator latent space}, in which measured VQC
+observables rather than a raw quantum state form the representation handed to a
+classical decoder, following quantum-enhanced feature maps \citep{Havlicek2019}.
+The second is an \emph{exact, numerically-verified $D_4$-equivariant
+observable-pooling construction}, which group-averages the observable grid over
+the eight symmetries of the square rather than motivating symmetry through
+architecture choices alone. This follows group-equivariant classical vision
+\citep{Cohen2016, Bronstein2021} and the equivariant-quantum-neural-network line
+that formalises symmetry-embedding constructions for variational circuits
+\citep{Meyer2023, Nguyen2024EQNN, Schatzki2024, West2024, West2024Erratum}. The
+third is a \emph{learnable Hamiltonian energy diagnostic}, with full
+nearest-neighbour $XX/YY/ZZ$ sectors in HVK1D and grid-edge $ZZ$ terms in HVK2D.
 Table~\ref{tab:differentiation} contrasts these properties against classical,
 adversarial, and standard quantum autoencoder baselines.
 
 \subsection*{Novelty relative to the nearest hybrid-vision architectures}
 
 HVK's closest architectural relatives are three hybrid quantum-vision patterns
-already established individually in the literature, and situating HVK against
-each clarifies what is new here versus what is inherited.
+already established individually in the literature.
+
 \emph{Register-based quantum autoencoders}
 \citep{Romero2017, WangQAECompression2024, QAEClassification2025} encode an
 image's pixel amplitudes directly into a qubit register and train a trash-qubit
-fidelity objective (or attach a classical decoder to that register's measured
-amplitudes); HVK never amplitude-encodes pixels into qubits at all --- it
-exposes only classically pre-compressed MPS patch features as circuit input, and
-hands the decoder measured Pauli correlators rather than register amplitudes or a
-fidelity score. \emph{Quantum-kernel vision models}
+fidelity objective. HVK never amplitude-encodes pixels into qubits. It exposes
+only classically pre-compressed MPS patch features as circuit input, and hands
+the decoder measured Pauli correlators rather than register amplitudes or a
+fidelity score.
+
+\emph{Quantum-kernel vision models}
 \citep{Havlicek2019, QuantumKernelDefect2022} embed an input into a quantum
-feature space and read out a scalar kernel (state-overlap) value consumed by a
-classical kernel method; HVK instead reads out an explicit vector of local and
-pairwise Pauli expectation values as a latent representation for a trained
-decoder, and adds enforced group-equivariant pooling and a Hamiltonian
-regulariser that a kernel construction has no analogue for.
+feature space and read out a scalar kernel value consumed by a classical kernel
+method. HVK reads out an explicit vector of local and pairwise Pauli expectation
+values as a latent representation for a trained decoder, and adds enforced
+group-equivariant pooling and a Hamiltonian regulariser that a kernel
+construction has no analogue for.
+
 \emph{Tensor-network (TN) circuit classifiers}
 \citep{Guala2023, Stoudenmire2016, Han2018} use MPS structure either as a
 standalone classical model or as a template for a shallow quantum circuit trained
-for classification; HVK uses MPS compression only as a classical
+for classification. HVK uses MPS compression only as a classical
 \emph{preprocessing} step that sets a separately trained VQC's rotation angles,
-and targets per-image reconstruction rather than classification. None of these
-three families combines classical MPS-compressed input, a measured
-Pauli-correlator (not kernel- or register-state) latent space, enforced
-$D_4$-equivariant pooling, and a learnable Hamiltonian diagnostic in one
-pipeline; HVK's contribution is this specific \emph{assembly} and the properties
-it jointly enables (Table~\ref{tab:differentiation}), not any single ingredient in
-isolation --- each of which individually recurs throughout this literature
-(Section~\ref{sec:representativeness}).
+and targets per-image reconstruction rather than classification.
+
+HVK's contribution is the assembly of these four elements in one pipeline
+(Table~\ref{tab:differentiation}). Section~\ref{sec:representativeness} examines
+how the individual ingredients recur across this literature.
 
 \subsection*{Contributions}
 
@@ -178,9 +169,9 @@ isolation --- each of which individually recurs throughout this literature
         numerically-verified $D_4$-equivariant observable-pooling construction
         makes the HVK2D observable map equivariant to the eight symmetries of
         the square, to floating-point precision (Section~\ref{sec:d4}). The
-        guarantee follows from Reynolds group averaging over the $D_4$ orbit,
-        not from anything quantum: the identical construction applied to a
-        purely classical feature map yields the same exactness (Supplementary
+        guarantee follows from Reynolds group averaging over the $D_4$ orbit
+        rather than from anything quantum. The identical construction applied to
+        a purely classical feature map yields the same exactness (Supplementary
         Material). We therefore report it as a property the assembled pipeline
         provides, not as a quantum result.
   \item \textbf{Restricted nonlocal result.} In a leakage-audited fixed-readout
@@ -192,15 +183,13 @@ isolation --- each of which individually recurs throughout this literature
 A companion document, \textit{Supplementary Material for the Hamiltonian Vision
 Kernel: Resource-Matched Ablations, Validation, and Reproducibility}, reports
 resource-matched held-out comparisons of HVK and classical/ablated feature maps,
-together with full hardware-pilot methodology (circuit construction, validation,
-job identifiers, quota accounting) and explicit provenance audits of excluded
-exploratory results, among them the training-dynamics traces of
+together with full hardware-pilot methodology covering circuit construction,
+validation, job identifiers and quota accounting. It also gives provenance audits
+of excluded exploratory results, among them the training-dynamics traces of
 Section~\ref{sec:phase_transition}, which we report as an interpretability
-readout rather than as evidence of a transition. We keep that analysis in a
-companion document so the architecture-level contributions above and the
-generalization question do not obscure each other;
-Section~\ref{sec:ablation_relationship} summarises its central finding and how it
-relates to the results here.
+readout rather than as evidence of a transition.
+Section~\ref{sec:ablation_relationship} summarises the central finding of the
+held-out comparison and how it relates to the results here.
 
 \section{Hamiltonian Vision Kernel: Architecture}
 \label{sec:architecture}

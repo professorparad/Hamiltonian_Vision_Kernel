@@ -5,11 +5,17 @@ Working record of the section-by-section language pass on `main_paper.tex` and
 are settled and are not under review here. The purpose of this file is so the
 pass can be resumed in a fresh session without re-deriving the decisions.
 
-Last updated: 2026-09-22, after the supplement annotation pass.
+Last updated: 2026-09-22, after the Abstract.
 
-`main_paper.tex`: **Sections 2, 3, 4, 5 and 6 are done.** Only the Introduction
-and the Abstract remain, both deferred by supervisor choice so they can be
-reconciled against the finished body.
+`main_paper.tex`: **the language pass is complete.** Every section has been
+through it: Abstract, Introduction, 2, 3, 4, 5 and 6. The paper went from 26
+pages to 24 over this session.
+
+"Complete" means the language pass only. The main paper is **not** submission
+ready: the colour markup and `\snew{}` markers must still be stripped, and the
+four red-bold blocks plus `todo.md` block I still need the student's answers.
+Those answers should come **before** the markup is stripped, or the questions
+disappear unresolved. See Section 4 below.
 
 `supplementary.tex`: language pass **not started**. Twelve reviewer blocks have
 been inserted for the student; no wording changed. Section 6 of this file has
@@ -112,8 +118,8 @@ Editing mechanics that matter:
 
 | Section | Lines | Status |
 |---|---|---|
-| Abstract | 44 | **remaining**, reconcile to the finished body |
-| 1 Introduction | 76-204 | **remaining** (deferred by supervisor choice) |
+| Abstract | 43-62 | **DONE** (done last, reconciled to the finished body) |
+| 1 Introduction | 76-197 | **DONE** |
 | 2 Architecture | 205-386 | **DONE** |
 | 3 Experimental Setup | 387-408 | **DONE** |
 | 4.1 Six real image datasets | 413-445 | **DONE** |
@@ -131,9 +137,11 @@ Editing mechanics that matter:
 | 5.4 Validated scope | 941-953 | **DONE** |
 | 6 Conclusion | 954-end | **DONE** |
 
-Sections 4, 5 and 6 were swept as whole units after their last subsection
-landed and are clean: zero prose em-dashes, zero colon-then-clause
-constructions, zero US spellings outside LaTeX identifiers.
+The **whole of `main_paper.tex`** has now been swept and is clean: zero prose
+em-dashes, zero colon-then-clause constructions, zero US spellings outside
+LaTeX identifiers. The only `---` left in the file are the four preamble
+banners and the single table cell at line 538 meaning "not applicable", all
+of which rule 3 permits.
 
 Line numbers drift as edits land. Re-derive them rather than trusting this
 table.
@@ -408,6 +416,72 @@ The Section 5 and 6 work is **not yet committed**.
   then reappeared when the file was regenerated, and was fixed a second time. Worth
   re-grepping after any regeneration of the manuscript from outside this loop.
 
+### Section 1, Introduction
+
+- Was 921 words, the largest prose block in the paper. Now about 620.
+- Removed the last two prose em-dashes in the manuscript, at lines 132 and 153.
+- The opening paragraph was a 26-line citation dump: six sentences carrying 29
+  citations across VQE, quantum image processing, tensor networks, particle
+  physics, annealing tomography, emission tomography, ghost imaging, hybrid SVMs,
+  QCNNs and capsule networks. Now about 11 lines. **All 29 citations are kept**,
+  grouped by theme rather than narrated one at a time. Each key was verified
+  individually after the edit.
+- The three-properties paragraph was one sentence chained by a colon and two
+  semicolons. Now four sentences.
+- "in the spirit of" appeared twice in that one sentence. Both removed, rule 3.
+- `formalizes` to `formalises`.
+- The Novelty subsection had three parallel semicolon splices, one per architecture
+  family (`;HVK never`, `;HVK instead`, `;HVK uses`). Split into five paragraphs,
+  one per family plus a closing claim.
+- **Duplication with Section 5.2 resolved in favour of 5.2.** The Introduction had
+  argued at length that no family combines the four ingredients and that the
+  contribution is the assembly. Section 5.2 now makes that argument. The
+  Introduction keeps the claim in one sentence and points to
+  `sec:representativeness`. If this is ever inverted, invert it in both places.
+- Contribution 5's colon construction split.
+- The closing paragraph justified putting material in a companion document so the
+  contributions and "the generalization question do not obscure each other". That
+  framing is gone; it now simply states what the supplement reports.
+  `generalization` to `generalisation`, with `\label{sec:no_generalization}` left
+  untouched as rule 1 requires.
+- **`\snew{five of seven distinct}` in Contribution 3 was deliberately not touched.**
+  Stripping the marker is mechanical, but the number inside it is live and is the
+  subject of `todo.md` block I. It needs the student's answer, not an editor's.
+
+### Abstract
+
+- Done last, so it could be reconciled against the finished body. All five numbers
+  were cross-checked against their source sections before editing: 25.8 and 41.6
+  against Section 4.1, 25.90 and 31.52 against Sections 4.4 and 4.6.
+- 216 words down to 183. QMI allows 150-250, so there was no length pressure; the
+  cut was for density.
+- Removed the double negative "The capabilities that a purely classical
+  reconstruction pipeline does not natively provide are...", which became "HVK
+  adds...". This was the **third and last** site of that construction; the same
+  phrase was removed from the Conclusion and the Introduction earlier in the pass.
+- Split the semicolon splice after "chain and grid interaction graphs".
+- Cut the null-control clause, the TOST expansion, "the CIFAR-10 image dataset" to
+  "CIFAR-10", and the decoding mechanism. The equivalence result is the headline;
+  beating random baselines is the weaker claim and is in Section 4.3.
+- Dropped the announced count "three capabilities", rule 3.
+- The word-count comment on line 43 said 230 when the true count was 216. It is now
+  set to 183 and should be re-derived if the abstract changes again.
+
+### An inconsistency found during the Abstract pass, not resolved
+
+The Abstract and the Introduction describe the **same** TOST comparison in two
+different ways, and both sit inside `\snew{}` markers:
+
+- Abstract: competitive with "a resource-matched raw/local linear classical
+  control", singular.
+- Introduction, Contribution 3: equivalent to "five of seven distinct"
+  resource-matched classical/ablated controls.
+
+These need to agree before submission. The question is the same one as `todo.md`
+block I, which asks whether the true count of distinct controls is five of seven
+or six of eight. Raised for the student, not acted on, because it is a question of
+fact about the experiments rather than of language.
+
 ---
 
 ## 4. Open items
@@ -443,12 +517,11 @@ and the issue at each site.
 
 - Remaining `-ization` and `-ized` forms in sections not yet reviewed.
 - `nonoverlapping` versus `non-overlapping`. The file currently uses both.
-- **Two prose em-dashes remain**, both in the Introduction, at lines 132 and
-  153. The other eight were removed with their own sections during the Section
-  5 and 6 pass. To re-locate, `grep -n '\-\-\-'` and ignore the preamble
-  banners at lines 3, 19, 43, 68 and the permitted table cell at 545.
-  Note the count in this file has twice been carried forward stale. Re-derive
-  it rather than trusting the number written here.
+- **Prose em-dashes in `main_paper.tex`: none left.** All ten are gone. The
+  last two, in the Introduction, went with the Introduction pass. To confirm,
+  `grep -n '\-\-\-'` and expect only the preamble banners and the table cell
+  at line 538. Note the count in this file was twice carried forward stale.
+  Re-derive it rather than trusting any number written here.
 
 **Raised, not yet decided**
 
