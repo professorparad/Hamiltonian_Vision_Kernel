@@ -88,3 +88,40 @@ Main2/newHVK/results/scaling_study/scaling_study*.json.tmp
 # Local secrets - never commit
 .env.local
 .claude/
+
+# --- mc-manuscript-only: code and data trees live on main-checking ---
+# This branch tracks overleaf_docs only. These entries remain on disk so
+# switching back to main-checking re-tracks them; they are ignored here so
+# git status stays clean. Do NOT git clean -fd on this branch.
+/.github
+/.pre-commit-config.yaml
+/Baselines
+/CITATION.cff
+/Dockerfile
+/IBM_Cloud
+/Main
+/Main2
+/Main_new
+/Main_new2
+/Makefile
+/README.md
+/REPRODUCE.md
+/Summary_Main.md
+/Summary_Main2.md
+/TODO
+/cuda_check.py
+/docs
+/experiments
+/latex_outputs
+/order_parameter
+/project_artifacts
+/pyproject.toml
+/python_library
+/q1_revision
+/requirements-ci.txt
+/requirements.txt
+/setup.py
+/supervisor_plan.md
+/sync_github.sh
+/tests
+/tmp
