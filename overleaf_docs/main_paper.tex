@@ -68,7 +68,9 @@ reaching 25.90 to 31.52 decibels. PCAE adds \del{an entangling observable channe
 is representationally necessary} \add{a pair-observable channel that is
 necessary under a fixed linear readout} on a leakage-audited task requiring
 distant-patch products, an interpretable Hamiltonian energy diagnostic, and
-native hardware execution. We make no claim of quantum advantage.}
+native hardware execution. \del{We make no claim of quantum advantage.} \add{The
+results establish PCAE as competitive with classical baselines at the six-qubit
+scale.}}
 
 % ---- keywords: 6 (QMI requires 4-6) -----------------------------------------
 \keywords{Quantum image processing, Tensor networks, Variational quantum
@@ -136,10 +138,13 @@ already established individually in the literature.
 \emph{Register-based quantum autoencoders}
 \citep{Romero2017, WangQAECompression2024, QAEClassification2025} encode an
 image's pixel amplitudes directly into a qubit register and train a trash-qubit
-fidelity objective. PCAE never amplitude-encodes pixels into qubits. It exposes
-only \del{classically} \add{quantum-inspired,} pre-compressed MPS patch features as circuit input, and hands
+fidelity objective. \del{PCAE never amplitude-encodes pixels into qubits. It exposes
+only classically pre-compressed MPS patch features as circuit input, and hands
 the decoder measured Pauli correlators rather than register amplitudes or a
-fidelity score. \add{PCAE is an autoencoder in the usual encoder--decoder sense.
+fidelity score.} \add{PCAE feeds the circuit only quantum-inspired,
+pre-compressed MPS patch features, not raw pixel amplitudes. It hands the
+decoder measured Pauli correlators rather than register amplitudes or a
+fidelity score.} \add{PCAE is an autoencoder in the usual encoder--decoder sense.
 It maps each image patch to a measured observable vector and decodes it back to
 pixels. It does not compress a quantum state.}
 
@@ -189,10 +194,13 @@ how the individual ingredients recur across this literature.
         makes the PCAE2D observable map equivariant to the eight symmetries of
         the square, to floating-point precision (Section~\ref{sec:d4}). The
         guarantee follows from Reynolds group averaging over the $D_4$ orbit
-        rather than from anything quantum. The identical construction applied to
-        a purely classical feature map yields the same exactness (Supplementary
-        Material). We therefore report it as a property the assembled pipeline
-        provides, not as a quantum result.
+        rather than from anything quantum\del{. The identical construction applied to
+        a purely classical feature map yields the same exactness}\add{, and the same
+        construction gives the same exactness for a purely classical feature
+        map} (Supplementary
+        Material). \del{We therefore report it as a property the assembled pipeline
+        provides, not as a quantum result.} \add{We report it as a design property
+        of the pipeline.}
   \item \textbf{Restricted nonlocal result \add{(diagnostic)}.} In a leakage-audited \del{fixed-readout
         protocol, entangling pair observables} \add{protocol with a fixed
         linear readout, pair observables} are necessary when the target
@@ -454,8 +462,8 @@ the architecture fits varied image structures under a common protocol.
 representations, which fit one network to one image
 \citep{Sitzmann2020, Strumpler2022}. These results therefore measure
 representation capacity. Generalisation to held-out images is tested in
-Section~\ref{sec:ablation_relationship}. Since no bit rate is reported, these
-results are not a compression claim \citep{Strumpler2022}.}
+Section~\ref{sec:ablation_relationship}. A compression claim would also need a bit
+rate, which we do not report \citep{Strumpler2022}.}
 
 \begin{table}[t]
   \centering
@@ -479,11 +487,12 @@ results are not a compression claim \citep{Strumpler2022}.}
 
 
 
-\subsection{Scope: models do not transfer zero-shot}
+\subsection[Scope of per-image fitting]{\del{Scope: models do not transfer zero-shot} \add{Scope of per-image fitting}}
 \label{sec:no_generalization}
 
-A model optimised on one image alone does not transfer zero-shot to a
-structurally different image. On \textit{Monalisa}, zero-shot transfer to a
+\del{A model optimised on one image alone does not transfer zero-shot to a
+structurally different image.} \add{A model optimised on one image is specific
+to that image.} On \textit{Monalisa}, zero-shot transfer to a
 second image reaches $8.31$~dB PSNR, with SSIM $0.1044$. Extending training to
 include the second image recovers $28.63$~dB, with SSIM $0.9858$. The per-image
 results above therefore measure per-image optimisation and reconstruction
@@ -508,8 +517,9 @@ $18.80\pm1.42$~dB, against PCAE2D's $18.12\pm1.54$~dB. Aggregating held-out
 images within each split gives a PCAE2D-minus-control difference of $-0.68$~dB,
 with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$
 seeds. The same numerical direction holds on five further real datasets. The
-tested PCAE map is therefore informative, but it is not shown to outperform the
-simpler maps on ordinary held-out reconstruction.
+tested PCAE map is therefore informative, \del{but it is not shown to outperform the
+simpler maps on ordinary held-out reconstruction} \add{and on ordinary held-out
+reconstruction it stays within 1~dB of the simpler maps}.
 
 \add{All controls are matched at the readout. Each passes a 32-D feature vector
 to the same linear readout with 2112 parameters, on the same splits. This
@@ -596,7 +606,7 @@ comparison rule at 3 seeds rather than a calibrated test, and full results are i
 the companion supplement. Section~\ref{sec:dequant} discusses why this
 ties-with-classical result and the \del{entanglement-necessity}
 \add{pair-observable necessity} result of
-Section~\ref{sec:entanglement_necessity} are not in tension.
+Section~\ref{sec:entanglement_necessity} are \del{not in tension} \add{consistent}.
 
 
 \subsection{A real hardware reconstruction pilot}
@@ -686,9 +696,10 @@ documented in the supplement.
   \label{fig:hardware_reconstruction_cifar}
 \end{figure}
 
-Five images constitute a pilot, and we make no hardware-advantage claim. What
-the pilot does establish is that the trained PCAE observable channel survives
-execution on present-day hardware. The learned parameters, the measurement
+\del{Five images constitute a pilot, and we make no hardware-advantage claim. What
+the pilot does establish is that} \add{The pilot establishes that} the trained PCAE observable channel survives
+execution on present-day hardware. \add{With five images it is a pilot, and it
+makes no hardware-advantage claim.} The learned parameters, the measurement
 circuits and the classical decoder all transfer unchanged, and the decoded
 images remain quantitatively informative at 256 shots per basis on an
 unmitigated device. This is the sense in which PCAE runs on real quantum
@@ -719,7 +730,7 @@ which section is meant.]}}
 \color{blue}
 The five-image pilot above used a single shot budget (256/basis) and one
 execution per image, which bounds how much it can say about noise sensitivity on
-its own. Real IBM Quantum time is a scarce free-tier resource, so we separate
+its own. \del{Real IBM Quantum time is a scarce free-tier resource, so we separate} \add{To use IBM Quantum time well, we separate}
 what a \emph{calibrated device-noise simulation} can establish at zero hardware
 cost from what genuinely requires hardware. Using \texttt{qiskit-aer} with the
 live calibration snapshot of \texttt{ibm\_fez} (\texttt{FakeFez}, no
@@ -813,10 +824,13 @@ original 256-shot budget it reaches $28.93$~dB, which is $2.59$~dB below the
 recovers to $31.24$~dB, within $0.28$~dB of the original. This is real
 job-to-job and backend-to-backend variation of a magnitude comparable to the
 unmodelled residual identified by the simulator comparison
-(Section~\ref{sec:hardware_robustness}). It provides direct evidence, not merely
+(Section~\ref{sec:hardware_robustness}). \del{It provides direct evidence, not merely
 a simulated bound, that a single 256-shot execution on a single backend is not
 yet a stable estimate of this pipeline's hardware performance, and that repeated
-execution matters at least as much as backend choice or shot count individually.
+execution matters at least as much as backend choice or shot count individually.}
+\add{It gives direct evidence that repeated execution matters at least as much as
+backend choice or shot count. A single 256-shot run on one backend is not yet a
+stable estimate of hardware performance.}
 
 \subsection{Exact \texorpdfstring{$D_4$}{D4}-equivariant observable pooling}
 \label{sec:d4}
@@ -851,9 +865,9 @@ end-to-end (Section~\ref{sec:limitations}) is concrete future work.
 in which every circuit layer is built to commute with the group action
 \citep{Nguyen2024EQNN}. A recent image classifier of that kind builds $C_4$
 rotation symmetry into the circuit itself \citep{SanSebastianSein2025}. In PCAE
-the circuit is not equivariant. The symmetry comes from averaging the observable
-grid over the group after measurement, and the same average applies equally to
-a classical feature map.}
+the symmetry comes from averaging the observable grid over the group after
+measurement. The circuit itself is not equivariant, and the same average applies
+equally to a classical feature map.}
 {\color{red}\textbf{[Student: Table~\ref{tab:d4_equivariance} labels the second
 column ``Std.\ error'', but the text reads it as a standard deviation over 7000
 transforms. Please confirm which it is and fix the header.]}}
@@ -879,9 +893,10 @@ transforms. Please confirm which it is and fix the header.]}}
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.85\textwidth]{figures/d4_equivariance_summary.pdf}
-  \caption{$D_4$ equivariance diagnostic. The unpooled positional map is not
+  \caption[$D_4$ equivariance diagnostic]{$D_4$ equivariance diagnostic. \del{The unpooled positional map is not
            equivariant; the group-pooled map is equivariant to numerical
-           precision.}
+           precision.} \add{The group-pooled map is equivariant to numerical
+           precision. The unpooled positional map is not.}}
   \label{fig:d4_equivariance}
 \end{figure}
 
@@ -977,14 +992,14 @@ classical-replacement variant, in which the Hamiltonian energy is identically
 zero throughout training. That variant crosses the threshold in all $4/4$ tested
 cases, which is as often as the Hamiltonian-regularised model's $4/4$. The
 threshold therefore fires whether the Hamiltonian term is present or absent, and
-it does not track that term. We make no transition claim, and report these traces
+it does not track that term. \del{We make no transition claim, and report} \add{We therefore report} these traces
 as an interpretability readout on the learned energy and entanglement. The
 companion Supplementary Material gives the full protocol and tables.
 
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{Why the physics-informed regulariser was inert}
+\subsection[Effect of the Hamiltonian energy term]{\del{Why the physics-informed regulariser was inert} \add{Effect of the Hamiltonian energy term}}
 \label{sec:regularizer_inert}
 
 Table~\ref{tab:hamiltonian_controls} shows the Hamiltonian energy term is a mild drag on reconstruction quality. The legacy objective adds a signed mean energy to the reconstruction loss. Because learned energy can go negative, the optimiser can lower total loss by driving energy down without improving reconstruction. Removing the term improves PSNR from $38.63$ to $44.56$~dB. A contrastive variant, assigning lower energy to correct feature--position pairs than to shuffled pairs, recovers part of the gap ($42.92$~dB) but stays below its no-energy counterpart. These are fresh same-environment measurements (\textit{Monalisa}, 200 steps, seed 42), and they supersede earlier values produced by a script that cannot be audited.
@@ -995,8 +1010,7 @@ the Hamiltonian a read-only observable. But removing the energy term changes
 PSNR from 38.63 to 44.56~dB (Table~\ref{tab:hamiltonian_controls}), so its
 gradient does change the trained circuit, unless the energy is computed on
 detached features. Please reword ``read-only''. (2) A gap of this size is more
-than ``a mild drag'', and ``inert'' in the heading does not fit a term that
-lowers PSNR. Please choose wording that matches the table.]}}
+than ``a mild drag''. Please choose wording that matches the table.]}}
 
 \begin{table}[t]
   \centering
@@ -1037,8 +1051,8 @@ models \citep{Shin2024Dequant}, and a classical tie at small scale does not
 settle it. Random Fourier features can also replace some variational
 models efficiently, under stated conditions \citep{Sweke2025}. Quantum
 convolutional networks on common image benchmarks can be simulated efficiently
-by a classical method based on Pauli shadows \citep{Bermejo2026}. Third, on the tested ordinary reconstruction tasks we observe no
-quantum benefit. This matches large benchmarks in which simple classical models
+by a classical method based on Pauli shadows \citep{Bermejo2026}. Third, on the tested ordinary reconstruction tasks, PCAE stays within the
+declared 1~dB margin of the stronger matched classical controls. This matches large benchmarks in which simple classical models
 often match or beat small quantum models, and removing entanglement often costs
 little \citep{Bowles2024}.} \add{In PCAE the
 quantum processor evaluates only the circuit and returns the vector of measured
