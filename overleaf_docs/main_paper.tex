@@ -15,6 +15,11 @@
 % Remove these \snew wrappers (and this line) once the merge review is done.
 \definecolor{studentgreen}{rgb}{0.0,0.5,0.0}
 \newcommand{\snew}[1]{\textbf{\textcolor{studentgreen}{#1}}}
+% \del{...}: text to delete (strikethrough); \add{...}: new text (bold black).
+% Accept an edit by removing the \del{} block and unwrapping the \add{}.
+\usepackage[normalem]{ulem}
+\newcommand{\del}[1]{\sout{#1}}
+\newcommand{\add}[1]{\textbf{\textcolor{black}{#1}}}
 
 % ---- column types used by the differentiation matrices (Tables 5 and 6) ------
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
@@ -72,28 +77,26 @@ native hardware execution. We make no claim of quantum advantage.}
 \section{Introduction}
 \label{sec:intro}
 
-Hybrid quantum--classical models for vision tasks are increasingly proposed as a
-route to representations with favourable inductive bias, exploiting entanglement,
-physically motivated regularisers, or tensor-network structure beyond what
-classical convolutional pipelines provide
-\citep{Cerezo2021, Tilly2022, Preskill2018}. The variational quantum eigensolver
-and its descendants exploit the local decomposability of physically relevant
-Hamiltonians to construct shallow, problem-aware circuits
-\citep{Cerezo2021, Tilly2022, Bauer2020}. Quantum image processing provides
-encodings that place pixel information directly into qubit registers, from
-flexible amplitude-style representations \citep{Le2011} to basis-encoded pixel
-values \citep{Zhang2013} and their processing primitives
-\citep{Chakraborty2018, Zhou2017, Yao2017}. Tensor-network methods have proven
-effective as compressed representations of structured classical data, including
-images
-\citep{Cirac2021, Latorre2005, Han2018, Stoudenmire2016, Ran2020TNCS, Guala2023}
-and particle-physics events \citep{Araz2022}. Related hybrid architectures target
-adjacent imaging tasks, including tomographic reconstruction
-\citep{Haga2024, Nau2023}, ghost imaging \citep{Zhai2025}, and quantum
-convolutional and capsule networks
-\citep{Slabbert2024, Cong2019, Hur2022, Liu2022}. HVK focuses on the specific
-combination of a Pauli-correlator latent space, enforced group-equivariant
-pooling, and a physically motivated energy diagnostic.
+Hybrid quantum--classical models are now often proposed for vision tasks. The
+aim is to obtain representations with a favourable inductive bias. Such models
+can use entanglement, physically motivated regularisers, or tensor-network
+structure, which standard convolutional networks do not have \citep{Cerezo2021,
+Tilly2022, Preskill2018}. The variational quantum eigensolver and its later
+variants use the fact that physical Hamiltonians split into local terms. This
+allows them to build shallow circuits suited to the problem \citep{Cerezo2021,
+Tilly2022, Bauer2020}. Quantum image processing gives several ways to store
+pixel values directly in qubits. These range from amplitude-style encodings
+\citep{Le2011} to basis-encoded pixel values \citep{Zhang2013}. Basic image
+operations on these encodings have also been developed \citep{Chakraborty2018,
+Zhou2017, Yao2017}. Tensor-network methods work well as compressed
+representations of structured classical data, such as images \citep{Cirac2021,
+Latorre2005, Han2018, Stoudenmire2016, Ran2020TNCS, Guala2023} and
+particle-physics events \citep{Araz2022}. Hybrid models have also been applied
+to related imaging tasks, such as tomographic reconstruction \citep{Haga2024,
+Nau2023} and ghost imaging \citep{Zhai2025}. Quantum convolutional and capsule
+networks are further examples \citep{Slabbert2024, Cong2019, Hur2022, Liu2022}.
+HVK focuses on the combination of a Pauli-correlator latent space, enforced
+group-equivariant pooling, and a physically motivated energy diagnostic.
 
 We introduce the Hamiltonian Vision Kernel (HVK1D/HVK2D), which combines these
 ingredients into a single architecture with three properties studied jointly.
