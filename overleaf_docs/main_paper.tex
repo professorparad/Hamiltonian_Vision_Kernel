@@ -31,8 +31,10 @@
 \begin{document}
 
 % ============================== TITLE BLOCK =================================
-\title[Hamiltonian Vision Kernel]{Hamiltonian Vision Kernel: Symmetry-Pooled
+\title[Hybrid Pauli-Correlator Architecture]{\del{Hamiltonian Vision Kernel: Symmetry-Pooled
   Quantum Correlator Features with Hardware Validation}
+  \add{Hybrid Quantum--Classical Pauli-Correlator Architecture for Image
+  Reconstruction}}
 
 \author[1]{\fnm{Sparsho} \sur{Chakraborty}}\email{25ph05023@iitbbs.ac.in}
 
@@ -46,23 +48,23 @@
   \orgname{TCG CREST}, \orgaddress{\city{Kolkata}, \country{India}}}
 
 % ---- abstract: 183 words (QMI requires 150-250) ------------------------------
-\abstract{We introduce the Hamiltonian Vision Kernel (HVK), a hybrid quantum--classical
-architecture for image reconstruction. HVK assembles matrix-product-state patch
+\abstract{We introduce the \del{Hamiltonian Vision Kernel (HVK)} \add{Pauli-Correlator Autoencoder (PCAE)}, a hybrid quantum--classical
+architecture for image reconstruction. PCAE assembles matrix-product-state patch
 features, a variational quantum circuit exposing a Pauli-correlator latent
 space, two-dimensional Fourier positional encoding, a learnable Hamiltonian
 energy diagnostic, and a classical decoder into a single pipeline. Two
-instantiations, HVK1D and HVK2D, realise chain and grid interaction graphs.
-Group-averaged observable pooling makes the HVK2D feature map exactly
+instantiations, PCAE1D and PCAE2D, realise chain and grid interaction graphs.
+Group-averaged observable pooling makes the PCAE2D feature map exactly
 equivariant to the eight symmetries of the square. The contribution is this
 specific assembly rather than any ingredient in isolation. Across six real image
-datasets, per-image-trained HVK2D models reconstruct with peak signal-to-noise
+datasets, per-image-trained PCAE2D models reconstruct with peak signal-to-noise
 ratio (PSNR) between 25.8 and 41.6 decibels. On a resource-matched, multi-seed
 held-out comparison using CIFAR-10, a pre-declared \del{TOST equivalence procedure}
 \add{equivalence procedure using two one-sided tests (TOST)} at
-a one-decibel margin establishes that HVK2D is statistically \emph{competitive}
+a one-decibel margin establishes that PCAE2D is statistically \emph{competitive}
 with \snew{a resource-matched raw/local linear classical control}. Five fitted
 checkpoints are replayed on superconducting quantum hardware without retraining,
-reaching 25.90 to 31.52 decibels. HVK adds \del{an entangling observable channel that
+reaching 25.90 to 31.52 decibels. PCAE adds \del{an entangling observable channel that
 is representationally necessary} \add{a pair-observable channel that is
 necessary under a fixed linear readout} on a leakage-audited task requiring
 distant-patch products, an interpretable Hamiltonian energy diagnostic, and
@@ -71,16 +73,17 @@ native hardware execution. We make no claim of quantum advantage.}
 % ---- keywords: 6 (QMI requires 4-6) -----------------------------------------
 \keywords{Quantum image processing, Tensor networks, Variational quantum
   algorithms, Pauli observables, Group-equivariant representations,
-  Quantum hardware validation}
+  Quantum hardware \del{validation} \add{pilot}}
 
 \maketitle
 
-{\color{red}\textbf{[PI decision pending, title and name. (1) HVK is not a kernel
-method in the positive-semidefinite sense, and Section~\ref{sec:intro} contrasts
-it with quantum-kernel models. Keep ``Kernel'' and define it, or rename.
-(2) ``Symmetry-Pooled'' names a step that is outside the trained path.
-(3) ``Hardware Validation'' in the title and keywords names what the body calls
-a pilot.]}}
+{\color{red}\textbf{[Rename: the model was the Hamiltonian Vision Kernel (HVK).
+HVK is not a kernel method, so it is now the Pauli-Correlator Autoencoder
+(PCAE), with variants PCAE1D and PCAE2D. Only the first uses are marked. All
+other uses of HVK were replaced directly. Student: (1) regenerate every figure
+whose labels show HVK, HVK1D or HVK2D, (2) rename the model in the supplement,
+including its title, (3) then update the three places where this paper cites
+the supplement's title.]}}
 
 \tableofcontents
 % ================================ BODY ======================================
@@ -105,10 +108,10 @@ particle-physics events \citep{Araz2022}. Hybrid models have also been applied
 to related imaging tasks, such as tomographic reconstruction \citep{Haga2024,
 Nau2023} and ghost imaging \citep{Zhai2025}. Quantum convolutional and capsule
 networks are further examples \citep{Slabbert2024, Cong2019, Hur2022, Liu2022}.
-HVK focuses on the combination of a Pauli-correlator latent space, enforced
+PCAE focuses on the combination of a Pauli-correlator latent space, enforced
 group-equivariant pooling, and a physically motivated energy diagnostic.
 
-We introduce the Hamiltonian Vision Kernel (HVK1D/HVK2D), which combines these
+We introduce the \del{Hamiltonian Vision Kernel (HVK1D/HVK2D)} \add{Pauli-Correlator Autoencoder (PCAE1D/PCAE2D)}, which combines these
 ingredients into a single architecture with three properties studied jointly.
 The first is a \emph{Pauli-correlator latent space}, in which measured VQC
 observables rather than a raw quantum state form the representation handed to a
@@ -121,19 +124,19 @@ architecture choices alone. This follows group-equivariant classical vision
 that formalises symmetry-embedding constructions for variational circuits
 \citep{Meyer2023, Nguyen2024EQNN, Schatzki2024, West2024, West2024Erratum}. The
 third is a \emph{learnable Hamiltonian energy diagnostic}, with full
-nearest-neighbour $XX/YY/ZZ$ sectors in HVK1D and grid-edge $ZZ$ terms in HVK2D.
+nearest-neighbour $XX/YY/ZZ$ sectors in PCAE1D and grid-edge $ZZ$ terms in PCAE2D.
 Table~\ref{tab:differentiation} contrasts these properties against classical,
 adversarial, and standard quantum autoencoder baselines.
 
 \subsection*{Novelty relative to the nearest hybrid-vision architectures}
 
-HVK's closest architectural relatives are three hybrid quantum-vision patterns
+PCAE's closest architectural relatives are three hybrid quantum-vision patterns
 already established individually in the literature.
 
 \emph{Register-based quantum autoencoders}
 \citep{Romero2017, WangQAECompression2024, QAEClassification2025} encode an
 image's pixel amplitudes directly into a qubit register and train a trash-qubit
-fidelity objective. HVK never amplitude-encodes pixels into qubits. It exposes
+fidelity objective. PCAE never amplitude-encodes pixels into qubits. It exposes
 only \del{classically} \add{quantum-inspired,} pre-compressed MPS patch features as circuit input, and hands
 the decoder measured Pauli correlators rather than register amplitudes or a
 fidelity score.
@@ -141,7 +144,7 @@ fidelity score.
 \emph{Quantum-kernel vision models}
 \citep{Havlicek2019, QuantumKernelDefect2022} embed an input into a quantum
 feature space and read out a scalar kernel value consumed by a classical kernel
-method. HVK reads out an explicit vector of local and pairwise Pauli expectation
+method. PCAE reads out an explicit vector of local and pairwise Pauli expectation
 values as a latent representation for a trained decoder, and adds enforced
 group-equivariant pooling and a Hamiltonian \del{regulariser} \add{energy diagnostic} that a kernel
 construction has no analogue for.
@@ -149,18 +152,18 @@ construction has no analogue for.
 \emph{Tensor-network (TN) circuit classifiers}
 \citep{Guala2023, Stoudenmire2016, Han2018} use MPS structure either as a
 standalone classical model or as a template for a shallow quantum circuit trained
-for classification. HVK uses MPS compression only as a \del{classical} \add{quantum-inspired}
+for classification. PCAE uses MPS compression only as a \del{classical} \add{quantum-inspired}
 \emph{preprocessing} step that sets a separately trained VQC's rotation angles,
 and targets per-image reconstruction rather than classification.
 
-HVK's contribution is the assembly of these four elements in one pipeline
+PCAE's contribution is the assembly of these four elements in one pipeline
 (Table~\ref{tab:differentiation}). Section~\ref{sec:representativeness} examines
 how the individual ingredients recur across this literature.
 
 \subsection*{Contributions}
 
 \begin{enumerate}\itemsep3pt
-  \item \textbf{Architecture.} HVK1D/HVK2D combines MPS patch features, a
+  \item \textbf{Architecture.} PCAE1D/PCAE2D combines MPS patch features, a
         six-qubit VQC, a 19--27-dimensional Pauli-correlator vector, 2D Fourier
         positional encoding, a graph-Hamiltonian diagnostic, and a classical
         decoder.
@@ -169,7 +172,7 @@ how the individual ingredients recur across this literature.
         (Section~\ref{sec:sameset_results}).
   \item \textbf{Competitive with resource-matched classical baselines \add{(held-out comparison)}.} A
         pre-declared \del{TOST equivalence test} \add{equivalence procedure using
-        two one-sided tests (TOST)} on held-out CIFAR-10 shows HVK2D \del{is
+        two one-sided tests (TOST)} on held-out CIFAR-10 shows PCAE2D \del{is
         statistically equivalent} \add{meets the equivalence criterion}, within a $\pm1$~dB margin, \del{to} \add{against} \snew{five of seven
         distinct} resource-matched classical/ablated controls, and substantially
         outperforms the two null controls (strict classical random features and
@@ -181,7 +184,7 @@ how the individual ingredients recur across this literature.
         (Sections~\ref{sec:hardware_robustness}--\ref{sec:hardware_anchors}).
   \item \textbf{Equivariant observable pooling \add{(proposition)}.} An exact,
         numerically-verified $D_4$-equivariant observable-pooling construction
-        makes the HVK2D observable map equivariant to the eight symmetries of
+        makes the PCAE2D observable map equivariant to the eight symmetries of
         the square, to floating-point precision (Section~\ref{sec:d4}). The
         guarantee follows from Reynolds group averaging over the $D_4$ orbit
         rather than from anything quantum. The identical construction applied to
@@ -197,7 +200,7 @@ how the individual ingredients recur across this literature.
 
 A companion document, \textit{Supplementary Material for the Hamiltonian Vision
 Kernel: Resource-Matched Ablations, Validation, and Reproducibility}, reports
-resource-matched held-out comparisons of HVK and classical/ablated feature maps,
+resource-matched held-out comparisons of PCAE and classical/ablated feature maps,
 together with full hardware-pilot methodology covering circuit construction,
 validation, job identifiers and quota accounting. It also gives provenance audits
 of excluded exploratory results, among them the training-dynamics traces of
@@ -206,37 +209,37 @@ readout rather than as evidence of a transition.
 Section~\ref{sec:ablation_relationship} summarises the central finding of the
 held-out comparison and how it relates to the results here.
 
-\section{Hamiltonian Vision Kernel: Architecture}
+\section[Pauli-Correlator Autoencoder: Architecture]{\del{Hamiltonian Vision Kernel} \add{Pauli-Correlator Autoencoder}: Architecture}
 \label{sec:architecture}
 
 \color{blue}
-HVK treats each spatial patch as a finite spin state and compresses it as a
+PCAE treats each spatial patch as a finite spin state and compresses it as a
 matrix product state (MPS). A variational quantum circuit (VQC) then measures a
 fixed set of Pauli observables, which a classical multi-layer perceptron (MLP)
 decodes back into pixels. A learnable graph-Hamiltonian energy term regularises
 training. Parameterised Hamiltonian learning approaches treat the Hamiltonian as
-the primary learned object \citep{Shi2022}; in HVK it is instead a diagnostic
+the primary learned object \citep{Shi2022}; in PCAE it is instead a diagnostic
 regulariser alongside a separate reconstruction objective.
 
 
 \paragraph{Problem statement.}
 Given an image $x$ partitioned into non-overlapping patches
-$\{x_p\}_{p=1}^{P}$, HVK learns a per-patch reconstruction map. Each patch is
+$\{x_p\}_{p=1}^{P}$, PCAE learns a per-patch reconstruction map. Each patch is
 compressed to a \del{classical} \add{quantum-inspired} MPS feature vector $\phi_{\mathrm{MPS}}(x_p)$, a learned
 linear layer sets the VQC rotation angles, and measuring a fixed set of Pauli
 observables yields the correlator feature map
-$\Phi(x_p)\in\mathbb{R}^{d}$ ($d=27$ for HVK1D, $19$ for HVK2D). {\color{red}%
+$\Phi(x_p)\in\mathbb{R}^{d}$ ($d=27$ for PCAE1D, $19$ for PCAE2D). {\color{red}%
 With $n=6$ qubits, bond set $\mathcal{E}$, and $c$ measured pair channels per bond,
 \begin{equation}
   \label{eq:obs_dim}
   d=2n+c\lvert\mathcal{E}\rvert=
   \begin{cases}
-    2(6)+3(5)=27, & \text{HVK1D ($ZZ,XX,YY$ on a 5-bond chain)},\\
-    2(6)+1(7)=19, & \text{HVK2D ($ZZ$ on 7 grid edges)},\\
+    2(6)+3(5)=27, & \text{PCAE1D ($ZZ,XX,YY$ on a 5-bond chain)},\\
+    2(6)+1(7)=19, & \text{PCAE2D ($ZZ$ on 7 grid edges)},\\
     2(6)+1(5)=17, & \text{$ZZ$-only ablation control}.
   \end{cases}
 \end{equation}
-All reported HVK1D and HVK2D results use $d=27$ and $d=19$.}
+All reported PCAE1D and PCAE2D results use $d=27$ and $d=19$.}
 A classical
 decoder $D_\theta$ maps $\Phi(x_p)$, together with a Fourier positional encoding
 $\pi(p)$, back to a reconstructed patch $\hat{x}_p=D_\theta\!\big(\Phi(x_p),\pi(p)\big)$.
@@ -287,7 +290,7 @@ meaningful summary.
 
 
 
-\paragraph{Why a grid rather than a chain interaction topology for HVK2D.}
+\paragraph{Why a grid rather than a chain interaction topology for PCAE2D.}
 Aligning the six-qubit interaction graph with the $2\times3$ patch-neighbour
 adjacency, rather than an arbitrary linear chain, \del{is what makes the $D_4$
 group-pooling construction of Section~\ref{sec:d4} well defined in the first
@@ -299,7 +302,7 @@ choice. It acts by permuting the $4\times4$ grid of patches in an image, and a
 $2\times3$ graph has no $90^\circ$ rotation symmetry of its own.}
 {\color{red}\textbf{[Student: please confirm. This follows the Supplementary
 Material, which defines the $D_4$ action on the $4\times4$ patch grid.]}}
-HVK1D's chain topology serves the complementary role
+PCAE1D's chain topology serves the complementary role
 in this design: it is the ungridded control against which the grid's
 contribution is measured (Section~\ref{sec:topology}).
 
@@ -312,7 +315,7 @@ contribution is measured (Section~\ref{sec:topology}).
 	\label{tab:configurations}
 	\begin{tabular}{@{}l c c@{}}
 		\toprule
-		& HVK1D                 & HVK2D                  \\
+		& PCAE1D                 & PCAE2D                  \\
 		\midrule
 		Benchmark                     & \textit{Monalisa}     & multi-dataset          \\
 		Image size                    & $256\times256$        & $32\times32$ (native)  \\
@@ -353,7 +356,7 @@ the hardware replay and the noisy simulation of
 Sections~\ref{sec:hardware_pilot}--\ref{sec:hardware_anchors}.}
 {\color{red}\textbf{[Student: please confirm that training used exact
 expectation values (PennyLane with \texttt{shots=None}).]}}
-Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits. These were rebuilt in Qiskit for the hardware pilot of
+Figure~\ref{fig:hvk_ansatz} shows the exact PCAE1D and PCAE2D ansatz circuits. These were rebuilt in Qiskit for the hardware pilot of
 Section~\ref{sec:hardware_pilot}, and numerically verified against the training-time PennyLane circuit before use. The complete Hamiltonian, loss,
 positional-encoding and measurement definitions are retained in the companion supplement.
 \color{blue}
@@ -362,41 +365,41 @@ positional-encoding and measurement definitions are retained in the companion su
   \centering
   \includegraphics[width=\textwidth]{figures/hvk1d_ansatz.pdf}\\[6pt]
   \includegraphics[width=\textwidth]{figures/hvk2d_ansatz.pdf}
-  \caption{The HVK1D (top) and HVK2D (bottom) variational ans\"atze, exactly as
+  \caption{The PCAE1D (top) and PCAE2D (bottom) variational ans\"atze, exactly as
            executed (encoding $R_X$ rotations, positional $R_Y$ rotations, then
            two entangling layers of $R_Z$-$R_Y$-$R_Z$ single-qubit rotations with
-           a CNOT ring for HVK1D or fixed grid-edge CNOTs for HVK2D). Both
+           a CNOT ring for PCAE1D or fixed grid-edge CNOTs for PCAE2D). Both
            circuits were rebuilt gate-for-gate in Qiskit and validated against
            the original PennyLane training circuit before use in the hardware
            pilot of Section~\ref{sec:hardware_pilot}.}
   \label{fig:hvk_ansatz}
 \end{figure}
 
-Table~\ref{tab:variants} summarises the tested variants. HVK1D uses a linear
-6-qubit chain (5 nearest-neighbour bonds, 27-D observable vector); HVK2D arranges
+Table~\ref{tab:variants} summarises the tested variants. PCAE1D uses a linear
+6-qubit chain (5 nearest-neighbour bonds, 27-D observable vector); PCAE2D arranges
 the same 6 qubits on a $2\times3$ lattice matching patch-boundary adjacency
-(19-D latent signature); a symmetric HVK1D variant adds a
-$\mathrm{U}(1)$-preserving coupling constraint; and a $D_4$-pooled HVK2D variant
+(19-D latent signature); a symmetric PCAE1D variant adds a
+$\mathrm{U}(1)$-preserving coupling constraint; and a $D_4$-pooled PCAE2D variant
 (Section~\ref{sec:symmetry}) group-averages the observable grid over the eight
 symmetries of the square,
 $\Phi_{D_4}(x)=\tfrac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx)$, which is equivariant
 by construction. The IBM Cloud circuit probe reported in the supplement confirms
-both HVK1D and HVK2D compile to depth-18, 6-qubit circuits on a Heron-class
+both PCAE1D and PCAE2D compile to depth-18, 6-qubit circuits on a Heron-class
 basis.
 \color{black}
 
 \begin{table}[t]
   \centering
-  \caption{HVK variants tested in this paper.}
+  \caption{PCAE variants tested in this paper.}
   \label{tab:variants}
   \begin{tabular}{@{}l l c l@{}}
     \toprule
     Variant                 & Topology                  & Latent dim. & Symmetry \\
     \midrule
-    HVK1D                   & 6-qubit chain             & 27-D        & None (control)            \\
-    HVK2D                   & $2\times3$ grid           & 19-D        & $D_4$-motivated only      \\
-    Symmetric HVK1D         & 6-qubit chain             & 27-D        & $\mathrm{U}(1)$ coupling  \\
-    $D_4$-pooled HVK2D      & $2\times3$ grid, pooled   & 19-D        & $D_4$-equivariant (exact) \\
+    PCAE1D                   & 6-qubit chain             & 27-D        & None (control)            \\
+    PCAE2D                   & $2\times3$ grid           & 19-D        & $D_4$-motivated only      \\
+    Symmetric PCAE1D         & 6-qubit chain             & 27-D        & $\mathrm{U}(1)$ coupling  \\
+    $D_4$-pooled PCAE2D      & $2\times3$ grid, pooled   & 19-D        & $D_4$-equivariant (exact) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -407,7 +410,7 @@ basis.
 \color{green}
 All image-reconstruction results in
 Sections~\ref{sec:sameset_results}--\ref{sec:hardware_pilot} use the single-image
-\textit{Monalisa} protocol developed for HVK: a fresh model is optimised directly
+\textit{Monalisa} protocol developed for PCAE: a fresh model is optimised directly
 on its target image, with no held-out split. These results therefore measure
 per-image fitting and reconstruction capability. The hardware pilot replays the
 resulting fitted checkpoints on real devices without retraining. The symmetry
@@ -430,7 +433,7 @@ are given in the companion supplementary document.
 \subsection{Reconstruction across six real image datasets}
 \label{sec:sameset_results}
 
-For each image, we trained a fresh HVK2D model using non-overlapping $8\times8$
+For each image, we trained a fresh PCAE2D model using non-overlapping $8\times8$
 patches (16 patches/image, 80--100 optimisation steps). The sample covers
 CIFAR-10 \citep{Krizhevsky2009}, MNIST \citep{LeCun1998}, Fashion-MNIST
 \citep{Xiao2017}, and the PathMNIST, BloodMNIST, and PneumoniaMNIST subsets of
@@ -446,7 +449,7 @@ results are not a compression claim \citep{Strumpler2022}.}
 
 \begin{table}[t]
   \centering
-  \caption{HVK2D same-set reconstruction across six real image datasets
+  \caption{PCAE2D same-set reconstruction across six real image datasets
            (per-image trained, 80--100 steps, mean $\pm$ std over sampled
            images).}
   \label{tab:sameset_multi_dataset}
@@ -483,18 +486,17 @@ directly.
 \label{sec:ablation_relationship}
 \color{green}
 The results above measure per-image fitting. A separate question is whether
-HVK's feature map improves reconstruction on real, \emph{held-out} images under
+PCAE's feature map improves reconstruction on real, \emph{held-out} images under
 a resource-matched multi-seed protocol. That question is answered in the
 companion document, \textit{Supplementary Material for the Hamiltonian Vision
 Kernel: Resource-Matched Ablations, Validation, and Reproducibility}.
 
 On held-out CIFAR-10, \snew{the raw/local linear control} reaches
-$18.80\pm1.42$~dB, against HVK2D's $18.12\pm1.54$~dB. Aggregating held-out
-images within each split gives an HVK2D-minus-control difference of $-0.68$~dB,
+$18.80\pm1.42$~dB, against PCAE2D's $18.12\pm1.54$~dB. Aggregating held-out
+images within each split gives a PCAE2D-minus-control difference of $-0.68$~dB,
 with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$
-seeds. \add{With five seeds, $p=0.0625$ is the smallest two-sided Wilcoxon
-$p$-value possible, so this test cannot reach $0.05$.} The same numerical direction holds on five further real datasets. The
-tested HVK map is therefore informative, but it is not shown to outperform the
+seeds. The same numerical direction holds on five further real datasets. The
+tested PCAE map is therefore informative, but it is not shown to outperform the
 simpler maps on ordinary held-out reconstruction.
 
 \add{All controls are matched at the readout. Each passes a 32-D feature vector
@@ -503,9 +505,9 @@ matches the readout resources. It does not match the feature class or the
 compute cost. The controls differ in what their features can express. The
 no-entanglement and $ZZ$-only controls remove all or part of the entangling
 pair channel, and the quadratic classical control adds second-order classical
-terms. The compute needed to produce the features is not matched, since HVK2D
+terms. The compute needed to produce the features is not matched, since PCAE2D
 evaluates a quantum circuit for every patch.}
-{\color{red}\textbf{[Student: (1) the held-out HVK2D map is 32-D with 6 pair
+{\color{red}\textbf{[Student: (1) the held-out PCAE2D map is 32-D with 6 pair
 channels (Supplement, Table~S-resource\_capacity), not the 19-D map of
 Table~\ref{tab:configurations}. Please state this in both documents. (2) The
 supplement never defines the quadratic classical control. Please add its
@@ -514,36 +516,41 @@ definition and confirm ``second-order classical terms''.]}}
 A TOST equivalence test \add{\citep{Schuirmann1987, Lakens2017}} at a declared $\pm1$~dB margin confirms that this gap is
 small enough\del{, in a pre-declared and data-independent sense,} to call the two
 \emph{competitive} rather than merely ``not shown to differ''.
-\add{The estimand is the seed-level HVK2D-minus-control PSNR difference,
+\add{The estimand is the seed-level PCAE2D-minus-control PSNR difference,
 averaged over held-out images within each seed. Equivalence requires both
 one-sided tests to reject at $\alpha=0.05$. This is the same as the 90\%
-confidence interval lying inside $[-1,+1]$~dB (Table~\ref{tab:tost_main}). This
-$t$-based interval is wider than the bootstrap interval above. With only five
-seeds the bootstrap interval tends to be too narrow, so the $t$-based interval
-is the safer basis. The margin is a declared choice. A 1~dB change in PSNR
-corresponds to a factor of about $1.26$ in MSE.}
+confidence interval lying inside $[-1,+1]$~dB (Table~\ref{tab:tost_main}). The
+margin is a declared choice.}
+{\color{red}\textbf{[Student: please decide on these three sentences. They are
+not in the supplement, so add them only if you agree. (1) With five seeds,
+$p=0.0625$ is the smallest two-sided Wilcoxon $p$-value possible, so the
+Wilcoxon test cannot reach $0.05$. (2) The $t$-based 90\% interval is wider than
+the bootstrap 95\% interval, because with only five seeds the bootstrap interval
+tends to be too narrow. (3) A 1~dB change in PSNR is a factor of about $1.26$ in
+MSE.]}}
 {\color{red}\textbf{[Student: when was the $\pm1$~dB margin fixed? If a dated
 commit shows it was set before the TOST run, cite it in the supplement. If not,
 remove ``pre-declared'' from the abstract, contribution~3 and the conclusion.
 The supplement's current reason for the margin uses the observed 3--7~dB gaps,
 which makes it depend on the data.]}}
 \snew{Five of seven distinct} tested controls \del{are statistically equivalent to}
-\add{meet the equivalence criterion against} HVK2D within that margin. The two weakest controls, strict classical random
-features and random-VQC, are correctly excluded, because HVK2D substantially
+\add{meet the equivalence criterion against} PCAE2D within that margin. The two weakest controls, strict classical random
+features and random-VQC, are correctly excluded, because PCAE2D substantially
 outperforms them. \add{Each control is tested separately at $\alpha=0.05$, with
 no correction for the seven comparisons.}
-{\color{red}\textbf{[PI, not for the text: a Holm correction across the seven
-reported TOST $p$-values would keep four equivalences (no entanglement,
-$ZZ$-only, quadratic classical, shuffled pair observables) and drop the
-raw/local linear control ($p=0.034$), which the abstract names. Any such
-reanalysis is the student's to run and report. Otherwise keep the uncorrected
-policy stated above.]}}
+{\color{red}\textbf{[Student: the seven TOST tests are not corrected for
+multiple comparisons. Under a Holm correction, four equivalences would stay (no
+entanglement, $ZZ$-only, quadratic classical, shuffled pair observables). The
+raw/local linear control ($p=0.034$), which the abstract names, would not pass.
+Please choose one with the PI. (a) Keep the uncorrected tests and say so in the
+abstract. (b) Name a different control in the abstract. (c) Run and report a
+corrected analysis yourself.]}}
 
 \begin{table}[t]
   \centering
   \caption[TOST equivalence test on held-out CIFAR-10]{\add{TOST equivalence
            test on held-out CIFAR-10 ($\pm1$~dB margin, $\alpha=0.05$, five
-           seed-level paired differences, HVK2D minus control). Equivalence
+           seed-level paired differences, PCAE2D minus control). Equivalence
            requires the 90\% CI to lie inside $[-1,+1]$~dB. Values from the
            Supplementary Material.}}
   \label{tab:tost_main}
@@ -558,8 +565,8 @@ policy stated above.]}}
     $ZZ$-only observables            & $-0.44$ & $[-0.61,-0.27]$ & $0.001$   & Equivalent \\
     Quadratic classical              & $-0.21$ & $[-0.46,+0.03]$ & $0.001$   & Equivalent \\
     Shuffled pair observables        & $-0.19$ & $[-0.35,-0.02]$ & $<0.001$  & Equivalent \\
-    Strict classical random features & $+2.27$ & $[+1.92,+2.63]$ & $0.999$   & HVK2D better \\
-    Random VQC                       & $+6.97$ & $[+5.56,+8.39]$ & $1.000$   & HVK2D better \\
+    Strict classical random features & $+2.27$ & $[+1.92,+2.63]$ & $0.999$   & PCAE2D better \\
+    Random VQC                       & $+6.97$ & $[+5.56,+8.39]$ & $1.000$   & PCAE2D better \\
     \bottomrule
   \end{tabular}
 \end{table} We report this as a complement to the positive \del{entanglement} \add{pair-observable}
@@ -592,7 +599,7 @@ The pilot covers five images. These are the full 16-patch \textit{Monalisa}
 benchmark and four native-resolution CIFAR-10 images (\textit{cat},
 \textit{ship}$\times2$, \textit{airplane}), each optimised directly on its own
 target image following the same per-image protocol as every result in this
-paper. For each image we took an already-trained HVK1D/HVK2D checkpoint's exact
+paper. For each image we took an already-trained PCAE1D/PCAE2D checkpoint's exact
 learned parameters and rebuilt its measurement circuits gate-for-gate in Qiskit.
 We verified the translation against the original PennyLane simulator to within
 numerical noise, at most $7.9\times10^{-4}$ maximum absolute error per
@@ -635,11 +642,11 @@ documented in the supplement.
     \toprule
     Image                              & Patches & Sim.\ PSNR (dB)   & HW PSNR (dB)      \\
     \midrule
-    Monalisa (HVK1D)                   & 16      & 37.99             & 25.90             \\
-    CIFAR cat (HVK2D)                  & 16      & 44.85             & 31.52             \\
-    CIFAR ship, hydrofoil (HVK2D)      & 16      & 36.56             & 26.44             \\
-    CIFAR ship, sea boat (HVK2D)       & 16      & 42.57             & 31.20             \\
-    CIFAR airplane (HVK2D)             & 16      & 46.79             & 29.10             \\
+    Monalisa (PCAE1D)                   & 16      & 37.99             & 25.90             \\
+    CIFAR cat (PCAE2D)                  & 16      & 44.85             & 31.52             \\
+    CIFAR ship, hydrofoil (PCAE2D)      & 16      & 36.56             & 26.44             \\
+    CIFAR ship, sea boat (PCAE2D)       & 16      & 42.57             & 31.20             \\
+    CIFAR airplane (PCAE2D)             & 16      & 46.79             & 29.10             \\
     \midrule
     CIFAR mean $\pm$ std (4 images)    & ---     & $42.69\pm3.84$    & $29.56\pm2.03$    \\
     \bottomrule
@@ -662,23 +669,23 @@ documented in the supplement.
   \includegraphics[width=\textwidth]{figures/ibm_hardware_reconstruction_cifar.pdf}
   \caption{Four CIFAR-10 images reconstructed from real IBM Quantum hardware
            measurements (bottom row) against noiseless-simulator replays of the
-           same trained HVK2D checkpoints (middle row) and ground truth (top
+           same trained PCAE2D checkpoints (middle row) and ground truth (top
            row).}
   \label{fig:hardware_reconstruction_cifar}
 \end{figure}
 
 Five images constitute a pilot, and we make no hardware-advantage claim. What
-the pilot does establish is that the trained HVK observable channel survives
+the pilot does establish is that the trained PCAE observable channel survives
 execution on present-day hardware. The learned parameters, the measurement
 circuits and the classical decoder all transfer unchanged, and the decoded
 images remain quantitatively informative at 256 shots per basis on an
-unmitigated device. This is the sense in which HVK runs on real quantum
+unmitigated device. This is the sense in which PCAE runs on real quantum
 hardware. The companion supplementary document gives the full methodology,
 covering exact gate sequences, per-basis measurement construction, job IDs, and
 pre-submission local-validation results.
 
 The same checkpoint-replay methodology supports a further \del{hardware-validation
-exercise} \add{hardware replay}, reported in the companion Supplementary Material. Fresh HVK1D
+exercise} \add{hardware replay}, reported in the companion Supplementary Material. Fresh PCAE1D
 checkpoints were trained at $N\in\{4,6,8\}$ and replayed epoch-by-epoch on real
 IBM Quantum hardware and on the IonQ cloud simulator \citep{IonQBackends}. That
 exercise serves the training-dynamics diagnostic of
@@ -796,7 +803,7 @@ execution matters at least as much as backend choice or shot count individually.
 \label{sec:d4}
 \label{sec:symmetry}
 
-A $D_4$-pooled HVK2D observable-grid map is equivariant to the eight symmetries
+A $D_4$-pooled PCAE2D observable-grid map is equivariant to the eight symmetries
 of the square \emph{by construction}:
 \begin{equation}
   \Phi_{D_4}(x)=\frac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx),
@@ -824,7 +831,7 @@ end-to-end (Section~\ref{sec:limitations}) is concrete future work.
 \add{This route to symmetry differs from equivariant quantum neural networks,
 in which every circuit layer is built to commute with the group action
 \citep{Nguyen2024EQNN}. A recent image classifier of that kind builds $C_4$
-rotation symmetry into the circuit itself \citep{SanSebastianSein2025}. In HVK
+rotation symmetry into the circuit itself \citep{SanSebastianSein2025}. In PCAE
 the circuit is not equivariant. The symmetry comes from averaging the observable
 grid over the group after measurement, and the same average applies equally to
 a classical feature map.}
@@ -839,9 +846,9 @@ a classical feature map.}
     \toprule
     Model                    & Mean error              & Std.\ error             \\
     \midrule
-    $D_4$-pooled HVK2D       & $9.57\times10^{-17}$    & $1.26\times10^{-17}$    \\
+    $D_4$-pooled PCAE2D       & $9.57\times10^{-17}$    & $1.26\times10^{-17}$    \\
     No positional encoding   & $7.40\times10^{-1}$     & $1.52\times10^{-1}$     \\
-    HVK2D positional         & $8.15\times10^{-1}$     & $1.29\times10^{-1}$     \\
+    PCAE2D positional         & $8.15\times10^{-1}$     & $1.29\times10^{-1}$     \\
     Local/raw                & $8.37\times10^{-1}$     & $1.31\times10^{-1}$     \\
     \bottomrule
   \end{tabular}
@@ -864,12 +871,12 @@ fit a target that depends on pair correlations. The target is a fixed synthetic
 function of \emph{simulated} patch features, and those features are not
 concatenated into any candidate's own input block. The companion supplement
 gives the leakage-audit procedure that rules out circularity. Every control
-receives the same raw inputs as HVK2D. {\color{red}\textbf{The task is by
+receives the same raw inputs as PCAE2D. {\color{red}\textbf{The task is by
 construction favourable to pair-observable structure, which is why we read it as
 a representational statement and not as a performance comparison.}}
 
 Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic}
-report the result across five seeds. HVK2D's \del{entangling observable}
+report the result across five seeds. PCAE2D's \del{entangling observable}
 \add{pair-observable} channel
 reaches mean $R^2=0.9735$, or $32.77$~dB PSNR. This is a $17.74$~dB improvement
 over a no-entanglement control ($R^2=0.019$) and $18.52$~dB over random-VQC
@@ -905,7 +912,7 @@ reason we scope} the claim to the linear protocol rather than to classical model
 
 \begin{table}[t]
   \centering
-  \caption[HVK2D restricted pair-correlation diagnostic]{HVK2D restricted pair-correlation diagnostic across five seeds.
+  \caption[PCAE2D restricted pair-correlation diagnostic]{PCAE2D restricted pair-correlation diagnostic across five seeds.
            Deliberately favourable to pair-observable structure; evidence for
            \del{entanglement-necessity} \add{pair-observable necessity} under a matched linear readout.}
   \label{tab:hvk_pair_diagnostic}
@@ -913,7 +920,7 @@ reason we scope} the claim to the linear protocol rather than to classical model
     \toprule
     Model                            & Mean MSE                  & Mean PSNR (dB) & Mean $R^2$ \\
     \midrule
-    HVK2D \del{entangling} \add{pair} observables     & $8.5969\times10^{-4}$     & 32.77          & $ 0.9735$  \\
+    PCAE2D \del{entangling} \add{pair} observables     & $8.5969\times10^{-4}$     & 32.77          & $ 0.9735$  \\
     Freeze quantum                   & $4.7904\times10^{-3}$     & 27.34          & $ 0.8533$  \\
     No entanglement                  & $3.1461\times10^{-2}$     & 15.03          & $ 0.0191$  \\
     Raw-linear classical             & $3.1654\times10^{-2}$     & 15.00          & $ 0.0133$  \\
@@ -993,7 +1000,7 @@ thermodynamic reading is outside their scope.
 \label{sec:representativeness}
 
 Whether a quantum feature map offers any advantage over a classical model is a property of the specific data and target, not a fixed property of the model class. Dequantization results have repeatedly shown that apparent quantum advantages on structured, low-entanglement classical data can be matched once the right classical feature is identified \citep{Huang2021PowerData, Tang2019}. Where provable separations do exist, they are established for carefully constructed learning problems rather than for generic structured data \citep{Gyurik2023}. \add{We separate
-three questions. First, HVK at six qubits can be simulated exactly on a
+three questions. First, PCAE at six qubits can be simulated exactly on a
 classical computer, which says little about larger scales. Second, whether its
 model class admits an efficient classical replacement at scale is open.
 Tensor-network analyses give conditions for such dequantisation of variational
@@ -1004,23 +1011,23 @@ convolutional networks on common image benchmarks can be simulated efficiently
 by a classical method based on Pauli shadows \citep{Bermejo2026}. Third, on the tested ordinary reconstruction tasks we observe no
 quantum benefit. This matches large benchmarks in which simple classical models
 often match or beat small quantum models, and removing entanglement often costs
-little \citep{Bowles2024}.} \add{In HVK the
+little \citep{Bowles2024}.} \add{In PCAE the
 quantum processor evaluates only the circuit and returns the vector of measured
 Pauli expectation values. The MPS compression is quantum-inspired but runs on
 classical hardware, as do the Fourier positional encoding, the $D_4$ pooling,
-the decoder and the optimisation. Any quantum contribution to HVK must
+the decoder and the optimisation. Any quantum contribution to PCAE must
 therefore enter through the measured observable vector.}
 
-The restricted diagnostic of Section~\ref{sec:entanglement_necessity} is constructed so that the relevant structure is a genuine distant-element product, which raw or local features cannot represent under a fixed linear readout. That is the regime in which HVK's \del{entangling} \add{pair-observable} channel separates. Natural image patches at the resolution and patch size used here are low-entanglement, locally structured data, where a linear or shallow classical readout is already close to sufficient. The distinction lies in the measured pair-observable channel rather than in the circuit. The ansatz uses strongly-entangling layers and does generate an entangled state, but whether the measured channel carries task-relevant information is a property of the target. On natural-image targets the pair observables add little beyond the local ones. On the constructed nonlocal target they are necessary. Together with the held-out comparisons of Section~\ref{sec:ablation_relationship}, these results delineate where the tested entangling representation does and does not yield a measurable benefit.
+The restricted diagnostic of Section~\ref{sec:entanglement_necessity} is constructed so that the relevant structure is a genuine distant-element product, which raw or local features cannot represent under a fixed linear readout. That is the regime in which PCAE's \del{entangling} \add{pair-observable} channel separates. Natural image patches at the resolution and patch size used here are low-entanglement, locally structured data, where a linear or shallow classical readout is already close to sufficient. The distinction lies in the measured pair-observable channel rather than in the circuit. The ansatz uses strongly-entangling layers and does generate an entangled state, but whether the measured channel carries task-relevant information is a property of the target. On natural-image targets the pair observables add little beyond the local ones. On the constructed nonlocal target they are necessary. Together with the held-out comparisons of Section~\ref{sec:ablation_relationship}, these results delineate where the tested entangling representation does and does not yield a measurable benefit.
 
-HVK's three ingredients each recur individually in the hybrid quantum-vision literature, covering MPS compression of structured input \citep{Stoudenmire2016, Han2018, Cirac2021, Guala2023}, a Pauli-correlator latent space handed to a classical decoder \citep{Havlicek2019}, and a physically motivated auxiliary regulariser alongside a task loss \citep{Shi2022}. Its specific instantiation, a six-qubit VQC with a $19$--$27$-D correlator vector and a graph-Hamiltonian term, sits within the parameter ranges typical of that literature. The measured behaviour is therefore evidence about the design pattern itself. We do not claim the boundary transfers unchanged to every dataset, patch size, or qubit count.
+PCAE's three ingredients each recur individually in the hybrid quantum-vision literature, covering MPS compression of structured input \citep{Stoudenmire2016, Han2018, Cirac2021, Guala2023}, a Pauli-correlator latent space handed to a classical decoder \citep{Havlicek2019}, and a physically motivated auxiliary regulariser alongside a task loss \citep{Shi2022}. Its specific instantiation, a six-qubit VQC with a $19$--$27$-D correlator vector and a graph-Hamiltonian term, sits within the parameter ranges typical of that literature. The measured behaviour is therefore evidence about the design pattern itself. We do not claim the boundary transfers unchanged to every dataset, patch size, or qubit count.
 
 \subsection{Topology alignment as an inductive bias}
 \label{sec:topology}
 
-Aligning the latent interaction graph with image-patch adjacency (HVK2D vs.\ HVK1D) is an architectural inductive bias, and the companion supplementary study tests it directly under matched held-out conditions. Its real-circuit subset (3 seeds, 3 held-out CIFAR-10 images) gives an HVK1D-minus-HVK2D mean PSNR difference of $0.16$~dB. After averaging images within seed, the bootstrap 95\% CI is $[-0.38,0.46]$~dB and the seed-level Wilcoxon test gives $p=0.50$. A broader five-seed surrogate comparison across CIFAR-10, Fashion-MNIST, and PathMNIST likewise finds numerically small topology differences, at most $0.07$~dB in mean PSNR. HVK2D completes the matched 90-step runs in roughly half the wall-clock time. At the tested scale, topology is therefore primarily a resource-cost choice rather than a reliable accuracy advantage. These tests do not establish formal equivalence.
+Aligning the latent interaction graph with image-patch adjacency (PCAE2D vs.\ PCAE1D) is an architectural inductive bias, and the companion supplementary study tests it directly under matched held-out conditions. Its real-circuit subset (3 seeds, 3 held-out CIFAR-10 images) gives a PCAE1D-minus-PCAE2D mean PSNR difference of $0.16$~dB. After averaging images within seed, the bootstrap 95\% CI is $[-0.38,0.46]$~dB and the seed-level Wilcoxon test gives $p=0.50$. A broader five-seed surrogate comparison across CIFAR-10, Fashion-MNIST, and PathMNIST likewise finds numerically small topology differences, at most $0.07$~dB in mean PSNR. PCAE2D completes the matched 90-step runs in roughly half the wall-clock time. At the tested scale, topology is therefore primarily a resource-cost choice rather than a reliable accuracy advantage. These tests do not establish formal equivalence.
 
-Table~\ref{tab:differentiation} contrasts HVK's structural properties against reference frameworks, including the three nearest hybrid-vision architecture families. Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy diagnostic, each documented and scoped in the preceding sections.
+Table~\ref{tab:differentiation} contrasts PCAE's structural properties against reference frameworks, including the three nearest hybrid-vision architecture families. Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy diagnostic, each documented and scoped in the preceding sections.
 
 
 \begin{table}[t]
@@ -1039,7 +1046,7 @@ Table~\ref{tab:differentiation} contrasts HVK's structural properties against re
       & Register-based QAE
       & Quantum-kernel vision
       & TN-circuit classifier
-      & HVK (ours) \\
+      & PCAE (ours) \\
     \midrule
     Latent representation
       & Continuous $\mathbb{R}^d$
@@ -1100,15 +1107,15 @@ Table~\ref{tab:differentiation} contrasts HVK's structural properties against re
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented the Hamiltonian Vision Kernel, a hybrid quantum--classical
+We presented the \del{Hamiltonian Vision Kernel} \add{Pauli-Correlator Autoencoder (PCAE)}, a hybrid quantum--classical
 architecture for image reconstruction that assembles matrix-product-state patch
 features, a measured Pauli-correlator latent space, enforced $D_4$-equivariant
 observable pooling, and a learnable Hamiltonian energy diagnostic into a single
 pipeline (Section~\ref{sec:representativeness}). Across six real image datasets,
-per-image-trained HVK2D models \del{reconstruct with high fidelity}
+per-image-trained PCAE2D models \del{reconstruct with high fidelity}
 \add{reach $25.8$--$41.6$~dB PSNR}. On a
 resource-matched, multi-seed held-out comparison, a pre-declared TOST equivalence
-test shows HVK2D is \emph{competitive with}, rather than inferior or superior to,
+test shows PCAE2D is \emph{competitive with}, rather than inferior or superior to,
 simple classical controls (Section~\ref{sec:ablation_relationship}). A hardware
 pilot replayed trained checkpoints on IBM Quantum devices without retraining,
 establishing feasibility at a five-image, single-trial scope
@@ -1126,14 +1133,14 @@ report as a design-correctness property rather than a quantum capability, since
 the same Reynolds averaging applied to a classical feature map is equally exact.
 We make no claim of quantum advantage. \del{HVK is, at this scope, a new architecture
 that works, is competitive with resource-matched classical baselines, and runs on
-real quantum hardware.} \add{At the six-qubit scale tested here, HVK is
+real quantum hardware.} \add{At the six-qubit scale tested here, PCAE is
 competitive with resource-matched classical baselines and runs on real quantum
 hardware.}
 
 Future work should integrate the $D_4$-pooled map into an end-to-end trainable
 pipeline (Section~\ref{sec:limitations}), scale the hardware pilot toward a
 statistically resolved benchmark with error mitigation and repeated trials,
-search for further real-world tasks with nonlocal structure where HVK's
+search for further real-world tasks with nonlocal structure where PCAE's
 \del{entanglement-sensitive} \add{pair-observable} separation translates into a reconstruction advantage, and
 extend the resource-matched, leakage-audited evaluation protocol to other hybrid
 quantum vision architectures.
@@ -1169,7 +1176,7 @@ in this work.
         supporting this study are included in the accompanying repository. The
         file \texttt{project\_artifacts/submission\_claim\_audit.json} maps each
         numerical headline claim to its retained source artifact, covering the
-        resource-matched held-out comparison, on which the tested HVK map is
+        resource-matched held-out comparison, on which the tested PCAE map is
         competitive with rather than superior to the classical controls, and the
         withdrawn training-dynamics material. Automated tests verify those
         mappings.
