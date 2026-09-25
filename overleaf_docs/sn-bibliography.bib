@@ -5,6 +5,10 @@
 %  Capitalisation of proper nouns is brace-protected for sentence-case styles.
 % ============================================================================
 
+@preamble{"\providecommand{\arxivdot}{.}"}
+% sn-basic.bst strips every '.' from the journal field, so arXiv numbers
+% use \arxivdot{} for their dot.
+
 @article{Araz2022,
   author  = {Araz, Jack Y. and Spannowsky, Michael},
   title   = {Classical versus quantum: comparing tensor-network-based quantum
@@ -42,7 +46,7 @@
 @article{QuantumKernelDefect2022,
   author  = {Beaulieu, Daniel and Miracle, Danielle and Pham, Anh and Scherr, William},
   title   = {Quantum kernel for image classification of real world manufacturing defects},
-  journal = {arXiv preprint arXiv:2212.08693},
+  journal = {arXiv preprint arXiv:2212\arxivdot{}08693},
   year    = {2022},
   doi     = {10.48550/arXiv.2212.08693}
 }
@@ -51,7 +55,7 @@
   author  = {Bronstein, Michael M. and Bruna, Joan and Cohen, Taco and
              Veli{\v c}kovi{\'c}, Petar},
   title   = {Geometric deep learning: grids, groups, graphs, geodesics, and gauges},
-  journal = {arXiv preprint arXiv:2104.13478},
+  journal = {arXiv preprint arXiv:2104\arxivdot{}13478},
   year    = {2021},
   doi     = {10.48550/arXiv.2104.13478}
 }
@@ -136,7 +140,7 @@
 @article{Gyurik2023,
   author  = {Gyurik, Casper and Dunjko, Vedran},
   title   = {Exponential separations between classical and quantum learners},
-  journal = {arXiv preprint arXiv:2306.16028},
+  journal = {arXiv preprint arXiv:2306\arxivdot{}16028},
   year    = {2023},
   doi     = {10.48550/arXiv.2306.16028}
 }
@@ -399,7 +403,7 @@
   author  = {Slabbert, Donovan and Petruccione, Francesco},
   title   = {Hybrid quantum-classical feature extraction approach for image
              classification using autoencoders and quantum {SVM}s},
-  journal = {arXiv preprint arXiv:2410.18814},
+  journal = {arXiv preprint arXiv:2410\arxivdot{}18814},
   year    = {2024},
   doi     = {10.48550/arXiv.2410.18814}
 }
@@ -475,7 +479,7 @@
   author  = {Xiao, Han and Rasul, Kashif and Vollgraf, Roland},
   title   = {{F}ashion-{MNIST}: a novel image dataset for benchmarking
              machine learning algorithms},
-  journal = {arXiv preprint arXiv:1708.07747},
+  journal = {arXiv preprint arXiv:1708\arxivdot{}07747},
   year    = {2017},
   doi     = {10.48550/arXiv.1708.07747}
 }
@@ -550,4 +554,118 @@
   pages   = {2511},
   year    = {2017},
   doi     = {10.1038/s41598-017-02575-6}
+}
+
+@article{Schuirmann1987,
+	author  = {Schuirmann, Donald J.},
+	title   = {A comparison of the two one-sided tests procedure and the
+	power approach for assessing the equivalence of average
+	bioavailability},
+	journal = {Journal of Pharmacokinetics and Biopharmaceutics},
+	volume  = {15},
+	number  = {6},
+	pages   = {657--680},
+	year    = {1987},
+	doi     = {10.1007/BF01068419}
+}
+
+@article{Lakens2017,
+	author  = {Lakens, Dani{\"e}l},
+	title   = {Equivalence tests: A practical primer for {$t$} tests,
+	correlations, and meta-analyses},
+	journal = {Social Psychological and Personality Science},
+	volume  = {8},
+	number  = {4},
+	pages   = {355--362},
+	year    = {2017},
+	doi     = {10.1177/1948550617697177}
+}
+
+@inproceedings{Tancik2020,
+	author    = {Tancik, Matthew and Srinivasan, Pratul P. and
+	Mildenhall, Ben and Fridovich-Keil, Sara and
+	Raghavan, Nithin and Singhal, Utkarsh and
+	Ramamoorthi, Ravi and Barron, Jonathan T. and Ng, Ren},
+	title     = {Fourier Features Let Networks Learn High Frequency
+	Functions in Low Dimensional Domains},
+	booktitle = {Advances in Neural Information Processing Systems},
+	volume    = {33},
+	pages     = {7537--7547},
+	publisher = {Curran Associates, Inc.},
+	year      = {2020},
+	url       = {https://proceedings.neurips.cc/paper/2020/hash/55053683268957697aa39fba6f231c68-Abstract.html}
+}
+
+@inproceedings{Sitzmann2020,
+	author    = {Sitzmann, Vincent and Martel, Julien N. P. and
+	Bergman, Alexander W. and Lindell, David B. and
+	Wetzstein, Gordon},
+	title     = {Implicit Neural Representations with Periodic
+	Activation Functions},
+	booktitle = {Advances in Neural Information Processing Systems},
+	volume    = {33},
+	pages     = {7462--7473},
+	publisher = {Curran Associates, Inc.},
+	year      = {2020},
+	url       = {https://proceedings.neurips.cc/paper/2020/hash/53c04118df112c13a8c34b38343b9c10-Abstract.html}
+}
+
+@inproceedings{Strumpler2022,
+	author    = {Str{\"u}mpler, Yannick and Postels, Janis and
+	Yang, Ren and {Van Gool}, Luc and Tombari, Federico},
+	title     = {Implicit Neural Representations for Image Compression},
+	booktitle = {Computer Vision -- ECCV 2022},
+	series    = {Lecture Notes in Computer Science},
+	volume    = {13686},
+	pages     = {74--91},
+	publisher = {Springer},
+	address   = {Cham},
+	year      = {2022},
+	doi       = {10.1007/978-3-031-19809-0_5}
+}
+
+@article{SanSebastianSein2025,
+  author    = {San Sebastian Sein, Paul and Ca{\~n}izo, Mikel and Or{\'u}s, Rom{\'a}n},
+  title     = {Image classification with rotation-invariant variational quantum circuits},
+  journal   = {Physical Review Research},
+  volume    = {7},
+  pages     = {013082},
+  year      = {2025},
+  doi       = {10.1103/PhysRevResearch.7.013082}
+}
+
+@article{Bowles2024,
+  author  = {Bowles, Joseph and Ahmed, Shahnawaz and Schuld, Maria},
+  title   = {Better than classical? {T}he subtle art of benchmarking quantum machine learning models},
+  journal = {arXiv preprint arXiv:2403\arxivdot{}07059},
+  year    = {2024}
+}
+
+@article{Shin2024Dequant,
+  author  = {Shin, Seongwook and Teo, Yong Siah and Jeong, Hyunseok},
+  title   = {Dequantizing quantum machine learning models using tensor networks},
+  journal = {Physical Review Research},
+  volume  = {6},
+  pages   = {023218},
+  year    = {2024},
+  doi     = {10.1103/PhysRevResearch.6.023218}
+}
+
+@article{Sweke2025,
+  author  = {Sweke, Ryan and Recio-Armengol, Erik and Jerbi, Sofiene and Gil-Fuster, Elies and Fuller, Bryce and Eisert, Jens and Meyer, Johannes Jakob},
+  title   = {Potential and limitations of random {F}ourier features for dequantizing quantum machine learning},
+  journal = {Quantum},
+  volume  = {9},
+  pages   = {1640},
+  year    = {2025},
+  doi     = {10.22331/q-2025-02-20-1640}
+}
+
+@article{Bermejo2026,
+  author  = {Bermejo, Pablo and Braccia, Paolo and Rudolph, Manuel S. and Holmes, Zo{\"e} and Cincio, Lukasz and Cerezo, M.},
+  title   = {Quantum convolutional neural networks are effectively classically simulable},
+  journal = {PRX Quantum},
+  volume  = {7},
+  pages   = {020304},
+  year    = {2026}
 }

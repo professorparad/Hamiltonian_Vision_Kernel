@@ -57,12 +57,14 @@ equivariant to the eight symmetries of the square. The contribution is this
 specific assembly rather than any ingredient in isolation. Across six real image
 datasets, per-image-trained HVK2D models reconstruct with peak signal-to-noise
 ratio (PSNR) between 25.8 and 41.6 decibels. On a resource-matched, multi-seed
-held-out comparison using CIFAR-10, a pre-declared TOST equivalence procedure at
+held-out comparison using CIFAR-10, a pre-declared \del{TOST equivalence procedure}
+\add{equivalence procedure using two one-sided tests (TOST)} at
 a one-decibel margin establishes that HVK2D is statistically \emph{competitive}
 with \snew{a resource-matched raw/local linear classical control}. Five fitted
 checkpoints are replayed on superconducting quantum hardware without retraining,
-reaching 25.90 to 31.52 decibels. HVK adds an entangling observable channel that
-is representationally necessary on a leakage-audited task requiring
+reaching 25.90 to 31.52 decibels. HVK adds \del{an entangling observable channel that
+is representationally necessary} \add{a pair-observable channel that is
+necessary under a fixed linear readout} on a leakage-audited task requiring
 distant-patch products, an interpretable Hamiltonian energy diagnostic, and
 native hardware execution. We make no claim of quantum advantage.}
 
@@ -72,6 +74,14 @@ native hardware execution. We make no claim of quantum advantage.}
   Quantum hardware validation}
 
 \maketitle
+
+{\color{red}\textbf{[PI decision pending, title and name. (1) HVK is not a kernel
+method in the positive-semidefinite sense, and Section~\ref{sec:intro} contrasts
+it with quantum-kernel models. Keep ``Kernel'' and define it, or rename.
+(2) ``Symmetry-Pooled'' names a step that is outside the trained path.
+(3) ``Hardware Validation'' in the title and keywords names what the body calls
+a pilot.]}}
+
 \tableofcontents
 % ================================ BODY ======================================
 \section{Introduction}
@@ -105,7 +115,7 @@ observables rather than a raw quantum state form the representation handed to a
 classical decoder, following quantum-enhanced feature maps \citep{Havlicek2019}.
 The second is an \emph{exact, numerically-verified $D_4$-equivariant
 observable-pooling construction}, which group-averages the observable grid over
-the eight symmetries of the square rather than motivating symmetry through
+the eight symmetries of the square \add{$4\times4$ patch grid} rather than motivating symmetry through
 architecture choices alone. This follows group-equivariant classical vision
 \citep{Cohen2016, Bronstein2021} and the equivariant-quantum-neural-network line
 that formalises symmetry-embedding constructions for variational circuits
@@ -124,7 +134,7 @@ already established individually in the literature.
 \citep{Romero2017, WangQAECompression2024, QAEClassification2025} encode an
 image's pixel amplitudes directly into a qubit register and train a trash-qubit
 fidelity objective. HVK never amplitude-encodes pixels into qubits. It exposes
-only classically pre-compressed MPS patch features as circuit input, and hands
+only \del{classically} \add{quantum-inspired,} pre-compressed MPS patch features as circuit input, and hands
 the decoder measured Pauli correlators rather than register amplitudes or a
 fidelity score.
 
@@ -133,13 +143,13 @@ fidelity score.
 feature space and read out a scalar kernel value consumed by a classical kernel
 method. HVK reads out an explicit vector of local and pairwise Pauli expectation
 values as a latent representation for a trained decoder, and adds enforced
-group-equivariant pooling and a Hamiltonian regulariser that a kernel
+group-equivariant pooling and a Hamiltonian \del{regulariser} \add{energy diagnostic} that a kernel
 construction has no analogue for.
 
 \emph{Tensor-network (TN) circuit classifiers}
 \citep{Guala2023, Stoudenmire2016, Han2018} use MPS structure either as a
 standalone classical model or as a template for a shallow quantum circuit trained
-for classification. HVK uses MPS compression only as a classical
+for classification. HVK uses MPS compression only as a \del{classical} \add{quantum-inspired}
 \emph{preprocessing} step that sets a separately trained VQC's rotation angles,
 and targets per-image reconstruction rather than classification.
 
@@ -154,12 +164,13 @@ how the individual ingredients recur across this literature.
         six-qubit VQC, a 19--27-dimensional Pauli-correlator vector, 2D Fourier
         positional encoding, a graph-Hamiltonian diagnostic, and a classical
         decoder.
-  \item \textbf{Reconstruction scope.} Identically configured per-image fitting
+  \item \textbf{Reconstruction scope \add{(per-image fitting)}.} Identically configured per-image fitting
         experiments cover six real image datasets
         (Section~\ref{sec:sameset_results}).
-  \item \textbf{Competitive with resource-matched classical baselines.} A
-        pre-declared TOST equivalence test on held-out CIFAR-10 shows HVK2D is
-        statistically equivalent, within a $\pm1$~dB margin, to \snew{five of seven
+  \item \textbf{Competitive with resource-matched classical baselines \add{(held-out comparison)}.} A
+        pre-declared \del{TOST equivalence test} \add{equivalence procedure using
+        two one-sided tests (TOST)} on held-out CIFAR-10 shows HVK2D \del{is
+        statistically equivalent} \add{meets the equivalence criterion}, within a $\pm1$~dB margin, \del{to} \add{against} \snew{five of seven
         distinct} resource-matched classical/ablated controls, and substantially
         outperforms the two null controls (strict classical random features and
         a random-VQC) (Section~\ref{sec:ablation_relationship}).
@@ -168,7 +179,7 @@ how the individual ingredients recur across this literature.
         observables (Section~\ref{sec:hardware_pilot}), strengthened by a
         noise/shot-budget sweep and repeated execution across backends
         (Sections~\ref{sec:hardware_robustness}--\ref{sec:hardware_anchors}).
-  \item \textbf{Equivariant observable pooling.} An exact,
+  \item \textbf{Equivariant observable pooling \add{(proposition)}.} An exact,
         numerically-verified $D_4$-equivariant observable-pooling construction
         makes the HVK2D observable map equivariant to the eight symmetries of
         the square, to floating-point precision (Section~\ref{sec:d4}). The
@@ -177,8 +188,9 @@ how the individual ingredients recur across this literature.
         a purely classical feature map yields the same exactness (Supplementary
         Material). We therefore report it as a property the assembled pipeline
         provides, not as a quantum result.
-  \item \textbf{Restricted nonlocal result.} In a leakage-audited fixed-readout
-        protocol, entangling pair observables are necessary when the target
+  \item \textbf{Restricted nonlocal result \add{(diagnostic)}.} In a leakage-audited \del{fixed-readout
+        protocol, entangling pair observables} \add{protocol with a fixed
+        linear readout, pair observables} are necessary when the target
         depends explicitly on distant-patch products
         (Section~\ref{sec:entanglement_necessity}).
 \end{enumerate}
@@ -210,7 +222,7 @@ regulariser alongside a separate reconstruction objective.
 \paragraph{Problem statement.}
 Given an image $x$ partitioned into non-overlapping patches
 $\{x_p\}_{p=1}^{P}$, HVK learns a per-patch reconstruction map. Each patch is
-compressed to a classical MPS feature vector $\phi_{\mathrm{MPS}}(x_p)$, a learned
+compressed to a \del{classical} \add{quantum-inspired} MPS feature vector $\phi_{\mathrm{MPS}}(x_p)$, a learned
 linear layer sets the VQC rotation angles, and measuring a fixed set of Pauli
 observables yields the correlator feature map
 $\Phi(x_p)\in\mathbb{R}^{d}$ ($d=27$ for HVK1D, $19$ for HVK2D). {\color{red}%
@@ -255,14 +267,17 @@ instead represents it as a chain of small tensors bounded by a fixed bond
 dimension $\chi$. This is a compact, singular-value-controlled compression whose
 entanglement-entropy profile is already known to track image compressibility
 \citep{Latorre2005, Stoudenmire2016}, and whose local expectations and
-correlations are cheap classical features that do not require a full
+correlations are cheap \del{classical} features that do not require a full
 state-preparation circuit.
 
 
 \paragraph{Why a Pauli-correlator latent space rather than a raw quantum state.}
 Handing the classical decoder a fixed vector of measured Pauli expectation
 values, instead of full state tomography, keeps the quantum-to-classical
-interface at $O(\text{qubits})$ rather than exponential readout cost. It also
+interface at \del{$O(\text{qubits})$} \add{a size linear in the qubit count, on
+the bounded-degree graphs used here,} rather than exponential readout cost.
+\add{The execution cost also grows with the number of measurement settings and
+the shots per setting.} It also
 follows the measured-observable-as-feature pattern used by quantum-enhanced
 feature maps generally \citep{Havlicek2019}. This choice is what makes the
 interpretability diagnostics of Section~\ref{sec:regularizer_inert} and the
@@ -274,11 +289,17 @@ meaningful summary.
 
 \paragraph{Why a grid rather than a chain interaction topology for HVK2D.}
 Aligning the six-qubit interaction graph with the $2\times3$ patch-neighbour
-adjacency, rather than an arbitrary linear chain, is what makes the $D_4$
+adjacency, rather than an arbitrary linear chain, \del{is what makes the $D_4$
 group-pooling construction of Section~\ref{sec:d4} well defined in the first
 place. The pooling operator averages over the spatial symmetries of the square,
 which requires a latent structure that itself respects the patch grid's
-two-dimensional adjacency. HVK1D's chain topology serves the complementary role
+two-dimensional adjacency.} \add{gives the latent a two-dimensional coupling
+pattern. The $D_4$ pooling of Section~\ref{sec:d4} does not depend on this
+choice. It acts by permuting the $4\times4$ grid of patches in an image, and a
+$2\times3$ graph has no $90^\circ$ rotation symmetry of its own.}
+{\color{red}\textbf{[Student: please confirm. This follows the Supplementary
+Material, which defines the $D_4$ action on the $4\times4$ patch grid.]}}
+HVK1D's chain topology serves the complementary role
 in this design: it is the ungridded control against which the grid's
 contribution is measured (Section~\ref{sec:topology}).
 
@@ -315,11 +336,24 @@ same three stages. Each image is first divided into sixteen non-overlapping
 patches. Every patch is then $\ell_2$-normalised and sequentially SVD-compressed
 to a matrix product state of bond dimension $\chi=4$. Finally, the local
 expectations, nearest-neighbour correlations and bipartite entropies of that
-state are read off as the classical MPS feature vector. The two configurations
+state are read off as the \del{classical} \add{quantum-inspired} MPS feature vector. The two configurations
 differ only in the sizes involved, which Table~\ref{tab:configurations} lists in
 full.
+{\color{red}\textbf{[Student: please add three details here. (1) How the 64
+pixels of an $8\times8$ patch, and the 4096 pixels of a $64\times64$ patch, are
+arranged into 6 or 12 sites of dimension 2. (2) Which canonical form the MPS is
+in when the features are read off. (3) What is done with a patch whose pixels
+are all zero, since such a patch cannot be normalised.]}}
 \color{green}
-The remaining stages are common to both. A learned linear layer compresses the MPS feature vector to six circuit angles, one per qubit. After the circuit is executed, a two-hidden-layer MLP (128 and 256 units) maps the measured observables together with the Fourier positional vector back to a single greyscale patch. The positional encoding follows established use as a spatial inductive bias in classical generative vision models \citep{Xu2021}. Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits. These were rebuilt in Qiskit for the hardware pilot of
+The remaining stages are common to both. A learned linear layer compresses the MPS feature vector to six circuit angles, one per qubit. After the circuit is executed, a two-hidden-layer MLP (128 and 256 units) maps the measured observables together with the Fourier positional vector back to a single greyscale patch. The positional encoding follows established use as a spatial inductive bias in classical generative vision models \citep{Xu2021}. \add{Fourier features of
+this kind also help coordinate-based networks fit fine image detail
+\citep{Tancik2020}. During training the circuit is simulated exactly, so the
+decoder receives exact expectation values. Finite-shot estimates enter only in
+the hardware replay and the noisy simulation of
+Sections~\ref{sec:hardware_pilot}--\ref{sec:hardware_anchors}.}
+{\color{red}\textbf{[Student: please confirm that training used exact
+expectation values (PennyLane with \texttt{shots=None}).]}}
+Figure~\ref{fig:hvk_ansatz} shows the exact HVK1D and HVK2D ansatz circuits. These were rebuilt in Qiskit for the hardware pilot of
 Section~\ref{sec:hardware_pilot}, and numerically verified against the training-time PennyLane circuit before use. The complete Hamiltonian, loss,
 positional-encoding and measurement definitions are retained in the companion supplement.
 \color{blue}
@@ -377,7 +411,7 @@ Sections~\ref{sec:sameset_results}--\ref{sec:hardware_pilot} use the single-imag
 on its target image, with no held-out split. These results therefore measure
 per-image fitting and reconstruction capability. The hardware pilot replays the
 resulting fitted checkpoints on real devices without retraining. The symmetry
-and restricted-entanglement diagnostics use the separate protocols stated in
+and \del{restricted-entanglement} \add{restricted pair-observable} diagnostics use the separate protocols stated in
 their respective sections. The training-dynamics
 readouts of Section~\ref{sec:phase_transition} are reported as an
 interpretability diagnostic, with their scope set by the negative control given
@@ -403,6 +437,12 @@ CIFAR-10 \citep{Krizhevsky2009}, MNIST \citep{LeCun1998}, Fashion-MNIST
 MedMNIST~v2 \citep{Yang2023}. Table~\ref{tab:sameset_multi_dataset} reports mean
 PSNR between $25.8$ and $41.6$~dB (SSIM $0.91$--$1.00$). This establishes that
 the architecture fits varied image structures under a common protocol.
+\add{This protocol is per-image fitting, in the same sense as implicit neural
+representations, which fit one network to one image
+\citep{Sitzmann2020, Strumpler2022}. These results therefore measure
+representation capacity. Generalisation to held-out images is tested in
+Section~\ref{sec:ablation_relationship}. Since no bit rate is reported, these
+results are not a compression claim \citep{Strumpler2022}.}
 
 \begin{table}[t]
   \centering
@@ -452,17 +492,77 @@ On held-out CIFAR-10, \snew{the raw/local linear control} reaches
 $18.80\pm1.42$~dB, against HVK2D's $18.12\pm1.54$~dB. Aggregating held-out
 images within each split gives an HVK2D-minus-control difference of $-0.68$~dB,
 with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$
-seeds. The same numerical direction holds on five further real datasets. The
+seeds. \add{With five seeds, $p=0.0625$ is the smallest two-sided Wilcoxon
+$p$-value possible, so this test cannot reach $0.05$.} The same numerical direction holds on five further real datasets. The
 tested HVK map is therefore informative, but it is not shown to outperform the
 simpler maps on ordinary held-out reconstruction.
 
-A TOST equivalence test at a declared $\pm1$~dB margin confirms that this gap is
-small enough, in a pre-declared and data-independent sense, to call the two
+\add{All controls are matched at the readout. Each passes a 32-D feature vector
+to the same linear readout with 2112 parameters, on the same splits. This
+matches the readout resources. It does not match the feature class or the
+compute cost. The controls differ in what their features can express. The
+no-entanglement and $ZZ$-only controls remove all or part of the entangling
+pair channel, and the quadratic classical control adds second-order classical
+terms. The compute needed to produce the features is not matched, since HVK2D
+evaluates a quantum circuit for every patch.}
+{\color{red}\textbf{[Student: (1) the held-out HVK2D map is 32-D with 6 pair
+channels (Supplement, Table~S-resource\_capacity), not the 19-D map of
+Table~\ref{tab:configurations}. Please state this in both documents. (2) The
+supplement never defines the quadratic classical control. Please add its
+definition and confirm ``second-order classical terms''.]}}
+
+A TOST equivalence test \add{\citep{Schuirmann1987, Lakens2017}} at a declared $\pm1$~dB margin confirms that this gap is
+small enough\del{, in a pre-declared and data-independent sense,} to call the two
 \emph{competitive} rather than merely ``not shown to differ''.
-\snew{Five of seven distinct} tested controls are statistically equivalent to
-HVK2D within that margin. The two weakest controls, strict classical random
+\add{The estimand is the seed-level HVK2D-minus-control PSNR difference,
+averaged over held-out images within each seed. Equivalence requires both
+one-sided tests to reject at $\alpha=0.05$. This is the same as the 90\%
+confidence interval lying inside $[-1,+1]$~dB (Table~\ref{tab:tost_main}). This
+$t$-based interval is wider than the bootstrap interval above. With only five
+seeds the bootstrap interval tends to be too narrow, so the $t$-based interval
+is the safer basis. The margin is a declared choice. A 1~dB change in PSNR
+corresponds to a factor of about $1.26$ in MSE.}
+{\color{red}\textbf{[Student: when was the $\pm1$~dB margin fixed? If a dated
+commit shows it was set before the TOST run, cite it in the supplement. If not,
+remove ``pre-declared'' from the abstract, contribution~3 and the conclusion.
+The supplement's current reason for the margin uses the observed 3--7~dB gaps,
+which makes it depend on the data.]}}
+\snew{Five of seven distinct} tested controls \del{are statistically equivalent to}
+\add{meet the equivalence criterion against} HVK2D within that margin. The two weakest controls, strict classical random
 features and random-VQC, are correctly excluded, because HVK2D substantially
-outperforms them. We report this as a complement to the positive entanglement
+outperforms them. \add{Each control is tested separately at $\alpha=0.05$, with
+no correction for the seven comparisons.}
+{\color{red}\textbf{[PI, not for the text: a Holm correction across the seven
+reported TOST $p$-values would keep four equivalences (no entanglement,
+$ZZ$-only, quadratic classical, shuffled pair observables) and drop the
+raw/local linear control ($p=0.034$), which the abstract names. Any such
+reanalysis is the student's to run and report. Otherwise keep the uncorrected
+policy stated above.]}}
+
+\begin{table}[t]
+  \centering
+  \caption[TOST equivalence test on held-out CIFAR-10]{\add{TOST equivalence
+           test on held-out CIFAR-10 ($\pm1$~dB margin, $\alpha=0.05$, five
+           seed-level paired differences, HVK2D minus control). Equivalence
+           requires the 90\% CI to lie inside $[-1,+1]$~dB. Values from the
+           Supplementary Material.}}
+  \label{tab:tost_main}
+  \footnotesize\bfseries
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{@{}l r c r l@{}}
+    \toprule
+    Control                          & $\Delta$PSNR (dB) & 90\% CI (dB)       & TOST $p$  & Verdict \\
+    \midrule
+    Raw/local linear                 & $-0.68$ & $[-0.96,-0.40]$ & $0.034$   & Equivalent \\
+    No entanglement                  & $-0.34$ & $[-0.69,+0.02]$ & $0.008$   & Equivalent \\
+    $ZZ$-only observables            & $-0.44$ & $[-0.61,-0.27]$ & $0.001$   & Equivalent \\
+    Quadratic classical              & $-0.21$ & $[-0.46,+0.03]$ & $0.001$   & Equivalent \\
+    Shuffled pair observables        & $-0.19$ & $[-0.35,-0.02]$ & $<0.001$  & Equivalent \\
+    Strict classical random features & $+2.27$ & $[+1.92,+2.63]$ & $0.999$   & HVK2D better \\
+    Random VQC                       & $+6.97$ & $[+5.56,+8.39]$ & $1.000$   & HVK2D better \\
+    \bottomrule
+  \end{tabular}
+\end{table} We report this as a complement to the positive \del{entanglement} \add{pair-observable}
 and symmetry results below. It delineates their tested boundary and records the
 provenance checks that prevented exploratory artifacts from becoming claims.
 
@@ -475,7 +575,8 @@ exceeds the quantum baseline, and only a circuit-free random-VQC control
 performs clearly worse. This rerun uses a descriptive pooled-standard-deviation
 comparison rule at 3 seeds rather than a calibrated test, and full results are in
 the companion supplement. Section~\ref{sec:dequant} discusses why this
-ties-with-classical result and the entanglement-necessity result of
+ties-with-classical result and the \del{entanglement-necessity}
+\add{pair-observable necessity} result of
 Section~\ref{sec:entanglement_necessity} are not in tension.
 
 
@@ -511,7 +612,13 @@ average $29.56\pm2.03$~dB on hardware against $42.69\pm3.84$~dB in simulation
 (Figure~\ref{fig:hardware_reconstruction_cifar},
 Table~\ref{tab:hardware_pilot_summary}). The observed gap is consistent with
 noise in these unmitigated device executions, although the five-image pilot does
-not isolate individual noise sources. Every hardware reconstruction remains above
+not isolate individual noise sources.
+{\color{red}\textbf{[Student: the text calls these runs unmitigated. Please
+state (1) which error-suppression and mitigation options were switched off in
+SamplerV2, for example dynamical decoupling and twirling, (2) the date and time
+of the calibration data, (3) which physical qubits were used on each backend,
+and (4) the total number of shots per image. The supplement already gives the
+optimisation level, circuit depth, CX count and job IDs.]}} Every hardware reconstruction remains above
 the random-latent control range ($11$--$15$~dB in the companion supplementary
 study). The pilot used 176 circuits; the contemporaneous account-meter reading
 increased by 16 quantum-processor seconds, with the provenance limitation
@@ -570,8 +677,8 @@ hardware. The companion supplementary document gives the full methodology,
 covering exact gate sequences, per-basis measurement construction, job IDs, and
 pre-submission local-validation results.
 
-The same checkpoint-replay methodology supports a further hardware-validation
-exercise, reported in the companion Supplementary Material. Fresh HVK1D
+The same checkpoint-replay methodology supports a further \del{hardware-validation
+exercise} \add{hardware replay}, reported in the companion Supplementary Material. Fresh HVK1D
 checkpoints were trained at $N\in\{4,6,8\}$ and replayed epoch-by-epoch on real
 IBM Quantum hardware and on the IonQ cloud simulator \citep{IonQBackends}. That
 exercise serves the training-dynamics diagnostic of
@@ -624,8 +731,10 @@ quality.
 Comparing the 256-shot noisy simulation directly against the real-hardware point
 isolates what the calibration snapshot does \emph{not} capture. That comparison
 leaves a further $4.24$~dB average gap, ranging from $2.25$ to $8.06$~dB across
-images. We attribute this residual to drift between calibration and execution,
-crosstalk, and correlated errors. The airplane image is the clear outlier, with
+images. \del{We attribute this residual to} \add{This residual is consistent
+with effects that the calibration model does not capture, such as} drift between calibration and execution,
+crosstalk, and correlated errors. \add{The pilot does not separate these
+sources.} The airplane image is the clear outlier, with
 an $8.06$~dB residual gap, roughly double any other image. We report it rather
 than exclude it, since a single-execution, five-image pilot cannot distinguish an
 image-specific effect from ordinary job-to-job variation. This calibrated-noise
@@ -694,7 +803,14 @@ of the square \emph{by construction}:
   \qquad
   \Phi_{D_4}(hx)=P_h\,\Phi_{D_4}(x)\ \ \forall\, h\in D_4,
 \end{equation}
-up to floating-point error. We verify this numerically over 7000 patch
+\del{up to floating-point error. We verify this numerically} \add{Here $D_4$
+acts on an image $x$ by rotating or reflecting its $4\times4$ grid of patches,
+and $P_g$ permutes the per-patch observable vectors in the same way, so that
+$P_{gh}=P_gP_h$. The property then holds exactly for any base map $\Phi$.
+Substituting $hx$ and re-indexing the sum with $g'=gh$ gives
+$P_g^{-1}=P_hP_{g'}^{-1}$, and hence $\Phi_{D_4}(hx)=P_h\Phi_{D_4}(x)$. The
+numerical check below therefore tests the implementation, not the property. We
+run it} over 7000 patch
 transforms of cached CIFAR images (Table~\ref{tab:d4_equivariance},
 Figure~\ref{fig:d4_equivariance}). The pooled map's equivariance error is
 $9.57\times10^{-17}\pm1.26\times10^{-17}$, which is floating-point noise. The
@@ -705,6 +821,13 @@ pooling construction is what delivers the property. This construction operates
 at the feature-grid level and serves here as a numerical diagnostic, rather
 than as a component of the trainable reconstruction pipeline. Integrating it
 end-to-end (Section~\ref{sec:limitations}) is concrete future work.
+\add{This route to symmetry differs from equivariant quantum neural networks,
+in which every circuit layer is built to commute with the group action
+\citep{Nguyen2024EQNN}. A recent image classifier of that kind builds $C_4$
+rotation symmetry into the circuit itself \citep{SanSebastianSein2025}. In HVK
+the circuit is not equivariant. The symmetry comes from averaging the observable
+grid over the group after measurement, and the same average applies equally to
+a classical feature map.}
 
 \begin{table}[t]
   \centering
@@ -733,10 +856,10 @@ end-to-end (Section~\ref{sec:limitations}) is concrete future work.
   \label{fig:d4_equivariance}
 \end{figure}
 
-\subsection{Entanglement necessity in the nonlocal-structure protocol}
+\subsection[Pair-observable necessity in the nonlocal-structure protocol]{\del{Entanglement} \add{Pair-observable} necessity in the nonlocal-structure protocol}
 \label{sec:entanglement_necessity}
 
-The diagnostic tests whether an entangling pair-observable channel is needed to
+The diagnostic tests whether \del{an entangling} \add{a} pair-observable channel is needed to
 fit a target that depends on pair correlations. The target is a fixed synthetic
 function of \emph{simulated} patch features, and those features are not
 concatenated into any candidate's own input block. The companion supplement
@@ -746,7 +869,8 @@ construction favourable to pair-observable structure, which is why we read it as
 a representational statement and not as a performance comparison.}}
 
 Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic}
-report the result across five seeds. HVK2D's entangling observable channel
+report the result across five seeds. HVK2D's \del{entangling observable}
+\add{pair-observable} channel
 reaches mean $R^2=0.9735$, or $32.77$~dB PSNR. This is a $17.74$~dB improvement
 over a no-entanglement control ($R^2=0.019$) and $18.52$~dB over random-VQC
 latents ($R^2=-0.173$). Freezing the quantum circuit, so that features are fixed
@@ -755,28 +879,41 @@ classical control ($R^2=-0.030$) and a frozen-classical control ($R^2=-0.903$)
 fail outright. {\color{red}\textbf{The raw-linear classical control
 ($R^2=0.0133$) is in the table but is not named here; whether it should be
 depends on the duplicate-control question raised separately.}}
+{\color{red}\textbf{[Student: please state what the no-entanglement control
+measures. If it still measures $ZZ$ on a product state, then
+$\langle Z_iZ_j\rangle=\langle Z_i\rangle\langle Z_j\rangle$ exactly, and its
+failure needs one sentence of explanation. If it drops the pair channel, its
+name should be ``no pair observables''.]}}
 
 The mechanism is explicit under the fixed linear readout. A linear map of
 single-patch expectations $\{\langle O_i\rangle\}$ cannot form the cross-term
-$\langle O_i\rangle\langle O_j\rangle$ that the target depends on. The entangling
-measurement supplies the joint correlator $\langle O_iO_j\rangle$ directly as a
-feature. An entangling pair-observable channel is therefore
+$\langle O_i\rangle\langle O_j\rangle$ that the target depends on. The \del{entangling}
+\add{pair} measurement supplies the joint correlator $\langle O_iO_j\rangle$ directly as a
+feature. \add{Formally, let $z_i=\langle O_i\rangle$ and let every admissible
+predictor be affine, $f(z)=w^{\top}z+b$. Then
+$\partial^2 f/\partial z_i\partial z_j=0$ for all $i,j$. A target with a term
+$c\,z_iz_j$, $c\neq0$, has this mixed derivative equal to $c$ wherever $z_i$ and
+$z_j$ vary independently, so no affine $f$ can fit it. Adding $z_iz_j$ to the
+feature vector makes the term linearly representable.} \del{An entangling}
+\add{A} pair-observable channel is therefore
 \emph{representationally necessary within the tested feature class and fixed
-linear-readout protocol} to fit this target. A sufficiently nonlinear classical
-readout could in principle recover the same cross-terms, which is why we scope
-the claim to the linear protocol rather than to classical models in general.
+linear-readout protocol} to fit this target. \del{A sufficiently nonlinear classical
+readout could in principle recover the same cross-terms, which is why we scope}
+\add{A classical model that forms the same products, for example through
+quadratic features or a nonlinear readout, would also fit this target. For this
+reason we scope} the claim to the linear protocol rather than to classical models in general.
 
 \begin{table}[t]
   \centering
-  \caption{HVK2D restricted pair-correlation diagnostic across five seeds.
+  \caption[HVK2D restricted pair-correlation diagnostic]{HVK2D restricted pair-correlation diagnostic across five seeds.
            Deliberately favourable to pair-observable structure; evidence for
-           entanglement-necessity under a matched linear readout.}
+           \del{entanglement-necessity} \add{pair-observable necessity} under a matched linear readout.}
   \label{tab:hvk_pair_diagnostic}
   \begin{tabular}{@{}l r r r@{}}
     \toprule
     Model                            & Mean MSE                  & Mean PSNR (dB) & Mean $R^2$ \\
     \midrule
-    HVK2D entangling observables     & $8.5969\times10^{-4}$     & 32.77          & $ 0.9735$  \\
+    HVK2D \del{entangling} \add{pair} observables     & $8.5969\times10^{-4}$     & 32.77          & $ 0.9735$  \\
     Freeze quantum                   & $4.7904\times10^{-3}$     & 27.34          & $ 0.8533$  \\
     No entanglement                  & $3.1461\times10^{-2}$     & 15.03          & $ 0.0191$  \\
     Raw-linear classical             & $3.1654\times10^{-2}$     & 15.00          & $ 0.0133$  \\
@@ -790,8 +927,8 @@ the claim to the linear protocol rather than to classical models in general.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/full_ablation_metric_comparison.pdf}
-  \caption{Restricted pair-correlation diagnostic summary (mean $\pm$ std over
-           five seeds). The entangling observable feature map dominates every
+  \caption[Restricted pair-correlation diagnostic summary]{Restricted pair-correlation diagnostic summary (mean $\pm$ std over
+           five seeds). The \del{entangling observable} \add{pair-observable} feature map dominates every
            control on this deliberately favourable task.}
   \label{fig:hvk_pair_diagnostic}
 \end{figure}
@@ -855,9 +992,26 @@ thermodynamic reading is outside their scope.
 \label{sec:dequant}
 \label{sec:representativeness}
 
-Whether a quantum feature map offers any advantage over a classical model is a property of the specific data and target, not a fixed property of the model class. Dequantization results have repeatedly shown that apparent quantum advantages on structured, low-entanglement classical data can be matched once the right classical feature is identified \citep{Huang2021PowerData, Tang2019}. Where provable separations do exist, they are established for carefully constructed learning problems rather than for generic structured data \citep{Gyurik2023}.
+Whether a quantum feature map offers any advantage over a classical model is a property of the specific data and target, not a fixed property of the model class. Dequantization results have repeatedly shown that apparent quantum advantages on structured, low-entanglement classical data can be matched once the right classical feature is identified \citep{Huang2021PowerData, Tang2019}. Where provable separations do exist, they are established for carefully constructed learning problems rather than for generic structured data \citep{Gyurik2023}. \add{We separate
+three questions. First, HVK at six qubits can be simulated exactly on a
+classical computer, which says little about larger scales. Second, whether its
+model class admits an efficient classical replacement at scale is open.
+Tensor-network analyses give conditions for such dequantisation of variational
+models \citep{Shin2024Dequant}, and a classical tie at small scale does not
+settle it. Random Fourier features can also replace some variational
+models efficiently, under stated conditions \citep{Sweke2025}. Quantum
+convolutional networks on common image benchmarks can be simulated efficiently
+by a classical method based on Pauli shadows \citep{Bermejo2026}. Third, on the tested ordinary reconstruction tasks we observe no
+quantum benefit. This matches large benchmarks in which simple classical models
+often match or beat small quantum models, and removing entanglement often costs
+little \citep{Bowles2024}.} \add{In HVK the
+quantum processor evaluates only the circuit and returns the vector of measured
+Pauli expectation values. The MPS compression is quantum-inspired but runs on
+classical hardware, as do the Fourier positional encoding, the $D_4$ pooling,
+the decoder and the optimisation. Any quantum contribution to HVK must
+therefore enter through the measured observable vector.}
 
-The restricted diagnostic of Section~\ref{sec:entanglement_necessity} is constructed so that the relevant structure is a genuine distant-element product, which raw or local features cannot represent under a fixed linear readout. That is the regime in which HVK's entangling channel separates. Natural image patches at the resolution and patch size used here are low-entanglement, locally structured data, where a linear or shallow classical readout is already close to sufficient. The distinction lies in the measured pair-observable channel rather than in the circuit. The ansatz uses strongly-entangling layers and does generate an entangled state, but whether the measured channel carries task-relevant information is a property of the target. On natural-image targets the pair observables add little beyond the local ones. On the constructed nonlocal target they are necessary. Together with the held-out comparisons of Section~\ref{sec:ablation_relationship}, these results delineate where the tested entangling representation does and does not yield a measurable benefit.
+The restricted diagnostic of Section~\ref{sec:entanglement_necessity} is constructed so that the relevant structure is a genuine distant-element product, which raw or local features cannot represent under a fixed linear readout. That is the regime in which HVK's \del{entangling} \add{pair-observable} channel separates. Natural image patches at the resolution and patch size used here are low-entanglement, locally structured data, where a linear or shallow classical readout is already close to sufficient. The distinction lies in the measured pair-observable channel rather than in the circuit. The ansatz uses strongly-entangling layers and does generate an entangled state, but whether the measured channel carries task-relevant information is a property of the target. On natural-image targets the pair observables add little beyond the local ones. On the constructed nonlocal target they are necessary. Together with the held-out comparisons of Section~\ref{sec:ablation_relationship}, these results delineate where the tested entangling representation does and does not yield a measurable benefit.
 
 HVK's three ingredients each recur individually in the hybrid quantum-vision literature, covering MPS compression of structured input \citep{Stoudenmire2016, Han2018, Cirac2021, Guala2023}, a Pauli-correlator latent space handed to a classical decoder \citep{Havlicek2019}, and a physically motivated auxiliary regulariser alongside a task loss \citep{Shi2022}. Its specific instantiation, a six-qubit VQC with a $19$--$27$-D correlator vector and a graph-Hamiltonian term, sits within the parameter ranges typical of that literature. The measured behaviour is therefore evidence about the design pattern itself. We do not claim the boundary transfers unchanged to every dataset, patch size, or qubit count.
 
@@ -936,7 +1090,7 @@ Table~\ref{tab:differentiation} contrasts HVK's structural properties against re
 \begin{itemize}\itemsep4pt
 \item Every reconstruction result in this paper (Sections~\ref{sec:sameset_results}--\ref{sec:no_generalization}) is per-image trained. The companion supplementary study's held-out protocol is the appropriate evidence for a generalisation claim.
 \item The $D_4$-pooled map (Section~\ref{sec:d4}) is a feature-grid-level construction and numerical diagnostic. Integrating it into the trainable end-to-end pipeline is future work (Section~\ref{sec:conclusion}).
-\item The entanglement-necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a task constructed to require nonlocal structure. Ordinary natural-image reconstruction lies outside that scope (see Section~\ref{sec:dequant}).
+\item The \del{entanglement-necessity} \add{pair-observable necessity} result (Section~\ref{sec:entanglement_necessity}) is scoped to a task constructed to require nonlocal structure. Ordinary natural-image reconstruction lies outside that scope (see Section~\ref{sec:dequant}).
 \item The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, single-trial, unmitigated pilot rather than a statistically resolved hardware benchmark.
 \item The training-dynamics traces (Section~\ref{sec:phase_transition}) are an interpretability readout. The threshold fires whether the Hamiltonian term is present or absent, at 4/4 in both cases, with the full table in the Supplementary Material.
 \item The matched real-circuit topology comparison uses 3 seeds and 3 held-out images per topology, and the broader five-seed comparison is surrogate-based. These results support a resource-cost interpretation rather than formal equivalence of the topologies.
@@ -951,7 +1105,8 @@ architecture for image reconstruction that assembles matrix-product-state patch
 features, a measured Pauli-correlator latent space, enforced $D_4$-equivariant
 observable pooling, and a learnable Hamiltonian energy diagnostic into a single
 pipeline (Section~\ref{sec:representativeness}). Across six real image datasets,
-per-image-trained HVK2D models reconstruct with high fidelity. On a
+per-image-trained HVK2D models \del{reconstruct with high fidelity}
+\add{reach $25.8$--$41.6$~dB PSNR}. On a
 resource-matched, multi-seed held-out comparison, a pre-declared TOST equivalence
 test shows HVK2D is \emph{competitive with}, rather than inferior or superior to,
 simple classical controls (Section~\ref{sec:ablation_relationship}). A hardware
@@ -959,24 +1114,27 @@ pilot replayed trained checkpoints on IBM Quantum devices without retraining,
 establishing feasibility at a five-image, single-trial scope
 (Section~\ref{sec:hardware_pilot}).
 
-HVK's case rests on capabilities a classical reconstruction pipeline does not
-provide. Pair observables are necessary on a task requiring nonlocal structure,
-within the tested fixed-readout feature class
+\del{HVK's case rests on capabilities a classical reconstruction pipeline does not
+provide.} Pair observables are necessary on a task requiring nonlocal structure,
+\del{within the tested fixed-readout feature class} \add{under a fixed linear
+readout}
 (Section~\ref{sec:entanglement_necessity}). The Hamiltonian energy term serves as
 an interpretable diagnostic of the trained representation
 (Section~\ref{sec:regularizer_inert}). The pipeline executes natively on real
 quantum hardware. It is also exactly $D_4$-equivariant by construction, which we
 report as a design-correctness property rather than a quantum capability, since
 the same Reynolds averaging applied to a classical feature map is equally exact.
-We make no claim of quantum advantage. HVK is, at this scope, a new architecture
+We make no claim of quantum advantage. \del{HVK is, at this scope, a new architecture
 that works, is competitive with resource-matched classical baselines, and runs on
-real quantum hardware.
+real quantum hardware.} \add{At the six-qubit scale tested here, HVK is
+competitive with resource-matched classical baselines and runs on real quantum
+hardware.}
 
 Future work should integrate the $D_4$-pooled map into an end-to-end trainable
 pipeline (Section~\ref{sec:limitations}), scale the hardware pilot toward a
 statistically resolved benchmark with error mitigation and repeated trials,
 search for further real-world tasks with nonlocal structure where HVK's
-entanglement-sensitive separation translates into a reconstruction advantage, and
+\del{entanglement-sensitive} \add{pair-observable} separation translates into a reconstruction advantage, and
 extend the resource-matched, leakage-audited evaluation protocol to other hybrid
 quantum vision architectures.
 
