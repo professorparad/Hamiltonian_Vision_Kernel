@@ -459,11 +459,18 @@ MedMNIST~v2 \citep{Yang2023}. Table~\ref{tab:sameset_multi_dataset} reports mean
 PSNR between $25.8$ and $41.6$~dB (SSIM $0.91$--$1.00$). This establishes that
 the architecture fits varied image structures under a common protocol.
 \add{This protocol is per-image fitting, in the same sense as implicit neural
-representations, which fit one network to one image
-\citep{Sitzmann2020, Strumpler2022}. These results therefore measure
-representation capacity. Generalisation to held-out images is tested in
+representations, which fit one network to one image or scene
+\citep{Ulyanov2020DIP, Sitzmann2020, Tancik2020, Mildenhall2020NeRF,
+Dupont2021COIN, Strumpler2022}. Quantum versions of this idea fit a single
+signal or image with a variational circuit \citep{Zhao2024QIREN,
+Fujihashi2024QINC, LizzioBosco2026QISR}. The closest of these, QIREN, is a
+quantum coordinate network aimed at a fitting advantage over classical Fourier
+networks \citep{Zhao2024QIREN}. PCAE is instead a patch autoencoder with a
+measured-correlator bottleneck, and it aims at competitiveness with classical
+baselines. These results therefore measure representation capacity.
+Generalisation to held-out images is tested in
 Section~\ref{sec:ablation_relationship}. A compression claim would also need a bit
-rate, which we do not report \citep{Strumpler2022}.}
+rate, which we do not report \citep{Dupont2021COIN, Strumpler2022}.}
 
 \begin{table}[t]
   \centering

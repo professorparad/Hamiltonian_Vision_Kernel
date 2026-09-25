@@ -1,5 +1,5 @@
 \providecommand{\arxivdot}{.}
-\begin{thebibliography}{58}
+\begin{thebibliography}{64}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{{#1}}
 \providecommand{\urlprefix}{URL }
@@ -68,6 +68,15 @@ Cohen T, Welling M (2016) Group equivariant convolutional networks. In:
 \bibitem[{Cong et~al.(2019)Cong, Choi, and Lukin}]{Cong2019}
 Cong I, Choi S, Lukin MD (2019) Quantum convolutional neural networks. Nature
   Physics 15(12):1273--1278. \doi{10.1038/s41567-019-0648-8}
+
+\bibitem[{Dupont et~al.(2021)Dupont, Goli{\'n}ski, Alizadeh, Teh, and
+  Doucet}]{Dupont2021COIN}
+Dupont E, Goli{\'n}ski A, Alizadeh M, et~al (2021) {COIN}: {CO}mpression with
+  implicit neural representations. arXiv preprint arXiv:2103\arxivdot{}03123
+
+\bibitem[{Fujihashi and Koike-Akino(2024)}]{Fujihashi2024QINC}
+Fujihashi T, Koike-Akino T (2024) Quantum implicit neural compression. arXiv
+  preprint arXiv:2412\arxivdot{}19828
 
 \bibitem[{Guala et~al.(2023)Guala, Zhang, Cruz, Riofr{\'i}o, Klepsch, and
   Arrazola}]{Guala2023}
@@ -149,6 +158,12 @@ LeCun Y, Bottou L, Bengio Y, et~al (1998) Gradient-based learning applied to
 Liu Z, Shen PX, Li W, et~al (2023) Quantum capsule networks. Quantum Science
   and Technology 8(1):015016. \doi{10.1088/2058-9565/aca55d}
 
+\bibitem[{Lizzio~Bosco et~al.(2026)Lizzio~Bosco, Wang, Serra, and
+  Golyanik}]{LizzioBosco2026QISR}
+Lizzio~Bosco D, Wang S, Serra G, et~al (2026) Quantum implicit neural
+  representations for novel view synthesis. arXiv preprint
+  arXiv:2601\arxivdot{}05250
+
 \bibitem[{McClean et~al.(2018)McClean, Boixo, Smelyanskiy, Babbush, and
   Neven}]{McClean2018}
 McClean JR, Boixo S, Smelyanskiy VN, et~al (2018) Barren plateaus in quantum
@@ -160,6 +175,13 @@ McClean JR, Boixo S, Smelyanskiy VN, et~al (2018) Barren plateaus in quantum
 Meyer JJ, Mularski M, Gil-Fuster E, et~al (2023) Exploiting symmetry in
   variational quantum machine learning. PRX Quantum 4(1):010328.
   \doi{10.1103/PRXQuantum.4.010328}
+
+\bibitem[{Mildenhall et~al.(2020)Mildenhall, Srinivasan, Tancik, Barron,
+  Ramamoorthi, and Ng}]{Mildenhall2020NeRF}
+Mildenhall B, Srinivasan PP, Tancik M, et~al (2020) {NeRF}: Representing scenes
+  as neural radiance fields for view synthesis. In: Computer Vision -- ECCV
+  2020, Lecture Notes in Computer Science, vol 12346. Springer, pp 405--421,
+  \doi{10.1007/978-3-030-58452-8_24}
 
 \bibitem[{Nau et~al.(2023)Nau, Vija, Gohn, Reymann, and Maier}]{Nau2023}
 Nau MA, Vija AH, Gohn W, et~al (2023) Exploring the limitations of hybrid
@@ -262,6 +284,10 @@ Tilly J, Chen H, Cao S, et~al (2022) The variational quantum eigensolver: a
   review of methods and best practices. Physics Reports 986:1--128.
   \doi{10.1016/j.physrep.2022.08.003}
 
+\bibitem[{Ulyanov et~al.(2020)Ulyanov, Vedaldi, and Lempitsky}]{Ulyanov2020DIP}
+Ulyanov D, Vedaldi A, Lempitsky V (2020) Deep image prior. International
+  Journal of Computer Vision 128:1867--1888. \doi{10.1007/s11263-020-01303-4}
+
 \bibitem[{Wang et~al.(2024)Wang, Tan, Huang, and
   Zheng}]{WangQAECompression2024}
 Wang H, Tan J, Huang Y, et~al (2024) Quantum image compression with
@@ -309,6 +335,12 @@ Zhai X, Xiao T, Huang J, et~al (2025) Quantum neural compressive sensing for
 Zhang Y, Lu K, Gao Y, et~al (2013) {NEQR}: a novel enhanced quantum
   representation of digital images. Quantum Information Processing
   12(8):2833--2860. \doi{10.1007/s11128-013-0567-z}
+
+\bibitem[{Zhao et~al.(2024)Zhao, Qiao, Zhang, and Gao}]{Zhao2024QIREN}
+Zhao J, Qiao W, Zhang P, et~al (2024) Quantum implicit neural representations.
+  In: Proceedings of the 41st International Conference on Machine Learning,
+  Proceedings of Machine Learning Research, vol 235. PMLR, pp 60940--60956,
+  \urlprefix\url{https://proceedings.mlr.press/v235/zhao24l.html}
 
 \bibitem[{Zhou et~al.(2017)Zhou, Hu, Fan, and Ian}]{Zhou2017}
 Zhou RG, Hu W, Fan P, et~al (2017) Quantum realization of the bilinear
