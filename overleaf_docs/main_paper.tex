@@ -47,23 +47,27 @@
 architecture for image reconstruction. PCAE assembles matrix-product-state patch
 features, a variational quantum circuit exposing a Pauli-correlator latent
 space, two-dimensional Fourier positional encoding, a learnable Hamiltonian
-energy diagnostic, and a classical decoder into a single pipeline. Two
+energy \del{diagnostic} \add{term}, and a classical decoder into a single pipeline. Two
 instantiations, PCAE1D and PCAE2D, realise chain and grid interaction graphs.
 Group-averaged observable pooling makes the PCAE2D feature map exactly
 equivariant to the eight symmetries of the square. The contribution is this
 specific assembly rather than any ingredient in isolation. Across six real image
 datasets, per-image-trained PCAE2D models reconstruct with peak signal-to-noise
-ratio (PSNR) between 25.8 and 41.6 decibels. On a
+ratio (PSNR) between 25.8 and 41.6 decibels. \del{On a
 resource-matched, multi-seed held-out comparison using CIFAR-10, an equivalence
 procedure using two one-sided tests (TOST), with Holm correction for seven
 comparisons, establishes that PCAE2D is statistically competitive with four
-resource-matched controls. Five fitted
+resource-matched controls.} Five fitted
 checkpoints are replayed on superconducting quantum hardware without retraining,
-reaching 25.90 to 31.52 decibels. PCAE adds a pair-observable channel that is
+reaching 25.90 to 31.52 decibels. \del{PCAE adds a pair-observable channel that is
 necessary under a fixed linear readout on a leakage-audited task requiring
 distant-patch products, an interpretable Hamiltonian energy diagnostic, and
-native hardware execution. The
-results establish PCAE as competitive with classical baselines at the six-qubit
+native hardware execution.} \add{Under a fixed linear readout, an affine-readout
+argument and a synthetic test show that a pair-observable channel is necessary
+for targets built from distant-patch products. The learned Hamiltonian energy
+gives an interpretable readout of the trained representation.} The
+results establish PCAE as \del{competitive with classical baselines} \add{a working
+hybrid architecture that fits varied images and runs on quantum hardware} at the six-qubit
 scale.}
 
 % ---- keywords: 6 (QMI requires 4-6) -----------------------------------------
@@ -72,14 +76,6 @@ scale.}
   Quantum hardware pilot}
 
 \maketitle
-
-{\color{red}\textbf{[Rename: the model was the Hamiltonian Vision Kernel (HVK).
-HVK is not a kernel method, so it is now the Pauli-Correlator Autoencoder
-(PCAE), with variants PCAE1D and PCAE2D. Only the first uses are marked. All
-other uses of HVK were replaced directly. Student: (1) regenerate every figure
-whose labels show HVK, HVK1D or HVK2D, (2) rename the model in the supplement,
-including its title, (3) then update the three places where this paper cites
-the supplement's title.]}}
 
 \tableofcontents
 % ================================ BODY ======================================
@@ -119,7 +115,8 @@ architecture choices alone. This follows group-equivariant classical vision
 \citep{Cohen2016, Bronstein2021} and the equivariant-quantum-neural-network line
 that formalises symmetry-embedding constructions for variational circuits
 \citep{Meyer2023, Nguyen2024EQNN, Schatzki2024, West2024, West2024Erratum}. The
-third is a \emph{learnable Hamiltonian energy diagnostic}, with full
+third is a \emph{learnable Hamiltonian energy \del{diagnostic} \add{term}}, \add{used as an
+auxiliary training objective and read out as an interpretable diagnostic,} with full
 nearest-neighbour $XX/YY/ZZ$ sectors in PCAE1D and grid-edge $ZZ$ terms in PCAE2D.
 Table~\ref{tab:differentiation} contrasts these properties against classical,
 adversarial, and standard quantum autoencoder baselines.
@@ -144,7 +141,7 @@ pixels. It does not compress a quantum state.
 feature space and read out a scalar kernel value consumed by a classical kernel
 method. PCAE reads out an explicit vector of local and pairwise Pauli expectation
 values as a latent representation for a trained decoder, and adds enforced
-group-equivariant pooling and a Hamiltonian energy diagnostic that a kernel
+group-equivariant pooling and a Hamiltonian energy \del{diagnostic} \add{term} that a kernel
 construction has no analogue for.
 
 \emph{Tensor-network (TN) circuit classifiers}
@@ -163,18 +160,24 @@ how the individual ingredients recur across this literature.
 \begin{enumerate}\itemsep3pt
   \item \textbf{Architecture.} PCAE1D/PCAE2D combines MPS patch features, a
         six-qubit VQC, a 19--27-dimensional Pauli-correlator vector, 2D Fourier
-        positional encoding, a graph-Hamiltonian diagnostic, and a classical
+        positional encoding, a graph-Hamiltonian \del{diagnostic} \add{energy term}, and a classical
         decoder.
   \item \textbf{Reconstruction scope (per-image fitting).} Identically configured per-image fitting
         experiments cover six real image datasets
         (Section~\ref{sec:sameset_results}).
-  \item \textbf{Competitive with resource-matched classical baselines (held-out comparison).}
-        An equivalence procedure using two one-sided tests (TOST), with
+  \item \textbf{\del{Competitive with resource-matched classical baselines} \add{Held-out surrogate comparison} (held-out comparison).}
+        \del{An equivalence procedure using two one-sided tests (TOST), with
         Holm correction for seven comparisons, shows that PCAE2D meets the
         $\pm1$~dB equivalence criterion against four of seven distinct
         resource-matched classical/ablated controls and substantially
         outperforms the two null controls (strict classical random features and
-        a random-VQC) (Section~\ref{sec:ablation_relationship}).
+        a random-VQC)} \add{On held-out CIFAR-10, a closed-form surrogate of the
+        PCAE2D observable map meets the $\pm1$~dB equivalence criterion against
+        four of seven resource-matched classical/ablated feature maps, under two
+        one-sided tests (TOST) with Holm correction. It clearly outperforms the
+        two random-feature null controls. The trained circuit itself stays near
+        the random-latent range on held-out images at the tested budget}
+        (Section~\ref{sec:ablation_relationship}).
   \item \textbf{Hardware pilot.} Five fitted checkpoints are replayed on IBM
         hardware without retraining and decoded from hardware-measured
         observables (Section~\ref{sec:hardware_pilot}), strengthened by a
@@ -183,7 +186,7 @@ how the individual ingredients recur across this literature.
   \item \textbf{Equivariant observable pooling (proposition).} An exact,
         numerically verified $D_4$-equivariant observable-pooling construction
         makes the PCAE2D observable map equivariant to the eight symmetries of
-        the square, to floating-point precision (Section~\ref{sec:d4}). The
+        the square, to \del{floating-point} \add{numerical} precision (Section~\ref{sec:d4}). The
         guarantee follows from Reynolds group averaging over the $D_4$ orbit
         rather than from anything quantum, and the same
         construction gives the same exactness for a purely classical feature
@@ -196,9 +199,9 @@ how the individual ingredients recur across this literature.
         (Section~\ref{sec:entanglement_necessity}).
 \end{enumerate}
 
-A companion document, \textit{Supplementary Material for the Hamiltonian Vision
-Kernel: Resource-Matched Ablations, Validation, and Reproducibility}, reports
-resource-matched held-out comparisons of PCAE and classical/ablated feature maps,
+A companion document, \textit{Supplementary Material for the \del{Hamiltonian Vision
+Kernel:} \add{Pauli-Correlator Autoencoder:} Resource-Matched Ablations, Validation, and Reproducibility}, reports
+resource-matched held-out comparisons of \del{PCAE} \add{a closed-form PCAE surrogate} and classical/ablated feature maps,
 together with full hardware-pilot methodology covering circuit construction,
 validation, job identifiers and quota accounting. It also gives provenance audits
 of excluded exploratory results, among them the training-dynamics traces of
@@ -215,8 +218,10 @@ matrix product state (MPS). A variational quantum circuit (VQC) then measures a
 fixed set of Pauli observables, which a classical multi-layer perceptron (MLP)
 decodes back into pixels. A learnable graph-Hamiltonian energy term regularises
 training. Parameterised Hamiltonian learning approaches treat the Hamiltonian as
-the primary learned object \citep{Shi2022}; in PCAE it is instead a diagnostic
-regulariser alongside a separate reconstruction objective.
+the primary learned object \citep{Shi2022}; in PCAE it is instead \del{a diagnostic
+regulariser alongside a separate reconstruction objective.} \add{an auxiliary
+objective alongside the reconstruction loss, and its learned energy is read out
+as a diagnostic.}
 
 
 \paragraph{Problem statement.}
@@ -236,18 +241,21 @@ With $n=6$ qubits, bond set $\mathcal{E}$, and $c$ measured pair channels per bo
     2(6)+1(5)=17, & \text{$ZZ$-only ablation control}.
   \end{cases}
 \end{equation}
-All reported PCAE1D and PCAE2D results use $d=27$ and $d=19$.
+All \del{reported} PCAE1D and PCAE2D \add{circuit} results use $d=27$ and $d=19$.
 A classical
 decoder $D_\theta$ maps $\Phi(x_p)$, together with a Fourier positional encoding
 $\pi(p)$, back to a reconstructed patch $\hat{x}_p=D_\theta\!\big(\Phi(x_p),\pi(p)\big)$.
 Training minimises the pixel-reconstruction loss with the graph-Hamiltonian energy
 term $E(\cdot)$ as an auxiliary regulariser,
+% OLD: \mathcal{L}(\theta)=\frac{1}{P}\sum_{p=1}^{P}\big\|x_p-\hat{x}_p\big\|_2^{2} + ...
+{\boldmath
 \begin{equation}
   \label{eq:objective}
-  \mathcal{L}(\theta)=\frac{1}{P}\sum_{p=1}^{P}\big\|x_p-\hat{x}_p\big\|_2^{2}
+  \mathcal{L}(\theta)=\frac{1}{Pm}\sum_{p=1}^{P}\big\|x_p-\hat{x}_p\big\|_2^{2}
   \;+\;\lambda\,\frac{1}{P}\sum_{p=1}^{P}E\big(\Phi(x_p)\big),
-\end{equation}
-where the second term is the mean graph-Hamiltonian
+\end{equation}}
+\add{where $m$ is the number of pixels per patch, so the first term is the mean
+squared pixel error,} \del{where} \add{and} the second term is the mean graph-Hamiltonian
 energy over patches and $\lambda$ sets its weight
 (Section~\ref{sec:regularizer_inert} reports its effect). The shared pipeline is
 \begin{equation}
@@ -336,14 +344,13 @@ full.
 The $2^{n}$ pixel values of a patch ($n=6$ for $8\times8$, $n=12$ for
 $64\times64$) are flattened in row-major order and reshaped into an
 order-$n$ tensor with binary indices, so each index is one site of dimension~2.
-Sequential SVDs from the left leave the MPS in left-canonical form, with the
+\del{Sequential SVDs from the left leave the MPS in left-canonical form, with the
 orthogonality centre on the last site, and all features are read off in this
-gauge.
-{\color{red}\textbf{[Student: all-zero patches do occur (MNIST corners are
-black). The code avoids them by adding $10^{-4}$ to every pixel before the MPS
-step (\texttt{run\_full\_dataset\_sameset.py}: \texttt{patches + 1e-4}). Please
-state this offset here. Please also confirm the canonical form against
-quimb's \texttt{compress} default.]}}
+gauge.} \add{The features are expectation values and Schmidt spectra of the
+compressed state, so they do not depend on its canonical form. In the
+multi-dataset runs of Section~\ref{sec:sameset_results}, $10^{-4}$ is added to
+every pixel before normalisation, so that all-zero patches, such as MNIST
+background, can be normalised.}
 The remaining stages are common to both. A learned linear layer compresses the MPS feature vector to six circuit angles, one per qubit. After the circuit is executed, a two-hidden-layer MLP (128 and 256 units) maps the measured observables together with the Fourier positional vector back to a single greyscale patch. The positional encoding follows established use as a spatial inductive bias in classical generative vision models \citep{Xu2021}. Fourier features of
 this kind also help coordinate-based networks fit fine image detail
 \citep{Tancik2020}. During training the circuit is simulated exactly, so the
@@ -406,12 +413,13 @@ Sections~\ref{sec:sameset_results}, \ref{sec:no_generalization} and
 directly on its target image, with no held-out split. These results therefore measure
 per-image fitting and reconstruction capability. The hardware pilot replays the
 resulting fitted checkpoints on real devices without retraining. The symmetry
-and restricted pair-observable diagnostics use the separate protocols stated in
+and restricted pair-observable diagnostics use \add{closed-form feature maps and} the separate protocols stated in
 their respective sections. The training-dynamics
 readouts of Section~\ref{sec:phase_transition} are reported as an
 interpretability diagnostic, with their scope set by the negative control given
 there. Held-out generalisation and component necessity are evaluated under the
-resource-matched statistical protocol of the companion supplementary study
+resource-matched statistical protocol of the companion supplementary study\add{,
+using a closed-form surrogate of the PCAE2D observable map}
 (Section~\ref{sec:ablation_relationship}). All settings report MSE and
 PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings
 additionally report SSIM. Full implementation settings and environment versions
@@ -438,8 +446,9 @@ signal or image with a variational circuit \citep{Zhao2024QIREN,
 Fujihashi2024QINC, LizzioBosco2026QISR}. The closest of these, QIREN, is a
 quantum coordinate network aimed at a fitting advantage over classical Fourier
 networks \citep{Zhao2024QIREN}. PCAE is instead a patch autoencoder with a
-measured-correlator bottleneck, and it aims at competitiveness with classical
-baselines. These results therefore measure representation capacity.
+measured-correlator bottleneck, and it aims at \del{competitiveness with classical
+baselines} \add{a practical hybrid pipeline whose quantum part is the measured
+observable vector}. These results therefore measure representation capacity.
 Generalisation to held-out images is tested in
 Section~\ref{sec:ablation_relationship}. A compression claim would also need a bit
 rate, which we do not report \citep{Dupont2021COIN, Strumpler2022}.
@@ -448,7 +457,7 @@ rate, which we do not report \citep{Dupont2021COIN, Strumpler2022}.
   \centering
   \caption{PCAE2D same-set reconstruction across six real image datasets
            (per-image trained, 80--100 steps, mean $\pm$ std over sampled
-           images).}
+           images\add{; SSIM is computed globally over each image}).}
   \label{tab:sameset_multi_dataset}
   \begin{tabular}{@{}l c r@{\,$\pm$\,}l r@{\,$\pm$\,}l@{}}
     \toprule
@@ -478,43 +487,56 @@ capability. Section~\ref{sec:ablation_relationship} tests the held-out case
 directly.
 
 
-\subsection{Competitive with resource-matched classical baselines}
+\subsection[Held-out comparison with a closed-form surrogate]{\del{Competitive with resource-matched classical baselines} \add{Held-out comparison with a closed-form surrogate}}
 \label{sec:ablation_relationship}
 The results above measure per-image fitting. A separate question is whether
 PCAE's feature map improves reconstruction on real, \emph{held-out} images under
-a resource-matched multi-seed protocol. The full study is in the
+a resource-matched multi-seed protocol. \add{This comparison uses a closed-form
+surrogate of the PCAE2D observable map, so that many seeds and controls can be
+run. The surrogate combines 18 local patch statistics, six products of
+local-feature pairs that stand in for the pairwise $ZZ$ correlators, the sines
+of those products, and positional features. It does not evaluate the circuit.}
+The full study is in the
 companion document, \textit{Supplementary Material for the Pauli-Correlator Autoencoder: Resource-Matched Ablations, Validation, and Reproducibility}. Its
 main results are summarised below, including the equivalence tests of
 Table~\ref{tab:tost_main}.
 
 On held-out CIFAR-10, the raw/local linear control reaches
-$18.80\pm1.42$~dB, against PCAE2D's $18.12\pm1.54$~dB. Aggregating held-out
+$18.80\pm1.42$~dB, against \del{PCAE2D's} \add{the PCAE2D surrogate's} $18.12\pm1.54$~dB. Aggregating held-out
 images within each split gives a PCAE2D-minus-control difference of $-0.68$~dB,
 with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$
 seeds. The same numerical direction holds on five further real datasets. The
-tested PCAE map is therefore informative, and on ordinary held-out
-reconstruction it stays within 1~dB of the simpler maps.
+\del{tested PCAE map is therefore informative, and on ordinary held-out
+reconstruction it stays within 1~dB of the simpler maps.} \add{surrogate map is
+therefore informative. Its mean stays within 1~dB of the simpler maps, and the
+raw/local linear control is $0.68$~dB ahead of it.}
 
 All controls are matched at the readout. Each passes a 32-D feature vector
 to the same linear readout with 2112 parameters, on the same splits. This
-matches the readout resources. It does not match the feature class or the
-compute cost. The controls differ in what their features can express. The
-no-entanglement and $ZZ$-only controls remove all or part of the entangling
-pair channel, and the quadratic classical control adds second-order classical
-terms. The compute needed to produce the features is not matched, since PCAE2D
-evaluates a quantum circuit for every patch.
-The held-out PCAE2D map is the 32-D variant of Table~S-resource\_capacity,
+matches the readout resources. It does not match the feature class\del{ or the
+compute cost}. The controls differ in what their features can express. The
+no-entanglement and $ZZ$-only controls remove all or \del{part} \add{half} of the \del{entangling
+pair channel} \add{pair products}, and the quadratic classical control adds second-order classical
+terms. \del{The compute needed to produce the features is not matched, since PCAE2D
+evaluates a quantum circuit for every patch.}
+\del{The held-out PCAE2D map is the 32-D variant of Table~S-resource\_capacity,
 with six pair channels and 14 CNOTs, rather than the 19-D map of
-Table~\ref{tab:configurations}. The quadratic classical control augments the
+Table~\ref{tab:configurations}.} \add{The surrogate is the 32-D map of the
+supplementary resource table, not the 19-D circuit map of
+Table~\ref{tab:configurations}.} The quadratic classical control augments the
 18 local features with the nine products of adjacent local-feature pairs and
 their sines, together with the positional features, selected to the same
-32-D width.
+32-D width. \add{It therefore has the same form as the surrogate, with nine
+products in place of six.}
 
-A TOST equivalence test \citep{Schuirmann1987, Lakens2017} at a declared $\pm1$~dB margin confirms that this gap is
+A TOST equivalence test \citep{Schuirmann1987, Lakens2017} at a declared $\pm1$~dB margin \del{confirms that this gap is
 small enough to call the two
-\emph{competitive} rather than merely ``not shown to differ''.
+\emph{competitive} rather than merely ``not shown to differ''.} \add{asks whether each gap
+is small enough to call two maps equivalent rather than merely ``not shown to
+differ''.}
 The estimand is the seed-level PCAE2D-minus-control PSNR difference,
-averaged over held-out images within each seed. Equivalence requires both
+averaged over held-out images within each seed. \add{Without correction,}
+\del{Equivalence} \add{equivalence} requires both
 one-sided tests to reject at $\alpha=0.05$. This is the same as the 90\%
 confidence interval lying inside $[-1,+1]$~dB (Table~\ref{tab:tost_main}). The
 margin is a declared choice.
@@ -530,19 +552,29 @@ within that margin: no entanglement, $ZZ$-only observables, quadratic classical
 features, and shuffled pair observables. The raw/local linear control meets the
 uncorrected criterion ($p=0.034$) but not the Holm-corrected criterion
 (adjusted $p=0.103$). The two weakest controls, strict classical random
-features and random-VQC, are not equivalent because PCAE2D substantially
+features and random-VQC, are not equivalent because \del{PCAE2D} \add{the surrogate} substantially
 outperforms them.
+\add{The trained circuit has been tested on held-out images in the topology
+comparison of Section~\ref{sec:topology}. Trained on two images for 90 steps,
+PCAE2D reaches $11.57\pm1.53$~dB on three unseen CIFAR-10 images, close to the
+random-latent range of the supplementary study. Held-out generalisation of the
+trained circuit is therefore not established at this budget.}
 
 \begin{table}[t]
   \centering
   \caption[TOST equivalence test on held-out CIFAR-10]{TOST equivalence
            test on held-out CIFAR-10 ($\pm1$~dB margin, $\alpha=0.05$, five
-           seed-level paired differences, PCAE2D minus control). Equivalence
-           requires the 90\% CI to lie inside $[-1,+1]$~dB. Values from the
+           seed-level paired differences, \add{closed-form} PCAE2D \add{surrogate} minus control). \del{Equivalence
+           requires the 90\% CI to lie inside $[-1,+1]$~dB.} \add{The verdict uses the
+           Holm-adjusted $p$. Without correction, equivalence is the same as the
+           90\% CI lying inside $[-1,+1]$~dB. Control names follow the
+           Supplementary Material. ``No entanglement'' removes the pair
+           products, and ``Random VQC'' is a block of Gaussian random
+           features.} Values from the
            Supplementary Material.}
   \label{tab:tost_main}
   \footnotesize\bfseries
-  \setlength{\tabcolsep}{2.5pt}
+  \setlength{\tabcolsep}{2pt}
   \begin{tabular}{@{}l r c r l l@{}}
     \toprule
     Control                          & $\Delta$PSNR (dB) & 90\% CI (dB)       & TOST $p$  & Holm $p$ & Verdict \\
@@ -796,7 +828,7 @@ $P_{gh}=P_gP_h$. The property then holds exactly for any base map $\Phi$.
 Substituting $hx$ and re-indexing the sum with $g'=gh$ gives
 $P_g^{-1}=P_hP_{g'}^{-1}$, and hence $\Phi_{D_4}(hx)=P_h\Phi_{D_4}(x)$. The
 numerical check below therefore tests the implementation, not the property. We
-run it over 7000 patch
+run it \add{on the closed-form surrogate feature map} over 7000 patch
 transforms of cached CIFAR images (Table~\ref{tab:d4_equivariance},
 Figure~\ref{fig:d4_equivariance}). The pooled map's equivariance error is
 $9.57\times10^{-17}\pm1.26\times10^{-17}$, which is floating-point noise. The
@@ -807,6 +839,8 @@ pooling construction is what delivers the property. This construction operates
 at the feature-grid level and serves here as a numerical diagnostic, rather
 than as a component of the trainable reconstruction pipeline. Integrating it
 end-to-end (Section~\ref{sec:limitations}) is concrete future work.
+\add{On the trained circuit, the Supplementary Material applies the same
+pooling and reduces the equivariance error to order $10^{-8}$.}
 This route to symmetry differs from equivariant quantum neural networks,
 in which every circuit layer is built to commute with the group action
 \citep{Nguyen2024EQNN}. A recent image classifier of that kind builds $C_4$
@@ -819,7 +853,7 @@ equally to a classical feature map.
   \centering
   \caption{$D_4$ equivariance error for unpooled and pooled observable-grid maps
            (lower is better; the pooled map is group-averaged over all eight
-           square symmetries).}
+           square symmetries\add{; closed-form surrogate map}).}
   \label{tab:d4_equivariance}
   \begin{tabular}{@{}l r r@{}}
     \toprule
@@ -849,7 +883,11 @@ fit a target that depends on pair correlations. The target is a fixed synthetic
 function of \emph{simulated} patch features, and those features are not
 concatenated into any candidate's own input block. The companion supplement
 gives the leakage-audit procedure that rules out circularity. Every control
-receives the same raw inputs as PCAE2D. The
+receives the same raw inputs as PCAE2D. \add{All feature maps in this
+diagnostic are closed-form, and no circuit is evaluated. The pair-observable
+channel is represented by the analytic pair products that a pair measurement
+would supply. By construction, these products match the pair terms of the
+target.} The
 experiment demonstrates representational capability under a deliberately
 aligned protocol, not a general performance advantage.
 
@@ -857,10 +895,12 @@ Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic}
 report the result across five seeds. PCAE2D's
 pair-observable channel
 reaches mean $R^2=0.9735$, or $32.77$~dB PSNR. This is a $17.74$~dB improvement
-over a no-pair-observables control ($R^2=0.019$) and $18.52$~dB over random-VQC
-latents ($R^2=-0.173$). Freezing the quantum circuit, so that features are fixed
-and only the readout is trained, still reaches $R^2=0.853$. A raw-linear classical control ($R^2=0.0133$), a
-parameter-matched classical control ($R^2=-0.030$), a random-VQC control
+over a no-pair-observables control ($R^2=0.019$) and $18.52$~dB over \del{random-VQC
+latents} \add{Gaussian random latents (``random VQC'')} ($R^2=-0.173$). \del{Freezing the quantum circuit, so that features are fixed
+and only the readout is trained, still reaches $R^2=0.853$.} \add{Randomly
+rescaling and masking the pair features (``freeze quantum''), with only the
+readout trained, still reaches $R^2=0.853$.} A raw-linear classical control ($R^2=0.0133$), a
+parameter-matched classical control ($R^2=-0.030$), a \del{random-VQC} \add{random-feature} control
 ($R^2=-0.173$), and a frozen-classical control ($R^2=-0.903$) all fail on this
 deliberately pair-dependent target. The no-pair-observables control retains
 only single-site nonlinear channels and removes every cross-site product
@@ -888,7 +928,9 @@ reason we scope the claim to the linear protocol rather than to classical models
   \centering
   \caption[PCAE2D restricted pair-correlation diagnostic]{PCAE2D restricted pair-correlation diagnostic across five seeds.
            Deliberately favourable to pair-observable structure; evidence for
-           pair-observable necessity under a matched linear readout.}
+           pair-observable necessity under a matched linear readout. \add{All
+           features are closed-form. ``Random VQC'' is a block of Gaussian
+           random features.}}
   \label{tab:hvk_pair_diagnostic}
   \begin{tabular}{@{}l r r r@{}}
     \toprule
@@ -982,8 +1024,11 @@ models \citep{Shin2024Dequant}, and a classical tie at small scale does not
 settle it. Random Fourier features can also replace some variational
 models efficiently, under stated conditions \citep{Sweke2025}. Quantum
 convolutional networks on common image benchmarks can be simulated efficiently
-by a classical method based on Pauli shadows \citep{Bermejo2026}. Third, on the tested ordinary reconstruction tasks, PCAE stays within the
-declared 1~dB margin of the stronger matched classical controls. This matches large benchmarks in which simple classical models
+by a classical method based on Pauli shadows \citep{Bermejo2026}. Third, \del{on the tested ordinary reconstruction tasks, PCAE stays within the
+declared 1~dB margin of the stronger matched classical controls.} \add{on held-out
+CIFAR-10, a closed-form surrogate of the PCAE2D map stays within 1~dB of
+matched classical feature maps. The trained circuit has not yet shown held-out
+generalisation.} This matches large benchmarks in which simple classical models
 often match or beat small quantum models, and removing entanglement often costs
 little \citep{Bowles2024}. In PCAE the
 quantum processor evaluates only the circuit and returns the vector of measured
@@ -1001,7 +1046,7 @@ Three of PCAE's ingredients recur individually in the hybrid quantum-vision lite
 
 Aligning the latent interaction graph with image-patch adjacency (PCAE2D vs.\ PCAE1D) is an architectural inductive bias, and the companion supplementary study tests it directly under matched held-out conditions. Its real-circuit subset (3 seeds, 3 held-out CIFAR-10 images) gives a PCAE1D-minus-PCAE2D mean PSNR difference of $0.16$~dB. After averaging images within seed, the bootstrap 95\% CI is $[-0.38,0.46]$~dB and the seed-level Wilcoxon test gives $p=0.50$. A broader five-seed surrogate comparison across CIFAR-10, Fashion-MNIST, and PathMNIST likewise finds numerically small topology differences, at most $0.07$~dB in mean PSNR. PCAE2D completes the matched 90-step runs in roughly half the wall-clock time. At the tested scale, topology is therefore primarily a resource-cost choice rather than a reliable accuracy advantage. These tests do not establish formal equivalence.
 
-Table~\ref{tab:differentiation} contrasts PCAE's structural properties against reference frameworks, including the three nearest hybrid-vision architecture families. Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy diagnostic, each documented and scoped in the preceding sections.
+Table~\ref{tab:differentiation} contrasts PCAE's structural properties against reference frameworks, including the three nearest hybrid-vision architecture families. Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy \del{diagnostic} \add{term}, each documented and scoped in the preceding sections.
 
 
 \begin{table}[t]
@@ -1044,7 +1089,7 @@ Table~\ref{tab:differentiation} contrasts PCAE's structural properties against r
       & Fidelity / reconstruction
       & None (kernel value only)
       & Classification loss
-      & Hamiltonian diagnostic \\
+      & \del{Hamiltonian diagnostic} \add{Hamiltonian energy term} \\
     \addlinespace
     Enforced group symmetry
       & Not in baseline
@@ -1069,9 +1114,10 @@ Table~\ref{tab:differentiation} contrasts PCAE's structural properties against r
 \label{sec:limitations}
 
 \begin{itemize}\itemsep4pt
-\item Every reconstruction result in this paper is per-image trained, except the held-out comparison of Section~\ref{sec:ablation_relationship}. Only that held-out comparison, reported in full in the companion supplement, supports a generalisation claim.
-\item The $D_4$-pooled map (Section~\ref{sec:d4}) is a feature-grid-level construction and numerical diagnostic. Integrating it into the trainable end-to-end pipeline is future work (Section~\ref{sec:conclusion}).
-\item The pair-observable necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a task constructed to require nonlocal structure. Ordinary natural-image reconstruction lies outside that scope (see Section~\ref{sec:dequant}).
+\item \del{Every reconstruction result in this paper is per-image trained, except the held-out comparison of Section~\ref{sec:ablation_relationship}. Only that held-out comparison, reported in full in the companion supplement, supports a generalisation claim.} \add{Every circuit-based reconstruction result in this paper is per-image trained. The held-out comparison of Section~\ref{sec:ablation_relationship} uses a closed-form surrogate of the PCAE2D map. On held-out images the trained circuit stays near the random-latent range at the tested budget, so its held-out generalisation is not established.}
+\item \add{The per-image results of Section~\ref{sec:sameset_results} are not compared with a matched-size classical per-image network, as is usual for implicit neural representations.}
+\item The $D_4$-pooled map (Section~\ref{sec:d4}) is a feature-grid-level construction and numerical diagnostic\add{, measured on the closed-form surrogate in Table~\ref{tab:d4_equivariance}}. Integrating it into the trainable end-to-end pipeline is future work (Section~\ref{sec:conclusion}).
+\item The pair-observable necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a \add{synthetic} task \add{with closed-form features,} constructed to require nonlocal structure. Ordinary natural-image reconstruction lies outside that scope (see Section~\ref{sec:dequant}).
 \item The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, unmitigated pilot with one run per image on the main backend rather than a statistically resolved hardware benchmark.
 \item The training-dynamics traces (Section~\ref{sec:phase_transition}) are an interpretability readout. The threshold fires whether the Hamiltonian term is present or absent, at 4/4 in both cases, with the full table in the Supplementary Material.
 \item The matched real-circuit topology comparison uses 3 seeds and 3 held-out images per topology, and the broader five-seed comparison is surrogate-based. These results support a resource-cost interpretation rather than formal equivalence of the topologies.
@@ -1084,33 +1130,40 @@ Table~\ref{tab:differentiation} contrasts PCAE's structural properties against r
 We presented the Pauli-Correlator Autoencoder (PCAE), a hybrid quantum--classical
 architecture for image reconstruction that assembles matrix-product-state patch
 features, a measured Pauli-correlator latent space, enforced $D_4$-equivariant
-observable pooling, and a learnable Hamiltonian energy diagnostic into a single
+observable pooling, and a learnable Hamiltonian energy \del{diagnostic} \add{term} into a single
 pipeline (Section~\ref{sec:representativeness}). Across six real image datasets,
 per-image-trained PCAE2D models
-reach $25.8$--$41.6$~dB PSNR. On a
+reach $25.8$--$41.6$~dB PSNR. \del{On a
 resource-matched, multi-seed held-out comparison, a TOST equivalence
 test shows PCAE2D is \emph{competitive with}, rather than inferior or superior to,
-simple classical controls (Section~\ref{sec:ablation_relationship}). A hardware
+simple classical controls} \add{On held-out CIFAR-10, a closed-form surrogate of
+the PCAE2D observable map is equivalent within 1~dB to four resource-matched
+feature maps. Held-out generalisation of the trained circuit remains to be
+shown} (Section~\ref{sec:ablation_relationship}). A hardware
 pilot replayed trained checkpoints on IBM Quantum devices without retraining,
 establishing feasibility at a five-image scope with one run per image on the main backend
 (Section~\ref{sec:hardware_pilot}).
 
-Pair observables are necessary on a task requiring nonlocal structure,
+Pair observables are necessary on a \add{synthetic} task requiring nonlocal structure,
 under a fixed linear
 readout
-(Section~\ref{sec:entanglement_necessity}). The Hamiltonian energy term serves as
-an interpretable diagnostic of the trained representation
+(Section~\ref{sec:entanglement_necessity}). The Hamiltonian energy term \del{serves as
+an interpretable diagnostic of the trained representation} \add{acts as an auxiliary
+training objective, and its learned energy is an interpretable readout of the
+trained representation}
 (Section~\ref{sec:regularizer_inert}). The pipeline executes natively on real
 quantum hardware. It is also exactly $D_4$-equivariant by construction, which we
 report as a design-correctness property rather than a quantum capability, since
 the same Reynolds averaging applied to a classical feature map is equally exact.
-We make no claim of quantum advantage. At the six-qubit scale tested here, PCAE is
-competitive with resource-matched classical baselines and runs on real quantum
+\del{We make no claim of quantum advantage.} At the six-qubit scale tested here, PCAE \del{is
+competitive with resource-matched classical baselines} \add{fits varied real images} and runs on real quantum
 hardware.
 
 Future work should integrate the $D_4$-pooled map into an end-to-end trainable
 pipeline (Section~\ref{sec:limitations}), scale the hardware pilot toward a
 statistically resolved benchmark with error mitigation and repeated trials,
+\add{test held-out generalisation of the trained circuit against the same
+resource-matched controls,}
 search for further real-world tasks with nonlocal structure where PCAE's
 pair-observable separation translates into a reconstruction advantage, and
 extend the resource-matched, leakage-audited evaluation protocol to other hybrid
@@ -1121,8 +1174,8 @@ quantum vision architectures.
 
 \bmhead{Supplementary information}
 
-A companion document, \textit{Supplementary Material for the Hamiltonian Vision
-Kernel: Resource-Matched Ablations, Validation, and Reproducibility}, accompanies
+A companion document, \textit{Supplementary Material for the \del{Hamiltonian Vision
+Kernel:} \add{Pauli-Correlator Autoencoder:} Resource-Matched Ablations, Validation, and Reproducibility}, accompanies
 this manuscript.
 
 \bmhead{Acknowledgements}
@@ -1147,12 +1200,11 @@ in this work.
         supporting this study are included in the accompanying repository. The
         file \texttt{project\_artifacts/submission\_claim\_audit.json} maps each
         numerical headline claim to its retained source artifact, covering the
-        resource-matched held-out comparison, on which the tested PCAE map is
-        competitive with rather than superior to the classical controls, and the
-        withdrawn training-dynamics material. {\color{red}\textbf{[Student:
-Section~\ref{sec:phase_transition} still reports the training-dynamics traces as
-an interpretability readout. Please say which training-dynamics material was
-withdrawn, so that the two statements agree.]}} Automated tests verify those
+        resource-matched held-out \add{surrogate} comparison\del{, on which the tested PCAE map is
+        competitive with rather than superior to the classical controls,} and the
+        withdrawn training-dynamics material\add{, namely per-variant training
+        curves of the restricted diagnostic that were interpolated from final
+        metrics rather than logged}. Automated tests verify those
         mappings.
         IBM Quantum job identifiers and reconstructed outputs are retained; as
         disclosed in the supplement, the raw account-usage service response was
