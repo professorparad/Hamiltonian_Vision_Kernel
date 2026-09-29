@@ -148,6 +148,10 @@ standalone classical model or as a template for a shallow quantum circuit traine
 for classification. PCAE uses MPS compression only as a quantum-inspired
 \emph{preprocessing} step that sets a separately trained VQC's rotation angles,
 and targets per-image reconstruction rather than classification. Further, an MPS feature extractor has been placed before a VQC and trained end to end with it for classification \citep{Chen2021MPSVQC}. The MPS in PCAE is instead a fixed SVD compression.
+{\color{red}\textbf{[Student Q1: Please confirm that no MPS parameter is trained. The MPS
+features should come from a fixed SVD compression at $\chi=4$, and only the
+linear layer after them is learned. The text now states this.]}}
+
 
 PCAE's contribution is the assembly of MPS preprocessing and the three properties above in one pipeline
 (Table~\ref{tab:differentiation}). Section~\ref{sec:representativeness} examines
@@ -483,6 +487,10 @@ surrogate of the PCAE2D observable map, so that many seeds and controls can be
 run. The surrogate combines 18 local patch statistics, six products of
 local-feature pairs that stand in for the pairwise $ZZ$ correlators, the sines
 of those products, and positional features. It does not evaluate the circuit. It is specified by hand and is not fitted to the trained circuit. Thus, the term has a different meaning here from the classical surrogates of \citet{Schreiber2023}, which are derived from a trained quantum model.
+{\color{red}\textbf{[Student Q2: Please confirm that the surrogate's features and their form
+were fixed by hand and were not fitted to the outputs of the trained circuit.
+The text now states this, citing Schreiber et al.\ (2023).]}}
+
 The
 main results are summarised below, including the equivalence tests of
 Table~\ref{tab:tost_main}.
@@ -536,6 +544,12 @@ comparison of Section~\ref{sec:topology}. Trained on two images for 90 steps,
 PCAE2D reaches $11.57\pm1.53$~dB on three unseen CIFAR-10 images, close to the
 $11$--$15$~dB random-latent range (Section~\ref{sec:hardware_pilot}). Held-out generalisation of the
 trained circuit is therefore not established at this budget.
+{\color{red}\textbf{[Student Q3: The random-latent control ($11$--$15$~dB) is used here and in
+Section~\ref{sec:hardware_pilot}, but the main text never defines it. How was
+it run? Was the decoder trained on random latents, or were random latents fed
+to a decoder trained on circuit outputs? Please send one sentence defining it,
+and the artifact file that holds these numbers.]}}
+
 
 \begin{table}[t]
   \centering
@@ -616,6 +630,12 @@ image. The original jobs' physical-qubit layouts and contemporaneous calibration
 timestamps were not serialised and could not subsequently be recovered. Every hardware reconstruction remains above
 the random-latent control range ($11$--$15$~dB). The pilot used 176 circuits; the contemporaneous account-meter reading
 increased by 16 quantum-processor seconds. We note that a similar protocol, with training in simulation and inference on IBM hardware, has been used for MedMNIST classification with error suppression and mitigation \citep{Singh2026}. Here, it is applied to reconstruction without mitigation.
+{\color{red}\textbf{[Student Q4: Singh et al.\ used dynamical decoupling, gate twirling and M3
+readout mitigation on IBM hardware. Could the \textit{Monalisa} and
+\textit{cat} anchor replays be repeated once with twirling and dynamical
+decoupling switched on in SamplerV2? This should cost only a few
+quantum-processor seconds. Please tell us whether the free-tier quota allows it.]}}
+
 
 \begin{table}[t]
   \centering
@@ -793,6 +813,11 @@ Here $D_4$
 acts on an image $x$ by rotating or reflecting its $4\times4$ grid of patches,
 and $P_g$ permutes the per-patch observable vectors in the same way, so that
 $P_{gh}=P_gP_h$. The property then holds exactly for any base map $\Phi$. This is the standard group-averaging construction \citep{Puny2022}. It needs one evaluation of the base map for each of the eight group elements.
+{\color{red}\textbf{[Student Q5: Please confirm that the pooled map was computed with eight
+separate evaluations of the base map, one per transformed image, including the
+trained-circuit check that gives an error of order $10^{-8}$. Which artifact
+holds that $10^{-8}$ value?]}}
+
 Substituting $hx$ and re-indexing the sum with $g'=gh$ gives
 $P_g^{-1}=P_hP_{g'}^{-1}$, and hence $\Phi_{D_4}(hx)=P_h\Phi_{D_4}(x)$. The
 numerical check below therefore tests the implementation, not the property. We
@@ -945,6 +970,12 @@ as an interpretability readout on the learned energy and entanglement.
 \label{sec:regularizer_inert}
 
 In this single-seed comparison, the signed Hamiltonian-energy objective substantially reduces reconstruction quality: removing it increases PSNR from $38.63$ to $44.56$~dB (Table~\ref{tab:hamiltonian_controls}). The legacy objective adds a signed mean energy to the reconstruction loss. Because learned energy can go negative, the optimiser can lower total loss by driving energy down without improving reconstruction. A contrastive variant, assigning lower energy to correct feature--position pairs than to shuffled pairs, recovers part of the gap ($42.92$~dB) but stays below its no-energy counterpart. These are fresh same-environment measurements (\textit{Monalisa}, 200 steps, seed 42), and they supersede earlier values produced by a script that cannot be audited. The effect of the signed energy term is in general agreement with an independent study, which finds no benefit beyond simple classical regularisers from a VQE-inspired energy term added to the loss of a generative adversarial network \citep{Strnadel2025}.
+{\color{red}\textbf{[Student Q6: The abstract now says that the energy term lowers
+reconstruction quality in a single-seed ablation. Can the three runs of
+Table~\ref{tab:hamiltonian_controls} (signed energy, no energy, contrastive) be
+repeated with two more seeds? Each run is 200 steps on \textit{Monalisa}. With
+three seeds we could drop the word ``single-seed''.]}}
+
 
 The learned couplings do not enter the decoder directly, but the energy term contributes gradients during training and therefore changes the learned circuit representation. It is consequently an auxiliary training objective as well as a post-training diagnostic. A physically motivated regulariser has room to help when it resolves an otherwise underdetermined objective. Under this protocol, the reconstruction loss alone provides the stronger optimisation signal.
 
@@ -998,7 +1029,12 @@ classical hardware, as do the Fourier positional encoding, the $D_4$ pooling,
 the decoder and the optimisation. Any quantum contribution to PCAE must
 therefore enter through the measured observable vector.
 
-The restricted diagnostic of Section~\ref{sec:entanglement_necessity} is constructed so that the relevant structure is a genuine distant-element product, which raw or local features cannot represent under a fixed linear readout. That is the regime in which PCAE's pair-observable channel separates. Natural image patches at the resolution and patch size used here are low-entanglement, locally structured data \citep{Martyn2020, Lu2025}, where a linear or shallow classical readout is already close to sufficient. The distinction lies in the measured pair-observable channel rather than in the circuit. The ansatz uses strongly-entangling layers and does generate an entangled state, but whether the measured channel carries task-relevant information is a property of the target. On natural-image targets the pair observables add little beyond the local ones. On the constructed nonlocal target they are necessary. Together with the held-out comparisons of Section~\ref{sec:ablation_relationship}, these results delineate where the tested entangling representation does and does not yield a measurable benefit.
+The restricted diagnostic of Section~\ref{sec:entanglement_necessity} is constructed so that the relevant structure is a genuine distant-element product, which raw or local features cannot represent under a fixed linear readout. That is the regime in which PCAE's pair-observable channel separates. Natural image patches at the resolution and patch size used here are low-entanglement, locally structured data \citep{Martyn2020, Lu2025}, where a linear or shallow classical readout is already close to sufficient.
+{\color{red}\textbf{[Student Q7: The MPS feature vector already contains bipartite
+entanglement entropies. Are these entropies saved for the natural-image patches
+used in this paper? If yes, please send their range and the file. A range from
+our own data would support this sentence directly, next to the two citations.]}}
+ The distinction lies in the measured pair-observable channel rather than in the circuit. The ansatz uses strongly-entangling layers and does generate an entangled state, but whether the measured channel carries task-relevant information is a property of the target. On natural-image targets the pair observables add little beyond the local ones. On the constructed nonlocal target they are necessary. Together with the held-out comparisons of Section~\ref{sec:ablation_relationship}, these results delineate where the tested entangling representation does and does not yield a measurable benefit.
 
 Three of PCAE's ingredients recur individually in the hybrid quantum-vision literature, covering MPS compression of structured input \citep{Stoudenmire2016, Han2018, Cirac2021, Guala2023}, a Pauli-correlator latent space handed to a classical decoder \citep{Havlicek2019}, and a physically motivated auxiliary regulariser alongside a task loss \citep{Shi2022}. Its specific instantiation, a six-qubit VQC with a $19$--$27$-D correlator vector and a graph-Hamiltonian term, sits within the parameter ranges typical of that literature. The measured behaviour is therefore evidence about the design pattern itself. We do not claim the boundary transfers unchanged to every dataset, patch size, or qubit count.
 
@@ -1077,6 +1113,13 @@ Table~\ref{tab:differentiation} contrasts PCAE's structural properties against r
 \begin{itemize}\itemsep4pt
 \item Every circuit-based reconstruction result in this paper is per-image trained. The held-out comparison of Section~\ref{sec:ablation_relationship} uses a closed-form surrogate of the PCAE2D map. On held-out images the trained circuit stays near the random-latent range at the tested budget, so its held-out generalisation is not established.
 \item The per-image results of Section~\ref{sec:sameset_results} are not compared with a matched-size classical per-image network, as is usual for implicit neural representations.
+{\color{red}\textbf{[Student Q8: By our rough count the decoder has about 52k parameters
+(23--128--256--64), against 1{,}024 pixels in a $32\times32$ image, and it also
+receives the patch position. A referee may ask whether the decoder alone can
+reproduce the image. Do we have a run in which the decoder gets only the
+positional encoding, or a matched-size classical per-image network (an MLP or
+SIREN), under the same protocol? If not, how long would one such run take?]}}
+
 \item The $D_4$-pooled map (Section~\ref{sec:d4}) is a feature-grid-level construction and numerical diagnostic, measured on the closed-form surrogate in Table~\ref{tab:d4_equivariance}. Integrating it into the trainable end-to-end pipeline is future work (Section~\ref{sec:conclusion}).
 \item The pair-observable necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a synthetic task with closed-form features, constructed to require nonlocal structure. Ordinary natural-image reconstruction lies outside that scope (see Section~\ref{sec:dequant}).
 \item The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, unmitigated pilot with one run per image on the main backend rather than a statistically resolved hardware benchmark.
@@ -1175,6 +1218,12 @@ in this work.
 %  sn-jnl.cls sets the bibliography style from the sn-basic class option.
 %  If BibTeX reports that it cannot open the style file, uncomment the next line.
 % \bibliographystyle{sn-basic}
+{\color{red}\textbf{[Student Q9: Please update these bibliography entries from their DOIs
+before submission. \texttt{Fujihashi2024QINC} now has a published Springer
+chapter (doi 10.1007/978-3-032-15931-1\_5). Please also check whether
+\texttt{Bowles2024}, \texttt{Gyurik2023}, \texttt{Bronstein2021} and
+\texttt{Slabbert2024} now have journal versions.]}}
+
 \bibliography{sn-bibliography}
 
 \end{document}
