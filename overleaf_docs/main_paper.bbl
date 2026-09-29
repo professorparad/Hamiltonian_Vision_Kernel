@@ -1,5 +1,5 @@
 \providecommand{\arxivdot}{.}
-\begin{thebibliography}{64}
+\begin{thebibliography}{79}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{{#1}}
 \providecommand{\urlprefix}{URL }
@@ -27,6 +27,12 @@ Beaulieu D, Miracle D, Pham A, et~al (2022) Quantum kernel for image
   classification of real world manufacturing defects. arXiv preprint
   arXiv:2212\arxivdot{}08693 \doi{10.48550/arXiv.2212.08693}
 
+\bibitem[{van~den Berg et~al.(2022)van~den Berg, Minev, and
+  Temme}]{vandenBerg2022}
+van~den Berg E, Minev ZK, Temme K (2022) Model-free readout-error mitigation
+  for quantum expectation values. Physical Review A 105(3):032620.
+  \doi{10.1103/PhysRevA.105.032620}
+
 \bibitem[{Bermejo et~al.(2026)Bermejo, Braccia, Rudolph, Holmes, Cincio, and
   Cerezo}]{Bermejo2026}
 Bermejo P, Braccia P, Rudolph MS, et~al (2026) Quantum convolutional neural
@@ -48,11 +54,23 @@ Bronstein MM, Bruna J, Cohen T, et~al (2021) Geometric deep learning: grids,
 Cerezo M, Arrasmith A, Babbush R, et~al (2021) Variational quantum algorithms.
   Nature Reviews Physics 3(9):625--644. \doi{10.1038/s42254-021-00348-9}
 
+\bibitem[{Cerezo et~al.(2025)Cerezo, Larocca, Garc{\'i}a-Mart{\'i}n, Diaz,
+  Braccia, Fontana, Rudolph, Bermejo, Ijaz, Thanasilp, Anschuetz, and
+  Holmes}]{Cerezo2025}
+Cerezo M, Larocca M, Garc{\'i}a-Mart{\'i}n D, et~al (2025) Does provable
+  absence of barren plateaus imply classical simulability? Nature
+  Communications 16:7907. \doi{10.1038/s41467-025-63099-6}
+
 \bibitem[{Chakraborty et~al.(2022)Chakraborty, Mandal, and
   Shaikh}]{Chakraborty2018}
 Chakraborty S, Mandal SB, Shaikh SH (2022) Quantum image processing: challenges
   and future research issues. International Journal of Information Technology
   14(1):475--489. \doi{10.1007/s41870-018-0227-8}
+
+\bibitem[{Chen et~al.(2021)Chen, Huang, Hsing, and Kao}]{Chen2021MPSVQC}
+Chen SYC, Huang CM, Hsing CW, et~al (2021) An end-to-end trainable hybrid
+  classical-quantum classifier. Machine Learning: Science and Technology
+  2(4):045021. \doi{10.1088/2632-2153/ac104d}
 
 \bibitem[{Cirac et~al.(2021)Cirac, P{\'e}rez-Garc{\'i}a, Schuch, and
   Verstraete}]{Cirac2021}
@@ -74,9 +92,15 @@ Cong I, Choi S, Lukin MD (2019) Quantum convolutional neural networks. Nature
 Dupont E, Goli{\'n}ski A, Alizadeh M, et~al (2021) {COIN}: {CO}mpression with
   implicit neural representations. arXiv preprint arXiv:2103\arxivdot{}03123
 
-\bibitem[{Fujihashi and Koike-Akino(2024)}]{Fujihashi2024QINC}
-Fujihashi T, Koike-Akino T (2024) Quantum implicit neural compression. arXiv
-  preprint arXiv:2412\arxivdot{}19828
+\bibitem[{Efron and Tibshirani(1993)}]{Efron1993}
+Efron B, Tibshirani RJ (1993) An Introduction to the Bootstrap. Chapman and
+  Hall/CRC, New York
+
+\bibitem[{Fujihashi and Koike-Akino(2026)}]{Fujihashi2024QINC}
+Fujihashi T, Koike-Akino T (2026) Quantum implicit neural compression. In:
+  Quantum Computing and Artificial Intelligence. Springer Nature Switzerland,
+  Communications in Computer and Information Science, pp 60--69,
+  \doi{10.1007/978-3-032-15931-1_5}
 
 \bibitem[{Guala et~al.(2023)Guala, Zhang, Cruz, Riofr{\'i}o, Klepsch, and
   Arrazola}]{Guala2023}
@@ -105,6 +129,10 @@ Havl{\'i}{\v c}ek V, C{\'o}rcoles AD, Temme K, et~al (2019) Supervised learning
   with quantum-enhanced feature spaces. Nature 567(7747):209--212.
   \doi{10.1038/s41586-019-0980-2}
 
+\bibitem[{Holm(1979)}]{Holm1979}
+Holm S (1979) A simple sequentially rejective multiple test procedure.
+  Scandinavian Journal of Statistics 6(2):65--70
+
 \bibitem[{Huang et~al.(2020)Huang, Kueng, and Preskill}]{Huang2020Shadows}
 Huang HY, Kueng R, Preskill J (2020) Predicting many properties of a quantum
   system from very few measurements. Nature Physics 16(10):1050--1057.
@@ -124,6 +152,12 @@ Hur T, Kim L, Park DK (2022) Quantum convolutional neural network for classical
 {IonQ} (2026) Backends. {IonQ} Quantum Cloud Documentation,
   \urlprefix\url{https://docs.ionq.com/user-manual/backends}, accessed 24 July
   2026
+
+\bibitem[{Kim et~al.(2023)Kim, Eddins, Anand, Wei, van~den Berg, Rosenblatt,
+  Nayfeh, Wu, Zaletel, Temme, and Kandala}]{Kim2023}
+Kim Y, Eddins A, Anand S, et~al (2023) Evidence for the utility of quantum
+  computing before fault tolerance. Nature 618:500--505.
+  \doi{10.1038/s41586-023-06096-3}
 
 \bibitem[{Krizhevsky(2009)}]{Krizhevsky2009}
 Krizhevsky A (2009) Learning multiple layers of features from tiny images.
@@ -164,6 +198,16 @@ Lizzio~Bosco D, Wang S, Serra G, et~al (2026) Quantum implicit neural
   representations for novel view synthesis. arXiv preprint
   arXiv:2601\arxivdot{}05250
 
+\bibitem[{Lu et~al.(2025)Lu, Kan{\'a}sz-Nagy, Kukuljan, and Cirac}]{Lu2025}
+Lu S, Kan{\'a}sz-Nagy M, Kukuljan I, et~al (2025) Tensor networks and efficient
+  descriptions of classical data. Physical Review A 111(3):032409.
+  \doi{10.1103/PhysRevA.111.032409}
+
+\bibitem[{Martyn et~al.(2020)Martyn, Vidal, Roberts, and
+  Leichenauer}]{Martyn2020}
+Martyn J, Vidal G, Roberts C, et~al (2020) Entanglement and tensor networks for
+  supervised image classification. arXiv preprint arXiv:2007\arxivdot{}06082
+
 \bibitem[{McClean et~al.(2018)McClean, Boixo, Smelyanskiy, Babbush, and
   Neven}]{McClean2018}
 McClean JR, Boixo S, Smelyanskiy VN, et~al (2018) Barren plateaus in quantum
@@ -197,6 +241,12 @@ Nguyen QT, Schatzki L, Braccia P, et~al (2024) Theory for equivariant quantum
 Preskill J (2018) Quantum computing in the {NISQ} era and beyond. Quantum 2:79.
   \doi{10.22331/q-2018-08-06-79}
 
+\bibitem[{Puny et~al.(2022)Puny, Atzmon, Ben-Hamu, Misra, Grover, Smith, and
+  Lipman}]{Puny2022}
+Puny O, Atzmon M, Ben-Hamu H, et~al (2022) Frame averaging for invariant and
+  equivariant network design. In: International Conference on Learning
+  Representations (ICLR)
+
 \bibitem[{Ran et~al.(2020)Ran, Sun, Fei, Su, and Lewenstein}]{Ran2020TNCS}
 Ran SJ, Sun ZZ, Fei SM, et~al (2020) Tensor network compressed sensing with
   unsupervised machine learning. Physical Review Research 2(3):033293.
@@ -206,6 +256,12 @@ Ran SJ, Sun ZZ, Fei SM, et~al (2020) Tensor network compressed sensing with
 Romero J, Olson JP, Aspuru-Guzik A (2017) Quantum autoencoders for efficient
   compression of quantum data. Quantum Science and Technology 2(4):045001.
   \doi{10.1088/2058-9565/aa8072}
+
+\bibitem[{Sakhnenko et~al.(2022)Sakhnenko, O'Meara, Ghosh, Mendl, Cortiana, and
+  Bernab{\'e}-Moreno}]{Sakhnenko2022}
+Sakhnenko A, O'Meara C, Ghosh KJB, et~al (2022) Hybrid classical-quantum
+  autoencoder for anomaly detection. Quantum Machine Intelligence 4(2):27.
+  \doi{10.1007/s42484-022-00075-z}
 
 \bibitem[{San Sebastian~Sein et~al.(2025)San Sebastian~Sein, Ca{\~n}izo, and
   Or{\'u}s}]{SanSebastianSein2025}
@@ -218,6 +274,11 @@ San Sebastian~Sein P, Ca{\~n}izo M, Or{\'u}s R (2025) Image classification with
 Schatzki L, Larocca M, Nguyen QT, et~al (2024) Theoretical guarantees for
   permutation-equivariant quantum neural networks. npj Quantum Information
   10(1):12. \doi{10.1038/s41534-024-00804-1}
+
+\bibitem[{Schreiber et~al.(2023)Schreiber, Eisert, and Meyer}]{Schreiber2023}
+Schreiber FJ, Eisert J, Meyer JJ (2023) Classical surrogates for quantum
+  learning models. Physical Review Letters 131(10):100803.
+  \doi{10.1103/PhysRevLett.131.100803}
 
 \bibitem[{Schuirmann(1987)}]{Schuirmann1987}
 Schuirmann DJ (1987) A comparison of the two one-sided tests procedure and the
@@ -235,6 +296,10 @@ Shin S, Teo YS, Jeong H (2024) Dequantizing quantum machine learning models
   using tensor networks. Physical Review Research 6:023218.
   \doi{10.1103/PhysRevResearch.6.023218}
 
+\bibitem[{Singh et~al.(2026)Singh, Jin, and Merz}]{Singh2026}
+Singh G, Jin H, Merz KM (2026) Benchmarking {MedMNIST} dataset on real quantum
+  hardware. Scientific Reports 16:9017. \doi{10.1038/s41598-026-35605-3}
+
 \bibitem[{Sitzmann et~al.(2020)Sitzmann, Martel, Bergman, Lindell, and
   Wetzstein}]{Sitzmann2020}
 Sitzmann V, Martel JNP, Bergman AW, et~al (2020) Implicit neural
@@ -251,6 +316,11 @@ Slabbert D, Petruccione F (2024) Hybrid quantum-classical feature extraction
 \bibitem[{Stoudenmire and Schwab(2016)}]{Stoudenmire2016}
 Stoudenmire EM, Schwab DJ (2016) Supervised learning with tensor networks. In:
   Advances in Neural Information Processing Systems
+
+\bibitem[{Strnadel(2025)}]{Strnadel2025}
+Strnadel D (2025) Differentiable energy-based regularization in {GAN}s: a
+  simulator-based exploration of {VQE}-inspired auxiliary losses. arXiv
+  preprint arXiv:2512\arxivdot{}12581
 
 \bibitem[{Str{\"u}mpler et~al.(2022)Str{\"u}mpler, Postels, Yang, {Van Gool},
   and Tombari}]{Strumpler2022}
@@ -278,6 +348,11 @@ Tang E (2019) A quantum-inspired classical algorithm for recommendation
   systems. In: Proceedings of the 51st Annual {ACM} {SIGACT} Symposium on
   Theory of Computing (STOC), pp 217--228, \doi{10.1145/3313276.3316310}
 
+\bibitem[{Temme et~al.(2017)Temme, Bravyi, and Gambetta}]{Temme2017}
+Temme K, Bravyi S, Gambetta JM (2017) Error mitigation for short-depth quantum
+  circuits. Physical Review Letters 119(18):180509.
+  \doi{10.1103/PhysRevLett.119.180509}
+
 \bibitem[{Tilly et~al.(2022)Tilly, Chen, Cao, Picozzi, Setia, Li, Grant,
   Wossnig, Rungger, Booth, and Tennyson}]{Tilly2022}
 Tilly J, Chen H, Cao S, et~al (2022) The variational quantum eigensolver: a
@@ -303,6 +378,10 @@ West MT, Heredge J, Sevior M, et~al (2024) Provably trainable rotationally
 West MT, Heredge J, Sevior M, et~al (2025) Erratum: provably trainable
   rotationally equivariant quantum machine learning [{PRX} {Q}uantum
   \textbf{5}, 030320 (2024)]. PRX Quantum 6:020902. \doi{10.1103/g4zk-79l9}
+
+\bibitem[{Wilcoxon(1945)}]{Wilcoxon1945}
+Wilcoxon F (1945) Individual comparisons by ranking methods. Biometrics
+  Bulletin 1(6):80--83. \doi{10.2307/3001968}
 
 \bibitem[{Xiao et~al.(2017)Xiao, Rasul, and Vollgraf}]{Xiao2017}
 Xiao H, Rasul K, Vollgraf R (2017) {F}ashion-{MNIST}: a novel image dataset for
