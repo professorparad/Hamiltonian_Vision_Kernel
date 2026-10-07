@@ -342,11 +342,16 @@ full.
 The $2^{n}$ pixel values of a patch ($n=6$ for $8\times8$, $n=12$ for
 $64\times64$) are flattened in row-major order and reshaped into an
 order-$n$ tensor with binary indices, so each index is one site of dimension~2.
+\blue{The tensor is compressed with the \texttt{compress} method of quimb}
+\blue{\citep{Gray2018} at maximum bond dimension $\chi$. With its default settings,}
+\blue{the compressed state is in right-canonical form, with the orthogonality}
+\blue{centre on the first site.}
 \blue{The} features are \blue{expectation values and Schmidt spectra of the}
 \blue{compressed state, so they} do \blue{not depend on its canonical form. In the}
 \blue{multi-dataset runs of Section~\ref{sec:sameset_results},} $10^{-4}$ \blue{is added} to
 every pixel before \blue{normalisation, so that all-zero patches, such as MNIST}
-\blue{background, can be normalised.}
+\blue{background, can be normalised.} \blue{The offset enters only the MPS input.}
+\blue{The decoder is still trained to reconstruct the unmodified patch.}
 The remaining stages are common to both. A learned linear layer compresses the MPS feature vector to six circuit angles, one per qubit. After the circuit is executed, a two-hidden-layer MLP (128 and 256 units) maps the measured observables together with the Fourier positional vector back to a single greyscale patch. The positional encoding follows established use as a spatial inductive bias in classical generative vision models \citep{Xu2021}. Fourier features of
 this kind also help coordinate-based networks fit fine image detail
 \citep{Tancik2020}. During training the circuit is simulated exactly, so the
