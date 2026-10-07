@@ -598,8 +598,10 @@ provenance checks that prevented exploratory artifacts from becoming claims.
 A matched-budget, multi-seed rerun of the component-ablation table reaches the
 same conclusion on ordinary per-image reconstruction. The rerun uses 240 steps
 and 3 seeds per variant. A plain classical-replacement control ties or slightly
-exceeds the quantum baseline, and only a circuit-free random-VQC control
-performs clearly worse. This rerun uses a descriptive pooled-standard-deviation
+exceeds the quantum baseline, and \blue{apart from a freeze-classical sanity}
+\blue{check,} only a circuit-free random-VQC control
+performs clearly worse. \blue{Freeze-classical holds the decoder fixed, so it}
+\blue{cannot learn to reconstruct and is expected to fail.} This rerun uses a descriptive pooled-standard-deviation
 comparison rule at 3 seeds rather than a calibrated test, and full results are in
 the \blue{Supplementary Material.} Section~\ref{sec:dequant} discusses why this
 ties-with-classical result and the
