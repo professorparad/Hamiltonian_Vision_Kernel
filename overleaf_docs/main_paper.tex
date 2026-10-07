@@ -3,8 +3,8 @@
 % ---- packages ---------------------------------------------------------------
 %  sn-jnl.cls already provides hyperref, natbib, url and the caption setup;
 %  do not load those again or you will get an option clash.
+\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
-\graphicspath{{assets/}}% figures live in assets/figures/; includes stay figures/...
 \usepackage{amsmath,amssymb,amsfonts,bm}
 \usepackage{booktabs}
 \usepackage{array}
@@ -872,7 +872,7 @@ equally to a classical feature map.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.85\textwidth]{figures/d4_equivariance_summary.pdf}
+  \includegraphics[width=0.85\textwidth]{figures/d4_equivariance_summary.png}
   \caption[$D_4$ equivariance diagnostic]{$D_4$ equivariance diagnostic. The group-pooled map is equivariant to numerical
            precision. The unpooled positional map is not.}
   \label{fig:d4_equivariance}
@@ -949,7 +949,7 @@ reason we scope the claim to the linear protocol rather than to classical models
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/full_ablation_metric_comparison.pdf}
+  \includegraphics[width=0.9\textwidth]{figures/full_ablation_metric_comparison.png}
   \caption[Restricted pair-correlation diagnostic summary]{Restricted pair-correlation diagnostic summary (mean $\pm$ std over
            five seeds). The pair-observable feature map dominates every
            control on this deliberately favourable task.}

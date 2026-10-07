@@ -3,7 +3,6 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm}
-\graphicspath{{assets/}}% figures live in assets/figures/; includes stay figures/...
 \usepackage[hidelinks,hypertexnames=false]{hyperref}
 \usepackage{float}
 % ---- REVIEW MARKUP ONLY. Remove xcolor, ulem, the three macros below,
@@ -132,8 +131,8 @@ Random VQC & 5 & $6.97$ & $[5.76,8.06]$ & $0.0625$ \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.75\linewidth]{figures/real_cifar_holdout_summary.pdf}\\
-\includegraphics[width=0.75\linewidth]{figures/real_cifar_shot_noise.pdf}
+\includegraphics[width=0.75\linewidth]{supplementary_figures/real_cifar_holdout_summary.png}\\
+\includegraphics[width=0.75\linewidth]{supplementary_figures/real_cifar_shot_noise.pdf}
 \caption{Real held-out CIFAR validation and shot-noise robustness. The trained HVK2D image feature map is competitive with local/raw controls (TOST equivalence, $\pm1$~dB) and substantially outperforms the random-VQC null control.}
 \label{fig:hvk_real_cifar}
 \end{figure}
@@ -235,7 +234,7 @@ A multi-seed, real-trained-circuit qubit-count follow-up (CIFAR-10, reduced 90-s
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/capacity_scaling_sweeps.pdf}
+\includegraphics[width=\linewidth]{supplementary_figures/capacity_scaling_sweeps.pdf}
 \caption{Capacity and scaling sweeps (single-seed, \textit{Monalisa}). Left: PSNR vs.\ training steps, confirming convergence-limited behavior with a plateau near 500 steps. Center: qubit-count sweep, $q=8$ strongest in the tested range. Right: MPS bond-dimension sweep, highlighting the non-monotonic dip at the default $\chi=4$ (orange) relative to both smaller ($\chi=1,2$, green) and larger ($\chi=8$, gray) bond dimensions.}
 \label{fig:capacity_scaling_sweeps}
 \end{figure}
@@ -262,7 +261,7 @@ The same-set CIFAR-10 results (Figure~\ref{fig:cifar_metric_comparison}) are a c
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/cifar_metric_comparison.pdf}
+\includegraphics[width=\linewidth]{supplementary_figures/cifar_metric_comparison.png}
 \caption{Same-set CIFAR-10 comparison across all eight methods: MSE (log scale, left), PSNR with the memorization framing made explicit (center), and mean SSIM over the five images (right). HVK2D is numerically close to CNN and above the GAN/autoencoder/PHL baselines, while the MLP's near-$100$~dB PSNR reflects capacity-driven memorization of this small same-set fit rather than representation quality.}
 \label{fig:cifar_metric_comparison}
 \end{figure}
@@ -302,7 +301,7 @@ The main paper's restricted pair-correlation result remains supported by the fiv
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/full_ablation_metric_comparison.pdf}
+\includegraphics[width=\linewidth]{supplementary_figures/full_ablation_metric_comparison.png}
 \caption{The restricted pair-correlation diagnostic underlying the entanglement-necessity result (mean $R^2=0.9735$ vs.\ $R^2\leq0.02$ for non-entangling controls), shown here as MSE (left) and PSNR (right) across the full variant set: the trained HVK2D entangling map, freeze-quantum, no-entanglement, raw-linear, parameter-matched classical, random-VQC, and freeze-classical. The entangling channel (blue) separates numerically from every non-entangling control on this target, in direct contrast to the ordinary held-out reconstruction result of Section~\ref{sec:holdout_headline} where the same entangling channel does not separate from local/raw controls --- the two figures together visualize this document's central task-dependence argument.}
 \label{fig:restricted_diagnostic_summary}
 \end{figure}
@@ -377,7 +376,7 @@ Total & \multicolumn{2}{c}{Off} & 4/4 & -- \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/critical_temperature_traces.pdf}
+\includegraphics[width=\linewidth]{supplementary_figures/critical_temperature_traces.png}
 \caption{The surviving readout: signed energy-to-entanglement ratio $R_{ES}(t)=H(t)/S$ across training, HVK1D, two CIFAR-10 images $\times$ four seeds. Every trace descends smoothly and monotonically as the learned signed energy decreases at fixed $S$. There is no sharp feature here, and none is claimed: these are not temperature or cooling curves, and no critical epoch is marked. The figure is shown because this smooth descent is what the Hamiltonian term makes legible --- an interpretability readout a purely classical feature map does not natively expose. {\color{red}\textbf{[SUPERVISOR: The double negative ``does not natively expose'' was removed from the Conclusion of the main paper. Confirm we may state it positively here too, for instance that the Hamiltonian term supplies this readout directly whereas a classical feature map would have to be instrumented for it]}}}
 \label{fig:critical_temperature}
 \end{figure}
@@ -419,7 +418,7 @@ To reach the seed and dataset breadth a held-out comparison needs, we extend the
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{figures/topology_comparison_summary.pdf}
+\includegraphics[width=0.95\textwidth]{supplementary_figures/topology_comparison_summary.png}
 \caption{HVK1D vs.\ HVK2D across both evidence bases. Left two panels: real-circuit held-out PSNR and per-run wall-clock time (90-step budget, 3 seeds, error bars = std). Right two panels: surrogate-sweep held-out reconstruction PSNR and classification accuracy across three datasets (5 seeds), both topologies plotted against the strongest classical control (raw-linear).}
 \label{fig:topology_comparison_summary}
 \end{figure*}
@@ -450,7 +449,7 @@ local-raw (classical) & $0.8380\pm0.0067$ & $0.01202\pm0.00245$ & $15.16\pm0.68$
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{figures/d4_symmetry_experiment_summary.pdf}
+\includegraphics[width=0.95\textwidth]{supplementary_figures/d4_symmetry_experiment_summary.png}
 \caption{Held-out output-level $D_4$ symmetry evaluation, 5 seeds. Left: feature-equivariance error (log scale) --- both pooled modes sit at floating-point precision, roughly 16 orders of magnitude below every non-pooled control. Center: output-consistency MSE across all 8 $D_4$ transforms (log scale) --- the same separation persists at the reconstruction-output level, not just the feature level. Right: held-out accuracy PSNR (linear scale, error bars = std) --- the five mean values are close relative to their between-seed variation; no formal equivalence claim is made.}
 \label{fig:d4_symmetry_experiment_summary}
 \end{figure*}
@@ -508,7 +507,7 @@ The trained HVK1D forward pass applies, per patch: $R_X$ angle embedding, $R_Y$ 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.75\linewidth]{figures/ibm_circuit_summary.pdf}
+\includegraphics[width=0.75\linewidth]{supplementary_figures/ibm_circuit_summary.png}
 \caption{Transpiled circuit resource comparison between the HVK1D (\textit{Monalisa}) and HVK2D (CIFAR) per-patch circuits at \texttt{optimization\_level=1} on \texttt{ibm\_fez}: circuit depth (left) and CX-gate count (right). Both circuits have depth 18 and use 10--14 CX gates. These resource counts document the executed circuits; they do not by themselves attribute the observed hardware--simulator PSNR gap to a particular noise source.}
 \label{fig:ibm_circuit_summary}
 \end{figure}
