@@ -982,6 +982,10 @@ cases, which is as often as the Hamiltonian-regularised model's $4/4$. The
 threshold therefore fires whether the Hamiltonian term is present or absent, and
 it does not track that term. We therefore report these traces
 as an interpretability readout on the learned energy and entanglement.
+\blue{The readout is descriptive. It shows how the two quantities evolve during}
+\blue{optimisation. We do not treat it as evidence of a phase transition or a}
+\blue{critical point, and an earlier phase-transition reading of these traces has}
+\blue{been withdrawn.}
 
 \section{Discussion}
 \label{sec:discussion}
@@ -1221,7 +1225,11 @@ in this work.
         resource-matched held-out \blue{surrogate comparison} and the
         withdrawn training-dynamics \blue{material, namely per-variant training}
         \blue{curves of} the \blue{restricted diagnostic} that \blue{were interpolated from final}
-        \blue{metrics rather than logged.} Automated tests verify those
+        \blue{metrics rather than logged.} \blue{The earlier phase-transition reading}
+        \blue{of the training-dynamics traces is also withdrawn. The traces kept in}
+        \blue{Section~\ref{sec:phase_transition} come from a corrected rerun that}
+        \blue{records a noise-free evaluation pass after every optimiser update, and}
+        \blue{they are reported only as a descriptive readout.} Automated tests verify those
         mappings.
         IBM Quantum job identifiers and reconstructed outputs are retained; the raw account-usage service response was
         not serialised, so the reported quota change is an execution-log record
