@@ -16,8 +16,6 @@
 \usepackage[normalem]{ulem}
 \newcommand{\del}[1]{\sout{#1}}
 \newcommand{\add}[1]{\textbf{\textcolor{black}{#1}}}
-% \yellowcomment{...}: student reply, shown in a yellow box; remove before submission.
-\newcommand{\yellowcomment}[1]{\par\noindent\colorbox{yellow!40}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\RaggedRight #1}}\par}
 
 % ---- column types used by the differentiation matrices (differentiation table)
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
@@ -607,16 +605,6 @@ the \blue{Supplementary Material.} Section~\ref{sec:dequant} discusses why this
 ties-with-classical result and the
 pair-observable necessity result of
 Section~\ref{sec:entanglement_necessity} are consistent.
-\yellowcomment{A reproducible replacement table is already reported in
-\texttt{overleaf\_docs/supplementary.tex} as
-Table~\texttt{tab:core\_multiseed\_240}. Its retained main-branch artifacts are
-\texttt{Main2/newHVK/results/core\_multiseed\_240/runs.csv},
-\texttt{Main2/newHVK/results/core\_multiseed\_240/summary.csv}, and
-\texttt{Main2/newHVK/results/core\_multiseed\_240/summary.json}. The generating
-script is \texttt{Main2/newHVK/run\_core\_multiseed\_240.py}. Therefore, the
-fresh 240-step, three-seed table is reproducible and supersedes the earlier
-table whose original per-seed records are unavailable.}
-
 
 \subsection{A real hardware reconstruction pilot}
 \label{sec:hardware_pilot}
