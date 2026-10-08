@@ -429,6 +429,15 @@ PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings
 additionally report SSIM. \blue{All trained models use Adam with full-batch updates.}
 \del{Full implementation settings} \blue{Learning rates, step counts, seeds} and environment versions
 are given in the \blue{Supplementary Material.}
+{\color{red}\textbf{[Student Q8: The main text should state the training settings
+itself. Please write two or three sentences for this paragraph giving the
+optimiser, the learning rates, the step budgets, the energy weight $\lambda$ and
+the seeds. From the scripts we read Adam with full-batch updates, learning rate
+$0.003$ for PCAE1D and $0.004$ for PCAE2D, $\lambda=0.01$, 200 steps for the
+\textit{Monalisa} and CIFAR-10 hardware fits, 80--100 steps for the six-dataset
+fits and 90 steps for the topology comparison. Please confirm these against the
+runs actually reported. Please also state how the circuit parameters are
+initialised.]}}
 
 \section{Results}
 \label{sec:results}
