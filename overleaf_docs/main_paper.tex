@@ -189,16 +189,15 @@ how the individual ingredients recur across this literature.
         construction gives the same exactness for a purely classical feature
         \blue{map.} We report it as a design property
         of the \blue{pooled observable map.}
-  \item \textbf{Restricted nonlocal result (diagnostic).} In a leakage-audited protocol with a fixed
+  \item \textbf{Restricted nonlocal result (diagnostic).} In a leakage-audited protocol \blue{(Appendix~\ref{app:leakage})} with a fixed
         linear readout, pair observables are necessary when the target
         depends explicitly on distant-patch products
         (Section~\ref{sec:entanglement_necessity}).
 \end{enumerate}
 
 \blue{The}
-\blue{Supplementary} Material \blue{gives} the \blue{complete} held-out \blue{surrogate study, the}
-\blue{hardware} \del{job identifiers and} \blue{validation data,} \blue{the training settings,} \blue{and} provenance audits of excluded
-exploratory \blue{results.}
+\del{Supplementary Material gives the complete held-out surrogate study, the hardware job identifiers and validation data, the training settings, and provenance audits of excluded exploratory results.}
+\blue{appendices give the training settings, the matched-budget ablation, further held-out results, the hardware methodology, the $D_4$ check on the trained circuit and the training-dynamics definitions.}
 
 \section{Pauli-Correlator Autoencoder: Architecture}
 \label{sec:architecture}
@@ -428,7 +427,7 @@ resource-matched statistical \blue{protocol,}
 PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings
 additionally report SSIM. \blue{All trained models use Adam with full-batch updates.}
 \del{Full implementation settings} \blue{Learning rates, step counts, seeds} and environment versions
-are given in the \blue{Supplementary Material.}
+are given in \del{the Supplementary Material.} \blue{Appendix~\ref{sec:training_settings}.}
 {\color{red}\textbf{[Student Q8: The main text should state the training settings
 itself. Please write two or three sentences for this paragraph giving the
 optimiser, the learning rates, the step budgets, the energy weight $\lambda$ and
@@ -517,7 +516,7 @@ On held-out CIFAR-10, the raw/local linear control reaches
 $18.80\pm1.42$~dB, against \blue{the PCAE2D surrogate's} $18.12\pm1.54$~dB. Aggregating held-out
 images within each split gives a PCAE2D-minus-control difference of $-0.68$~dB,
 with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$
-\blue{seeds \citep{Efron1993, Wilcoxon1945}.} The same numerical direction holds on five further real datasets. The
+\blue{seeds \citep{Efron1993, Wilcoxon1945}.} The same numerical direction holds on five further real datasets \blue{(Appendix~\ref{app:multidataset}).} The
 \blue{surrogate} map is
 therefore \blue{informative. Its mean} stays within 1~dB of the simpler \blue{maps, and the}
 \blue{raw/local linear control is $0.68$~dB ahead of it.}
@@ -569,6 +568,7 @@ outperforms them.
 \blue{PCAE2D reaches $11.57\pm1.53$~dB on three unseen CIFAR-10 images, close to the}
 \blue{$11$--$15$~dB random-latent range (Section~\ref{sec:hardware_pilot}). Held-out generalisation of the}
 \blue{trained circuit is therefore not established at this budget.}
+\blue{Appendix~\ref{app:random_latent} gives a random-latent control under the same protocol.}
 {\color{red}\textbf{[Student Q3: The random-latent values we found (11.45, 13.92 and
 14.61~dB) all come from evaluation-time swaps in Monalisa PCAE1D checkpoints
 (\texttt{legacy\_hvk\_controls} and \texttt{verify\_shuffle\_permutations}). Is
@@ -613,7 +613,7 @@ exceeds the quantum baseline, and \blue{apart from a freeze-classical sanity}
 performs clearly worse. \blue{Freeze-classical holds the decoder fixed, so it}
 \blue{cannot learn to reconstruct and is expected to fail.} This rerun uses a descriptive pooled-standard-deviation
 comparison rule at 3 seeds rather than a calibrated test, and full results are in
-the \blue{Supplementary Material.} Section~\ref{sec:dequant} discusses why this
+\del{the Supplementary Material.} \blue{Appendix~\ref{sec:core_multiseed_rerun}.} Section~\ref{sec:dequant} discusses why this
 ties-with-classical result and the
 pair-observable necessity result of
 Section~\ref{sec:entanglement_necessity} are consistent.
@@ -712,8 +712,8 @@ circuits and the classical decoder all transfer unchanged, and the decoded
 images remain quantitatively informative at 256 shots per basis on an
 unmitigated device. This is the sense in which PCAE runs on real quantum
 hardware. \blue{Gate} sequences, measurement
-construction\del{, job identifiers} and \blue{validation results are in the Supplementary}
-\blue{Material.}
+construction\del{, job identifiers} and \blue{validation results are in} \del{the Supplementary Material.}
+\blue{Appendix~\ref{sec:hardware_methodology}.}
 
 The same checkpoint-replay methodology supports a further hardware \blue{replay.} Fresh PCAE1D
 checkpoints were trained at $N\in\{4,6,8\}$ and replayed epoch-by-epoch on real
@@ -855,7 +855,7 @@ pooling construction is what delivers the property. This construction operates
 at the feature-grid level and serves here as a numerical diagnostic, rather
 than as a component of the trainable reconstruction pipeline. Integrating it
 end-to-end (Section~\ref{sec:limitations}) is concrete future work.
-\blue{Applied to the trained circuit, the same pooling reduces the equivariance error to order $10^{-8}$.}
+\blue{Applied to the trained circuit, the same pooling reduces the equivariance error to order $10^{-8}$ (Appendix~\ref{sec:d4_real_circuit}).}
 This route to symmetry differs from equivariant quantum neural networks,
 in which every circuit layer is built to commute with the group action
 \citep{Nguyen2024EQNN}. A recent image classifier of that kind builds $C_4$
@@ -977,6 +977,7 @@ energy-to-entanglement ratio $R_{ES}(t)$. Both drift smoothly over training with
 run-to-run fluctuations, and neither shows a sharp transition. Any apparent onset
 is a within-run median-plus-$2\sigma$ threshold crossing, rather than a
 calibrated statistical test.
+\blue{Appendix~\ref{app:dynamics} defines both readouts and the threshold rule.}
 
 A negative control fixes the scope. We applied the identical protocol to a
 classical-replacement variant, in which the Hamiltonian energy is identically
@@ -1199,9 +1200,9 @@ quantum vision architectures.
 % ============================== BACK MATTER =================================
 \backmatter
 
-\bmhead{Supplementary information}
+\bmhead{\del{Supplementary information}}
 
-\blue{Supplementary} Material accompanies this manuscript.
+\del{Supplementary Material accompanies this manuscript.}
 
 \bmhead{Acknowledgements}
 
@@ -1245,6 +1246,168 @@ in this work.
         review \& editing, Resources. Both authors reviewed and approved the
         final manuscript.
 \end{description}
+
+% ============================== APPENDICES =================================
+% Condensed on 2026-10-08 from supplementary_shortened.tex (existing results only).
+% The block is new to this file and is set in blue. Floats reset to the default
+% colour, so the default is set to blue inside the environment as well.
+\begin{appendices}
+\color{blue}\expandafter\let\csname default@color\expandafter\endcsname
+  \csname current@color\endcsname
+% distinct hyperref anchors for the appendix floats and equations
+\renewcommand{\theHtable}{app.\thetable}%
+\renewcommand{\theHfigure}{app.\thefigure}%
+\renewcommand{\theHequation}{app.\theequation}%
+
+\section{Training settings and evaluation protocol}
+\label{sec:training_settings}
+
+All trained models use Adam with full-batch updates over the patches of their training images.
+The loss is the reconstruction mean squared error plus $\lambda=0.01$ times the mean Hamiltonian energy, except where an ablation removes or replaces the energy term.
+The held-out comparison fits no network.
+Its linear readout is solved in closed form as a ridge regression with regularisation $10^{-6}$.
+Table~\ref{tab:training_settings} lists the settings of each experiment.
+
+\begin{table}[!htbp]
+\centering
+\caption{Training settings. Learning rates are for Adam. Patches are non-overlapping unless a stride is given.}
+\label{tab:training_settings}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}l l l r l l@{}}
+\toprule
+Experiment & Model & Patches & Steps & Learning rate & Seeds \\
+\midrule
+\textit{Monalisa} fit$^{a}$ & PCAE1D & 16, $64\times64$ & 200 & 0.003 & 42 \\
+240-step ablation & PCAE1D & 16, $64\times64$ & 240 & 0.003 & 0, 1, 2 \\
+Six-dataset fits & PCAE2D & 16, $8\times8$ & 80--100 & 0.004 & -- \\
+CIFAR-10 hardware fits & PCAE2D & 16, $8\times8$ & 200 & 0.004 & -- \\
+Topology comparison & 1D / 2D & 49, $8\times8$, stride 4 & 90 & 0.003 / 0.004 & 0, 1, 2 \\
+Held-out comparison & surrogate & 16, $8\times8$ & -- & closed form & 0--4 \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\raggedright $^{a}$\,Used for the hardware pilot and the Hamiltonian-term controls.
+\end{table}
+
+The experiment drivers set the Python, NumPy and PyTorch random seeds explicitly.
+``Mean $\pm$ std'' denotes the mean and the population standard deviation over the unit named in each caption.
+Bootstrap intervals are percentile 95\% intervals, and Wilcoxon values are two-sided signed-rank tests.
+The runs used Python 3.11.9, PyTorch 2.6.0 with CUDA 12.4, PennyLane 0.42.3, Qiskit 2.5.0 and NumPy 2.4.6 on an NVIDIA GeForce GTX 1050.
+
+\label{app:leakage}%
+Every constructed diagnostic is audited for leakage.
+A target that is a near-linear function of a quantity given to only one model produces an apparent advantage that is copying, not learning.
+For a target $y$ and a feature block $x$, the audit checks whether a linear or near-linear map from $x$ to $y$ reaches near-zero residual on the features used to build $y$.
+If it does, the diagnostic is circular for every architecture.
+Every diagnostic retained as quantitative evidence passes this check.
+{\color{red}\textbf{[Student: the values in Table~\ref{tab:training_settings} are read from the training scripts and their defaults. Please confirm that the reported runs used them, fill in the seeds marked ``--'', and check the patch layout of the held-out comparison.]}}
+
+\section{Matched-budget component ablation}
+\label{sec:core_multiseed_rerun}
+
+All nine variants were trained on \textit{Monalisa} with a matched 240-step budget and an identical learning rate and schedule, for three seeds each (Table~\ref{tab:core_multiseed_240}).
+The classical-replacement variant exceeds the quantum baseline by $0.081$~dB, against a pooled standard deviation of $0.019$~dB.
+The classical-matched variant, rank-limited to the circuit's parameter count, falls $0.197$~dB below the baseline.
+At three seeds the pooled-standard-deviation rule is a descriptive comparison, and no $p$-value is attached to it.
+
+\begin{table}[!htbp]
+\centering
+\caption{Matched-budget (240-step) component ablation on \textit{Monalisa}, three seeds per variant, mean $\pm$ std.}
+\label{tab:core_multiseed_240}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lcc@{\hspace{14pt}}lcc@{}}
+\toprule
+Variant & PSNR (dB) & SSIM & Variant & PSNR (dB) & SSIM \\
+\midrule
+Baseline (quantum) & $33.42\pm0.02$ & $0.99385\pm0.00003$ & Classical-replacement & $33.50\pm0.01$ & $0.99395\pm0.00002$ \\
+Freeze-quantum & $33.39\pm0.06$ & $0.99381\pm0.00006$ & Classical-matched & $33.22\pm0.19$ & $0.99356\pm0.00027$ \\
+No-entanglement & $33.48\pm0.02$ & $0.99392\pm0.00003$ & Random-VQC & $28.09\pm0.23$ & $0.97907\pm0.00135$ \\
+No-MPS & $33.34\pm0.05$ & $0.99374\pm0.00008$ & Freeze-classical & $10.94\pm0.00$ & $0.0219\pm0.0001$ \\
+No-energy-loss & $33.44\pm0.01$ & $0.99387\pm0.00001$ & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+{\color{red}\textbf{[Student: the retained \texttt{runs.csv} of this rerun has four baseline runs (seeds 0--3) and two runs for each freeze-quantum seed (0--2), although the text reports three seeds per variant. Which runs enter the means of Table~\ref{tab:core_multiseed_240}? Please correct the table or the text.]}}
+
+\section{Held-out reconstruction}
+\label{app:multidataset}
+
+The held-out protocol of Section~\ref{sec:ablation_relationship} was repeated on cached subsets of six datasets, with 400 images per dataset and three stratified split seeds (Table~\ref{tab:multi_dataset_reconstruction}).
+The local/raw control has equal or higher mean PSNR on every dataset.
+After averaging within each split seed, all six seed-bootstrap intervals exclude zero, and each two-sided signed-rank test gives $p=0.25$, the smallest value attainable with three seeds.
+
+\begin{table}[!htbp]
+\centering
+\caption{Held-out PSNR (dB) on cached subsets, mean $\pm$ std over held-out images, for the best local/raw control and the PCAE2D surrogate.}
+\label{tab:multi_dataset_reconstruction}
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Dataset & Best local/raw & PCAE2D surrogate & Higher mean \\
+\midrule
+CIFAR-10 & $21.17{\pm}1.98$ & $19.99{\pm}2.02$ & Local/raw \\
+MNIST & $16.55{\pm}1.27$ & $16.12{\pm}1.34$ & No-entanglement/local \\
+Fashion-MNIST & $17.67{\pm}1.71$ & $17.33{\pm}1.80$ & Local/raw \\
+PathMNIST & $27.52{\pm}6.02$ & $27.01{\pm}5.81$ & Local/raw \\
+BloodMNIST & $24.79{\pm}1.78$ & $24.24{\pm}1.66$ & Local/raw \\
+PneumoniaMNIST & $26.49{\pm}2.48$ & $25.73{\pm}2.29$ & Local/raw \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\label{app:random_latent}%
+In the held-out topology test of Section~\ref{sec:topology}, PCAE1D reaches $11.73\pm1.99$~dB and PCAE2D reaches $11.57\pm1.53$~dB.
+A random-latent control under the identical protocol replaces the observable vector with resampled noise and trains the decoder normally.
+It reaches $12.74\pm2.21$~dB for PCAE1D and $12.64\pm2.12$~dB for PCAE2D.
+The trained circuits are about 1~dB below this floor, and the paired difference is negative in all six seed-level comparisons (two-sided Wilcoxon $p=0.031$).
+At 90 steps, only the PCAE1D-minus-PCAE2D difference in this test is informative.
+
+\section{Hardware pilot methodology}
+\label{sec:hardware_methodology}
+
+No model was retrained for the pilot.
+The \textit{Monalisa} circuit is the PCAE1D checkpoint of the ``Legacy baseline, signed energy'' row of Table~\ref{tab:hamiltonian_controls}.
+The four CIFAR-10 circuits are PCAE2D checkpoints, each trained on its own image with 16 non-overlapping $8\times8$ patches (Table~\ref{tab:training_settings}).
+Each trained circuit was rebuilt gate for gate in Qiskit.
+PCAE1D measures $Z$, $X$, $ZZ$, $XX$ and $YY$ (27 observables).
+Its pair correlators are joint parities of the same all-$Z$, all-$X$ and all-$Y$ basis measurements that give the single-qubit values, so three measurement circuits per patch suffice, or 48 circuits for \textit{Monalisa}.
+PCAE2D measures $Z$, $X$ and $ZZ$ (19 observables) and needs two circuits per patch, or 128 circuits for the four CIFAR-10 images.
+
+Before any hardware submission, every circuit was checked against the cached training-time observables by exact statevector simulation.
+The largest absolute error was $7.89\times10^{-4}$ for \textit{Monalisa} and at most $9.42\times10^{-6}$ for the CIFAR-10 checkpoints.
+On hardware, the mean absolute deviation of the observables from the statevector values was $0.096$--$0.125$, so gate translation is not the main source of the hardware--simulator PSNR gap.
+Hardware counts were converted to expectation values with the standard parity estimator and passed, with the training-time positional encoding, through the unmodified trained decoder.
+
+\section{\texorpdfstring{$D_4$}{D4} pooling on the trained circuit}
+\label{sec:d4_real_circuit}
+
+The pooling check of Section~\ref{sec:d4} was repeated on the four trained PCAE2D hardware checkpoints, using an exact statevector forward pass on all eight $D_4$-transformed copies of each image.
+Without pooling, the mean feature-equivariance error is $0.2777$ and the mean output-consistency MSE is $4.355\times10^{-2}$.
+With the same Reynolds average, they fall to $5.39\times10^{-8}$ and $1.46\times10^{-15}$, which is floating-point error from the statevector simulation and the per-transform feature standardisation.
+
+\section{Training-dynamics readouts}
+\label{app:dynamics}
+
+The traces of Section~\ref{sec:phase_transition} come from a noise-free forward pass in evaluation mode after every optimiser update.
+At step $t$, with $P$ patches and $N$ qubits,
+\begin{equation}
+M_z(t)=\frac{1}{PN}\sum_{p=1}^{P}\sum_{i=1}^{N}\langle Z_i\rangle_p(t),
+\qquad
+R_{ES}(t)=\frac{1}{S}\sum_i\sum_{\alpha\in\{x,y,z\}}J_\alpha^{(i)}\langle\sigma_\alpha^{(i)}\sigma_\alpha^{(i+1)}\rangle(t).
+\label{eq:order_parameter}
+\end{equation}
+Here $S$ is the sum of the von Neumann bond entropies of the MPS decomposition.
+$S$ does not change during circuit training, so $R_{ES}$ tracks the learned energy up to a fixed scale.
+$R_{ES}$ is not a thermodynamic temperature, and it is tracked for PCAE1D on two CIFAR-10 images over four seeds.
+The threshold rule flags a run when the largest change of $M_z$ between successive steps exceeds that run's median change plus two standard deviations.
+Across the six datasets, with two images and two seeds each, it flags 16 of 24 runs.
+In the negative control on \textit{Monalisa} and CIFAR-10 \textit{cat}, with two seeds each and 200 steps, it flags all four runs with the Hamiltonian term and all four runs without it.
+
+\end{appendices}
 
 % ============================== REFERENCES ==================================
 %  sn-jnl.cls sets the bibliography style from the sn-basic class option.
