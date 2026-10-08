@@ -887,6 +887,20 @@ def select_same_width(features: np.ndarray, width: int = 32) -> np.ndarray:
     return np.concatenate([features, pad], axis=1)
 
 
+def select_same_width_with_position(
+    model_features: np.ndarray,
+    positional_features: np.ndarray,
+    width: int = 32,
+) -> np.ndarray:
+    """Match width while reserving every positional channel for every model."""
+    positional_width = positional_features.shape[1]
+    if positional_width > width:
+        raise ValueError("Positional features cannot exceed the requested width")
+    model_width = width - positional_width
+    selected_model_features = select_same_width(model_features, model_width)
+    return np.concatenate([selected_model_features, positional_features], axis=1)
+
+
 def real_newhvk_features(base: np.ndarray) -> np.ndarray:
     local = base[:, :18]
     pos = base[:, 18:26]
@@ -902,14 +916,15 @@ def real_newhvk_features(base: np.ndarray) -> np.ndarray:
         axis=1,
     )
     harmonics = np.sin(np.pi * pairs)
-    return select_same_width(np.concatenate([local, pairs, harmonics, pos], axis=1), 32)
+    model_features = np.concatenate([local, pairs, harmonics], axis=1)
+    return select_same_width_with_position(model_features, pos, 32)
 
 
 def real_no_entanglement_features(base: np.ndarray) -> np.ndarray:
     local = base[:, :18]
     pos = base[:, 18:26]
-    single_site = np.concatenate([local, np.sin(np.pi * local[:, :6]), pos], axis=1)
-    return select_same_width(single_site, 32)
+    single_site = np.concatenate([local, np.sin(np.pi * local[:, :6])], axis=1)
+    return select_same_width_with_position(single_site, pos, 32)
 
 
 def real_zz_only_features(base: np.ndarray) -> np.ndarray:
@@ -923,18 +938,18 @@ def real_zz_only_features(base: np.ndarray) -> np.ndarray:
         ],
         axis=1,
     )
-    return select_same_width(np.concatenate([local, zz, pos], axis=1), 32)
+    return select_same_width_with_position(np.concatenate([local, zz], axis=1), pos, 32)
 
 
 def real_local_observables_only(base: np.ndarray) -> np.ndarray:
-    return select_same_width(np.concatenate([base[:, :18], base[:, 18:26]], axis=1), 32)
+    return select_same_width_with_position(base[:, :18], base[:, 18:26], 32)
 
 
 def real_shuffled_pair_features(base: np.ndarray, seed: int) -> np.ndarray:
     features = real_newhvk_features(base).copy()
     rng = np.random.default_rng(50_000 + seed)
-    pair_block = features[:, 18:30].copy()
-    features[:, 18:30] = pair_block[rng.permutation(pair_block.shape[0])]
+    pair_block = features[:, 18:24].copy()
+    features[:, 18:24] = pair_block[rng.permutation(pair_block.shape[0])]
     return features
 
 
@@ -968,11 +983,12 @@ def real_quadratic_classical_features(base: np.ndarray) -> np.ndarray:
         ],
         axis=1,
     )
-    return select_same_width(np.concatenate([local, quadratic, np.sin(np.pi * quadratic), pos], axis=1), 32)
+    model_features = np.concatenate([local, quadratic, np.sin(np.pi * quadratic)], axis=1)
+    return select_same_width_with_position(model_features, pos, 32)
 
 
 def real_raw_linear_features(base: np.ndarray) -> np.ndarray:
-    return select_same_width(base, 32)
+    return select_same_width_with_position(base[:, :18], base[:, 18:26], 32)
 
 
 def add_shot_noise(features: np.ndarray, shots: int, seed: int) -> np.ndarray:
@@ -1330,7 +1346,7 @@ def write_q1_report(
         for row in shot_summary
     )
     stat_rows = "\n".join(
-        f"{row['comparison'].replace('HVK2D-real-cifar minus ', '')} & {int(row['n_pairs'])} & "
+        f"{row['comparison'].replace('HVK2D-real-cifar minus ', '')} & {int(row['n_seeds'])} & "
         f"${float(row['mean_psnr_difference_db']):.2f}$ & "
         f"$[{float(row['bootstrap95_low_db']):.2f},{float(row['bootstrap95_high_db']):.2f}]$ & "
         f"{float(row['wilcoxon_p_psnr']):.3g} \\\\"
@@ -1387,12 +1403,12 @@ Model & MSE & PSNR & SSIM \\
 \end{{figure*}}
 
 \section{{Statistical Analysis}}
-All principal image-level comparisons are paired by seed and held-out image.
-For each pair, we compute the PSNR difference between HVK2D-real-cifar and the
-corresponding control. Because the sample size is small and normality should
-not be assumed, we report a Wilcoxon signed-rank $p$ value and a bootstrap
-$95\%$ confidence interval for the mean paired PSNR difference. Positive values
-favor HVK2D; negative values favor the control.
+All principal comparisons are paired by split seed. We first average the four
+held-out-image differences within each seed because those images share a fitted
+readout. Because the sample size is small and normality should not be assumed,
+we report a Wilcoxon signed-rank $p$ value and a bootstrap $95\%$ confidence
+interval for the mean seed-level PSNR difference. Positive values favor HVK2D;
+negative values favor the control.
 
 \begin{{table*}}[t]
 \centering
@@ -1401,7 +1417,7 @@ favor HVK2D; negative values favor the control.
 \scriptsize
 \begin{{tabular}}{{lcccc}}
 \toprule
-Control & Pairs & Mean $\Delta$PSNR & Bootstrap 95\% CI & Wilcoxon $p$ \\
+Control & Seeds & Mean $\Delta$PSNR & Bootstrap 95\% CI & Wilcoxon $p$ \\
 \midrule
 {stat_rows}
 \bottomrule

@@ -1,0 +1,121 @@
+\documentclass[journal]{IEEEtran}
+\usepackage{amsmath,amsfonts,amssymb,graphicx,booktabs,cite,bm}
+\usepackage[hypertexnames=false]{hyperref}
+\begin{document}
+\title{HVK1D/HVK2D Q1-Validation Addendum: Held-Out CIFAR Baselines, Observable Ablations, and Shot-Noise Robustness}
+\author{Sparsho~Chakraborty and Siddhartha~Patra}
+\maketitle
+\begin{abstract}
+This addendum strengthens the HVK1D/HVK2D evidence package by separating diagnostic pair-correlation performance from held-out natural-image reconstruction. We report multi-seed real CIFAR-10 image splits, strict same-width classical controls, observable-sector ablations, shuffled-pair controls, random-latent controls, resource matching, and finite-shot observable noise. Unlike the restricted pair-correlation diagnostic, the real held-out CIFAR test does not establish quantum advantage: the best real-image result is obtained by local-observables-only, while HVK2D-real-cifar reaches 18.30 dB mean PSNR. The correct conclusion is therefore narrower: HVK2D has a useful entanglement-sensitive diagnostic, but the current real-image validation still requires architectural improvement before a Q1-level quantum-advantage claim is defensible.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Hamiltonian vision kernel, CIFAR-10 reconstruction, ablation study, quantum observables, shot noise, classical controls.
+\end{IEEEkeywords}
+
+\section{Validation Protocol}
+Ten cached CIFAR-10 grayscale images are split across five random seeds. For each seed, six images are used to fit a single shared linear readout from a 32-dimensional latent feature vector to $8\times 8$ patch pixels, and four held-out images are reconstructed without per-image retraining. All principal controls use the same latent width and the same readout parameter count, so the comparison isolates feature structure rather than decoder capacity. This cached-image protocol is a reproducible smoke test, not a substitute for the recommended class-balanced CIFAR-10 subset protocol with mutually exclusive training, validation, and test images.
+
+\section{Classical Pair-Feature Controls}
+Because the nonlocal target is constructed from pair products, a raw-linear baseline is not by itself a sufficient classical control. We therefore include explicit quadratic-feature controls in the CIFAR reconstruction suite and in the CIFAR-derived nonlocal diagnostic. These controls test whether performance arises from access to multiplicative pair features generally, rather than from a uniquely quantum mechanism.
+
+\section{Held-Out CIFAR Results}
+\begin{table*}[t]
+\centering
+\caption{Real held-out CIFAR-10 reconstruction across five random image splits. Lower MSE and higher PSNR/SSIM are better.}
+\label{tab:real_cifar_q1}
+\scriptsize
+\begin{tabular}{lccc}
+\toprule
+Model & MSE & PSNR & SSIM \\
+\midrule
+local-observables-only & $1.3923e-02\pm4.7e-03$ & $18.80\pm1.42$ & $0.8280\pm0.0578$ \\
+raw-linear-classical & $1.3923e-02\pm4.7e-03$ & $18.80\pm1.42$ & $0.8280\pm0.0578$ \\
+zz-only & $1.4782e-02\pm5.2e-03$ & $18.56\pm1.49$ & $0.8194\pm0.0603$ \\
+no-entanglement & $1.4956e-02\pm4.8e-03$ & $18.46\pm1.32$ & $0.8176\pm0.0569$ \\
+shuffled-pair-observables & $1.5075e-02\pm4.8e-03$ & $18.43\pm1.36$ & $0.8151\pm0.0627$ \\
+quadratic-classical & $1.5377e-02\pm6.0e-03$ & $18.44\pm1.62$ & $0.8141\pm0.0682$ \\
+HVK2D-real-cifar & $1.5899e-02\pm6.3e-03$ & $18.30\pm1.62$ & $0.8092\pm0.0667$ \\
+strict-classical-rff & $2.7390e-02\pm8.9e-03$ & $15.85\pm1.39$ & $0.6640\pm0.1041$ \\
+random-vqc & $7.9497e-02\pm2.0e-02$ & $11.15\pm1.19$ & $0.0237\pm0.1526$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{../results/q1_validation/real_cifar_holdout_summary.png}
+\caption{Held-out CIFAR metric summary for HVK2D and same-width controls.}
+\label{fig:real_cifar_summary}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{../results/q1_validation/real_cifar_reconstruction_panel.png}
+\caption{Representative held-out CIFAR reconstruction panel. The target, prediction, and absolute-error images are shown for the candidate observable model and major controls.}
+\label{fig:real_cifar_recons}
+\end{figure*}
+
+\section{Statistical Analysis}
+All principal comparisons are paired by split seed. We first average the four
+held-out-image differences within each seed because those images share a fitted
+readout. Because the sample size is small and normality should not be assumed,
+we report a Wilcoxon signed-rank $p$ value and a bootstrap $95\%$ confidence
+interval for the mean seed-level PSNR difference. Positive values favor HVK2D;
+negative values favor the control.
+
+\begin{table*}[t]
+\centering
+\caption{Paired statistical tests for held-out CIFAR reconstruction.}
+\label{tab:paired_stats_q1}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Control & Seeds & Mean $\Delta$PSNR & Bootstrap 95\% CI & Wilcoxon $p$ \\
+\midrule
+raw-linear-classical & 5 & $-0.50$ & $[-0.76,-0.29]$ & 0.0625 \\
+local-observables-only & 5 & $-0.50$ & $[-0.76,-0.29]$ & 0.0625 \\
+no-entanglement & 5 & $-0.16$ & $[-0.47,0.12]$ & 0.812 \\
+zz-only & 5 & $-0.26$ & $[-0.42,-0.10]$ & 0.0625 \\
+quadratic-classical & 5 & $-0.14$ & $[-0.22,-0.06]$ & 0.0625 \\
+strict-classical-rff & 5 & $2.45$ & $[2.14,2.80]$ & 0.0625 \\
+shuffled-pair-observables & 5 & $-0.13$ & $[-0.33,0.06]$ & 0.438 \\
+random-vqc & 5 & $7.15$ & $[5.93,8.23]$ & 0.0625 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Shot-Noise Robustness}
+\begin{table}[t]
+\centering
+\caption{Finite-shot observable-noise simulation for real held-out CIFAR reconstruction.}
+\label{tab:shot_noise_q1}
+\scriptsize
+\begin{tabular}{rccc}
+\toprule
+Shots & Mean MSE & Mean PSNR & Mean SSIM \\
+\midrule
+128 & $2.1104e-02$ & 16.95 & 0.7538 \\
+256 & $2.0676e-02$ & 17.04 & 0.7608 \\
+512 & $2.0160e-02$ & 17.17 & 0.7670 \\
+1024 & $2.0526e-02$ & 17.11 & 0.7646 \\
+2048 & $2.0554e-02$ & 17.10 & 0.7655 \\
+4096 & $2.0536e-02$ & 17.12 & 0.7676 \\
+8192 & $2.0496e-02$ & 17.13 & 0.7667 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../results/q1_validation/real_cifar_shot_noise.png}
+\caption{Shot-noise robustness of the HVK2D observable feature vector on real held-out CIFAR splits.}
+\label{fig:shot_noise_q1}
+\end{figure}
+
+\section{Interpretation}
+The key baseline is the strict same-width classical random-feature control, but the strongest warning comes from the local and raw-linear controls. In the real held-out CIFAR table, local-observables-only obtains the best mean MSE ($1.3923e-02$), while HVK2D-real-cifar is weaker ($1.5899e-02$). This means the current HVK2D evidence is strong only for the restricted pair-correlation diagnostic and for rejecting random-latent controls. It does not yet support a broad natural-image quantum-advantage claim. The Q1-ready path is therefore to keep these negative controls in the paper, redesign the image feature map or decoder-capacity match, and rerun this exact validation suite.
+
+\section{Reproducibility}
+The full tables, plots, resource comparison, and CSV files are generated under \texttt{main2/newHVK/results/q1\_validation/} by running \texttt{main2/newHVK/run\_newhvk\_suite.py --q1-validation --write-q1-report}.
+\end{document}

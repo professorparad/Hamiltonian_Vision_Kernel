@@ -5,9 +5,9 @@
     "image": "0264_airplane_stealth_bomber_s_000001.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.01901254405612173,
-    "psnr": 17.20959766584789,
-    "ssim": 0.7980165506102735,
+    "mse": 0.015421589460875325,
+    "psnr": 18.118708624385786,
+    "ssim": 0.8247372882310579,
     "shots": 128
   },
   {
@@ -16,9 +16,9 @@
     "image": "0350_truck_aerial_ladder_truck_s_000799.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.018388705124850666,
-    "psnr": 17.354488513454655,
-    "ssim": 0.8428653594331712,
+    "mse": 0.01957929380749672,
+    "psnr": 17.082029765287068,
+    "ssim": 0.8275968788127301,
     "shots": 128
   },
   {
@@ -27,9 +27,9 @@
     "image": "0518_dog_lapdog_s_001485.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.023355162723362636,
-    "psnr": 16.316171024882824,
-    "ssim": 0.8252845842868511,
+    "mse": 0.0301069532410859,
+    "psnr": 15.213331919310749,
+    "ssim": 0.773900395470226,
     "shots": 128
   },
   {
@@ -38,9 +38,9 @@
     "image": "0890_deer_odocoileus_hemionus_s_000537.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.0168442469217918,
-    "psnr": 17.735484008313477,
-    "ssim": 0.8336149122570569,
+    "mse": 0.01769869105583994,
+    "psnr": 17.520588516182166,
+    "ssim": 0.8332501384117463,
     "shots": 128
   },
   {
@@ -49,9 +49,9 @@
     "image": "0252_truck_tractor_trailer_s_000158.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.03647936957297508,
-    "psnr": 14.3795267564362,
-    "ssim": 0.668138285294855,
+    "mse": 0.035970641049686544,
+    "psnr": 14.440518223466071,
+    "ssim": 0.6786729290095458,
     "shots": 128
   },
   {
@@ -60,9 +60,9 @@
     "image": "0608_cat_tomcat_s_001650.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.019507189854387832,
-    "psnr": 17.09805289223331,
-    "ssim": 0.7781195450484054,
+    "mse": 0.017749995974739224,
+    "psnr": 17.5080174109614,
+    "ssim": 0.8062858268076443,
     "shots": 128
   },
   {
@@ -71,9 +71,9 @@
     "image": "0745_horse_walking_horse_s_001609.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.017947398630736543,
-    "psnr": 17.459984909401797,
-    "ssim": 0.6489173279837553,
+    "mse": 0.017801173077906313,
+    "psnr": 17.495513772149984,
+    "ssim": 0.6483282520157453,
     "shots": 128
   },
   {
@@ -82,9 +82,9 @@
     "image": "0918_ship_packet_boat_s_001250.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.022023177434210936,
-    "psnr": 16.57120022212914,
-    "ssim": 0.6665270035716105,
+    "mse": 0.02401150729228647,
+    "psnr": 16.19580576795281,
+    "ssim": 0.6498620765866202,
     "shots": 128
   },
   {
@@ -93,9 +93,9 @@
     "image": "0052_airplane_stealth_bomber_s_002171.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.012136025079526738,
-    "psnr": 19.15923534735431,
-    "ssim": 0.8405112372836945,
+    "mse": 0.012777139561088748,
+    "psnr": 18.93566361504647,
+    "ssim": 0.8140189467865758,
     "shots": 128
   },
   {
@@ -104,9 +104,9 @@
     "image": "0571_horse_mare_s_001216.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.025141766923481808,
-    "psnr": 15.99604204050504,
-    "ssim": 0.823656815393279,
+    "mse": 0.02585095535484479,
+    "psnr": 15.875234023700163,
+    "ssim": 0.8030575745997117,
     "shots": 128
   },
   {
@@ -115,9 +115,9 @@
     "image": "0959_ship_ferry_s_000340.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.018961260589966018,
-    "psnr": 17.22132793101997,
-    "ssim": 0.8216424480933612,
+    "mse": 0.019359181336270175,
+    "psnr": 17.13113012144251,
+    "ssim": 0.8161183198338989,
     "shots": 128
   },
   {
@@ -126,9 +126,9 @@
     "image": "0963_frog_western_toad_s_000335.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.01496933787280427,
-    "psnr": 18.247974090455248,
-    "ssim": 0.7277533258775896,
+    "mse": 0.016334475792268432,
+    "psnr": 17.868947983895357,
+    "ssim": 0.722200521449299,
     "shots": 128
   },
   {
@@ -137,9 +137,9 @@
     "image": "0133_truck_garbage_truck_s_000418.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.02712595409554336,
-    "psnr": 15.666149775252563,
-    "ssim": 0.80265568638011,
+    "mse": 0.025567993798147524,
+    "psnr": 15.923033477099167,
+    "ssim": 0.808672352072997,
     "shots": 128
   },
   {
@@ -148,9 +148,9 @@
     "image": "0714_deer_fallow_deer_s_001726.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.011116721016393969,
-    "psnr": 19.54023293193125,
-    "ssim": 0.870909852103583,
+    "mse": 0.011481892124193819,
+    "psnr": 19.399865377756143,
+    "ssim": 0.8673175755608842,
     "shots": 128
   },
   {
@@ -159,9 +159,9 @@
     "image": "0797_deer_sambar_s_000548.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.01669177784823573,
-    "psnr": 17.77497403970357,
-    "ssim": 0.7622152551408149,
+    "mse": 0.016427655991354307,
+    "psnr": 17.84424400207284,
+    "ssim": 0.763771321674652,
     "shots": 128
   },
   {
@@ -170,9 +170,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.02548506874317738,
-    "psnr": 15.937141906119676,
-    "ssim": 0.7075295890638156,
+    "mse": 0.025015299598557583,
+    "psnr": 16.017942913725697,
+    "ssim": 0.735305038512693,
     "shots": 128
   },
   {
@@ -181,9 +181,9 @@
     "image": "0104_automobile_police_cruiser_s_000916.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.030513013285915942,
-    "psnr": 15.15514901868373,
-    "ssim": 0.6819878639398181,
+    "mse": 0.031848519807106956,
+    "psnr": 14.969107471447591,
+    "ssim": 0.6453067243763585,
     "shots": 128
   },
   {
@@ -192,9 +192,9 @@
     "image": "0340_bird_dromaius_novaehollandiae_s_000183.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.013698894288486276,
-    "psnr": 18.633144856748636,
-    "ssim": 0.6946272963680932,
+    "mse": 0.014781362467166367,
+    "psnr": 18.30285533146818,
+    "ssim": 0.6674285327775025,
     "shots": 128
   },
   {
@@ -203,9 +203,9 @@
     "image": "0554_truck_truck_s_001781.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.01974036340284041,
-    "psnr": 17.04644856610881,
-    "ssim": 0.6904400519704716,
+    "mse": 0.020726161376970323,
+    "psnr": 16.834811246870704,
+    "ssim": 0.6695585943022914,
     "shots": 128
   },
   {
@@ -214,9 +214,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.022208551000499344,
-    "psnr": 16.53479776121319,
-    "ssim": 0.7357324864493006,
+    "mse": 0.023567306513232487,
+    "psnr": 16.276900497745075,
+    "ssim": 0.7205047661213501,
     "shots": 128
   },
   {
@@ -225,9 +225,9 @@
     "image": "0264_airplane_stealth_bomber_s_000001.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.016886374259020252,
-    "psnr": 17.72463589525307,
-    "ssim": 0.8191383491561371,
+    "mse": 0.017121458431966836,
+    "psnr": 17.664592442162174,
+    "ssim": 0.8177431044669456,
     "shots": 256
   },
   {
@@ -236,9 +236,9 @@
     "image": "0350_truck_aerial_ladder_truck_s_000799.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.01721010869757358,
-    "psnr": 17.642163866969995,
-    "ssim": 0.8564337246737576,
+    "mse": 0.019218778370213616,
+    "psnr": 17.16274221450863,
+    "ssim": 0.8326785022708114,
     "shots": 256
   },
   {
@@ -247,9 +247,9 @@
     "image": "0518_dog_lapdog_s_001485.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.023899315763348732,
-    "psnr": 16.216145327110993,
-    "ssim": 0.8280761610514209,
+    "mse": 0.027243523436162202,
+    "psnr": 15.647367253228913,
+    "ssim": 0.8098846996667862,
     "shots": 256
   },
   {
@@ -258,9 +258,9 @@
     "image": "0890_deer_odocoileus_hemionus_s_000537.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.01678920846284033,
-    "psnr": 17.749697784494394,
-    "ssim": 0.8365609889427191,
+    "mse": 0.015908556535193928,
+    "psnr": 17.983692243282555,
+    "ssim": 0.8400541816047286,
     "shots": 256
   },
   {
@@ -269,9 +269,9 @@
     "image": "0252_truck_tractor_trailer_s_000158.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.036014656295566126,
-    "psnr": 14.435207255395559,
-    "ssim": 0.6834736488232436,
+    "mse": 0.03651419659233546,
+    "psnr": 14.375382505299646,
+    "ssim": 0.668955659311258,
     "shots": 256
   },
   {
@@ -280,9 +280,9 @@
     "image": "0608_cat_tomcat_s_001650.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.018013856157258763,
-    "psnr": 17.443933094704782,
-    "ssim": 0.808782378895571,
+    "mse": 0.016534445335096924,
+    "psnr": 17.81610369359113,
+    "ssim": 0.8168211240728748,
     "shots": 256
   },
   {
@@ -291,9 +291,9 @@
     "image": "0745_horse_walking_horse_s_001609.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.018506503673611875,
-    "psnr": 17.326756222348237,
-    "ssim": 0.644941850703295,
+    "mse": 0.017711551124495593,
+    "psnr": 17.517434029369483,
+    "ssim": 0.6470250242528183,
     "shots": 256
   },
   {
@@ -302,9 +302,9 @@
     "image": "0918_ship_packet_boat_s_001250.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.023099959702050362,
-    "psnr": 16.363887777352332,
-    "ssim": 0.6592287656733484,
+    "mse": 0.022886743179064938,
+    "psnr": 16.404160037427996,
+    "ssim": 0.6447742031348144,
     "shots": 256
   },
   {
@@ -313,9 +313,9 @@
     "image": "0052_airplane_stealth_bomber_s_002171.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.012295831311781075,
-    "psnr": 19.102421036138068,
-    "ssim": 0.8313269936773239,
+    "mse": 0.013873041764584877,
+    "psnr": 18.5782830628489,
+    "ssim": 0.804441761416411,
     "shots": 256
   },
   {
@@ -324,9 +324,9 @@
     "image": "0571_horse_mare_s_001216.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.027487899729052547,
-    "psnr": 15.608584420746448,
-    "ssim": 0.797501546729453,
+    "mse": 0.028466187125270978,
+    "psnr": 15.45670700093989,
+    "ssim": 0.7845460153393773,
     "shots": 256
   },
   {
@@ -335,9 +335,9 @@
     "image": "0959_ship_ferry_s_000340.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.018092465380052637,
-    "psnr": 17.425022497239617,
-    "ssim": 0.8215550344094702,
+    "mse": 0.019539878294016228,
+    "psnr": 17.090781456531605,
+    "ssim": 0.8146273901267218,
     "shots": 256
   },
   {
@@ -346,9 +346,9 @@
     "image": "0963_frog_western_toad_s_000335.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.015329337847575286,
-    "psnr": 18.14476604138119,
-    "ssim": 0.7231137753714155,
+    "mse": 0.015520358788451975,
+    "psnr": 18.090982432554217,
+    "ssim": 0.7274308690195862,
     "shots": 256
   },
   {
@@ -357,9 +357,9 @@
     "image": "0133_truck_garbage_truck_s_000418.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.024348547063365356,
-    "psnr": 16.13526949077245,
-    "ssim": 0.8201976468064077,
+    "mse": 0.022815300023875964,
+    "psnr": 16.41773815830306,
+    "ssim": 0.8308187636131261,
     "shots": 256
   },
   {
@@ -368,9 +368,9 @@
     "image": "0714_deer_fallow_deer_s_001726.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.010427925218968397,
-    "psnr": 19.81802091917386,
-    "ssim": 0.8792070001260744,
+    "mse": 0.0123188867590168,
+    "psnr": 19.094285369979602,
+    "ssim": 0.8614154590961065,
     "shots": 256
   },
   {
@@ -379,9 +379,9 @@
     "image": "0797_deer_sambar_s_000548.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.01616823714566285,
-    "psnr": 17.913373294842494,
-    "ssim": 0.7704117249882716,
+    "mse": 0.014427417333538741,
+    "psnr": 18.408114054400805,
+    "ssim": 0.7933572952273851,
     "shots": 256
   },
   {
@@ -390,9 +390,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.022619068626372356,
-    "psnr": 16.455252817604624,
-    "ssim": 0.7429818083190387,
+    "mse": 0.02629298025489537,
+    "psnr": 15.801601847228739,
+    "ssim": 0.7065336379915597,
     "shots": 256
   },
   {
@@ -401,9 +401,9 @@
     "image": "0104_automobile_police_cruiser_s_000916.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.03268092252607602,
-    "psnr": 14.857056925824196,
-    "ssim": 0.6598592782822631,
+    "mse": 0.0326244177411478,
+    "psnr": 14.864572305827991,
+    "ssim": 0.6615101689666739,
     "shots": 256
   },
   {
@@ -412,9 +412,9 @@
     "image": "0340_bird_dromaius_novaehollandiae_s_000183.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.014508119090324515,
-    "psnr": 18.383888881578766,
-    "ssim": 0.6909194666698224,
+    "mse": 0.014813686039834635,
+    "psnr": 18.29336863991988,
+    "ssim": 0.6831829871253913,
     "shots": 256
   },
   {
@@ -423,9 +423,9 @@
     "image": "0554_truck_truck_s_001781.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.01811702311059762,
-    "psnr": 17.4191316167309,
-    "ssim": 0.7154551819472522,
+    "mse": 0.01720111900967662,
+    "psnr": 17.644432993761818,
+    "ssim": 0.7389719627198866,
     "shots": 256
   },
   {
@@ -434,9 +434,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.02258756687132532,
-    "psnr": 16.461305486842672,
-    "ssim": 0.7375872375401131,
+    "mse": 0.022493456728353733,
+    "psnr": 16.479437983353492,
+    "ssim": 0.7321071438952048,
     "shots": 256
   },
   {
@@ -445,9 +445,9 @@
     "image": "0264_airplane_stealth_bomber_s_000001.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.01801831574518626,
-    "psnr": 17.442858069616864,
-    "ssim": 0.8079322256242266,
+    "mse": 0.017073408921415168,
+    "psnr": 17.67679757857019,
+    "ssim": 0.8140250430546484,
     "shots": 512
   },
   {
@@ -456,9 +456,9 @@
     "image": "0350_truck_aerial_ladder_truck_s_000799.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.018899554125711277,
-    "psnr": 17.235484414895794,
-    "ssim": 0.8420174972644144,
+    "mse": 0.01768935985661349,
+    "psnr": 17.522878830750514,
+    "ssim": 0.8435712564475051,
     "shots": 512
   },
   {
@@ -467,9 +467,9 @@
     "image": "0518_dog_lapdog_s_001485.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.026108591817430374,
-    "psnr": 15.832165514789242,
-    "ssim": 0.8165205921308029,
+    "mse": 0.026182366757639006,
+    "psnr": 15.819910979180351,
+    "ssim": 0.8127358237353096,
     "shots": 512
   },
   {
@@ -478,9 +478,9 @@
     "image": "0890_deer_odocoileus_hemionus_s_000537.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.016159989402239415,
-    "psnr": 17.91558928372723,
-    "ssim": 0.8391017086556881,
+    "mse": 0.016557525000546726,
+    "psnr": 17.8100458053043,
+    "ssim": 0.8371762755101373,
     "shots": 512
   },
   {
@@ -489,9 +489,9 @@
     "image": "0252_truck_tractor_trailer_s_000158.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.036586141605186404,
-    "psnr": 14.366833890357345,
-    "ssim": 0.6787110488764698,
+    "mse": 0.033785729530100415,
+    "psnr": 14.712666989833059,
+    "ssim": 0.6992471356010255,
     "shots": 512
   },
   {
@@ -500,9 +500,9 @@
     "image": "0608_cat_tomcat_s_001650.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.018440028487463924,
-    "psnr": 17.342384123529516,
-    "ssim": 0.8009024820129421,
+    "mse": 0.016361151137303485,
+    "psnr": 17.861861435136394,
+    "ssim": 0.8216554415105588,
     "shots": 512
   },
   {
@@ -511,9 +511,9 @@
     "image": "0745_horse_walking_horse_s_001609.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.017022538837653617,
-    "psnr": 17.68975666286972,
-    "ssim": 0.6655657883822252,
+    "mse": 0.016573086143600483,
+    "psnr": 17.80596612260366,
+    "ssim": 0.6794248554970668,
     "shots": 512
   },
   {
@@ -522,9 +522,9 @@
     "image": "0918_ship_packet_boat_s_001250.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.02349529234995568,
-    "psnr": 16.290191467175298,
-    "ssim": 0.6424256493545591,
+    "mse": 0.022745143516648254,
+    "psnr": 16.431113185266284,
+    "ssim": 0.6510440992175375,
     "shots": 512
   },
   {
@@ -533,9 +533,9 @@
     "image": "0052_airplane_stealth_bomber_s_002171.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.012357557194531018,
-    "psnr": 19.080673708156596,
-    "ssim": 0.8311521149669123,
+    "mse": 0.011174727319895435,
+    "psnr": 19.51763065503371,
+    "ssim": 0.8481676645182219,
     "shots": 512
   },
   {
@@ -544,9 +544,9 @@
     "image": "0571_horse_mare_s_001216.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.02929731812375989,
-    "psnr": 15.331721331394064,
-    "ssim": 0.7824294525921114,
+    "mse": 0.02698024368181008,
+    "psnr": 15.689541321590168,
+    "ssim": 0.7983965801789641,
     "shots": 512
   },
   {
@@ -555,9 +555,9 @@
     "image": "0959_ship_ferry_s_000340.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.01806785067748895,
-    "psnr": 17.430935073408044,
-    "ssim": 0.8206738302490386,
+    "mse": 0.01764803479010745,
+    "psnr": 17.533036487651266,
+    "ssim": 0.8313945632655719,
     "shots": 512
   },
   {
@@ -566,9 +566,9 @@
     "image": "0963_frog_western_toad_s_000335.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.013963187417958054,
-    "psnr": 18.550154327141424,
-    "ssim": 0.7484935766719437,
+    "mse": 0.015110499445633642,
+    "psnr": 18.207211807372175,
+    "ssim": 0.7302227258137911,
     "shots": 512
   },
   {
@@ -577,9 +577,9 @@
     "image": "0133_truck_garbage_truck_s_000418.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.023573922098173387,
-    "psnr": 16.275681559614743,
-    "ssim": 0.8253410750029284,
+    "mse": 0.025030382477006768,
+    "psnr": 16.015325140999515,
+    "ssim": 0.8132551875666634,
     "shots": 512
   },
   {
@@ -588,9 +588,9 @@
     "image": "0714_deer_fallow_deer_s_001726.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.01077317344050283,
-    "psnr": 19.67656348262778,
-    "ssim": 0.8757684652898307,
+    "mse": 0.01015611223316214,
+    "psnr": 19.932725084704618,
+    "ssim": 0.8784353087419744,
     "shots": 512
   },
   {
@@ -599,9 +599,9 @@
     "image": "0797_deer_sambar_s_000548.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.016652940511771956,
-    "psnr": 17.78509069347944,
-    "ssim": 0.7691082901971522,
+    "mse": 0.01629491279997248,
+    "psnr": 17.879479592609485,
+    "ssim": 0.7674094906215128,
     "shots": 512
   },
   {
@@ -610,9 +610,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.024418776534119842,
-    "psnr": 16.122760995144546,
-    "ssim": 0.7299773495984145,
+    "mse": 0.027751184340366865,
+    "psnr": 15.567184777121039,
+    "ssim": 0.6972490231184597,
     "shots": 512
   },
   {
@@ -621,9 +621,9 @@
     "image": "0104_automobile_police_cruiser_s_000916.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.03349207899773797,
-    "psnr": 14.750578930925148,
-    "ssim": 0.6506905593078373,
+    "mse": 0.031206732070073587,
+    "psnr": 15.057517077282084,
+    "ssim": 0.6709802115104598,
     "shots": 512
   },
   {
@@ -632,9 +632,9 @@
     "image": "0340_bird_dromaius_novaehollandiae_s_000183.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.014114420763854071,
-    "psnr": 18.503369399912838,
-    "ssim": 0.6823537459903997,
+    "mse": 0.014492814864354766,
+    "psnr": 18.3884725556879,
+    "ssim": 0.684361819296532,
     "shots": 512
   },
   {
@@ -643,9 +643,9 @@
     "image": "0554_truck_truck_s_001781.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.019945554446377897,
-    "psnr": 17.001538866714835,
-    "ssim": 0.6992231720711057,
+    "mse": 0.018817001635459955,
+    "psnr": 17.254495773442187,
+    "ssim": 0.7199273078108619,
     "shots": 512
   },
   {
@@ -654,9 +654,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.02242010566021039,
-    "psnr": 16.493623450176646,
-    "ssim": 0.7408014408491589,
+    "mse": 0.02156013540782617,
+    "psnr": 16.66348515902412,
+    "ssim": 0.741140538630039,
     "shots": 512
   },
   {
@@ -665,9 +665,9 @@
     "image": "0264_airplane_stealth_bomber_s_000001.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.017208694471411094,
-    "psnr": 17.64252075946034,
-    "ssim": 0.8157523977197957,
+    "mse": 0.018574304751230154,
+    "psnr": 17.31087433198891,
+    "ssim": 0.797815140184401,
     "shots": 1024
   },
   {
@@ -676,9 +676,9 @@
     "image": "0350_truck_aerial_ladder_truck_s_000799.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.017381897104788827,
-    "psnr": 17.599028252879076,
-    "ssim": 0.8550902689543117,
+    "mse": 0.020782505557392646,
+    "psnr": 16.8230209469256,
+    "ssim": 0.8217838983895399,
     "shots": 1024
   },
   {
@@ -687,9 +687,9 @@
     "image": "0518_dog_lapdog_s_001485.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.02424924778545181,
-    "psnr": 16.153017287192146,
-    "ssim": 0.8261386072601626,
+    "mse": 0.026647648755340248,
+    "psnr": 15.743411047473383,
+    "ssim": 0.8090584218119273,
     "shots": 1024
   },
   {
@@ -698,9 +698,9 @@
     "image": "0890_deer_odocoileus_hemionus_s_000537.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.016070253959874572,
-    "psnr": 17.93977259982103,
-    "ssim": 0.8437515190872109,
+    "mse": 0.016648636551918373,
+    "psnr": 17.786213274564158,
+    "ssim": 0.8345295421906725,
     "shots": 1024
   },
   {
@@ -709,9 +709,9 @@
     "image": "0252_truck_tractor_trailer_s_000158.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.036599943662605106,
-    "psnr": 14.365195831039106,
-    "ssim": 0.6791024527463995,
+    "mse": 0.035719343106508435,
+    "psnr": 14.470965365651772,
+    "ssim": 0.6886132035647092,
     "shots": 1024
   },
   {
@@ -720,9 +720,9 @@
     "image": "0608_cat_tomcat_s_001650.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.018254824755287818,
-    "psnr": 17.38622331883073,
-    "ssim": 0.8070163508866937,
+    "mse": 0.016121635167536067,
+    "psnr": 17.925909111523413,
+    "ssim": 0.8238101063161067,
     "shots": 1024
   },
   {
@@ -731,9 +731,9 @@
     "image": "0745_horse_walking_horse_s_001609.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.016009790604700664,
-    "psnr": 17.956143482691914,
-    "ssim": 0.6883203981463971,
+    "mse": 0.016841130271363188,
+    "psnr": 17.736287647280776,
+    "ssim": 0.6810100300941041,
     "shots": 1024
   },
   {
@@ -742,9 +742,9 @@
     "image": "0918_ship_packet_boat_s_001250.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.022230731399162748,
-    "psnr": 16.53046248619268,
-    "ssim": 0.6641830055724263,
+    "mse": 0.02313087232035068,
+    "psnr": 16.358079886400546,
+    "ssim": 0.6554635933220603,
     "shots": 1024
   },
   {
@@ -753,9 +753,9 @@
     "image": "0052_airplane_stealth_bomber_s_002171.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.011716711199575737,
-    "psnr": 19.311942746929873,
-    "ssim": 0.8395162178685409,
+    "mse": 0.01150262088773766,
+    "psnr": 19.392031937857034,
+    "ssim": 0.8387653329591097,
     "shots": 1024
   },
   {
@@ -764,9 +764,9 @@
     "image": "0571_horse_mare_s_001216.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.028231292199466886,
-    "psnr": 15.492692429209407,
-    "ssim": 0.7920277309183734,
+    "mse": 0.029063127437543662,
+    "psnr": 15.366576537755524,
+    "ssim": 0.7805474834923868,
     "shots": 1024
   },
   {
@@ -775,9 +775,9 @@
     "image": "0959_ship_ferry_s_000340.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.017461281111140273,
-    "psnr": 17.57923895848776,
-    "ssim": 0.8256565802364677,
+    "mse": 0.018846399134177103,
+    "psnr": 17.24771615513559,
+    "ssim": 0.8118873869238195,
     "shots": 1024
   },
   {
@@ -786,9 +786,9 @@
     "image": "0963_frog_western_toad_s_000335.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.013595318942085785,
-    "psnr": 18.666105995392886,
-    "ssim": 0.7544386933185646,
+    "mse": 0.015288846041035958,
+    "psnr": 18.156252926728953,
+    "ssim": 0.7372798554249455,
     "shots": 1024
   },
   {
@@ -797,9 +797,9 @@
     "image": "0133_truck_garbage_truck_s_000418.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.024487623070143353,
-    "psnr": 16.110533683101288,
-    "ssim": 0.8204999916467148,
+    "mse": 0.023502297285248074,
+    "psnr": 16.288896845561844,
+    "ssim": 0.8277544312037862,
     "shots": 1024
   },
   {
@@ -808,9 +808,9 @@
     "image": "0714_deer_fallow_deer_s_001726.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.010626686332840089,
-    "psnr": 19.736021382719965,
-    "ssim": 0.8735561708710644,
+    "mse": 0.010545394611871074,
+    "psnr": 19.769371641889276,
+    "ssim": 0.8749147821322161,
     "shots": 1024
   },
   {
@@ -819,9 +819,9 @@
     "image": "0797_deer_sambar_s_000548.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.015968388528068794,
-    "psnr": 17.967389090762705,
-    "ssim": 0.7751722897280915,
+    "mse": 0.013634316400896532,
+    "psnr": 18.65366631888903,
+    "ssim": 0.8031674352694147,
     "shots": 1024
   },
   {
@@ -830,9 +830,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.02300003074179958,
-    "psnr": 16.382715835047986,
-    "ssim": 0.7454036236972224,
+    "mse": 0.025254949145170756,
+    "psnr": 15.976535016712894,
+    "ssim": 0.724413076391327,
     "shots": 1024
   },
   {
@@ -841,9 +841,9 @@
     "image": "0104_automobile_police_cruiser_s_000916.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.03130308781174262,
-    "psnr": 15.044128204900337,
-    "ssim": 0.6767529033562628,
+    "mse": 0.03307128484637392,
+    "psnr": 14.80548932063898,
+    "ssim": 0.6552686097322966,
     "shots": 1024
   },
   {
@@ -852,9 +852,9 @@
     "image": "0340_bird_dromaius_novaehollandiae_s_000183.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.014363547877102277,
-    "psnr": 18.427382736636147,
-    "ssim": 0.678763935762152,
+    "mse": 0.013715101097669654,
+    "psnr": 18.628009867471484,
+    "ssim": 0.6860336949870381,
     "shots": 1024
   },
   {
@@ -863,9 +863,9 @@
     "image": "0554_truck_truck_s_001781.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.019420594308412947,
-    "psnr": 17.11737483958653,
-    "ssim": 0.7036648839079345,
+    "mse": 0.01886545505249978,
+    "psnr": 17.243327147457244,
+    "ssim": 0.7124574952420535,
     "shots": 1024
   },
   {
@@ -874,9 +874,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.022500580532690384,
-    "psnr": 16.47806276604571,
-    "ssim": 0.7279498705438667,
+    "mse": 0.02276741764678701,
+    "psnr": 16.426862256584837,
+    "ssim": 0.7279152414716457,
     "shots": 1024
   },
   {
@@ -885,9 +885,9 @@
     "image": "0264_airplane_stealth_bomber_s_000001.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.01756308991744028,
-    "psnr": 17.553990752156764,
-    "ssim": 0.8097284759950861,
+    "mse": 0.016750517496056026,
+    "psnr": 17.759717711817736,
+    "ssim": 0.8221949345084435,
     "shots": 2048
   },
   {
@@ -896,9 +896,9 @@
     "image": "0350_truck_aerial_ladder_truck_s_000799.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.017367030135687966,
-    "psnr": 17.602744421146607,
-    "ssim": 0.8573112182469991,
+    "mse": 0.018982274823988177,
+    "psnr": 17.216517432097938,
+    "ssim": 0.832284762972304,
     "shots": 2048
   },
   {
@@ -907,9 +907,9 @@
     "image": "0518_dog_lapdog_s_001485.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.024000769873402203,
-    "psnr": 16.197748271880698,
-    "ssim": 0.8300716976310512,
+    "mse": 0.02955888274065458,
+    "psnr": 15.293119853224947,
+    "ssim": 0.7898255363098657,
     "shots": 2048
   },
   {
@@ -918,9 +918,9 @@
     "image": "0890_deer_odocoileus_hemionus_s_000537.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.01728338298881281,
-    "psnr": 17.62371246256719,
-    "ssim": 0.8376458036585004,
+    "mse": 0.017606424327308308,
+    "psnr": 17.543288355487043,
+    "ssim": 0.822371826321308,
     "shots": 2048
   },
   {
@@ -929,9 +929,9 @@
     "image": "0252_truck_tractor_trailer_s_000158.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.03792912462814682,
-    "psnr": 14.210271803278555,
-    "ssim": 0.6706762796511868,
+    "mse": 0.035177047366189845,
+    "psnr": 14.537406164529083,
+    "ssim": 0.6924610241031441,
     "shots": 2048
   },
   {
@@ -940,9 +940,9 @@
     "image": "0608_cat_tomcat_s_001650.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.019123996769426305,
-    "psnr": 17.184213383406306,
-    "ssim": 0.7986233297300704,
+    "mse": 0.01730558419449993,
+    "psnr": 17.61813735395264,
+    "ssim": 0.8122387558130282,
     "shots": 2048
   },
   {
@@ -951,9 +951,9 @@
     "image": "0745_horse_walking_horse_s_001609.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.01694924001688077,
-    "psnr": 17.708497702558592,
-    "ssim": 0.6769919926326364,
+    "mse": 0.015820249497969976,
+    "psnr": 18.00786671613489,
+    "ssim": 0.6985188070639766,
     "shots": 2048
   },
   {
@@ -962,9 +962,9 @@
     "image": "0918_ship_packet_boat_s_001250.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.022327616991866375,
-    "psnr": 16.511576263468008,
-    "ssim": 0.658481447538148,
+    "mse": 0.02312212737569371,
+    "psnr": 16.359722106917825,
+    "ssim": 0.6520828824638153,
     "shots": 2048
   },
   {
@@ -973,9 +973,9 @@
     "image": "0052_airplane_stealth_bomber_s_002171.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.01277873877597967,
-    "psnr": 18.93512007653509,
-    "ssim": 0.8300424653414795,
+    "mse": 0.01168991867951365,
+    "psnr": 19.321885099811308,
+    "ssim": 0.8345061614136132,
     "shots": 2048
   },
   {
@@ -984,9 +984,9 @@
     "image": "0571_horse_mare_s_001216.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.029023308660738045,
-    "psnr": 15.372530794519484,
-    "ssim": 0.7880204789806886,
+    "mse": 0.028471014769092504,
+    "psnr": 15.455970533741802,
+    "ssim": 0.7930074138239938,
     "shots": 2048
   },
   {
@@ -995,9 +995,9 @@
     "image": "0959_ship_ferry_s_000340.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.01852870722999579,
-    "psnr": 17.321548808680973,
-    "ssim": 0.8179988833658541,
+    "mse": 0.01833836633390758,
+    "psnr": 17.366393558944974,
+    "ssim": 0.8210138498187965,
     "shots": 2048
   },
   {
@@ -1006,9 +1006,9 @@
     "image": "0963_frog_western_toad_s_000335.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.01393634287209171,
-    "psnr": 18.558511773747554,
-    "ssim": 0.7546062335649859,
+    "mse": 0.014361624370616367,
+    "psnr": 18.42796436465688,
+    "ssim": 0.7402520539407902,
     "shots": 2048
   },
   {
@@ -1017,9 +1017,9 @@
     "image": "0133_truck_garbage_truck_s_000418.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.023632535763077233,
-    "psnr": 16.264896762166828,
-    "ssim": 0.8251338693610799,
+    "mse": 0.024157383652672712,
+    "psnr": 16.16950103442294,
+    "ssim": 0.8235625662626771,
     "shots": 2048
   },
   {
@@ -1028,9 +1028,9 @@
     "image": "0714_deer_fallow_deer_s_001726.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.010084597801839193,
-    "psnr": 19.963414178205767,
-    "ssim": 0.8813729204135274,
+    "mse": 0.010763680117696512,
+    "psnr": 19.680392173727522,
+    "ssim": 0.8717280315739745,
     "shots": 2048
   },
   {
@@ -1039,9 +1039,9 @@
     "image": "0797_deer_sambar_s_000548.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.016300866303108903,
-    "psnr": 17.877893145738113,
-    "ssim": 0.7691601739506104,
+    "mse": 0.014241275918120652,
+    "psnr": 18.464510992261566,
+    "ssim": 0.7910036905183264,
     "shots": 2048
   },
   {
@@ -1050,9 +1050,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.024782314007627218,
-    "psnr": 16.058581445368784,
-    "ssim": 0.7264130125609881,
+    "mse": 0.024646481561433824,
+    "psnr": 16.08245070200849,
+    "ssim": 0.7400294336148133,
     "shots": 2048
   },
   {
@@ -1061,9 +1061,9 @@
     "image": "0104_automobile_police_cruiser_s_000916.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.03378761879391297,
-    "psnr": 14.71242414354256,
-    "ssim": 0.6572204893889181,
+    "mse": 0.03389957983344954,
+    "psnr": 14.698056846035605,
+    "ssim": 0.6428315707175287,
     "shots": 2048
   },
   {
@@ -1072,9 +1072,9 @@
     "image": "0340_bird_dromaius_novaehollandiae_s_000183.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.014889649894797912,
-    "psnr": 18.271155138357972,
-    "ssim": 0.6671728643023195,
+    "mse": 0.014108440517754443,
+    "psnr": 18.50520988510989,
+    "ssim": 0.6802887417565512,
     "shots": 2048
   },
   {
@@ -1083,9 +1083,9 @@
     "image": "0554_truck_truck_s_001781.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.021366290398988762,
-    "psnr": 16.702708732077912,
-    "ssim": 0.6766227101678571,
+    "mse": 0.020306963429265506,
+    "psnr": 16.923550133016832,
+    "ssim": 0.7030722943241603,
     "shots": 2048
   },
   {
@@ -1094,9 +1094,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.022341123782321615,
-    "psnr": 16.508949851959624,
-    "ssim": 0.7330701493587367,
+    "mse": 0.021770233362160753,
+    "psnr": 16.621369155911744,
+    "ssim": 0.7475354539809028,
     "shots": 2048
   },
   {
@@ -1105,9 +1105,9 @@
     "image": "0264_airplane_stealth_bomber_s_000001.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.018348514025511416,
-    "psnr": 17.363991018016545,
-    "ssim": 0.8023765096872285,
+    "mse": 0.01680620973268128,
+    "psnr": 17.745302209916574,
+    "ssim": 0.816741828735679,
     "shots": 4096
   },
   {
@@ -1116,9 +1116,9 @@
     "image": "0350_truck_aerial_ladder_truck_s_000799.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.018466886856582997,
-    "psnr": 17.336063116503198,
-    "ssim": 0.8492147205265622,
+    "mse": 0.018752291964376205,
+    "psnr": 17.26945643848309,
+    "ssim": 0.8329408992181387,
     "shots": 4096
   },
   {
@@ -1127,9 +1127,9 @@
     "image": "0518_dog_lapdog_s_001485.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.025167549350191415,
-    "psnr": 15.991590711224635,
-    "ssim": 0.8252111059860575,
+    "mse": 0.02736598417562775,
+    "psnr": 15.627889285060013,
+    "ssim": 0.8093611192224209,
     "shots": 4096
   },
   {
@@ -1138,9 +1138,9 @@
     "image": "0890_deer_odocoileus_hemionus_s_000537.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.01609357376338346,
-    "psnr": 17.933475051006425,
-    "ssim": 0.8480207217693981,
+    "mse": 0.016038065805550932,
+    "psnr": 17.94848008908889,
+    "ssim": 0.8407194396303522,
     "shots": 4096
   },
   {
@@ -1149,9 +1149,9 @@
     "image": "0252_truck_tractor_trailer_s_000158.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.03626797463063522,
-    "psnr": 14.404766967299905,
-    "ssim": 0.6832734586937046,
+    "mse": 0.036523565618522096,
+    "psnr": 14.374268310046991,
+    "ssim": 0.6885156532574243,
     "shots": 4096
   },
   {
@@ -1160,9 +1160,9 @@
     "image": "0608_cat_tomcat_s_001650.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.01890517256422975,
-    "psnr": 17.234193540935262,
-    "ssim": 0.804317204227642,
+    "mse": 0.01702677656177194,
+    "psnr": 17.688675630732465,
+    "ssim": 0.819924626648227,
     "shots": 4096
   },
   {
@@ -1171,9 +1171,9 @@
     "image": "0745_horse_walking_horse_s_001609.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.017066246089505178,
-    "psnr": 17.678619962784655,
-    "ssim": 0.6707959257843599,
+    "mse": 0.015916496217569784,
+    "psnr": 17.981525296165625,
+    "ssim": 0.703964505417901,
     "shots": 4096
   },
   {
@@ -1182,9 +1182,9 @@
     "image": "0918_ship_packet_boat_s_001250.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.02205361073403351,
-    "psnr": 16.56520295380326,
-    "ssim": 0.6599940723095415,
+    "mse": 0.023922240727607354,
+    "psnr": 16.211981436611147,
+    "ssim": 0.6489525806043318,
     "shots": 4096
   },
   {
@@ -1193,9 +1193,9 @@
     "image": "0052_airplane_stealth_bomber_s_002171.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.012504435062691392,
-    "psnr": 19.029359244611058,
-    "ssim": 0.8322807027968815,
+    "mse": 0.012050089771800259,
+    "psnr": 19.19009717632494,
+    "ssim": 0.8337441499423428,
     "shots": 4096
   },
   {
@@ -1204,9 +1204,9 @@
     "image": "0571_horse_mare_s_001216.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.029465786352560707,
-    "psnr": 15.306819644103054,
-    "ssim": 0.785203565506347,
+    "mse": 0.030186387147091744,
+    "psnr": 15.201888623321032,
+    "ssim": 0.779407597564648,
     "shots": 4096
   },
   {
@@ -1215,9 +1215,9 @@
     "image": "0959_ship_ferry_s_000340.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.017772178765551705,
-    "psnr": 17.502593269581645,
-    "ssim": 0.8227127580225356,
+    "mse": 0.018201771785600594,
+    "psnr": 17.398863351326572,
+    "ssim": 0.8231361818629663,
     "shots": 4096
   },
   {
@@ -1226,9 +1226,9 @@
     "image": "0963_frog_western_toad_s_000335.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.013810587538657361,
-    "psnr": 18.597878450007293,
-    "ssim": 0.7539202933038905,
+    "mse": 0.01492915525714355,
+    "psnr": 18.25964765452489,
+    "ssim": 0.737524286760544,
     "shots": 4096
   },
   {
@@ -1237,9 +1237,9 @@
     "image": "0133_truck_garbage_truck_s_000418.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.02530353298897991,
-    "psnr": 15.968188365120564,
-    "ssim": 0.8147587004595201,
+    "mse": 0.025072483412998697,
+    "psnr": 16.008026473283454,
+    "ssim": 0.8158380182455857,
     "shots": 4096
   },
   {
@@ -1248,9 +1248,9 @@
     "image": "0714_deer_fallow_deer_s_001726.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.010210386034008135,
-    "psnr": 19.90957837808269,
-    "ssim": 0.8785523860096079,
+    "mse": 0.01006024846321974,
+    "psnr": 19.973912931495974,
+    "ssim": 0.8807593082756501,
     "shots": 4096
   },
   {
@@ -1259,9 +1259,9 @@
     "image": "0797_deer_sambar_s_000548.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.015222213462445996,
-    "psnr": 18.175221922019848,
-    "ssim": 0.7817870976962094,
+    "mse": 0.01422981734698326,
+    "psnr": 18.468006744558686,
+    "ssim": 0.7975378596825609,
     "shots": 4096
   },
   {
@@ -1270,9 +1270,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.02385775087840633,
-    "psnr": 16.223705006127616,
-    "ssim": 0.7404665979339756,
+    "mse": 0.025668928549114407,
+    "psnr": 15.905922589062238,
+    "ssim": 0.7201069731698033,
     "shots": 4096
   },
   {
@@ -1281,9 +1281,9 @@
     "image": "0104_automobile_police_cruiser_s_000916.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.03210950948125587,
-    "psnr": 14.933663288530244,
-    "ssim": 0.6702290042268633,
+    "mse": 0.033538256059896646,
+    "psnr": 14.744595238186253,
+    "ssim": 0.6535216764677372,
     "shots": 4096
   },
   {
@@ -1292,9 +1292,9 @@
     "image": "0340_bird_dromaius_novaehollandiae_s_000183.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.013830747468287226,
-    "psnr": 18.591543482652032,
-    "ssim": 0.6830198228773487,
+    "mse": 0.013684309335372749,
+    "psnr": 18.637771170997336,
+    "ssim": 0.6846252505560831,
     "shots": 4096
   },
   {
@@ -1303,9 +1303,9 @@
     "image": "0554_truck_truck_s_001781.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.019827466067572366,
-    "psnr": 17.02732784694726,
-    "ssim": 0.7018370788787278,
+    "mse": 0.01928139672321556,
+    "psnr": 17.14861509478084,
+    "ssim": 0.7186023527704211,
     "shots": 4096
   },
   {
@@ -1314,9 +1314,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.021988580281716647,
-    "psnr": 16.57802810462805,
-    "ssim": 0.7410586419702628,
+    "mse": 0.02146208120511215,
+    "psnr": 16.68328166243764,
+    "ssim": 0.745248536694013,
     "shots": 4096
   },
   {
@@ -1325,9 +1325,9 @@
     "image": "0264_airplane_stealth_bomber_s_000001.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.017935662246676035,
-    "psnr": 17.462825830377934,
-    "ssim": 0.8091522631738038,
+    "mse": 0.017483205330926094,
+    "psnr": 17.573789418436206,
+    "ssim": 0.8088740433173944,
     "shots": 8192
   },
   {
@@ -1336,9 +1336,9 @@
     "image": "0350_truck_aerial_ladder_truck_s_000799.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.017746359160405234,
-    "psnr": 17.508907332417543,
-    "ssim": 0.8533767256414813,
+    "mse": 0.017882807888010274,
+    "psnr": 17.475642889781877,
+    "ssim": 0.8438273136346562,
     "shots": 8192
   },
   {
@@ -1347,9 +1347,9 @@
     "image": "0518_dog_lapdog_s_001485.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.024464790260913707,
-    "psnr": 16.1145850313798,
-    "ssim": 0.8288616970613414,
+    "mse": 0.026717465098389417,
+    "psnr": 15.73204749265554,
+    "ssim": 0.8133629948999257,
     "shots": 8192
   },
   {
@@ -1358,9 +1358,9 @@
     "image": "0890_deer_odocoileus_hemionus_s_000537.png",
     "train_images": "0459_frog_bullfrog_s_001725.png;0206_airplane_twinjet_s_001153.png;0222_truck_tractor_trailer_s_000351.png;0162_frog_bullfrog_s_000701.png;0711_ship_iceboat_s_000304.png;0814_airplane_airbus_s_001294.png",
     "test_images": "0350_truck_aerial_ladder_truck_s_000799.png;0890_deer_odocoileus_hemionus_s_000537.png;0518_dog_lapdog_s_001485.png;0264_airplane_stealth_bomber_s_000001.png",
-    "mse": 0.016381996446501547,
-    "psnr": 17.85633172608312,
-    "ssim": 0.8437917116098905,
+    "mse": 0.015660265967110315,
+    "psnr": 18.05200866347839,
+    "ssim": 0.8460659494727485,
     "shots": 8192
   },
   {
@@ -1369,9 +1369,9 @@
     "image": "0252_truck_tractor_trailer_s_000158.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.03661697656881249,
-    "psnr": 14.363175178630696,
-    "ssim": 0.6821426539168993,
+    "mse": 0.03664420938990057,
+    "psnr": 14.359946439069585,
+    "ssim": 0.683529146512217,
     "shots": 8192
   },
   {
@@ -1380,9 +1380,9 @@
     "image": "0608_cat_tomcat_s_001650.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.018936702065732454,
-    "psnr": 17.226956535991775,
-    "ssim": 0.8039839196170885,
+    "mse": 0.017146384816373712,
+    "psnr": 17.658274336273497,
+    "ssim": 0.8157485220009529,
     "shots": 8192
   },
   {
@@ -1391,9 +1391,9 @@
     "image": "0745_horse_walking_horse_s_001609.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.016961194948687485,
-    "psnr": 17.705435541229456,
-    "ssim": 0.6760787909586553,
+    "mse": 0.016098719005651206,
+    "psnr": 17.932086799253128,
+    "ssim": 0.6993591300614539,
     "shots": 8192
   },
   {
@@ -1402,9 +1402,9 @@
     "image": "0918_ship_packet_boat_s_001250.png",
     "train_images": "0705_deer_sika_s_000257.png;0649_dog_toy_s_000974.png;0543_horse_quarter_horse_s_000457.png;0927_frog_bufo_bufo_s_000850.png;0577_truck_trailer_truck_s_000098.png;0471_horse_gelding_s_000199.png",
     "test_images": "0608_cat_tomcat_s_001650.png;0252_truck_tractor_trailer_s_000158.png;0918_ship_packet_boat_s_001250.png;0745_horse_walking_horse_s_001609.png",
-    "mse": 0.02238161718212847,
-    "psnr": 16.501085367576017,
-    "ssim": 0.6564980056881021,
+    "mse": 0.02357762191751868,
+    "psnr": 16.275000007753594,
+    "ssim": 0.6441039813607466,
     "shots": 8192
   },
   {
@@ -1413,9 +1413,9 @@
     "image": "0052_airplane_stealth_bomber_s_002171.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.012814162953246954,
-    "psnr": 18.92309757537386,
-    "ssim": 0.8268952451518894,
+    "mse": 0.011804987672009958,
+    "psnr": 19.279344621202686,
+    "ssim": 0.8332663145171328,
     "shots": 8192
   },
   {
@@ -1424,9 +1424,9 @@
     "image": "0571_horse_mare_s_001216.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.02891590175209951,
-    "psnr": 15.388632595300457,
-    "ssim": 0.7900893729645908,
+    "mse": 0.02810405107718247,
+    "psnr": 15.512310739149227,
+    "ssim": 0.7922895680399517,
     "shots": 8192
   },
   {
@@ -1435,9 +1435,9 @@
     "image": "0959_ship_ferry_s_000340.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.017925780983083926,
-    "psnr": 17.46521914083864,
-    "ssim": 0.8248367724914729,
+    "mse": 0.01835805278590714,
+    "psnr": 17.36173385726458,
+    "ssim": 0.819989466269764,
     "shots": 8192
   },
   {
@@ -1446,9 +1446,9 @@
     "image": "0963_frog_western_toad_s_000335.png",
     "train_images": "0234_ship_ship_s_000124.png;0463_deer_sika_s_001946.png;0911_cat_tabby_s_000948.png;0054_ship_container_vessel_s_000228.png;0771_automobile_police_cruiser_s_000080.png;0972_bird_honey_eater_s_000375.png",
     "test_images": "0571_horse_mare_s_001216.png;0052_airplane_stealth_bomber_s_002171.png;0963_frog_western_toad_s_000335.png;0959_ship_ferry_s_000340.png",
-    "mse": 0.013578766543367128,
-    "psnr": 18.671396783425987,
-    "ssim": 0.7599626274068076,
+    "mse": 0.01401034327864545,
+    "psnr": 18.535512235868133,
+    "ssim": 0.7493421689744152,
     "shots": 8192
   },
   {
@@ -1457,9 +1457,9 @@
     "image": "0133_truck_garbage_truck_s_000418.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.024650462357938926,
-    "psnr": 16.081749304387444,
-    "ssim": 0.8179537076074301,
+    "mse": 0.024828567143404846,
+    "psnr": 16.050483428565606,
+    "ssim": 0.818735293673831,
     "shots": 8192
   },
   {
@@ -1468,9 +1468,9 @@
     "image": "0714_deer_fallow_deer_s_001726.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.010052654558623234,
-    "psnr": 19.977192409366964,
-    "ssim": 0.8799993071972838,
+    "mse": 0.01052938730038605,
+    "psnr": 19.775968994510883,
+    "ssim": 0.8748235192346241,
     "shots": 8192
   },
   {
@@ -1479,9 +1479,9 @@
     "image": "0797_deer_sambar_s_000548.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.014999539520390305,
-    "psnr": 18.239220733991985,
-    "ssim": 0.7848050850693237,
+    "mse": 0.014049824320621419,
+    "psnr": 18.52329106154752,
+    "ssim": 0.7959566258075774,
     "shots": 8192
   },
   {
@@ -1490,9 +1490,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0334_frog_bufo_bufo_s_000019.png;0618_bird_ostrich_s_002263.png;0590_frog_rana_catesbeiana_s_000910.png;0388_bird_ostrich_s_002190.png;0679_dog_dog_s_000487.png;0105_automobile_convertible_s_000268.png",
     "test_images": "0797_deer_sambar_s_000548.png;0133_truck_garbage_truck_s_000418.png;0714_deer_fallow_deer_s_001726.png;0888_airplane_jetliner_s_000162.png",
-    "mse": 0.02353812776019793,
-    "psnr": 16.282280842177922,
-    "ssim": 0.7396511344589757,
+    "mse": 0.025182172096231654,
+    "psnr": 15.98906812404375,
+    "ssim": 0.7304207356450154,
     "shots": 8192
   },
   {
@@ -1501,9 +1501,9 @@
     "image": "0104_automobile_police_cruiser_s_000916.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.033652240034558516,
-    "psnr": 14.729860220114952,
-    "ssim": 0.6546962971258289,
+    "mse": 0.035211516385320905,
+    "psnr": 14.533152716183505,
+    "ssim": 0.6398849894301751,
     "shots": 8192
   },
   {
@@ -1512,9 +1512,9 @@
     "image": "0340_bird_dromaius_novaehollandiae_s_000183.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.014509550384361804,
-    "psnr": 18.383460450823208,
-    "ssim": 0.670065541261745,
+    "mse": 0.013729711879177549,
+    "psnr": 18.62338576426481,
+    "ssim": 0.6815368155604385,
     "shots": 8192
   },
   {
@@ -1523,9 +1523,9 @@
     "image": "0554_truck_truck_s_001781.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.021719216023790622,
-    "psnr": 16.631558550816493,
-    "ssim": 0.6727369404375823,
+    "mse": 0.01993315766156798,
+    "psnr": 17.004238981701064,
+    "ssim": 0.7119713728499596,
     "shots": 8192
   },
   {
@@ -1534,9 +1534,9 @@
     "image": "0888_airplane_jetliner_s_000162.png",
     "train_images": "0413_frog_pickerel_frog_s_000259.png;0097_airplane_biplane_s_001908.png;0962_automobile_automobile_s_001611.png;0234_ship_ship_s_000124.png;0668_automobile_wagon_s_001388.png;0941_automobile_car_s_001324.png",
     "test_images": "0340_bird_dromaius_novaehollandiae_s_000183.png;0888_airplane_jetliner_s_000162.png;0104_automobile_police_cruiser_s_000916.png;0554_truck_truck_s_001781.png",
-    "mse": 0.021857259748307337,
-    "psnr": 16.60404286612581,
-    "ssim": 0.7445187881234765,
+    "mse": 0.022962998022475534,
+    "psnr": 16.389714115868415,
+    "ssim": 0.7300381185202095,
     "shots": 8192
   }
 ]

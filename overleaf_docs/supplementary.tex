@@ -137,25 +137,25 @@ Table~\ref{tab:hvk_real_cifar_stats}'s tests all ask a difference question --- c
 
 \begin{table}[H]
 \centering
-\caption{TOST equivalence test ($\delta=1$~dB margin, $\alpha=0.05$), same five seed-level paired differences as Table~\ref{tab:hvk_real_cifar_stats}. Equivalence requires the 90\% CI to fall entirely inside $[-1,+1]$~dB.}
+\caption{TOST equivalence test ($\delta=1$~dB margin, $\alpha=0.05$), using the same five seed-level paired differences as Table~\ref{tab:hvk_real_cifar_stats}. The seven distinct comparisons are adjusted using Holm’s procedure.}
 \label{tab:tost_equivalence}
 \scriptsize
-\begin{tabular}{lcccl}
+\begin{tabular}{lcccccl}
 \toprule
-Control & Mean $\Delta$PSNR (dB) & 90\% CI (dB) & TOST $p$ & Verdict \\
+Control & Mean $\Delta$PSNR (dB) & 90\% CI (dB) & TOST $p$ & Holm $p$ & Verdict \\
 \midrule
-Raw/local linear control & $-0.68$ & $[-0.96,-0.40]$ & $0.034$ & Equivalent \\
-No entanglement & $-0.34$ & $[-0.69,+0.02]$ & $0.008$ & Equivalent \\
-ZZ-only observables & $-0.44$ & $[-0.61,-0.27]$ & $0.001$ & Equivalent \\
-Quadratic classical & $-0.21$ & $[-0.46,+0.03]$ & $0.001$ & Equivalent \\
-Shuffled pair observables & $-0.19$ & $[-0.35,-0.02]$ & $0.000$ & Equivalent \\
-Strict classical random features & $+2.27$ & $[+1.92,+2.63]$ & $0.999$ & Not equivalent (HVK2D wins) \\
-Random VQC & $+6.97$ & $[+5.56,+8.39]$ & $1.000$ & Not equivalent (HVK2D wins) \\
+Raw/local linear control & $-0.68$ & $[-0.96,-0.40]$ & $0.034$ & $0.103$ & Not equivalent after correction \\
+No entanglement & $-0.34$ & $[-0.69,+0.02]$ & $0.008$ & $0.032$ & Equivalent \\
+ZZ-only observables & $-0.44$ & $[-0.61,-0.27]$ & $0.001$ & $0.007$ & Equivalent \\
+Quadratic classical & $-0.21$ & $[-0.46,+0.03]$ & $0.001$ & $0.007$ & Equivalent \\
+Shuffled pair observables & $-0.19$ & $[-0.35,-0.02]$ & $<0.001$ & $0.002$ & Equivalent \\
+Strict classical random features & $+2.27$ & $[+1.92,+2.63]$ & $0.999$ & $1.000$ & Not equivalent (HVK2D wins) \\
+Random VQC & $+6.97$ & $[+5.56,+8.39]$ & $1.000$ & $1.000$ & Not equivalent (HVK2D wins) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-{\color{red}\textbf{[SUPERVISOR: COUNT DISAGREEMENT, please resolve before submission. This sentence says ``five of the seven distinct controls'', which is the corrected count from block~I of \texttt{todo.md}, treating \texttt{raw-linear-classical} and \texttt{local-observables-only} as one control because both are the same 26-D feature map zero-padded to 32. The main paper still says ``six of the eight''. Three tables in this document also still list the two rows separately. Decide the count once, then make the main paper, this sentence and those three tables agree. This is a number, so it is your call and not a language fix]}} Five of the seven distinct controls are statistically equivalent to HVK2D within $\pm1$~dB: raw/local linear, no-entanglement, ZZ-only, quadratic-classical, and shuffled-pair-observables. This is the evidence that licenses ``competitive with resource-matched classical baselines'' rather than either ``beats'' or ``loses to'' them --- the earlier Wilcoxon/bootstrap result already showed HVK2D does not measurably exceed these controls, and TOST now shows the gap is also small enough, in a pre-declared and data-independent sense, not to matter. The remaining two controls, strict classical random features and random-VQC, are correctly flagged \emph{not} equivalent: HVK2D substantially outperforms both (mean $\Delta=+2.27$ and $+6.97$~dB respectively, both TOST $p>0.99$, i.e.\ strongly rejected as equivalent because the gap is real and favors HVK2D), consistent with the earlier finding that the observable channel carries real information relative to a degenerate readout. Reproduction script: \path{Main2/newHVK/run_tost_equivalence.py}; raw per-seed differences and full statistics in \path{Main2/newHVK/results/q1_validation/tost_equivalence.json}.
+After Holm correction across the seven distinct comparisons, four controls remain statistically equivalent to HVK2D within $\pm1$~dB: no entanglement, ZZ-only, quadratic classical, and shuffled pair observables. The raw/local linear control meets the uncorrected criterion ($p=0.034$) but not the Holm-corrected criterion (adjusted $p=0.103$), so it is not counted among the corrected equivalences. The remaining two controls, strict classical random features and random-VQC, are not equivalent because HVK2D substantially outperforms both. Reproduction script: \path{Main2/newHVK/run_tost_equivalence.py}; raw per-seed differences and full statistics are in \path{Main2/newHVK/results/q1_validation/tost_equivalence.json}.
 
 The same numerical direction holds beyond CIFAR-10. Table~\ref{tab:multi_dataset_reconstruction} extends the held-out protocol to five further real datasets (400 cached images each, three stratified split seeds, identical protocol for every feature map); the collapsed local/raw control has equal or higher mean PSNR on every dataset. For inference, held-out differences are averaged within split seed. Against that raw/local control, all six dataset means favor the control and their seed-bootstrap intervals exclude zero, while each two-sided signed-rank test gives $p=0.25$, the minimum attainable nonzero value at $n=3$ seeds. We therefore report a recurring numerical direction rather than a dataset-wise significance claim. The same mean-performance pattern recurs on a downstream image-classification diagnostic using image-level pooled features, and on a tabular cross-domain sanity check (Wisconsin Breast Cancer); neither adds a distinct finding, so both are reported in the machine-readable archive rather than tabulated here.
 
