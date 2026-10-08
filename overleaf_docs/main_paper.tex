@@ -197,7 +197,7 @@ how the individual ingredients recur across this literature.
 
 \blue{The}
 \blue{Supplementary} Material \blue{gives} the \blue{complete} held-out \blue{surrogate study, the}
-\blue{hardware} job identifiers and \blue{validation data, and} provenance audits of excluded
+\blue{hardware} \del{job identifiers and} \blue{validation data,} \blue{the training settings,} \blue{and} provenance audits of excluded
 exploratory \blue{results.}
 
 \section{Pauli-Correlator Autoencoder: Architecture}
@@ -426,7 +426,8 @@ resource-matched statistical \blue{protocol,}
 \blue{using a closed-form surrogate} of the \blue{PCAE2D observable map}
 (Section~\ref{sec:ablation_relationship}). All settings report MSE and
 PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings
-additionally report SSIM. Full implementation settings and environment versions
+additionally report SSIM. \blue{All trained models use Adam with full-batch updates.}
+\del{Full implementation settings} \blue{Learning rates, step counts, seeds} and environment versions
 are given in the \blue{Supplementary Material.}
 
 \section{Results}
@@ -702,7 +703,7 @@ circuits and the classical decoder all transfer unchanged, and the decoded
 images remain quantitatively informative at 256 shots per basis on an
 unmitigated device. This is the sense in which PCAE runs on real quantum
 hardware. \blue{Gate} sequences, measurement
-construction, job \blue{identifiers} and \blue{validation results are in the Supplementary}
+construction\del{, job identifiers} and \blue{validation results are in the Supplementary}
 \blue{Material.}
 
 The same checkpoint-replay methodology supports a further hardware \blue{replay.} Fresh PCAE1D
@@ -711,7 +712,10 @@ IBM Quantum hardware and on the IonQ cloud simulator \citep{IonQBackends}. That
 exercise serves the training-dynamics diagnostic of
 Section~\ref{sec:phase_transition}.
 It is \blue{a single-patch, single-seed}
-\blue{probe,} reported in the Supplementary Material as an interpretability \blue{readout.}
+\blue{probe,} \del{reported in the Supplementary Material as an interpretability readout.}
+\blue{and it is not used as evidence. Every replay completed. The flagged epoch varied}
+\blue{non-monotonically with circuit size, which reflects instability of the threshold}
+\blue{rule rather than a scaling law.}
 
 
 \subsection{Noise/shot trade-off: a free simulator complement}
