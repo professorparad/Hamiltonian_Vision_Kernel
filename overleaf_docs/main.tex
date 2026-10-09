@@ -138,11 +138,11 @@ Section~\ref{sec:representativeness} examines how the individual ingredients rec
   The guarantee follows from Reynolds group averaging over the $D_4$ orbit \blue{\citep{Puny2022}} rather than from anything quantum, and the same construction gives the same exactness for a purely classical feature \blue{map.}
   We report it as a design property of the \blue{pooled observable map.}
   \item \textbf{Restricted nonlocal result (diagnostic).}
-  In a leakage-audited protocol \brown{(Appendix~\ref{app:leakage})} with a fixed linear readout, pair observables are necessary when the target depends explicitly on distant-patch products (Section~\ref{sec:entanglement_necessity}).
+  In a leakage-audited protocol with a fixed linear readout, pair observables are necessary when the target depends explicitly on distant-patch products (Section~\ref{sec:entanglement_necessity}).
 \end{enumerate}
 
 \blue{The} \blue{\del{Supplementary}} \del{Material} \blue{\del{gives}} \del{the} \blue{\del{complete}} \del{held-out} \blue{\del{surrogate study, the}} \blue{\del{hardware}} \del{job identifiers and} \blue{\del{validation data,}} \blue{\del{the training settings,}} \blue{\del{and}} \del{provenance audits of excluded exploratory} \blue{\del{results.}}
-\brown{appendices give the training settings, the matched-budget ablation, further held-out results, the hardware methodology, the $D_4$ check on the trained circuit and the training-dynamics definitions.}
+\brown{appendices give the training settings, the matched-budget ablation, further held-out results and the hardware methodology.}
 
 \section{Pauli-Correlator Autoencoder: Architecture}
 \label{sec:architecture}
@@ -627,7 +627,8 @@ Both are of order one.
 The patch grid's geometry therefore makes the unpooled map $D_4$-\emph{motivated} only, and the explicit pooling construction is what delivers the property.
 This construction operates at the feature-grid level and serves here as a numerical diagnostic, rather than as a component of the trainable reconstruction pipeline.
 Integrating it end-to-end (Section~\ref{sec:limitations}) is concrete future work.
-\blue{Applied to the trained circuit, the same pooling reduces the equivariance error to order $10^{-8}$ \brown{(Appendix~\ref{sec:d4_real_circuit})}.}
+\blue{Applied to the trained circuit, the same pooling reduces the equivariance error to order $10^{-8}$.}
+\blue{On the four trained PCAE2D hardware checkpoints, with an exact statevector pass over all eight transformed copies of each image, the mean error falls from $0.2777$ without pooling to $5.39\times10^{-8}$ with it.}
 This route to symmetry differs from equivariant quantum neural networks, in which every circuit layer is built to commute with the group action \citep{Nguyen2024EQNN}.
 A recent image classifier of that kind builds $C_4$ rotation symmetry into the circuit itself \citep{SanSebastianSein2025}.
 In PCAE the symmetry comes from averaging the observable grid over the group after measurement.
@@ -664,6 +665,9 @@ The circuit itself is not equivariant, and the same average applies equally to a
 The diagnostic tests whether a pair-observable channel is needed to fit a target that depends on pair correlations.
 The target is a fixed synthetic function of \emph{simulated} patch features, and those features are not concatenated into any candidate's own input block.
 Every control receives the same raw inputs as PCAE2D.
+\blue{The protocol is audited for leakage.
+For each feature block, we check whether a linear or near-linear map reaches near-zero residual on the features used to build the target, since such a fit would copy the target from the input.
+The diagnostic reported here passes this check.}
 \blue{All feature maps in this} \blue{diagnostic are closed-form, and no circuit is evaluated.}
 The \blue{pair-observable} \blue{channel is represented by the analytic pair products that a pair measurement} \blue{would supply.
 By construction, these products match the pair terms of the} \blue{target.
@@ -723,9 +727,11 @@ For this reason we scope the claim to the linear protocol rather than to classic
 
 Beyond the results above, we tracked two exploratory training-dynamics readouts.
 These are a magnetisation-style statistic $M_z(t)$ and a signed energy-to-entanglement ratio $R_{ES}(t)$.
+\blue{Here $M_z(t)$ is the mean of the local $\langle Z\rangle$ observables over all qubits and patches at optimisation step $t$.
+$R_{ES}(t)$ is the learned Hamiltonian energy divided by the fixed sum of the MPS bond entropies, so it tracks the energy up to a constant scale.}
 Both drift smoothly over training with run-to-run fluctuations, and neither shows a sharp transition.
 Any apparent onset is a within-run median-plus-$2\sigma$ threshold crossing, rather than a calibrated statistical test.
-\brown{Appendix~\ref{app:dynamics} defines both readouts and the threshold rule.}
+\blue{The rule flags a run when the largest step-to-step change in $M_z$ exceeds that run's median change plus two standard deviations.}
 
 A negative control fixes the scope.
 We applied the identical protocol to a classical-replacement variant, in which the Hamiltonian energy is identically zero throughout training.
@@ -970,6 +976,7 @@ We thank the maintainers of the open-source scientific computing libraries used 
 
 % ============================== APPENDICES =================================
 % Condensed on 2026-10-08 from supplementary_shortened.tex (existing results only).
+% Trimmed to A-D on 2026-10-09; the leakage, D4 and training-dynamics items moved to the main text.
 % The block is new to this file and is set in brown. Floats reset to the default
 % colour, so the default is set to brown inside the environment as well.
 \begin{appendices}
@@ -1017,14 +1024,7 @@ Held-out comparison & surrogate & 16, $8\times8$ & -- & closed form & 0--4 \\
 The experiment drivers set the Python, NumPy and PyTorch random seeds explicitly.
 ``Mean $\pm$ std'' denotes the mean and the population standard deviation over the unit named in each caption.
 Bootstrap intervals are percentile 95\% intervals, and Wilcoxon values are two-sided signed-rank tests.
-The runs used Python 3.11.9, PyTorch 2.6.0 with CUDA 12.4, PennyLane 0.42.3, Qiskit 2.5.0 and NumPy 2.4.6 on an NVIDIA GeForce GTX 1050.
-
-\label{app:leakage}%
-Every constructed diagnostic is audited for leakage.
-A target that is a near-linear function of a quantity given to only one model produces an apparent advantage that is copying, not learning.
-For a target $y$ and a feature block $x$, the audit checks whether a linear or near-linear map from $x$ to $y$ reaches near-zero residual on the features used to build $y$.
-If it does, the diagnostic is circular for every architecture.
-Every diagnostic retained as quantitative evidence passes this check.
+The runs used Python 3.11.9, PyTorch 2.6.0 with CUDA 12.4, PennyLane 0.42.3, Qiskit 2.5.0, NumPy 2.4.6 and quimb 1.11.2 on an NVIDIA GeForce GTX 1050.
 {\color{red}\textbf{[Student: the values in Table~\ref{tab:training_settings} are read from the training scripts and their defaults.
 Please confirm that the reported runs used them, fill in the seeds marked ``--'', and check the patch layout of the held-out comparison.]}}
 
@@ -1107,31 +1107,6 @@ Before any hardware submission, every circuit was checked against the cached tra
 The largest absolute error was $7.89\times10^{-4}$ for \textit{Monalisa} and at most $9.42\times10^{-6}$ for the CIFAR-10 checkpoints.
 On hardware, the mean absolute deviation of the observables from the statevector values was $0.096$--$0.125$, so gate translation is not the main source of the hardware--simulator PSNR gap.
 Hardware counts were converted to expectation values with the standard parity estimator and passed, with the training-time positional encoding, through the unmodified trained decoder.
-
-\section{\texorpdfstring{$D_4$}{D4} pooling on the trained circuit}
-\label{sec:d4_real_circuit}
-
-The pooling check of Section~\ref{sec:d4} was repeated on the four trained PCAE2D hardware checkpoints, using an exact statevector forward pass on all eight $D_4$-transformed copies of each image.
-Without pooling, the mean feature-equivariance error is $0.2777$ and the mean output-consistency MSE is $4.355\times10^{-2}$.
-With the same Reynolds average, they fall to $5.39\times10^{-8}$ and $1.46\times10^{-15}$, which is floating-point error from the statevector simulation and the per-transform feature standardisation.
-
-\section{Training-dynamics readouts}
-\label{app:dynamics}
-
-The traces of Section~\ref{sec:phase_transition} come from a noise-free forward pass in evaluation mode after every optimiser update.
-At step $t$, with $P$ patches and $N$ qubits,
-\begin{equation}
-M_z(t)=\frac{1}{PN}\sum_{p=1}^{P}\sum_{i=1}^{N}\langle Z_i\rangle_p(t),
-\qquad
-R_{ES}(t)=\frac{1}{S}\sum_i\sum_{\alpha\in\{x,y,z\}}J_\alpha^{(i)}\langle\sigma_\alpha^{(i)}\sigma_\alpha^{(i+1)}\rangle(t).
-\label{eq:order_parameter}
-\end{equation}
-Here $S$ is the sum of the von Neumann bond entropies of the MPS decomposition.
-$S$ does not change during circuit training, so $R_{ES}$ tracks the learned energy up to a fixed scale.
-$R_{ES}$ is not a thermodynamic temperature, and it is tracked for PCAE1D on two CIFAR-10 images over four seeds.
-The threshold rule flags a run when the largest change of $M_z$ between successive steps exceeds that run's median change plus two standard deviations.
-Across the six datasets, with two images and two seeds each, it flags 16 of 24 runs.
-In the negative control on \textit{Monalisa} and CIFAR-10 \textit{cat}, with two seeds each and 200 steps, it flags all four runs with the Hamiltonian term and all four runs without it.
 
 \end{appendices}
 
