@@ -100,25 +100,18 @@ Section~\ref{sec:representativeness} examines how the individual ingredients rec
 
 \subsection*{Contributions}
 
-\begin{enumerate}\itemsep3pt
-  \item \textbf{Architecture.}
-  PCAE1D/PCAE2D combines MPS patch features, a six-qubit VQC, a 19--27-dimensional Pauli-correlator vector, 2D Fourier positional encoding, a graph-Hamiltonian energy term, and a classical decoder.
-  \item \textbf{Reconstruction scope (per-image fitting).}
-  Identically configured per-image fitting experiments cover six real image datasets (Section~\ref{sec:sameset_results}).
-  \item \textbf{Held-out surrogate comparison.}
-  On held-out CIFAR-10, a closed-form surrogate of the PCAE2D observable map meets the $\pm1$~dB equivalence criterion against four of seven resource-matched classical/ablated feature maps, under two one-sided tests (TOST) with Holm correction.
-  It clearly outperforms the two random-feature null controls.
-  The trained circuit itself stays near the random-latent range on held-out images at the tested budget (Section~\ref{sec:ablation_relationship}).
-  \item \textbf{Hardware pilot.}
-  Five fitted checkpoints are replayed on IBM hardware without retraining and decoded from hardware-measured observables (Section~\ref{sec:hardware_pilot}).
-  A noise/shot-budget sweep and repeated execution across backends support the pilot (Sections~\ref{sec:hardware_robustness}--\ref{sec:hardware_anchors}).
-  \item \textbf{Equivariant observable pooling (construction).}
-  An exact, numerically verified $D_4$-equivariant observable-pooling construction makes the PCAE2D observable map equivariant to the eight symmetries of the square, to numerical precision (Section~\ref{sec:d4}).
-  The guarantee follows from Reynolds group averaging over the $D_4$ orbit \citep{Puny2022} rather than from anything quantum, and the same construction gives the same exactness for a purely classical feature map.
-  We report it as a design property of the pooled observable map.
-  \item \textbf{Restricted nonlocal result (diagnostic).}
-  In a leakage-audited protocol with a fixed linear readout, pair observables are necessary when the target depends explicitly on distant-patch products (Section~\ref{sec:entanglement_necessity}).
-\end{enumerate}
+PCAE1D/PCAE2D combines MPS patch features, a six-qubit VQC, a 19--27-dimensional Pauli-correlator vector, 2D Fourier positional encoding, a graph-Hamiltonian energy term, and a classical decoder.
+An exact, numerically verified $D_4$-equivariant observable-pooling construction makes the PCAE2D observable map equivariant to the eight symmetries of the square, to numerical precision (Section~\ref{sec:d4}).
+The guarantee follows from Reynolds group averaging over the $D_4$ orbit \citep{Puny2022} rather than from anything quantum, and the same construction gives the same exactness for a purely classical feature map.
+We report it as a design property of the pooled observable map.
+
+Identically configured per-image fitting experiments cover six real image datasets (Section~\ref{sec:sameset_results}).
+On held-out CIFAR-10, a closed-form surrogate of the PCAE2D observable map meets the $\pm1$~dB equivalence criterion against four of seven resource-matched classical/ablated feature maps, under two one-sided tests (TOST) with Holm correction.
+It clearly outperforms the two random-feature null controls.
+The trained circuit itself stays near the random-latent range on held-out images at the tested budget (Section~\ref{sec:ablation_relationship}).
+Five fitted checkpoints are replayed on IBM hardware without retraining and decoded from hardware-measured observables (Section~\ref{sec:hardware_pilot}).
+A noise/shot-budget sweep and repeated execution across backends support the pilot (Sections~\ref{sec:hardware_robustness}--\ref{sec:hardware_anchors}).
+In a leakage-audited protocol with a fixed linear readout, pair observables are necessary when the target depends explicitly on distant-patch products (Section~\ref{sec:entanglement_necessity}).
 
 The appendices give the training settings, the matched-budget ablation, further held-out results and the hardware methodology.
 
@@ -901,30 +894,30 @@ Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier po
 \subsection{Validated scope}
 \label{sec:limitations}
 
-\begin{itemize}\itemsep4pt
-\item Every circuit-based reconstruction result in this paper is per-image trained.
+Every circuit-based reconstruction result in this paper is per-image trained.
 The held-out comparison of Section~\ref{sec:ablation_relationship} uses a closed-form surrogate of the PCAE2D map.
 On held-out images the trained circuit stays near the random-latent range at the tested budget, so its held-out generalisation is not established.
-\item The per-image results of Section~\ref{sec:sameset_results} are not compared with a matched-size classical per-image network, as is usual for implicit neural representations.
+The per-image results of Section~\ref{sec:sameset_results} are not compared with a matched-size classical per-image network, as is usual for implicit neural representations.
 {\color{red}\textbf{[Student Q7: The decoder has about 52k parameters against 1{,}024 pixels in a $32\times32$ image, and it also receives the patch position.
 We found the per-image classical baselines in \texttt{Baselines/cifar10\_comparisons} (not size-matched) and the evaluation-time zero-observable control on \textit{Monalisa}.
 No decoder has been trained on the positional encoding alone.
 Can you run that control, a PCAE2D decoder trained per image with the observables removed, under the protocol of Table~\ref{tab:sameset_multi_dataset}?
 How long would it take?]}}
-\item The $D_4$-pooled map (Section~\ref{sec:d4}) is a feature-grid-level construction and numerical diagnostic, measured on the closed-form surrogate in Table~\ref{tab:d4_equivariance}.
+
+The $D_4$-pooled map (Section~\ref{sec:d4}) is a feature-grid-level construction and numerical diagnostic, measured on the closed-form surrogate in Table~\ref{tab:d4_equivariance}.
 Integrating it into the trainable end-to-end pipeline is future work.
-\item The pair-observable necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a synthetic task with closed-form features, constructed to require nonlocal structure.
+The pair-observable necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a synthetic task with closed-form features, constructed to require nonlocal structure.
 Ordinary natural-image reconstruction lies outside that scope (see Section~\ref{sec:dequant}).
-\item The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, unmitigated pilot with one run per image on the main backend rather than a statistically resolved hardware benchmark.
-\item The training-dynamics traces (Section~\ref{sec:phase_transition}) are an interpretability readout.
+The training-dynamics traces (Section~\ref{sec:phase_transition}) are an interpretability readout.
 The threshold fires whether the Hamiltonian term is present or absent, at 4/4 in both cases.
-\item The matched real-circuit topology comparison uses 3 seeds and 3 held-out images per topology.
+
+The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, unmitigated pilot with one run per image on the main backend rather than a statistically resolved hardware benchmark.
+The matched real-circuit topology comparison uses 3 seeds and 3 held-out images per topology.
 These results support a resource-cost interpretation rather than formal equivalence of the topologies.
-\item Every result here is at a six-qubit, depth-18 scale.
+Every result here is at a six-qubit, depth-18 scale.
 Trainability of variational models is known to degrade with width and depth through barren-plateau effects \citep{McClean2018, Larocca2025}.
 Further, models that provably avoid barren plateaus are often also efficiently simulable on a classical computer \citep{Cerezo2025}.
 Thus, whether the tested boundary moves at larger scale is an open question.
-\end{itemize}
 
 \section{Conclusion}
 \label{sec:conclusion}
