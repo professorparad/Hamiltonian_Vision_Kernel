@@ -940,19 +940,20 @@ Thus, whether the tested boundary moves at larger scale is an open question.
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented the Pauli-Correlator Autoencoder (PCAE), a hybrid quantum--classical architecture for image reconstruction that assembles matrix-product-state patch features, a measured Pauli-correlator latent space, enforced $D_4$-equivariant observable pooling, and a learnable Hamiltonian energy \blue{term} into a single pipeline (Section~\ref{sec:representativeness}).
+We presented the Pauli-Correlator Autoencoder (PCAE), a hybrid quantum--classical architecture for image reconstruction that assembles matrix-product-state patch features, a measured Pauli-correlator latent space, enforced $D_4$-equivariant observable pooling, and a learnable Hamiltonian energy term into a single pipeline (Section~\ref{sec:architecture}).
 Across six real image datasets, per-image-trained PCAE2D models reach $25.8$--$41.6$~dB PSNR.
-On \blue{held-out CIFAR-10,} a \blue{closed-form surrogate of} \blue{the} PCAE2D \blue{observable map} is \blue{equivalent within 1~dB to four resource-matched} \blue{feature maps.
-Held-out generalisation of the trained circuit remains to be} \blue{shown} (Section~\ref{sec:ablation_relationship}).
+On held-out CIFAR-10, a closed-form surrogate of the PCAE2D observable map is equivalent within 1~dB to four resource-matched feature maps.
+Held-out generalisation of the trained circuit remains to be shown (Section~\ref{sec:ablation_relationship}).
 A hardware pilot replayed trained checkpoints on IBM Quantum devices without retraining, establishing feasibility at a five-image scope with one run per image on the main backend (Section~\ref{sec:hardware_pilot}).
 
-Pair observables are necessary on a \blue{synthetic} task requiring nonlocal structure, under a fixed linear readout (Section~\ref{sec:entanglement_necessity}).
-The Hamiltonian energy term \blue{acts} as an \blue{auxiliary} \blue{training objective, and its learned energy is an} interpretable \blue{readout} of the trained representation (Section~\ref{sec:regularizer_inert}).
-The pipeline executes natively on real quantum hardware.
-\blue{The pooled observable map} is also exactly $D_4$-equivariant by construction, which we report as a design-correctness property rather than a quantum capability, since the same Reynolds averaging applied to a classical feature map is equally exact.
-At the six-qubit scale tested here, PCAE \blue{fits varied real images} and runs on real quantum hardware.
+Pair observables are necessary on a synthetic task requiring nonlocal structure, under a fixed linear readout (Section~\ref{sec:entanglement_necessity}).
+The Hamiltonian energy term acts as an auxiliary training objective, and its learned energy is an interpretable readout of the trained representation (Section~\ref{sec:regularizer_inert}).
+In a single-seed ablation it lowers reconstruction quality.
+The pooled observable map is also exactly $D_4$-equivariant by construction, which we report as a design-correctness property rather than a quantum capability, since the same Reynolds averaging applied to a classical feature map is equally exact.
+We make no claim of quantum advantage.
+At the six-qubit scale tested here, PCAE fits varied real images and runs on real quantum hardware.
 
-Future work should integrate the $D_4$-pooled map into an end-to-end trainable pipeline (Section~\ref{sec:limitations}), scale the hardware pilot toward a statistically resolved benchmark with error mitigation and repeated trials, \blue{test held-out generalisation of the trained circuit against the same} \blue{resource-matched controls,} search for further real-world tasks with nonlocal structure where PCAE's pair-observable separation translates into a reconstruction advantage, and extend the resource-matched, leakage-audited evaluation protocol to other hybrid quantum vision architectures.
+Future work should integrate the $D_4$-pooled map into an end-to-end trainable pipeline (Section~\ref{sec:limitations}), scale the hardware pilot toward a statistically resolved benchmark with error mitigation and repeated trials, test held-out generalisation of the trained circuit against the same resource-matched controls, search for further real-world tasks with nonlocal structure where PCAE's pair-observable separation translates into a reconstruction advantage, and extend the resource-matched, leakage-audited evaluation protocol to other hybrid quantum vision architectures.
 
 % ============================== BACK MATTER =================================
 \backmatter
