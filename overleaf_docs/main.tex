@@ -469,12 +469,12 @@ Section~\ref{sec:dequant} discusses why this ties-with-classical result and the 
 \label{sec:hardware_pilot}
 
 The results above are noiseless-simulator results.
-We now report a small but complete image-reconstruction pilot executed on real IBM Quantum hardware (\texttt{ibm\_fez}, a 156-qubit Heron-class \blue{processor).}
+We now report a small but complete image-reconstruction pilot executed on real IBM Quantum hardware (\texttt{ibm\_fez}, a 156-qubit Heron-class processor).
 
 The pilot covers five images.
 These are the full 16-patch \textit{Monalisa} benchmark and four native-resolution CIFAR-10 images (\textit{cat}, \textit{ship}$\times2$, \textit{airplane}), each optimised directly on its own target image following the same per-image protocol as Sections~\ref{sec:sameset_results} and~\ref{sec:no_generalization}.
 For each image we took an already-trained PCAE1D/PCAE2D checkpoint's exact learned parameters and rebuilt its measurement circuits gate-for-gate in Qiskit.
-We verified the translation against the original PennyLane simulator to within numerical noise, at most $7.9\times10^{-4}$ maximum absolute error per observable across every \blue{patch.}
+We verified the translation against the original PennyLane simulator to within numerical noise, at most $7.9\times10^{-4}$ maximum absolute error per observable across every patch.
 We then executed the same circuits on real hardware with 256 shots per measurement basis.
 This is a fixed per-basis shot budget, rather than an adaptive shadow-tomography-style estimation scheme \citep{Huang2020Shadows}.
 The hardware-measured observables were decoded by the same trained classical decoder, with no retraining and no simulator involved anywhere in the reconstruction path.
@@ -483,13 +483,15 @@ Reconstructions from real, noisy hardware measurements retain recognisable image
 \textit{Monalisa} reaches $25.90$~dB PSNR from hardware measurements, against a $37.99$~dB noiseless-simulator replay of the identical circuit (Figure~\ref{fig:hardware_reconstruction_monalisa}).
 The four CIFAR-10 images average $29.56\pm2.03$~dB on hardware against $42.69\pm3.84$~dB in simulation (Figure~\ref{fig:hardware_reconstruction_cifar}, Table~\ref{tab:hardware_pilot_summary}).
 The observed gap is consistent with noise in these unmitigated device executions, although the five-image pilot does not isolate individual noise sources.
-Circuits were transpiled at optimisation level 1 and submitted through SamplerV2 with default options; dynamical decoupling, Pauli twirling and readout-error mitigation were not \blue{enabled \citep[see][]{Temme2017, vandenBerg2022, Kim2023}.}
+Circuits were transpiled at optimisation level 1 and submitted through SamplerV2 with default options.
+Dynamical decoupling, Pauli twirling and readout-error mitigation were not enabled \citep[see][]{Temme2017, vandenBerg2022, Kim2023}.
 Each image used 256 shots per basis, totalling 12{,}288 shots for \textit{Monalisa} and 8{,}192 for each CIFAR-10 image.
 The original jobs' physical-qubit layouts and contemporaneous calibration timestamps were not serialised and could not subsequently be recovered.
-Every hardware reconstruction remains above the random-latent control range \blue{($11$--$15$~dB).}
-The pilot used 176 circuits; the contemporaneous account-meter reading increased by 16 quantum-processor \blue{seconds.
-We note that a similar protocol,} with \blue{training in simulation and inference on IBM hardware, has been used for MedMNIST classification with error suppression and mitigation \citep{Singh2026}.
-Here, it is applied to reconstruction without mitigation.}
+Every hardware reconstruction remains above the random-latent control range ($11$--$15$~dB).
+The pilot used 176 circuits.
+The contemporaneous account-meter reading increased by 16 quantum-processor seconds.
+A similar protocol, with training in simulation and inference on IBM hardware, has been used for MedMNIST classification with error suppression and mitigation \citep{Singh2026}.
+Here, it is applied to reconstruction without mitigation.
 {\color{red}\textbf{[Student Q4: Singh et al.\ used dynamical decoupling, gate twirling and M3 readout mitigation on IBM hardware.
 Could the \textit{Monalisa} and \textit{cat} anchor replays be repeated once with twirling and dynamical decoupling switched on in SamplerV2?
 This should cost only a few quantum-processor seconds.
@@ -534,17 +536,7 @@ The pilot establishes that the trained PCAE observable channel survives executio
 With five images it is a pilot, and it makes no hardware-advantage claim.
 The learned parameters, the measurement circuits and the classical decoder all transfer unchanged, and the decoded images remain quantitatively informative at 256 shots per basis on an unmitigated device.
 This is the sense in which PCAE runs on real quantum hardware.
-\blue{Gate} sequences, measurement construction\del{, job identifiers} and \blue{validation results are in \del{the Supplementary}} \blue{\del{Material.}}
-\brown{Appendix~\ref{sec:hardware_methodology}.}
-
-\del{The same checkpoint-replay methodology supports a further hardware} \blue{\del{replay.}}
-\del{Fresh PCAE1D checkpoints were trained at $N\in\{4,6,8\}$ and replayed epoch-by-epoch on real IBM Quantum hardware and on the IonQ cloud simulator \mbox{\citep{IonQBackends}}.}
-\del{That exercise serves the training-dynamics diagnostic of Section~\mbox{\ref{sec:phase_transition}}.}
-\del{It is} \blue{\del{a single-patch, single-seed}} \blue{\del{probe,}} \del{reported in the Supplementary Material as an interpretability readout.}
-\blue{\del{and it is not used as evidence.}
-\del{Every replay completed.}
-\del{The flagged epoch varied}} \blue{\del{non-monotonically with circuit size, which reflects instability of the threshold}} \blue{\del{rule rather than a scaling law.}}
-
+Gate sequences, measurement construction and validation results are in Appendix~\ref{sec:hardware_methodology}.
 
 \subsection{Noise/shot trade-off: a free simulator complement}
 \label{sec:hardware_robustness}
@@ -632,19 +624,19 @@ A $D_4$-pooled PCAE2D observable-grid map is equivariant to the eight symmetries
 \end{equation}
 Here $D_4$ acts on an image $x$ by rotating or reflecting its $4\times4$ grid of patches, and $P_g$ permutes the per-patch observable vectors in the same way, so that $P_{gh}=P_gP_h$.
 The property then holds exactly for any base map $\Phi$.
-\blue{This is the standard group-averaging construction \citep{Puny2022}.
-It needs one evaluation of the base map for each of the eight group elements.}
+This is the standard group-averaging construction \citep{Puny2022}.
+It needs one evaluation of the base map for each of the eight group elements.
 Substituting $hx$ and re-indexing the sum with $g'=gh$ gives $P_g^{-1}=P_hP_{g'}^{-1}$, and hence $\Phi_{D_4}(hx)=P_h\Phi_{D_4}(x)$.
 The numerical check below therefore tests the implementation, not the property.
-We run it \blue{on the closed-form surrogate feature map} over 7000 patch transforms of cached CIFAR images (Table~\ref{tab:d4_equivariance}, Figure~\ref{fig:d4_equivariance}).
+We run it on the closed-form surrogate feature map over 7000 patch transforms of cached CIFAR images (Table~\ref{tab:d4_equivariance}, Figure~\ref{fig:d4_equivariance}).
 The pooled map's equivariance error is $9.57\times10^{-17}\pm1.26\times10^{-17}$, which is floating-point noise.
 The unpooled positional map has an error of $0.815\pm0.129$, and the local/raw control has $0.837\pm0.131$.
 Both are of order one.
 The patch grid's geometry therefore makes the unpooled map $D_4$-\emph{motivated} only, and the explicit pooling construction is what delivers the property.
+Applied to the trained circuit, the same pooling reduces the equivariance error to order $10^{-8}$.
+On the four trained PCAE2D hardware checkpoints, with an exact statevector pass over all eight transformed copies of each image, the mean error falls from $0.2777$ without pooling to $5.39\times10^{-8}$ with it.
 This construction operates at the feature-grid level and serves here as a numerical diagnostic, rather than as a component of the trainable reconstruction pipeline.
 Integrating it end-to-end (Section~\ref{sec:limitations}) is concrete future work.
-\blue{Applied to the trained circuit, the same pooling reduces the equivariance error to order $10^{-8}$.}
-\blue{On the four trained PCAE2D hardware checkpoints, with an exact statevector pass over all eight transformed copies of each image, the mean error falls from $0.2777$ without pooling to $5.39\times10^{-8}$ with it.}
 This route to symmetry differs from equivariant quantum neural networks, in which every circuit layer is built to commute with the group action \citep{Nguyen2024EQNN}.
 A recent image classifier of that kind builds $C_4$ rotation symmetry into the circuit itself \citep{SanSebastianSein2025}.
 In PCAE the symmetry comes from averaging the observable grid over the group after measurement.
@@ -652,7 +644,8 @@ The circuit itself is not equivariant, and the same average applies equally to a
 
 \begin{table}[t]
   \centering
-  \caption{$D_4$ equivariance error for unpooled and pooled observable-grid maps (lower is better; the pooled map is group-averaged over all eight square \blue{symmetries; closed-form surrogate map).}}
+  \caption{$D_4$ equivariance error for unpooled and pooled observable-grid maps (lower is better; the pooled map is group-averaged over all eight square symmetries).
+  Values are computed on the closed-form surrogate map.}
   \label{tab:d4_equivariance}
   \begin{tabular}{@{}l r r@{}}
     \toprule
@@ -681,19 +674,22 @@ The circuit itself is not equivariant, and the same average applies equally to a
 The diagnostic tests whether a pair-observable channel is needed to fit a target that depends on pair correlations.
 The target is a fixed synthetic function of \emph{simulated} patch features, and those features are not concatenated into any candidate's own input block.
 Every control receives the same raw inputs as PCAE2D.
-\blue{The protocol is audited for leakage.
+The protocol is audited for leakage.
 For each feature block, we check whether a linear or near-linear map reaches near-zero residual on the features used to build the target, since such a fit would copy the target from the input.
-The diagnostic reported here passes this check.}
-\blue{All feature maps in this} \blue{diagnostic are closed-form, and no circuit is evaluated.}
-The \blue{pair-observable} \blue{channel is represented by the analytic pair products that a pair measurement} \blue{would supply.
-By construction, these products match the pair terms of the} \blue{target.
-The} experiment demonstrates representational capability under a deliberately aligned protocol, not a general performance advantage.
+The diagnostic reported here passes this check.
+All feature maps in this diagnostic are closed-form, and no circuit is evaluated.
+The pair-observable channel is represented by the analytic pair products that a pair measurement would supply.
+By construction, these products match the pair terms of the target.
+The experiment demonstrates representational capability under a deliberately aligned protocol, not a general performance advantage.
 
 Table~\ref{tab:hvk_pair_diagnostic} and Figure~\ref{fig:hvk_pair_diagnostic} report the result across five seeds.
 PCAE2D's pair-observable channel reaches mean $R^2=0.9735$, or $32.77$~dB PSNR.
-This is a $17.74$~dB improvement over a no-pair-observables control ($R^2=0.019$) and $18.52$~dB over \blue{Gaussian random} latents \blue{(``random VQC'')} ($R^2=-0.173$).
-\blue{Randomly} \blue{rescaling and masking} the \blue{pair} features \blue{(``freeze quantum''), with} only the readout trained, still reaches $R^2=0.853$.
-A raw-linear classical control ($R^2=0.0133$), a parameter-matched classical control ($R^2=-0.030$), a \blue{random-feature} control ($R^2=-0.173$), and a frozen-classical control ($R^2=-0.903$) all fail on this deliberately pair-dependent target.
+This is a $17.74$~dB improvement over a no-pair-observables control ($R^2=0.019$) and $18.52$~dB over Gaussian random latents (``random VQC'') ($R^2=-0.173$).
+Randomly rescaling and masking the pair features (``freeze quantum''), with only the readout trained, still reaches $R^2=0.853$.
+A raw-linear classical control ($R^2=0.0133$), a parameter-matched classical control ($R^2=-0.030$), a random-feature control ($R^2=-0.173$), and a frozen-classical control ($R^2=-0.903$) all fail on this deliberately pair-dependent target.
+{\color{red}\textbf{[Student Q12: The ``Gaussian random latents'' of the previous sentence and the ``random-feature control'' here both have $R^2=-0.173$, and Table~\ref{tab:hvk_pair_diagnostic} has only one such row (Random VQC).
+Are they the same run?
+If so, we will list it once.]}}
 The no-pair-observables control retains only single-site nonlinear channels and removes every cross-site product feature.
 Under the fixed linear readout, it therefore cannot construct the cross terms on which the target depends.
 
@@ -711,9 +707,9 @@ For this reason we scope the claim to the linear protocol rather than to classic
 \begin{table}[t]
   \centering
   \caption[PCAE2D restricted pair-correlation diagnostic]{PCAE2D restricted pair-correlation diagnostic across five seeds.
-  Deliberately favourable to pair-observable structure; evidence for pair-observable necessity under a matched linear \blue{readout.
-  All} \blue{features are closed-form.
-  ``Random VQC'' is a block of Gaussian} \blue{random features.}}
+  Deliberately favourable to pair-observable structure; evidence for pair-observable necessity under a matched linear readout.
+  All features are closed-form.
+  ``Random VQC'' is a block of Gaussian random features.}
   \label{tab:hvk_pair_diagnostic}
   \begin{tabular}{@{}l r r r@{}}
     \toprule
@@ -743,20 +739,21 @@ For this reason we scope the claim to the linear protocol rather than to classic
 
 Beyond the results above, we tracked two exploratory training-dynamics readouts.
 These are a magnetisation-style statistic $M_z(t)$ and a signed energy-to-entanglement ratio $R_{ES}(t)$.
-\blue{Here $M_z(t)$ is the mean of the local $\langle Z\rangle$ observables over all qubits and patches at optimisation step $t$.
-$R_{ES}(t)$ is the learned Hamiltonian energy divided by the fixed sum of the MPS bond entropies, so it tracks the energy up to a constant scale.}
+Here $M_z(t)$ is the mean of the local $\langle Z\rangle$ observables over all qubits and patches at optimisation step $t$.
+$R_{ES}(t)$ is the learned Hamiltonian energy divided by the fixed sum of the MPS bond entropies, so it tracks the energy up to a constant scale.
 Both drift smoothly over training with run-to-run fluctuations, and neither shows a sharp transition.
 Any apparent onset is a within-run median-plus-$2\sigma$ threshold crossing, rather than a calibrated statistical test.
-\blue{The rule flags a run when the largest step-to-step change in $M_z$ exceeds that run's median change plus two standard deviations.}
+The rule flags a run when the largest step-to-step change in $M_z$ exceeds that run's median change plus two standard deviations.
 
 A negative control fixes the scope.
 We applied the identical protocol to a classical-replacement variant, in which the Hamiltonian energy is identically zero throughout training.
 That variant crosses the threshold in all $4/4$ tested cases, which is as often as the Hamiltonian-regularised model's $4/4$.
 The threshold therefore fires whether the Hamiltonian term is present or absent, and it does not track that term.
 We therefore report these traces as an interpretability readout on the learned energy and entanglement.
-\blue{The readout is descriptive.
-It shows how the two quantities evolve during} \blue{optimisation.
-We do not treat it as evidence of a phase transition or a} \blue{critical point, and an earlier phase-transition reading of these traces has} \blue{been withdrawn.}
+The readout is descriptive.
+It shows how the two quantities evolve during optimisation.
+We do not treat it as evidence of a phase transition or a critical point.
+An earlier phase-transition reading of these traces has been withdrawn.
 
 \section{Discussion}
 \label{sec:discussion}
