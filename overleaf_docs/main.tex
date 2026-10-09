@@ -761,12 +761,13 @@ An earlier phase-transition reading of these traces has been withdrawn.
 \subsection{Effect of the Hamiltonian energy term}
 \label{sec:regularizer_inert}
 
-In this single-seed comparison, the signed Hamiltonian-energy objective substantially reduces reconstruction quality: removing it increases PSNR from $38.63$ to $44.56$~dB (Table~\ref{tab:hamiltonian_controls}).
+In this single-seed comparison, the signed Hamiltonian-energy objective substantially reduces reconstruction quality.
+Removing it increases PSNR from $38.63$ to $44.56$~dB (Table~\ref{tab:hamiltonian_controls}).
 The legacy objective adds a signed mean energy to the reconstruction loss.
 Because learned energy can go negative, the optimiser can lower total loss by driving energy down without improving reconstruction.
 A contrastive variant, assigning lower energy to correct feature--position pairs than to shuffled pairs, recovers part of the gap ($42.92$~dB) but stays below its no-energy counterpart.
 These are fresh same-environment measurements (\textit{Monalisa}, 200 steps, seed 42), and they supersede earlier values produced by a script that cannot be audited.
-\blue{The effect of the signed energy term is in general agreement with an independent study, which finds no benefit beyond simple classical regularisers from a VQE-inspired energy term added to the loss of a generative adversarial network \citep{Strnadel2025}.}
+The effect of the signed energy term is in general agreement with an independent study, which finds no benefit beyond simple classical regularisers from a VQE-inspired energy term added to the loss of a generative adversarial network \citep{Strnadel2025}.
 {\color{red}\textbf{[Student Q5: Only the no-energy row of Table~\ref{tab:hamiltonian_controls} has extra seeds (43 and 44, in \texttt{Main\_new/README.md}).
 Can the signed-energy and contrastive rows also be run with seeds 43 and 44 under the same protocol?
 That is four runs of 200 steps each.
@@ -780,7 +781,7 @@ Under this protocol, the reconstruction loss alone provides the stronger optimis
 \begin{table}[t]
   \centering
   \caption{Hamiltonian-sector controls (single-seed, fresh same-environment reproduction: \textit{Monalisa}, 200 steps, seed 42).
-  The energy objective is diagnostically useful but does not improve reconstruction accuracy. }
+  The energy objective is diagnostically useful but does not improve reconstruction accuracy.}
   \label{tab:hamiltonian_controls}
   \begin{tabularx}{\textwidth}{@{}L{0.30\textwidth} c Y@{}}
     \toprule
@@ -796,7 +797,6 @@ Under this protocol, the reconstruction loss alone provides the stronger optimis
 \end{table}
 
 The training-dynamics readouts of Section~\ref{sec:phase_transition} provide a descriptive window into how the learned energy and entanglement evolve.
-They are descriptive readouts rather than calibrated statistical tests, and the thermodynamic reading is outside their scope.
 
 \subsection{Task-dependent representational scope}
 \label{sec:dequant}
@@ -811,8 +811,8 @@ Second, whether its model class admits an efficient classical replacement at sca
 Tensor-network analyses give conditions for such dequantisation of variational models \citep{Shin2024Dequant}, and a classical tie at small scale does not settle it.
 Random Fourier features can also replace some variational models efficiently, under stated conditions \citep{Sweke2025}.
 Quantum convolutional networks on common image benchmarks can be simulated efficiently by a classical method based on Pauli shadows \citep{Bermejo2026}.
-Third, on \blue{held-out} \blue{CIFAR-10, a closed-form surrogate of} the \blue{PCAE2D map} stays within 1~dB of matched classical \blue{feature maps.
-The trained circuit has not yet shown held-out} \blue{generalisation.}
+Third, on held-out CIFAR-10, a closed-form surrogate of the PCAE2D map stays within 1~dB of matched classical feature maps.
+The trained circuit has not yet shown held-out generalisation.
 This matches large benchmarks in which simple classical models often match or beat small quantum models, and removing entanglement often costs little \citep{Bowles2024}.
 In PCAE the quantum processor evaluates only the circuit and returns the vector of measured Pauli expectation values.
 The MPS compression is quantum-inspired but runs on classical hardware, as do the Fourier positional encoding, the $D_4$ pooling, the decoder and the optimisation.
@@ -820,11 +820,12 @@ Any quantum contribution to PCAE must therefore enter through the measured obser
 
 The restricted diagnostic of Section~\ref{sec:entanglement_necessity} is constructed so that the relevant structure is a genuine distant-element product, which raw or local features cannot represent under a fixed linear readout.
 That is the regime in which PCAE's pair-observable channel separates.
-Natural image patches at the resolution and patch size used here are low-entanglement, locally structured \blue{data \citep{Martyn2020, Lu2025},} where a linear or shallow classical readout is already close to sufficient.
+Natural image patches at the resolution and patch size used here are low-entanglement, locally structured data \citep{Martyn2020, Lu2025}, where a linear or shallow classical readout is already close to sufficient.
 {\color{red}\textbf{[Student Q6: The bipartite entropies of the MPS features were not saved for any natural-image run.
 Can you compute their range for the CIFAR-10 and MedMNIST patches of Table~\ref{tab:sameset_multi_dataset} with the existing \texttt{extract\_mps\_features}?
 Please send the range and the file.
-A range from our own data would support this sentence directly.]}} The distinction lies in the measured pair-observable channel rather than in the circuit.
+A range from our own data would support this sentence directly.]}}
+The distinction lies in the measured pair-observable channel rather than in the circuit.
 The ansatz uses strongly-entangling layers and does generate an entangled state, but whether the measured channel carries task-relevant information is a property of the target.
 On natural-image targets the pair observables add little beyond the local ones.
 On the constructed nonlocal target they are necessary.
@@ -838,16 +839,15 @@ We do not claim the boundary transfers unchanged to every dataset, patch size, o
 \subsection{Topology alignment as an inductive bias}
 \label{sec:topology}
 
-Aligning the latent interaction graph with image-patch adjacency (PCAE2D vs.\ PCAE1D) is an architectural inductive bias, and \blue{we test} it directly under matched held-out conditions.
-\del{Its real-circuit subset} \blue{The real-circuit comparison} (3 seeds, 3 held-out CIFAR-10 images) gives a PCAE1D-minus-PCAE2D mean PSNR difference of $0.16$~dB.
+Aligning the latent interaction graph with image-patch adjacency (PCAE2D vs.\ PCAE1D) is an architectural inductive bias, and we test it directly under matched held-out conditions.
+The real-circuit comparison (3 seeds, 3 held-out CIFAR-10 images) gives a PCAE1D-minus-PCAE2D mean PSNR difference of $0.16$~dB.
 After averaging images within seed, the bootstrap 95\% CI is $[-0.38,0.46]$~dB and the seed-level Wilcoxon test gives $p=0.50$.
-\del{A broader five-seed surrogate comparison across CIFAR-10, Fashion-MNIST, and PathMNIST likewise finds numerically small topology differences, at most $0.07$~dB in mean PSNR.}
 PCAE2D completes the matched 90-step runs in roughly half the wall-clock time.
 At the tested scale, topology is therefore primarily a resource-cost choice rather than a reliable accuracy advantage.
 These tests do not establish formal equivalence.
 
 Table~\ref{tab:differentiation} contrasts PCAE's structural properties against reference frameworks, including the three nearest hybrid-vision architecture families.
-Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy \blue{term,} each documented and scoped in the preceding sections.
+Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier positional bias with enforced $D_4$ pooling, and a Hamiltonian energy term, each documented and scoped in the preceding sections.
 
 
 \begin{table}[t]
@@ -888,7 +888,7 @@ Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier po
       & Fidelity / reconstruction
       & None (kernel value only)
       & Classification loss
-      & Hamiltonian \blue{energy term} \\
+      & Hamiltonian energy term \\
     \addlinespace
     Enforced group symmetry
       & Not in baseline
@@ -913,28 +913,28 @@ Its distinguishing features are a Pauli-correlator latent space, a 2D Fourier po
 \label{sec:limitations}
 
 \begin{itemize}\itemsep4pt
-\item Every \blue{circuit-based} reconstruction result in this paper is per-image \blue{trained.
-The} held-out comparison of \blue{Section~\ref{sec:ablation_relationship} uses a closed-form surrogate of the PCAE2D map.
-On held-out images the trained circuit stays near the random-latent range at the tested budget, so its held-out generalisation is not established.}
-\item \blue{The per-image results of Section~\ref{sec:sameset_results} are not compared with a matched-size classical per-image network, as is usual for implicit neural representations.}
+\item Every circuit-based reconstruction result in this paper is per-image trained.
+The held-out comparison of Section~\ref{sec:ablation_relationship} uses a closed-form surrogate of the PCAE2D map.
+On held-out images the trained circuit stays near the random-latent range at the tested budget, so its held-out generalisation is not established.
+\item The per-image results of Section~\ref{sec:sameset_results} are not compared with a matched-size classical per-image network, as is usual for implicit neural representations.
 {\color{red}\textbf{[Student Q7: The decoder has about 52k parameters against 1{,}024 pixels in a $32\times32$ image, and it also receives the patch position.
 We found the per-image classical baselines in \texttt{Baselines/cifar10\_comparisons} (not size-matched) and the evaluation-time zero-observable control on \textit{Monalisa}.
 No decoder has been trained on the positional encoding alone.
 Can you run that control, a PCAE2D decoder trained per image with the observables removed, under the protocol of Table~\ref{tab:sameset_multi_dataset}?
 How long would it take?]}}
-\item The $D_4$-pooled map (Section~\ref{sec:d4}) is a feature-grid-level construction and numerical \blue{diagnostic, measured on the closed-form surrogate in Table~\ref{tab:d4_equivariance}.}
-Integrating it into the trainable end-to-end pipeline is future work (Section~\ref{sec:conclusion}).
-\item The pair-observable necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a \blue{synthetic} task \blue{with closed-form features,} constructed to require nonlocal structure.
+\item The $D_4$-pooled map (Section~\ref{sec:d4}) is a feature-grid-level construction and numerical diagnostic, measured on the closed-form surrogate in Table~\ref{tab:d4_equivariance}.
+Integrating it into the trainable end-to-end pipeline is future work.
+\item The pair-observable necessity result (Section~\ref{sec:entanglement_necessity}) is scoped to a synthetic task with closed-form features, constructed to require nonlocal structure.
 Ordinary natural-image reconstruction lies outside that scope (see Section~\ref{sec:dequant}).
 \item The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, unmitigated pilot with one run per image on the main backend rather than a statistically resolved hardware benchmark.
 \item The training-dynamics traces (Section~\ref{sec:phase_transition}) are an interpretability readout.
-The threshold fires whether the Hamiltonian term is present or absent, at 4/4 in both \blue{cases.}
-\item The matched real-circuit topology comparison uses 3 seeds and 3 held-out images per topology\del{, and the broader five-seed comparison is surrogate-based}.
+The threshold fires whether the Hamiltonian term is present or absent, at 4/4 in both cases.
+\item The matched real-circuit topology comparison uses 3 seeds and 3 held-out images per topology.
 These results support a resource-cost interpretation rather than formal equivalence of the topologies.
 \item Every result here is at a six-qubit, depth-18 scale.
-Trainability of variational models is known to degrade with width and depth through barren-plateau effects \citep{McClean2018, Larocca2025}\blue{.
+Trainability of variational models is known to degrade with width and depth through barren-plateau effects \citep{McClean2018, Larocca2025}.
 Further, models that provably avoid barren plateaus are often also efficiently simulable on a classical computer \citep{Cerezo2025}.
-Thus,} whether the tested boundary moves at larger scale is an open question.
+Thus, whether the tested boundary moves at larger scale is an open question.
 \end{itemize}
 
 \section{Conclusion}
