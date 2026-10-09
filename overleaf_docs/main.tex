@@ -279,7 +279,9 @@ These were rebuilt in Qiskit for the hardware pilot of Section~\ref{sec:hardware
 \end{figure}
 
 Table~\ref{tab:variants} summarises the tested variants.
-PCAE1D uses a linear 6-qubit chain (5 nearest-neighbour bonds, 27-D observable vector); PCAE2D arranges the same 6 qubits on a $2\times3$ lattice matching patch-boundary adjacency (19-D latent signature); \del{a symmetric PCAE1D variant adds a $\mathrm{U}(1)$-preserving coupling constraint;} and a $D_4$-pooled PCAE2D variant (Section~\ref{sec:symmetry}) group-averages the observable grid over the eight symmetries of the $4\times4$ patch grid, $\Phi_{D_4}(x)=\tfrac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx)$, which is equivariant by construction.
+PCAE1D uses a linear 6-qubit chain (5 nearest-neighbour bonds, 27-D observable vector).
+PCAE2D arranges the same 6 qubits on a $2\times3$ lattice matching patch-boundary adjacency (19-D latent signature).
+A $D_4$-pooled PCAE2D variant (Section~\ref{sec:symmetry}) group-averages the observable grid over the eight symmetries of the $4\times4$ patch grid, $\Phi_{D_4}(x)=\tfrac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx)$, which is equivariant by construction.
 Both PCAE1D and PCAE2D compile to depth-18, 6-qubit circuits on a Heron-class basis (Appendix~\ref{sec:hardware_methodology}).
 
 \begin{table}[t]
@@ -292,7 +294,6 @@ Both PCAE1D and PCAE2D compile to depth-18, 6-qubit circuits on a Heron-class ba
     \midrule
     PCAE1D                   & 6-qubit chain             & 27-D        & None (control)            \\
     PCAE2D                   & $2\times3$ grid           & 19-D        & $D_4$-motivated only      \\
-    \del{Symmetric PCAE1D}   & \del{6-qubit chain}       & \del{27-D}  & \del{$\mathrm{U}(1)$ coupling} \\
     $D_4$-pooled PCAE2D      & $2\times3$ grid, pooled   & 19-D        & $D_4$-equivariant (exact) \\
     \bottomrule
   \end{tabular}
