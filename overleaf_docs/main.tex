@@ -306,13 +306,12 @@ The reconstruction results in Sections~\ref{sec:sameset_results}, \ref{sec:no_ge
 A fresh model is optimised directly on its target image, with no held-out split.
 These results therefore measure per-image fitting and reconstruction capability.
 The hardware pilot replays the resulting fitted checkpoints on real devices without retraining.
-The symmetry and restricted pair-observable diagnostics use \blue{closed-form feature maps and} the separate protocols stated in their respective sections.
+The symmetry and restricted pair-observable diagnostics use closed-form feature maps and the separate protocols stated in their respective sections.
 The training-dynamics readouts of Section~\ref{sec:phase_transition} are reported as an interpretability diagnostic, with their scope set by the negative control given there.
-Held-out generalisation and component necessity are evaluated under the resource-matched statistical \blue{protocol,} \blue{using a closed-form surrogate} of the \blue{PCAE2D observable map} (Section~\ref{sec:ablation_relationship}).
+Held-out generalisation and component necessity are evaluated under the resource-matched statistical protocol, using a closed-form surrogate of the PCAE2D observable map (Section~\ref{sec:ablation_relationship}).
 All settings report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings additionally report SSIM.
-\blue{All trained models use Adam with full-batch updates.}
-\del{Full implementation settings} \blue{Learning rates, step counts, seeds} and environment versions are given in \del{the} \blue{\del{Supplementary Material.}}
-\brown{Appendix~\ref{sec:training_settings}.}
+{\color{red}All trained models use Adam with full-batch updates.
+Learning rates, step counts, seeds and environment versions are given in Appendix~\ref{sec:training_settings}.}
 {\color{red}\textbf{[Student Q8: The main text should state the training settings itself.
 Please write two or three sentences for this paragraph giving the optimiser, the learning rates, the step budgets, the energy weight $\lambda$ and the seeds.
 From the scripts we read Adam with full-batch updates, learning rate $0.003$ for PCAE1D and $0.004$ for PCAE2D, $\lambda=0.01$, 200 steps for the \textit{Monalisa} and CIFAR-10 hardware fits, 80--100 steps for the six-dataset fits and 90 steps for the topology comparison.
