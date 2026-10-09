@@ -410,6 +410,9 @@ The $t$-based 90\% interval is wider than the percentile-bootstrap 95\% interval
 For scale, a 1~dB PSNR difference corresponds to a factor of approximately $10^{0.1}\simeq1.26$ in MSE.
 After Holm correction \blue{\citep{Holm1979}} across the seven comparisons, four controls meet the equivalence criterion against PCAE2D within that margin: no entanglement, $ZZ$-only observables, quadratic classical features, and shuffled pair observables.
 The raw/local linear control meets the uncorrected criterion ($p=0.034$) but not the Holm-corrected criterion (adjusted $p=0.103$).
+{\color{red}\textbf{[Student Q9: The Holm-adjusted $p$-values here and in Table~\ref{tab:tost_main} (0.002, 0.007, 0.007, 0.032, 0.103, 1.000, 1.000) reproduce exactly from the TOST $p$-values in \texttt{tost\_equivalence.json}.
+However, no result file stores them, and \texttt{submission\_claim\_audit.json} does not cover them.
+Please add them to the result file and the claim audit, or tell us where they were computed.]}}
 The two weakest controls, strict classical random features and random-VQC, are not equivalent because \blue{the surrogate} substantially outperforms them.
 \blue{The trained circuit has been tested on held-out images in the topology} \blue{comparison of Section~\ref{sec:topology}.
 Trained on two images for 90 steps,} \blue{PCAE2D reaches $11.57\pm1.53$~dB on three unseen CIFAR-10 images, close to the} \blue{$11$--$15$~dB random-latent range (Section~\ref{sec:hardware_pilot}).
@@ -562,6 +565,8 @@ At this circuit size and shot range, shot count is not a lever that reliably imp
 
 Comparing the 256-shot noisy simulation directly against the real-hardware point isolates what the calibration snapshot does \emph{not} capture.
 That comparison leaves a further $4.24$~dB average gap, ranging from $2.25$ to $8.06$~dB across images.
+{\color{red}\textbf{[Student Q10: In \texttt{simulator\_sweep.json}, the smallest residual (sea-boat image, mean of the three 256-shot noisy runs minus the hardware PSNR) is 2.2553~dB, which rounds to 2.26~dB rather than 2.25~dB.
+Please confirm and correct the lower end of this range.]}}
 This residual is consistent with effects that the calibration model does not capture, such as drift between calibration and execution, crosstalk, and correlated errors.
 The pilot does not separate these sources.
 The airplane image is the clear outlier, with an $8.06$~dB residual gap, roughly double any other image.
@@ -1071,6 +1076,10 @@ Please also define the no-MPS and random-VQC variants of this ablation in one li
 The held-out protocol of Section~\ref{sec:ablation_relationship} was repeated on cached subsets of six datasets, with 400 images per dataset and three stratified split seeds (Table~\ref{tab:multi_dataset_reconstruction}).
 The local/raw control has equal or higher mean PSNR on every dataset.
 After averaging within each split seed, all six seed-bootstrap intervals exclude zero, and each two-sided signed-rank test gives $p=0.25$, the smallest value attainable with three seeds.
+{\color{red}\textbf{[Student: 400 is the loading cap (\texttt{--limit 400}) in \texttt{run\_multi\_dataset\_validation.py}, not a count.
+The paired statistics give 30, 300, 300, 240, 180 and 60 held-out image--seed pairs for CIFAR-10, MNIST, Fashion-MNIST, PathMNIST, BloodMNIST and PneumoniaMNIST.
+How many images does each cached subset hold, and how many are held out per seed?
+Please correct ``400 images per dataset'' if needed.]}}
 
 \begin{table}[!htbp]
 \centering
@@ -1108,8 +1117,9 @@ The control is higher at each of the three seeds.
 
 The \textit{Monalisa} circuit is the PCAE1D checkpoint of the ``Legacy baseline, signed energy'' row of Table~\ref{tab:hamiltonian_controls}.
 {\color{red}\textbf{[Student: the noiseless replay of this checkpoint gives 37.99~dB (Table~\ref{tab:hardware_pilot_summary}), while that row reads 38.63~dB.
-Is it the same run?
-If not, please correct this sentence and the footnote of Table~\ref{tab:training_settings}.]}}
+\texttt{hardware\_reconstruction\_report.json} stores \texttt{cached\_baseline\_psnr\_db} $=32.235$ for this checkpoint, which is the withdrawn legacy value of 32.24~dB.
+The 38.63~dB row is the fresh rerun in \texttt{Main\_new/}, so this checkpoint appears to be a different run.
+Please confirm, give its training steps and seed, and correct this sentence and the footnote of Table~\ref{tab:training_settings}.]}}
 The four CIFAR-10 circuits are PCAE2D checkpoints, each trained on its own image with 16 non-overlapping $8\times8$ patches (Table~\ref{tab:training_settings}).
 PCAE1D measures $Z$, $X$, $ZZ$, $XX$ and $YY$ (27 observables).
 Its pair correlators are joint parities of the same all-$Z$, all-$X$ and all-$Y$ basis measurements that give the single-qubit values, so three measurement circuits per patch suffice, or 48 circuits for \textit{Monalisa}.
