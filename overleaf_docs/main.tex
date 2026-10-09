@@ -84,8 +84,8 @@ These range from amplitude-style encodings \citep{Le2011} to basis-encoded pixel
 Basic image operations on these encodings have also been developed \citep{Chakraborty2018, Zhou2017, Yao2017}.
 Tensor-network methods work well as compressed representations of structured classical data, such as images \citep{Cirac2021, Latorre2005, Han2018, Stoudenmire2016, Ran2020TNCS, Guala2023} and particle-physics events \citep{Araz2022}.
 Hybrid models have also been applied to related imaging tasks, such as tomographic reconstruction \citep{Haga2024, Nau2023} and ghost imaging \citep{Zhai2025}.
-\blue{These solve inverse problems from indirect measurements.
-PCAE instead encodes and decodes a known image.}
+These solve inverse problems from indirect measurements.
+PCAE instead encodes and decodes a known image.
 Quantum convolutional and capsule networks are further examples \citep{Slabbert2024, Cong2019, Hur2022, Liu2022}.
 PCAE focuses on the combination of a Pauli-correlator latent space, enforced group-equivariant pooling, and a physically motivated energy diagnostic.
 
@@ -93,7 +93,7 @@ We introduce the Pauli-Correlator Autoencoder (PCAE1D/PCAE2D), which combines th
 The first is a \emph{Pauli-correlator latent space}, in which measured VQC observables rather than a raw quantum state form the representation handed to a classical decoder, following quantum-enhanced feature maps \citep{Havlicek2019}.
 The second is an \emph{exact, numerically verified $D_4$-equivariant observable-pooling construction}, which group-averages the observable grid over the eight symmetries of the $4\times4$ patch grid rather than motivating symmetry through architecture choices alone.
 This follows group-equivariant classical vision \citep{Cohen2016, Bronstein2021} and the equivariant-quantum-neural-network line that formalises symmetry-embedding constructions for variational circuits \citep{Meyer2023, Nguyen2024EQNN, Schatzki2024, West2024, West2024Erratum}.
-The third is a \emph{learnable Hamiltonian energy \blue{term}}\blue{, used as an} \blue{auxiliary training objective and read out as an interpretable diagnostic,} with full nearest-neighbour $XX/YY/ZZ$ sectors in PCAE1D and grid-edge $ZZ$ terms in PCAE2D.
+The third is a \emph{learnable Hamiltonian energy term}, used as an auxiliary training objective and read out as an interpretable diagnostic, with full nearest-neighbour $XX/YY/ZZ$ sectors in PCAE1D and grid-edge $ZZ$ terms in PCAE2D.
 Table~\ref{tab:differentiation} contrasts these properties against classical, adversarial, and standard quantum autoencoder baselines.
 
 \subsection*{Novelty relative to the nearest hybrid-vision architectures}
@@ -106,16 +106,16 @@ It hands the decoder measured Pauli correlators rather than register amplitudes 
 PCAE is an autoencoder in the usual encoder--decoder sense.
 It maps each image patch to a measured observable vector and decodes it back to pixels.
 It does not compress a quantum state.
-\blue{Closer to PCAE, a hybrid autoencoder has placed a circuit between a classical encoder and decoder and passed its per-qubit $\langle Z\rangle$ values to the decoder as the latent vector \citep{Sakhnenko2022}.
-However, it uses neither MPS input nor pairwise correlators.}
+Closer to PCAE, a hybrid autoencoder has placed a circuit between a classical encoder and decoder and passed its per-qubit $\langle Z\rangle$ values to the decoder as the latent vector \citep{Sakhnenko2022}.
+However, it uses neither MPS input nor pairwise correlators.
 
 \emph{Quantum-kernel vision models} \citep{Havlicek2019, QuantumKernelDefect2022} embed an input into a quantum feature space and read out a scalar kernel value consumed by a classical kernel method.
-PCAE reads out an explicit vector of local and pairwise Pauli expectation values as a latent representation for a trained decoder, and adds enforced group-equivariant pooling and a Hamiltonian energy \blue{term} that a kernel construction has no analogue for.
+PCAE reads out an explicit vector of local and pairwise Pauli expectation values as a latent representation for a trained decoder, and adds enforced group-equivariant pooling and a Hamiltonian energy term that a kernel construction has no analogue for.
 
 \emph{Tensor-network (TN) circuit classifiers} \citep{Guala2023, Stoudenmire2016, Han2018} use MPS structure either as a standalone classical model or as a template for a shallow quantum circuit trained for classification.
 PCAE uses MPS compression only as a quantum-inspired \emph{preprocessing} step that sets a separately trained VQC's rotation angles, and targets per-image reconstruction rather than classification.
-\blue{Further, an MPS feature extractor has been placed before a VQC and trained end to end with it for classification \citep{Chen2021MPSVQC}.
-The MPS in PCAE is instead a fixed SVD compression.}
+Further, an MPS feature extractor has been placed before a VQC and trained end to end with it for classification \citep{Chen2021MPSVQC}.
+The MPS in PCAE is instead a fixed SVD compression.
 
 PCAE's contribution is the assembly of MPS preprocessing and the three properties above in one pipeline (Table~\ref{tab:differentiation}).
 Section~\ref{sec:representativeness} examines how the individual ingredients recur across this literature.
@@ -124,25 +124,25 @@ Section~\ref{sec:representativeness} examines how the individual ingredients rec
 
 \begin{enumerate}\itemsep3pt
   \item \textbf{Architecture.}
-  PCAE1D/PCAE2D combines MPS patch features, a six-qubit VQC, a 19--27-dimensional Pauli-correlator vector, 2D Fourier positional encoding, a graph-Hamiltonian \blue{energy term,} and a classical decoder.
+  PCAE1D/PCAE2D combines MPS patch features, a six-qubit VQC, a 19--27-dimensional Pauli-correlator vector, 2D Fourier positional encoding, a graph-Hamiltonian energy term, and a classical decoder.
   \item \textbf{Reconstruction scope (per-image fitting).}
   Identically configured per-image fitting experiments cover six real image datasets (Section~\ref{sec:sameset_results}).
-  \item \blue{\textbf{Held-out surrogate comparison.}}
-  \blue{On held-out CIFAR-10, a closed-form surrogate of the} PCAE2D \blue{observable map} meets the $\pm1$~dB equivalence criterion against four of seven resource-matched classical/ablated \blue{feature maps, under two} \blue{one-sided tests (TOST) with Holm correction.
-  It clearly} outperforms the two \blue{random-feature} null \blue{controls.
-  The trained circuit itself stays near} \blue{the random-latent range on held-out images at the tested budget} (Section~\ref{sec:ablation_relationship}).
+  \item \textbf{Held-out surrogate comparison.}
+  On held-out CIFAR-10, a closed-form surrogate of the PCAE2D observable map meets the $\pm1$~dB equivalence criterion against four of seven resource-matched classical/ablated feature maps, under two one-sided tests (TOST) with Holm correction.
+  It clearly outperforms the two random-feature null controls.
+  The trained circuit itself stays near the random-latent range on held-out images at the tested budget (Section~\ref{sec:ablation_relationship}).
   \item \textbf{Hardware pilot.}
-  Five fitted checkpoints are replayed on IBM hardware without retraining and decoded from hardware-measured observables (Section~\ref{sec:hardware_pilot}), strengthened by a noise/shot-budget sweep and repeated execution across backends (Sections~\ref{sec:hardware_robustness}--\ref{sec:hardware_anchors}).
-  \item \textbf{Equivariant observable pooling \blue{(construction).}}
-  An exact, numerically verified $D_4$-equivariant observable-pooling construction makes the PCAE2D observable map equivariant to the eight symmetries of the square, to \blue{numerical} precision (Section~\ref{sec:d4}).
-  The guarantee follows from Reynolds group averaging over the $D_4$ orbit \blue{\citep{Puny2022}} rather than from anything quantum, and the same construction gives the same exactness for a purely classical feature \blue{map.}
-  We report it as a design property of the \blue{pooled observable map.}
+  Five fitted checkpoints are replayed on IBM hardware without retraining and decoded from hardware-measured observables (Section~\ref{sec:hardware_pilot}).
+  A noise/shot-budget sweep and repeated execution across backends support the pilot (Sections~\ref{sec:hardware_robustness}--\ref{sec:hardware_anchors}).
+  \item \textbf{Equivariant observable pooling (construction).}
+  An exact, numerically verified $D_4$-equivariant observable-pooling construction makes the PCAE2D observable map equivariant to the eight symmetries of the square, to numerical precision (Section~\ref{sec:d4}).
+  The guarantee follows from Reynolds group averaging over the $D_4$ orbit \citep{Puny2022} rather than from anything quantum, and the same construction gives the same exactness for a purely classical feature map.
+  We report it as a design property of the pooled observable map.
   \item \textbf{Restricted nonlocal result (diagnostic).}
   In a leakage-audited protocol with a fixed linear readout, pair observables are necessary when the target depends explicitly on distant-patch products (Section~\ref{sec:entanglement_necessity}).
 \end{enumerate}
 
-\blue{The} \blue{\del{Supplementary}} \del{Material} \blue{\del{gives}} \del{the} \blue{\del{complete}} \del{held-out} \blue{\del{surrogate study, the}} \blue{\del{hardware}} \del{job identifiers and} \blue{\del{validation data,}} \blue{\del{the training settings,}} \blue{\del{and}} \del{provenance audits of excluded exploratory} \blue{\del{results.}}
-\brown{appendices give the training settings, the matched-budget ablation, further held-out results and the hardware methodology.}
+The appendices give the training settings, the matched-budget ablation, further held-out results and the hardware methodology.
 
 \section{Pauli-Correlator Autoencoder: Architecture}
 \label{sec:architecture}
