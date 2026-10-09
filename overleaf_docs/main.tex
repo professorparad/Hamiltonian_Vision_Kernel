@@ -150,7 +150,8 @@ Section~\ref{sec:representativeness} examines how the individual ingredients rec
 PCAE treats each spatial patch as a finite spin state and compresses it as a matrix product state (MPS).
 A variational quantum circuit (VQC) then measures a fixed set of Pauli observables, which a classical multi-layer perceptron (MLP) decodes back into pixels.
 A learnable graph-Hamiltonian energy term regularises training.
-Parameterised Hamiltonian learning approaches treat the Hamiltonian as the primary learned object \citep{Shi2022}; in PCAE it is instead \blue{an auxiliary} \blue{objective alongside the reconstruction loss, and its learned energy is read out} \blue{as} a \blue{diagnostic.}
+Parameterised Hamiltonian learning approaches treat the Hamiltonian as the primary learned object \citep{Shi2022}.
+In PCAE it is instead an auxiliary objective alongside the reconstruction loss, and its learned energy is read out as a diagnostic.
 
 
 \paragraph{Problem statement.}
@@ -166,23 +167,23 @@ With $n=6$ qubits, bond set $\mathcal{E}$, and $c$ measured pair channels per bo
     2(6)+1(5)=17, & \text{$ZZ$-only ablation control}.
   \end{cases}
 \end{equation}
-All PCAE1D and PCAE2D \blue{circuit} results use $d=27$ and $d=19$.
+All PCAE1D and PCAE2D circuit results use $d=27$ and $d=19$.
 A classical decoder $D_\theta$ maps $\Phi(x_p)$, together with a Fourier positional encoding $\pi(p)$, back to a reconstructed patch $\hat{x}_p=D_\theta\!\big(\Phi(x_p),\pi(p)\big)$.
 Training minimises the pixel-reconstruction loss with the graph-Hamiltonian energy term $E(\cdot)$ as an auxiliary regulariser,
 \begin{equation}
   \label{eq:objective}
-  \blue{\mathcal{L}(\theta)=\frac{1}{Pm}\sum_{p=1}^{P}\big\|x_p-\hat{x}_p\big\|_2^{2}}
+  \mathcal{L}(\theta)=\frac{1}{Pm}\sum_{p=1}^{P}\big\|x_p-\hat{x}_p\big\|_2^{2}
   \;+\;\lambda\,\frac{1}{P}\sum_{p=1}^{P}E\big(\Phi(x_p)\big),
 \end{equation}
-where \blue{$m$ is the number of pixels per patch, so the first term is the mean} \blue{squared pixel error, and} the second term is the mean graph-Hamiltonian energy over patches and $\lambda$ sets its weight (Section~\ref{sec:regularizer_inert} reports its effect).
-The \blue{energy of} \blue{patch $p$ is}
+where $m$ is the number of pixels per patch, so the first term is the mean squared pixel error, and the second term is the mean graph-Hamiltonian energy over patches and $\lambda$ sets its weight (Section~\ref{sec:regularizer_inert} reports its effect).
+The energy of patch $p$ is
 \begin{equation}
   \label{eq:energy}
-  \blue{E\big(\Phi(x_p)\big)=\sum_{(u,v)\in\mathcal{E}}\;\sum_{\alpha\in S}}
-  \blue{J^{\alpha}_{uv}\,\langle\sigma^{\alpha}_{u}\sigma^{\alpha}_{v}\rangle_{p},}
+  E\big(\Phi(x_p)\big)=\sum_{(u,v)\in\mathcal{E}}\;\sum_{\alpha\in S}
+  J^{\alpha}_{uv}\,\langle\sigma^{\alpha}_{u}\sigma^{\alpha}_{v}\rangle_{p},
 \end{equation}
-\blue{where $\mathcal{E}$ is the bond set of Eq.~(\ref{eq:obs_dim}),} \blue{$S=\{x,y,z\}$ for PCAE1D and $S=\{z\}$ for PCAE2D, and the couplings} \blue{$J^{\alpha}_{uv}$ are learned.
-The} shared pipeline is
+where $\mathcal{E}$ is the bond set of Eq.~(\ref{eq:obs_dim}), $S=\{x,y,z\}$ for PCAE1D and $S=\{z\}$ for PCAE2D, and the couplings $J^{\alpha}_{uv}$ are learned.
+The shared pipeline is
 \begin{equation}
 \begin{aligned}
 \text{Image}
@@ -203,8 +204,8 @@ This is a compact, singular-value-controlled compression whose entanglement-entr
 \paragraph{Why a Pauli-correlator latent space rather than a raw quantum state.}
 Handing the classical decoder a fixed vector of measured Pauli expectation values, instead of full state tomography, keeps the quantum-to-classical interface at a size linear in the qubit count, on the bounded-degree graphs used here, rather than exponential readout cost.
 The execution cost also grows with the number of measurement settings and the shots per setting.
-It also follows the measured-observable-as-feature pattern used by quantum-enhanced feature maps generally \blue{\citep{Havlicek2019} and by projected quantum kernels built from local reduced density matrices \citep{Huang2021PowerData}.}
-This choice is what makes the interpretability diagnostics of Section~\ref{sec:regularizer_inert} and the training-dynamics diagnostics of \blue{Section~\ref{sec:phase_transition}} possible, since a full state vector would not expose a comparably compact, physically meaningful summary.
+It also follows the measured-observable-as-feature pattern used by quantum-enhanced feature maps generally \citep{Havlicek2019} and by projected quantum kernels built from local reduced density matrices \citep{Huang2021PowerData}.
+This choice is what makes the interpretability diagnostics of Section~\ref{sec:regularizer_inert} and the training-dynamics diagnostics of Section~\ref{sec:phase_transition} possible, since a full state vector would not expose a comparably compact, physically meaningful summary.
 
 
 
@@ -250,12 +251,12 @@ Every patch is then $\ell_2$-normalised and sequentially SVD-compressed to a mat
 Finally, the local expectations, nearest-neighbour correlations and bipartite entropies of that state are read off as the quantum-inspired MPS feature vector.
 The two configurations differ only in the sizes involved, which Table~\ref{tab:configurations} lists in full.
 The $2^{n}$ pixel values of a patch ($n=6$ for $8\times8$, $n=12$ for $64\times64$) are flattened in row-major order and reshaped into an order-$n$ tensor with binary indices, so each index is one site of dimension~2.
-\blue{The tensor is compressed with the \texttt{compress} method of quimb} \blue{\citep{Gray2018} at maximum bond dimension $\chi$.
-With its default settings,} \blue{the compressed state is in right-canonical form, with the orthogonality} \blue{centre on the first site.}
-\blue{The} features are \blue{expectation values and Schmidt spectra of the} \blue{compressed state, so they} do \blue{not depend on its canonical form.
-In the} \blue{multi-dataset runs of Section~\ref{sec:sameset_results},} $10^{-4}$ \blue{is added} to every pixel before \blue{normalisation, so that all-zero patches, such as MNIST} \blue{background, can be normalised.}
-\blue{The offset enters only the MPS input.}
-\blue{The decoder is still trained to reconstruct the unmodified patch.}
+The tensor is compressed with the \texttt{compress} method of quimb \citep{Gray2018} at maximum bond dimension $\chi$.
+With its default settings, the compressed state is in right-canonical form, with the orthogonality centre on the first site.
+The features are expectation values and Schmidt spectra of the compressed state, so they do not depend on its canonical form.
+In the multi-dataset runs of Section~\ref{sec:sameset_results}, $10^{-4}$ is added to every pixel before normalisation, so that all-zero patches, such as MNIST background, can be normalised.
+The offset enters only the MPS input.
+The decoder is still trained to reconstruct the unmodified patch.
 The remaining stages are common to both.
 A learned linear layer compresses the MPS feature vector to six circuit angles, one per qubit.
 After the circuit is executed, a two-hidden-layer MLP (128 and 256 units) maps the measured observables together with the Fourier positional vector back to a single greyscale patch.
@@ -279,7 +280,7 @@ These were rebuilt in Qiskit for the hardware pilot of Section~\ref{sec:hardware
 
 Table~\ref{tab:variants} summarises the tested variants.
 PCAE1D uses a linear 6-qubit chain (5 nearest-neighbour bonds, 27-D observable vector); PCAE2D arranges the same 6 qubits on a $2\times3$ lattice matching patch-boundary adjacency (19-D latent signature); \del{a symmetric PCAE1D variant adds a $\mathrm{U}(1)$-preserving coupling constraint;} and a $D_4$-pooled PCAE2D variant (Section~\ref{sec:symmetry}) group-averages the observable grid over the eight symmetries of the $4\times4$ patch grid, $\Phi_{D_4}(x)=\tfrac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx)$, which is equivariant by construction.
-\blue{Both} PCAE1D and PCAE2D compile to depth-18, 6-qubit circuits on a Heron-class basis.
+Both PCAE1D and PCAE2D compile to depth-18, 6-qubit circuits on a Heron-class basis (Appendix~\ref{sec:hardware_methodology}).
 
 \begin{table}[t]
   \centering
