@@ -65,7 +65,7 @@ Hybrid models have also been applied to related imaging tasks, such as tomograph
 These solve inverse problems from indirect measurements.
 PCAE instead encodes and decodes a known image.
 Quantum convolutional and capsule networks are further examples \citep{Slabbert2024, Cong2019, Hur2022, Liu2022}.
-PCAE focuses on the combination of a Pauli-correlator latent space, enforced group-equivariant pooling, and a physically motivated energy diagnostic.
+PCAE focuses on the combination of a Pauli-correlator latent space, enforced group-equivariant pooling, and a physically motivated energy term.
 
 We introduce the Pauli-Correlator Autoencoder (PCAE1D/PCAE2D), which combines these ingredients into a single architecture with three properties studied jointly.
 The first is a \emph{Pauli-correlator latent space}, in which measured VQC observables rather than a raw quantum state form the representation handed to a classical decoder, following quantum-enhanced feature maps \citep{Havlicek2019}.
@@ -199,7 +199,8 @@ It is used to measure what the grid adds (Section~\ref{sec:topology}).
 \begin{table}[t]
 	\centering
 	\caption{The two executed configurations.
-	Both use six qubits and the same decoder; they differ in patch size and in the measured observable set.}
+	Both use six qubits and the same decoder.
+	They differ in patch size and in the measured observable set.}
 	\label{tab:configurations}
 	\begin{tabular}{@{}l c c@{}}
 		\toprule
@@ -243,7 +244,8 @@ Fourier features of this kind also help coordinate-based networks fit fine image
 During training the circuit is simulated exactly, so the decoder receives exact expectation values.
 {\color{red}\textbf{[Student Q1: The code adds Gaussian noise with standard deviation 0.01 to the observables at every training step (\texttt{Quantum2DGridModel.forward} in \texttt{Main2/src/model.py}; the same in \texttt{Main\_new2}), so the decoder does not see exact expectation values during training.
 Was this noise switched on in every reported run, including the hardware checkpoints and the Hamiltonian table?
-If yes, we will reword this sentence to say so.]}} Finite-shot estimates enter only in the hardware replay and the noisy simulation of Sections~\ref{sec:hardware_pilot}--\ref{sec:hardware_anchors}.
+If yes, we will reword this sentence to say so.]}}
+Finite-shot estimates enter only in the hardware replay and the noisy simulation of Sections~\ref{sec:hardware_pilot}--\ref{sec:hardware_anchors}.
 Figure~\ref{fig:hvk_ansatz} shows the exact PCAE1D and PCAE2D ansatz circuits.
 These were rebuilt in Qiskit for the hardware pilot of Section~\ref{sec:hardware_pilot}, and numerically verified against the training-time PennyLane circuit before use.
 
@@ -280,14 +282,15 @@ Both PCAE1D and PCAE2D compile to depth-18, 6-qubit circuits on a Heron-class ba
 \section{Experimental Setup}
 \label{sec:protocol}
 
-The reconstruction results in Sections~\ref{sec:sameset_results}, \ref{sec:no_generalization} and \ref{sec:hardware_pilot}--\ref{sec:hardware_anchors} use the single-image \textit{Monalisa} protocol developed for PCAE.
+The reconstruction results in Sections~\ref{sec:sameset_results}, \ref{sec:no_generalization} and \ref{sec:hardware_pilot}--\ref{sec:hardware_anchors} use single-image fitting, the protocol developed for PCAE on \textit{Monalisa}.
 A fresh model is optimised directly on its target image, with no held-out split.
 These results therefore measure per-image fitting and reconstruction capability.
 The hardware pilot replays the resulting fitted checkpoints on real devices without retraining.
 The symmetry and restricted pair-observable diagnostics use closed-form feature maps and the separate protocols stated in their respective sections.
 The training-dynamics readouts of Section~\ref{sec:phase_transition} are reported as an interpretability diagnostic, with their scope set by the negative control given there.
 Held-out generalisation and component necessity are evaluated under the resource-matched statistical protocol, using a closed-form surrogate of the PCAE2D observable map (Section~\ref{sec:ablation_relationship}).
-All settings report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings additionally report SSIM.
+All settings report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$.
+Image settings additionally report SSIM.
 {\color{red}All trained models use Adam with full-batch updates.
 Learning rates, step counts, seeds and environment versions are given in Appendix~\ref{sec:training_settings}.}
 {\color{red}\textbf{[Student Q8: The main text should state the training settings itself.
@@ -390,9 +393,11 @@ Without correction, equivalence requires both one-sided tests to reject at $\alp
 This is the same as the 90\% confidence interval lying inside $[-1,+1]$~dB (Table~\ref{tab:tost_main}).
 The margin is a declared choice.
 With five seeds, $p=0.0625$ is the smallest attainable nonzero two-sided Wilcoxon signed-rank $p$-value, so that test cannot reject at the 0.05 level.
-The $t$-based 90\% interval is wider than the percentile-bootstrap 95\% interval in these data; bootstrap intervals can be unstable with only five seed-level observations.
+The $t$-based 90\% interval is wider than the percentile-bootstrap 95\% interval in these data.
+Bootstrap intervals can be unstable with only five seed-level observations.
 For scale, a 1~dB PSNR difference corresponds to a factor of approximately $10^{0.1}\simeq1.26$ in MSE.
-After Holm correction \citep{Holm1979} across the seven comparisons, four controls meet the equivalence criterion against PCAE2D within that margin: no entanglement, $ZZ$-only observables, quadratic classical features, and shuffled pair observables.
+After Holm correction \citep{Holm1979} across the seven comparisons, four controls meet the equivalence criterion against PCAE2D within that margin.
+These are no entanglement, $ZZ$-only observables, quadratic classical features, and shuffled pair observables.
 The raw/local linear control meets the uncorrected criterion ($p=0.034$) but not the Holm-corrected criterion (adjusted $p=0.103$).
 {\color{red}\textbf{[Student Q9: The Holm-adjusted $p$-values here and in Table~\ref{tab:tost_main} (0.002, 0.007, 0.007, 0.032, 0.103, 1.000, 1.000) reproduce exactly from the TOST $p$-values in \texttt{tost\_equivalence.json}.
 However, no result file stores them, and \texttt{submission\_claim\_audit.json} does not cover them.
@@ -406,6 +411,9 @@ In a larger end-to-end test with 150 training and 50 held-out images, a paramete
 {\color{red}\textbf{[Student Q3: The random-latent values we found (11.45, 13.92 and 14.61~dB) all come from evaluation-time swaps in Monalisa PCAE1D checkpoints (\texttt{legacy\_hvk\_controls} and \texttt{verify\_shuffle\_permutations}).
 Is this the source of the $11$--$15$~dB range?
 If so, is it fair to compare PCAE2D CIFAR-10 results against it, or should a PCAE2D random-latent run on CIFAR-10 be added?]}}
+{\color{red}\textbf{[Student Q12: Appendix~\ref{app:random_latent} reports a random-latent control under the same protocol, and there the trained circuits fall about 1~dB below it in all six seed comparisons.
+This paragraph and Contribution~3 in the Introduction say only that the trained circuit is ``close to'' or ``near'' the random-latent range.
+Should both say that it falls below the matched random-latent control?]}}
 
 \begin{table}[t]
   \centering
@@ -534,7 +542,7 @@ Using \texttt{qiskit-aer} with the live calibration snapshot of \texttt{ibm\_fez
   \label{fig:hardware_robustness_shot_sweep}
 \end{figure}
 
-Two findings follow, averaged over the five checkpoints.
+Two findings follow, averaged over the five checkpoints (Figure~\ref{fig:hardware_robustness_shot_sweep}).
 First, shot noise accounts for only part of the noiseless-to-real gap.
 Moving from the noiseless ceiling to a calibrated-noise simulation at the same 256-shot budget already costs $8.68$~dB on average, before any real device is involved.
 Second, more shots do not reliably recover it.
@@ -560,7 +568,7 @@ We checked this directly on hardware with four jobs from the free-tier IBM Quant
 These four jobs used well under $1\%$ of the monthly limit.
 Two checkpoints, \textit{Monalisa} and CIFAR \textit{cat}, were replayed with no retraining on \texttt{ibm\_marrakesh} and \texttt{ibm\_kingston}.
 Both backends are distinct from the original pilot's \texttt{ibm\_fez}.
-We ran them at the original 256-shot budget and, separately, at 1024 shots.
+We ran them at the original 256-shot budget and, separately, at 1024 shots (Table~\ref{tab:hardware_anchors}).
 
 \begin{table}[t]
   \centering
@@ -598,7 +606,7 @@ A $D_4$-pooled PCAE2D observable-grid map is equivariant to the eight symmetries
 \begin{equation}
   \Phi_{D_4}(x)=\frac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx),
   \qquad
-  \Phi_{D_4}(hx)=P_h\,\Phi_{D_4}(x)\ \ \forall\, h\in D_4,
+  \Phi_{D_4}(hx)=P_h\,\Phi_{D_4}(x)\ \ \forall\, h\in D_4.
 \end{equation}
 Here $D_4$ acts on an image $x$ by rotating or reflecting its $4\times4$ grid of patches, and $P_g$ permutes the per-patch observable vectors in the same way, so that $P_{gh}=P_gP_h$.
 The property then holds exactly for any base map $\Phi$.
@@ -622,7 +630,9 @@ The circuit itself is not equivariant, and the same average applies equally to a
 
 \begin{table}[t]
   \centering
-  \caption{$D_4$ equivariance error for unpooled and pooled observable-grid maps (lower is better; the pooled map is group-averaged over all eight square symmetries).
+  \caption{$D_4$ equivariance error for unpooled and pooled observable-grid maps.
+  Lower is better.
+  The pooled map is group-averaged over all eight square symmetries.
   Values are computed on the closed-form surrogate map.}
   \label{tab:d4_equivariance}
   \begin{tabular}{@{}l r r@{}}
@@ -665,7 +675,7 @@ PCAE2D's pair-observable channel reaches mean $R^2=0.9735$, or $32.77$~dB PSNR.
 This is a $17.74$~dB improvement over a no-pair-observables control ($R^2=0.019$) and $18.52$~dB over Gaussian random latents (``random VQC'') ($R^2=-0.173$).
 Randomly rescaling and masking the pair features (``freeze quantum''), with only the readout trained, still reaches $R^2=0.853$.
 A raw-linear classical control ($R^2=0.0133$), a parameter-matched classical control ($R^2=-0.030$), a random-feature control ($R^2=-0.173$), and a frozen-classical control ($R^2=-0.903$) all fail on this deliberately pair-dependent target.
-{\color{red}\textbf{[Student Q12: The ``Gaussian random latents'' of the previous sentence and the ``random-feature control'' here both have $R^2=-0.173$, and Table~\ref{tab:hvk_pair_diagnostic} has only one such row (Random VQC).
+{\color{red}\textbf{[Student Q13: The ``Gaussian random latents'' of the previous sentence and the ``random-feature control'' here both have $R^2=-0.173$, and Table~\ref{tab:hvk_pair_diagnostic} has only one such row (Random VQC).
 Are they the same run?
 If so, we will list it once.]}}
 The no-pair-observables control retains only single-site nonlinear channels and removes every cross-site product feature.
@@ -685,7 +695,8 @@ For this reason we scope the claim to the linear protocol rather than to classic
 \begin{table}[t]
   \centering
   \caption[PCAE2D restricted pair-correlation diagnostic]{PCAE2D restricted pair-correlation diagnostic across five seeds.
-  Deliberately favourable to pair-observable structure; evidence for pair-observable necessity under a matched linear readout.
+  The task is deliberately favourable to pair-observable structure.
+  The table gives evidence for pair-observable necessity under a matched linear readout.
   All features are closed-form.
   ``Random VQC'' is a block of Gaussian random features.}
   \label{tab:hvk_pair_diagnostic}
