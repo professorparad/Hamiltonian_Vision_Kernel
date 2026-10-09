@@ -359,8 +359,9 @@ A compression claim would also need a bit rate, which we do not report \citep{Du
 \label{sec:no_generalization}
 
 A model optimised on one image is specific to that image.
+\blue{In this single-seed test, PCAE2D with $8\times8$ patches is trained on \textit{Monalisa} alone for 100 steps and then evaluated, without further training, on Michelangelo's \textit{Hand of God}.}
 On \textit{Monalisa}, zero-shot transfer to a second image reaches $8.31$~dB PSNR, with SSIM $0.1044$.
-Extending training to include the second image recovers $28.63$~dB, with SSIM $0.9858$.
+Extending training to include the second image \blue{for another 100 steps} recovers $28.63$~dB, with SSIM $0.9858$.
 The per-image results above therefore measure per-image optimisation and reconstruction capability.
 Section~\ref{sec:ablation_relationship} tests the held-out case directly.
 
@@ -375,6 +376,7 @@ It does not evaluate the circuit.
 It is specified by hand and is not fitted to the trained circuit.
 Thus, the term has a different meaning here from the classical surrogates of \citet{Schreiber2023}, which are derived from a trained quantum model.}
 \blue{The} main results are summarised below, including the equivalence tests of Table~\ref{tab:tost_main}.
+\blue{Each of five split seeds fits the readout on six CIFAR-10 images and evaluates it on four disjoint held-out images, so each mean covers 20 held-out reconstructions.}
 
 On held-out CIFAR-10, the raw/local linear control reaches $18.80\pm1.42$~dB, against \blue{the PCAE2D surrogate's} $18.12\pm1.54$~dB.
 Aggregating held-out images within each split gives a PCAE2D-minus-control difference of $-0.68$~dB, with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$ \blue{seeds \citep{Efron1993, Wilcoxon1945}.}
@@ -413,6 +415,7 @@ The two weakest controls, strict classical random features and random-VQC, are n
 Trained on two images for 90 steps,} \blue{PCAE2D reaches $11.57\pm1.53$~dB on three unseen CIFAR-10 images, close to the} \blue{$11$--$15$~dB random-latent range (Section~\ref{sec:hardware_pilot}).
 Held-out generalisation of the} \blue{trained circuit is therefore not established at this budget.}
 \brown{Appendix~\ref{app:random_latent} gives a random-latent control under the same protocol.}
+\blue{In a larger end-to-end test with 150 training and 50 held-out images, a parameter-matched classical control reconstructs the held-out images better than the trained PCAE2D model (Appendix~\ref{app:multidataset}).}
 {\color{red}\textbf{[Student Q3: The random-latent values we found (11.45, 13.92 and 14.61~dB) all come from evaluation-time swaps in Monalisa PCAE1D checkpoints (\texttt{legacy\_hvk\_controls} and \texttt{verify\_shuffle\_permutations}).
 Is this the source of the $11$--$15$~dB range?
 If so, is it fair to compare PCAE2D CIFAR-10 results against it, or should a PCAE2D random-latent run on CIFAR-10 be added?]}}
@@ -1032,9 +1035,11 @@ Please confirm that the reported runs used them, fill in the seeds marked ``--''
 \label{sec:core_multiseed_rerun}
 
 All nine variants were trained on \textit{Monalisa} with a matched 240-step budget and an identical learning rate and schedule, for three seeds each (Table~\ref{tab:core_multiseed_240}).
+Freeze-classical trains only the circuit and the Hamiltonian couplings, with the decoder and projection layers fixed, and freeze-quantum does the reverse.
+No-entanglement removes the CNOT rings, and no-energy-loss removes the energy term.
+Classical-replacement replaces the circuit with a tanh map, and classical-matched limits that map to the circuit's parameter count.
 The classical-replacement variant exceeds the quantum baseline by $0.081$~dB, against a pooled standard deviation of $0.019$~dB.
-The classical-matched variant, rank-limited to the circuit's parameter count, falls $0.197$~dB below the baseline.
-At three seeds the pooled-standard-deviation rule is a descriptive comparison, and no $p$-value is attached to it.
+The classical-matched variant falls $0.197$~dB below the baseline.
 
 \begin{table}[!htbp]
 \centering
@@ -1057,7 +1062,8 @@ No-energy-loss & $33.44\pm0.01$ & $0.99387\pm0.00001$ & & & \\
 
 {\color{red}\textbf{[Student: the retained \texttt{runs.csv} of this rerun has four baseline runs (seeds 0--3) and two runs for each freeze-quantum seed (0--2), although the text reports three seeds per variant.
 Which runs enter the means of Table~\ref{tab:core_multiseed_240}?
-Please correct the table or the text.]}}
+Please correct the table or the text.
+Please also define the no-MPS and random-VQC variants of this ablation in one line each.]}}
 
 \section{Held-out reconstruction}
 \label{app:multidataset}
@@ -1092,16 +1098,23 @@ It reaches $12.74\pm2.21$~dB for PCAE1D and $12.64\pm2.12$~dB for PCAE2D.
 The trained circuits are about 1~dB below this floor, and the paired difference is negative in all six seed-level comparisons (two-sided Wilcoxon $p=0.031$).
 At 90 steps, only the PCAE1D-minus-PCAE2D difference in this test is informative.
 
+In a separate end-to-end test, one PCAE2D model is trained with full-batch Adam for 20 epochs on 150 CIFAR-10 images and evaluated, without further training, on 50 held-out images.
+Each of three seeds reshuffles the split.
+The model reaches $14.39\pm0.26$~dB, against $15.61\pm0.29$~dB for a parameter-matched classical linear control trained the same way.
+The control is higher at each of the three seeds.
+
 \section{Hardware pilot methodology}
 \label{sec:hardware_methodology}
 
-No model was retrained for the pilot.
 The \textit{Monalisa} circuit is the PCAE1D checkpoint of the ``Legacy baseline, signed energy'' row of Table~\ref{tab:hamiltonian_controls}.
+{\color{red}\textbf{[Student: the noiseless replay of this checkpoint gives 37.99~dB (Table~\ref{tab:hardware_pilot_summary}), while that row reads 38.63~dB.
+Is it the same run?
+If not, please correct this sentence and the footnote of Table~\ref{tab:training_settings}.]}}
 The four CIFAR-10 circuits are PCAE2D checkpoints, each trained on its own image with 16 non-overlapping $8\times8$ patches (Table~\ref{tab:training_settings}).
-Each trained circuit was rebuilt gate for gate in Qiskit.
 PCAE1D measures $Z$, $X$, $ZZ$, $XX$ and $YY$ (27 observables).
 Its pair correlators are joint parities of the same all-$Z$, all-$X$ and all-$Y$ basis measurements that give the single-qubit values, so three measurement circuits per patch suffice, or 48 circuits for \textit{Monalisa}.
 PCAE2D measures $Z$, $X$ and $ZZ$ (19 observables) and needs two circuits per patch, or 128 circuits for the four CIFAR-10 images.
+At optimisation level 1 on \texttt{ibm\_fez}, both per-patch circuits transpile to depth 18 with 10--14 CX gates.
 
 Before any hardware submission, every circuit was checked against the cached training-time observables by exact statevector simulation.
 The largest absolute error was $7.89\times10^{-4}$ for \textit{Monalisa} and at most $9.42\times10^{-6}$ for the CIFAR-10 checkpoints.
