@@ -331,14 +331,15 @@ This establishes that the architecture fits varied image structures under a comm
 This protocol is per-image fitting, in the same sense as implicit neural representations, which fit one network to one image or scene \citep{Ulyanov2020DIP, Sitzmann2020, Tancik2020, Mildenhall2020NeRF, Dupont2021COIN, Strumpler2022}.
 Quantum versions of this idea fit a single signal or image with a variational circuit \citep{Zhao2024QIREN, Fujihashi2024QINC, LizzioBosco2026QISR}.
 The closest of these, QIREN, is a quantum coordinate network aimed at a fitting advantage over classical Fourier networks \citep{Zhao2024QIREN}.
-PCAE is instead a patch autoencoder with a measured-correlator bottleneck, and it aims at \blue{a practical hybrid pipeline whose quantum part is the measured} \blue{observable vector.}
+PCAE is instead a patch autoencoder with a measured-correlator bottleneck, and it aims at a practical hybrid pipeline whose quantum part is the measured observable vector.
 These results therefore measure representation capacity.
 Generalisation to held-out images is tested in Section~\ref{sec:ablation_relationship}.
 A compression claim would also need a bit rate, which we do not report \citep{Dupont2021COIN, Strumpler2022}.
 
 \begin{table}[t]
   \centering
-  \caption{PCAE2D same-set reconstruction across six real image datasets (per-image trained, 80--100 steps, mean $\pm$ std over sampled \blue{images; SSIM is computed globally over each image).}}
+  \caption{PCAE2D same-set reconstruction across six real image datasets (per-image trained, 80--100 steps, mean $\pm$ std over sampled images).
+  SSIM is computed globally over each image.}
   \label{tab:sameset_multi_dataset}
   \begin{tabular}{@{}l c r@{\,$\pm$\,}l r@{\,$\pm$\,}l@{}}
     \toprule
@@ -360,40 +361,44 @@ A compression claim would also need a bit rate, which we do not report \citep{Du
 \label{sec:no_generalization}
 
 A model optimised on one image is specific to that image.
-\blue{In this single-seed test, PCAE2D with $8\times8$ patches is trained on \textit{Monalisa} alone for 100 steps and then evaluated, without further training, on Michelangelo's \textit{Hand of God}.}
-On \textit{Monalisa}, zero-shot transfer to a second image reaches $8.31$~dB PSNR, with SSIM $0.1044$.
-Extending training to include the second image \blue{for another 100 steps} recovers $28.63$~dB, with SSIM $0.9858$.
+In this single-seed test, PCAE2D with $8\times8$ patches is trained on \textit{Monalisa} alone for 100 steps and then evaluated, without further training, on Michelangelo's \textit{Hand of God}.
+Zero-shot transfer to \textit{Hand of God} reaches $8.31$~dB PSNR, with SSIM $0.1044$.
+Extending training to include \textit{Hand of God} for another 100 steps recovers $28.63$~dB, with SSIM $0.9858$.
 The per-image results above therefore measure per-image optimisation and reconstruction capability.
 Section~\ref{sec:ablation_relationship} tests the held-out case directly.
 
 
-\subsection[Held-out \blue{comparison} with \blue{a closed-form} surrogate]{\blue{Held-out comparison with a closed-form surrogate}}
+\subsection{Held-out comparison with a closed-form surrogate}
 \label{sec:ablation_relationship}
 The results above measure per-image fitting.
 A separate question is whether PCAE's feature map improves reconstruction on real, \emph{held-out} images under a resource-matched multi-seed protocol.
-\blue{This comparison uses a closed-form} \blue{surrogate of the PCAE2D observable map, so that many seeds and controls can be} \blue{run.}
-The \blue{surrogate combines 18 local patch statistics, six products of} \blue{local-feature pairs that stand} in for the \blue{pairwise $ZZ$ correlators, the sines} \blue{of those products,} and \blue{positional features.
+This comparison uses a closed-form surrogate of the PCAE2D observable map, so that many seeds and controls can be run.
+The surrogate combines 18 local patch statistics, six products of local-feature pairs that stand in for the pairwise $ZZ$ correlators, the sines of those products, and positional features.
 It does not evaluate the circuit.
 It is specified by hand and is not fitted to the trained circuit.
-Thus, the term has a different meaning here from the classical surrogates of \citet{Schreiber2023}, which are derived from a trained quantum model.}
-\blue{The} main results are summarised below, including the equivalence tests of Table~\ref{tab:tost_main}.
-\blue{Each of five split seeds fits the readout on six CIFAR-10 images and evaluates it on four disjoint held-out images, so each mean covers 20 held-out reconstructions.}
+Thus, the term has a different meaning here from the classical surrogates of \citet{Schreiber2023}, which are derived from a trained quantum model.
+The main results are summarised below, including the equivalence tests of Table~\ref{tab:tost_main}.
+Each of five split seeds fits the readout on six CIFAR-10 images and evaluates it on four disjoint held-out images, so each mean covers 20 held-out reconstructions.
 
-On held-out CIFAR-10, the raw/local linear control reaches $18.80\pm1.42$~dB, against \blue{the PCAE2D surrogate's} $18.12\pm1.54$~dB.
-Aggregating held-out images within each split gives a PCAE2D-minus-control difference of $-0.68$~dB, with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$ \blue{seeds \citep{Efron1993, Wilcoxon1945}.}
-The same numerical direction holds on five further real datasets \brown{(Appendix~\ref{app:multidataset})}.
-The \blue{surrogate} map is therefore \blue{informative.
-Its mean} stays within 1~dB of the simpler \blue{maps, and the} \blue{raw/local linear control is $0.68$~dB ahead of it.}
+On held-out CIFAR-10, the raw/local linear control reaches $18.80\pm1.42$~dB, against the PCAE2D surrogate's $18.12\pm1.54$~dB.
+Aggregating held-out images within each split gives a PCAE2D-minus-control difference of $-0.68$~dB, with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$ seeds \citep{Efron1993, Wilcoxon1945}.
+The same numerical direction holds on five further real datasets (Appendix~\ref{app:multidataset}).
+The surrogate map is therefore informative.
+Its mean stays within 1~dB of the simpler maps.
+The raw/local linear control is $0.68$~dB ahead of it.
 
 All controls are matched at the readout.
 Each passes a 32-D feature vector to the same linear readout with 2112 parameters, on the same splits.
 This matches the readout resources.
-It does not match the feature \blue{class.}
+It does not match the feature class.
 The controls differ in what their features can express.
-The no-entanglement and $ZZ$-only controls remove all or \blue{half} of the pair \blue{products,} and the quadratic classical control adds second-order classical terms.
-The \blue{surrogate} is \blue{a 32-D map,} not the 19-D \blue{circuit} map of Table~\ref{tab:configurations}.
+The no-entanglement and $ZZ$-only controls remove all or half of the pair products, and the quadratic classical control adds second-order classical terms.
+{\color{red}\textbf{[Student Q11: The text says that the $ZZ$-only control removes half of the surrogate's pair products.
+Please confirm from the held-out driver (\texttt{run\_newhvk\_suite.py}) that it keeps exactly three of the six products.
+If the fraction is different, tell us the correct one.]}}
+The surrogate is a 32-D map, not the 19-D circuit map of Table~\ref{tab:configurations}.
 The quadratic classical control augments the 18 local features with the nine products of adjacent local-feature pairs and their sines, together with the positional features, selected to the same 32-D width.
-\blue{It therefore has the same form as the surrogate, with nine} \blue{products in place of six.}
+It therefore has the same form as the surrogate, with nine products in place of six.
 {\color{red}\textbf{[Student Q2: In \texttt{run\_newhvk\_suite.py}, \texttt{select\_same\_width} keeps only the first 32 columns.
 The surrogate therefore keeps 2 of its 8 positional features (row only, no column), and the quadratic control keeps no positional features and only 5 of its 9 sines.
 The no-entanglement and raw/local controls keep all 8 positional features.
@@ -401,35 +406,36 @@ Was this truncation intended?
 If yes, we will describe it in the text.
 If not, the held-out comparison needs a rerun.]}}
 
-A TOST equivalence test \citep{Schuirmann1987, Lakens2017} at a declared $\pm1$~dB margin \blue{asks whether each} gap is small enough to call two \blue{maps equivalent} rather than merely ``not shown to differ''.
+A TOST equivalence test \citep{Schuirmann1987, Lakens2017} at a declared $\pm1$~dB margin asks whether each gap is small enough to call two maps equivalent rather than merely ``not shown to differ''.
 The estimand is the seed-level PCAE2D-minus-control PSNR difference, averaged over held-out images within each seed.
-\blue{Without correction,} \blue{equivalence} requires both one-sided tests to reject at $\alpha=0.05$.
+Without correction, equivalence requires both one-sided tests to reject at $\alpha=0.05$.
 This is the same as the 90\% confidence interval lying inside $[-1,+1]$~dB (Table~\ref{tab:tost_main}).
 The margin is a declared choice.
 With five seeds, $p=0.0625$ is the smallest attainable nonzero two-sided Wilcoxon signed-rank $p$-value, so that test cannot reject at the 0.05 level.
 The $t$-based 90\% interval is wider than the percentile-bootstrap 95\% interval in these data; bootstrap intervals can be unstable with only five seed-level observations.
 For scale, a 1~dB PSNR difference corresponds to a factor of approximately $10^{0.1}\simeq1.26$ in MSE.
-After Holm correction \blue{\citep{Holm1979}} across the seven comparisons, four controls meet the equivalence criterion against PCAE2D within that margin: no entanglement, $ZZ$-only observables, quadratic classical features, and shuffled pair observables.
+After Holm correction \citep{Holm1979} across the seven comparisons, four controls meet the equivalence criterion against PCAE2D within that margin: no entanglement, $ZZ$-only observables, quadratic classical features, and shuffled pair observables.
 The raw/local linear control meets the uncorrected criterion ($p=0.034$) but not the Holm-corrected criterion (adjusted $p=0.103$).
 {\color{red}\textbf{[Student Q9: The Holm-adjusted $p$-values here and in Table~\ref{tab:tost_main} (0.002, 0.007, 0.007, 0.032, 0.103, 1.000, 1.000) reproduce exactly from the TOST $p$-values in \texttt{tost\_equivalence.json}.
 However, no result file stores them, and \texttt{submission\_claim\_audit.json} does not cover them.
 Please add them to the result file and the claim audit, or tell us where they were computed.]}}
-The two weakest controls, strict classical random features and random-VQC, are not equivalent because \blue{the surrogate} substantially outperforms them.
-\blue{The trained circuit has been tested on held-out images in the topology} \blue{comparison of Section~\ref{sec:topology}.
-Trained on two images for 90 steps,} \blue{PCAE2D reaches $11.57\pm1.53$~dB on three unseen CIFAR-10 images, close to the} \blue{$11$--$15$~dB random-latent range (Section~\ref{sec:hardware_pilot}).
-Held-out generalisation of the} \blue{trained circuit is therefore not established at this budget.}
-\brown{Appendix~\ref{app:random_latent} gives a random-latent control under the same protocol.}
-\blue{In a larger end-to-end test with 150 training and 50 held-out images, a parameter-matched classical control reconstructs the held-out images better than the trained PCAE2D model (Appendix~\ref{app:multidataset}).}
+The two weakest controls, strict classical random features and random-VQC, are not equivalent because the surrogate substantially outperforms them.
+The trained circuit has been tested on held-out images in the topology comparison of Section~\ref{sec:topology}.
+Trained on two images for 90 steps, PCAE2D reaches $11.57\pm1.53$~dB on three unseen CIFAR-10 images, close to the $11$--$15$~dB random-latent range (Section~\ref{sec:hardware_pilot}).
+Held-out generalisation of the trained circuit is therefore not established at this budget.
+Appendix~\ref{app:random_latent} gives a random-latent control under the same protocol.
+In a larger end-to-end test with 150 training and 50 held-out images, a parameter-matched classical control reconstructs the held-out images better than the trained PCAE2D model (Appendix~\ref{app:multidataset}).
 {\color{red}\textbf{[Student Q3: The random-latent values we found (11.45, 13.92 and 14.61~dB) all come from evaluation-time swaps in Monalisa PCAE1D checkpoints (\texttt{legacy\_hvk\_controls} and \texttt{verify\_shuffle\_permutations}).
 Is this the source of the $11$--$15$~dB range?
 If so, is it fair to compare PCAE2D CIFAR-10 results against it, or should a PCAE2D random-latent run on CIFAR-10 be added?]}}
 
 \begin{table}[t]
   \centering
-  \caption[TOST equivalence test on held-out CIFAR-10]{TOST equivalence test on held-out CIFAR-10 ($\pm1$~dB margin, $\alpha=0.05$, five seed-level paired differences, \blue{closed-form} PCAE2D \blue{surrogate} minus control).
-  \blue{The verdict uses the} \blue{Holm-adjusted $p$.
-  Without correction, equivalence is the same as} the 90\% CI \blue{lying} inside $[-1,+1]$~dB.
-  \blue{``No entanglement'' removes} the \blue{pair} \blue{products, and ``Random VQC'' is a block of Gaussian random} \blue{features.} }
+  \caption[TOST equivalence test on held-out CIFAR-10]{TOST equivalence test on held-out CIFAR-10 ($\pm1$~dB margin, $\alpha=0.05$, five seed-level paired differences, closed-form PCAE2D surrogate minus control).
+  The verdict uses the Holm-adjusted $p$.
+  Without correction, equivalence is the same as the 90\% CI lying inside $[-1,+1]$~dB.
+  ``No entanglement'' removes the pair products.
+  ``Random VQC'' is a block of Gaussian random features.}
   \label{tab:tost_main}
   \footnotesize\bfseries
   \setlength{\tabcolsep}{2pt}
@@ -452,10 +458,11 @@ It delineates their tested boundary and records the provenance checks that preve
 
 A matched-budget, multi-seed rerun of the component-ablation table reaches the same conclusion on ordinary per-image reconstruction.
 The rerun uses 240 steps and 3 seeds per variant.
-A plain classical-replacement control ties or slightly exceeds the quantum baseline, and \blue{apart from a freeze-classical sanity} \blue{check,} only a circuit-free random-VQC control performs clearly worse.
-\blue{Freeze-classical holds the decoder fixed, so it} \blue{cannot learn to reconstruct and is expected to fail.}
-This rerun uses a descriptive pooled-standard-deviation comparison rule at 3 seeds rather than a calibrated test, and full results are in \del{the} \blue{\del{Supplementary Material.}}
-\brown{Appendix~\ref{sec:core_multiseed_rerun}.}
+A plain classical-replacement control ties or slightly exceeds the quantum baseline.
+Apart from a freeze-classical sanity check, only a circuit-free random-VQC control performs clearly worse.
+Freeze-classical holds the decoder fixed, so it cannot learn to reconstruct and is expected to fail.
+This rerun uses a descriptive pooled-standard-deviation comparison rule at 3 seeds rather than a calibrated test.
+Full results are in Appendix~\ref{sec:core_multiseed_rerun}.
 Section~\ref{sec:dequant} discusses why this ties-with-classical result and the pair-observable necessity result of Section~\ref{sec:entanglement_necessity} are consistent.
 
 \subsection{A real hardware reconstruction pilot}
