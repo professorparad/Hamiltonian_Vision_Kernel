@@ -49,20 +49,22 @@
 
 \affil*[2]{\orgdiv{Centre for Quantum Engineering, Research and Education}, \orgname{TCG CREST}, \orgaddress{\city{Kolkata}, \country{India}}}
 
-% ---- abstract: 233 words (QMI requires 150-250) ----------------------------
+% ---- abstract: 239 words (QMI requires 150-250) ----------------------------
 \abstract{We introduce the Pauli-Correlator Autoencoder (PCAE), a hybrid quantum--classical architecture for image reconstruction.
-PCAE assembles matrix-product-state patch features, a variational quantum circuit exposing a Pauli-correlator latent space, two-dimensional Fourier positional encoding, a learnable Hamiltonian energy \blue{term,} and a classical decoder into a single pipeline.
+PCAE assembles matrix-product-state patch features, a variational quantum circuit exposing a Pauli-correlator latent space, two-dimensional Fourier positional encoding, a learnable Hamiltonian energy term, and a classical decoder into a single pipeline.
 Two instantiations, PCAE1D and PCAE2D, realise chain and grid interaction graphs.
 Group-averaged observable pooling makes the PCAE2D feature map exactly equivariant to the eight symmetries of the square.
 The contribution is this specific assembly rather than any ingredient in isolation.
 Across six real image datasets, per-image-trained PCAE2D models reconstruct with peak signal-to-noise ratio (PSNR) between 25.8 and 41.6 decibels.
-On \blue{held-out CIFAR-10 images,} a \blue{closed-form surrogate of the PCAE2D feature map stays within 1 decibel of several simpler classical feature maps.
-However,} held-out \blue{generalisation of the trained circuit} is \blue{not yet established.}
+On held-out CIFAR-10 images, a closed-form surrogate of the PCAE2D feature map stays within 1 decibel of several simpler classical feature maps.
+However, held-out generalisation of the trained circuit is not yet established.
 Five fitted checkpoints are replayed on superconducting quantum hardware without retraining, reaching 25.90 to 31.52 decibels.
-\blue{Under a fixed linear readout, an affine-readout} \blue{argument and a synthetic test show that} a pair-observable channel is necessary \blue{for targets built from} distant-patch \blue{products.
-The learned Hamiltonian energy} \blue{gives} an interpretable \blue{readout of the trained representation.
-However, in a single-seed ablation the} energy \blue{term lowers reconstruction quality,} and \blue{we therefore treat it as an auxiliary objective and readout.}
-The results establish PCAE as \blue{a working} \blue{hybrid architecture that fits varied images and runs on quantum hardware} at the six-qubit scale.}
+Under a fixed linear readout, an affine-readout argument and a synthetic test show that a pair-observable channel is necessary for targets built from distant-patch products.
+The learned Hamiltonian energy gives an interpretable readout of the trained representation.
+However, in a single-seed ablation the energy term lowers reconstruction quality.
+We therefore treat it as an auxiliary objective and readout.
+We make no claim of quantum advantage.
+The results establish PCAE as a working hybrid architecture that fits varied images and runs on quantum hardware at the six-qubit scale.}
 
 % ---- keywords: 6 (QMI requires 4-6) -----------------------------------------
 \keywords{Quantum image processing, Tensor networks, Variational quantum algorithms, Pauli observables, Group-equivariant representations, Quantum hardware pilot}
