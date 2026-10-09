@@ -32,6 +32,9 @@
 % \blue{...}: text added after the Overleaf version of 2026-10-07.
 \DeclareRobustCommand{\blue}[1]{\leavevmode{\color{blue}#1}}
 \AtBeginDocument{\pdfstringdefDisableCommands{\def\blue#1{#1}}}
+% \brown{...}: material merged from the supplement on 2026-10-08.
+\DeclareRobustCommand{\brown}[1]{\leavevmode{\color{brown}#1}}
+\AtBeginDocument{\pdfstringdefDisableCommands{\def\brown#1{#1}}}
 
 \begin{document}
 
@@ -135,11 +138,11 @@ Section~\ref{sec:representativeness} examines how the individual ingredients rec
   The guarantee follows from Reynolds group averaging over the $D_4$ orbit \blue{\citep{Puny2022}} rather than from anything quantum, and the same construction gives the same exactness for a purely classical feature \blue{map.}
   We report it as a design property of the \blue{pooled observable map.}
   \item \textbf{Restricted nonlocal result (diagnostic).}
-  In a leakage-audited protocol \blue{(Appendix~\ref{app:leakage})} with a fixed linear readout, pair observables are necessary when the target depends explicitly on distant-patch products (Section~\ref{sec:entanglement_necessity}).
+  In a leakage-audited protocol \brown{(Appendix~\ref{app:leakage})} with a fixed linear readout, pair observables are necessary when the target depends explicitly on distant-patch products (Section~\ref{sec:entanglement_necessity}).
 \end{enumerate}
 
-\blue{The} \del{Supplementary Material gives the complete held-out surrogate study, the hardware job identifiers and validation data, the training settings, and provenance audits of excluded exploratory results.}
-\blue{appendices give the training settings, the matched-budget ablation, further held-out results, the hardware methodology, the $D_4$ check on the trained circuit and the training-dynamics definitions.}
+\blue{The} \blue{\del{Supplementary}} \del{Material} \blue{\del{gives}} \del{the} \blue{\del{complete}} \del{held-out} \blue{\del{surrogate study, the}} \blue{\del{hardware}} \del{job identifiers and} \blue{\del{validation data,}} \blue{\del{the training settings,}} \blue{\del{and}} \del{provenance audits of excluded exploratory} \blue{\del{results.}}
+\brown{appendices give the training settings, the matched-budget ablation, further held-out results, the hardware methodology, the $D_4$ check on the trained circuit and the training-dynamics definitions.}
 
 \section{Pauli-Correlator Autoencoder: Architecture}
 \label{sec:architecture}
@@ -306,8 +309,8 @@ The training-dynamics readouts of Section~\ref{sec:phase_transition} are reporte
 Held-out generalisation and component necessity are evaluated under the resource-matched statistical \blue{protocol,} \blue{using a closed-form surrogate} of the \blue{PCAE2D observable map} (Section~\ref{sec:ablation_relationship}).
 All settings report MSE and PSNR $=20\log_{10}(1/\sqrt{\mathrm{MSE}})$; image settings additionally report SSIM.
 \blue{All trained models use Adam with full-batch updates.}
-\del{Full implementation settings} \blue{Learning rates, step counts, seeds} and environment versions are given in \del{the Supplementary Material.}
-\blue{Appendix~\ref{sec:training_settings}.}
+\del{Full implementation settings} \blue{Learning rates, step counts, seeds} and environment versions are given in \del{the} \blue{\del{Supplementary Material.}}
+\brown{Appendix~\ref{sec:training_settings}.}
 {\color{red}\textbf{[Student Q8: The main text should state the training settings itself.
 Please write two or three sentences for this paragraph giving the optimiser, the learning rates, the step budgets, the energy weight $\lambda$ and the seeds.
 From the scripts we read Adam with full-batch updates, learning rate $0.003$ for PCAE1D and $0.004$ for PCAE2D, $\lambda=0.01$, 200 steps for the \textit{Monalisa} and CIFAR-10 hardware fits, 80--100 steps for the six-dataset fits and 90 steps for the topology comparison.
@@ -375,7 +378,7 @@ Thus, the term has a different meaning here from the classical surrogates of \ci
 
 On held-out CIFAR-10, the raw/local linear control reaches $18.80\pm1.42$~dB, against \blue{the PCAE2D surrogate's} $18.12\pm1.54$~dB.
 Aggregating held-out images within each split gives a PCAE2D-minus-control difference of $-0.68$~dB, with bootstrap 95\% CI $[-0.91,-0.46]$~dB and Wilcoxon $p=0.0625$ at $n=5$ \blue{seeds \citep{Efron1993, Wilcoxon1945}.}
-The same numerical direction holds on five further real datasets \blue{(Appendix~\ref{app:multidataset}).}
+The same numerical direction holds on five further real datasets \brown{(Appendix~\ref{app:multidataset})}.
 The \blue{surrogate} map is therefore \blue{informative.
 Its mean} stays within 1~dB of the simpler \blue{maps, and the} \blue{raw/local linear control is $0.68$~dB ahead of it.}
 
@@ -409,7 +412,7 @@ The two weakest controls, strict classical random features and random-VQC, are n
 \blue{The trained circuit has been tested on held-out images in the topology} \blue{comparison of Section~\ref{sec:topology}.
 Trained on two images for 90 steps,} \blue{PCAE2D reaches $11.57\pm1.53$~dB on three unseen CIFAR-10 images, close to the} \blue{$11$--$15$~dB random-latent range (Section~\ref{sec:hardware_pilot}).
 Held-out generalisation of the} \blue{trained circuit is therefore not established at this budget.}
-\blue{Appendix~\ref{app:random_latent} gives a random-latent control under the same protocol.}
+\brown{Appendix~\ref{app:random_latent} gives a random-latent control under the same protocol.}
 {\color{red}\textbf{[Student Q3: The random-latent values we found (11.45, 13.92 and 14.61~dB) all come from evaluation-time swaps in Monalisa PCAE1D checkpoints (\texttt{legacy\_hvk\_controls} and \texttt{verify\_shuffle\_permutations}).
 Is this the source of the $11$--$15$~dB range?
 If so, is it fair to compare PCAE2D CIFAR-10 results against it, or should a PCAE2D random-latent run on CIFAR-10 be added?]}}
@@ -444,8 +447,8 @@ A matched-budget, multi-seed rerun of the component-ablation table reaches the s
 The rerun uses 240 steps and 3 seeds per variant.
 A plain classical-replacement control ties or slightly exceeds the quantum baseline, and \blue{apart from a freeze-classical sanity} \blue{check,} only a circuit-free random-VQC control performs clearly worse.
 \blue{Freeze-classical holds the decoder fixed, so it} \blue{cannot learn to reconstruct and is expected to fail.}
-This rerun uses a descriptive pooled-standard-deviation comparison rule at 3 seeds rather than a calibrated test, and full results are in \del{the Supplementary Material.}
-\blue{Appendix~\ref{sec:core_multiseed_rerun}.}
+This rerun uses a descriptive pooled-standard-deviation comparison rule at 3 seeds rather than a calibrated test, and full results are in \del{the} \blue{\del{Supplementary Material.}}
+\brown{Appendix~\ref{sec:core_multiseed_rerun}.}
 Section~\ref{sec:dequant} discusses why this ties-with-classical result and the pair-observable necessity result of Section~\ref{sec:entanglement_necessity} are consistent.
 
 \subsection{A real hardware reconstruction pilot}
@@ -517,8 +520,8 @@ The pilot establishes that the trained PCAE observable channel survives executio
 With five images it is a pilot, and it makes no hardware-advantage claim.
 The learned parameters, the measurement circuits and the classical decoder all transfer unchanged, and the decoded images remain quantitatively informative at 256 shots per basis on an unmitigated device.
 This is the sense in which PCAE runs on real quantum hardware.
-\blue{Gate} sequences, measurement construction\del{, job identifiers} and \blue{validation results are in} \del{the Supplementary Material.}
-\blue{Appendix~\ref{sec:hardware_methodology}.}
+\blue{Gate} sequences, measurement construction\del{, job identifiers} and \blue{validation results are in \del{the Supplementary}} \blue{\del{Material.}}
+\brown{Appendix~\ref{sec:hardware_methodology}.}
 
 The same checkpoint-replay methodology supports a further hardware \blue{replay.}
 Fresh PCAE1D checkpoints were trained at $N\in\{4,6,8\}$ and replayed epoch-by-epoch on real IBM Quantum hardware and on the IonQ cloud simulator \citep{IonQBackends}.
@@ -624,7 +627,7 @@ Both are of order one.
 The patch grid's geometry therefore makes the unpooled map $D_4$-\emph{motivated} only, and the explicit pooling construction is what delivers the property.
 This construction operates at the feature-grid level and serves here as a numerical diagnostic, rather than as a component of the trainable reconstruction pipeline.
 Integrating it end-to-end (Section~\ref{sec:limitations}) is concrete future work.
-\blue{Applied to the trained circuit, the same pooling reduces the equivariance error to order $10^{-8}$ (Appendix~\ref{sec:d4_real_circuit}).}
+\blue{Applied to the trained circuit, the same pooling reduces the equivariance error to order $10^{-8}$ \brown{(Appendix~\ref{sec:d4_real_circuit})}.}
 This route to symmetry differs from equivariant quantum neural networks, in which every circuit layer is built to commute with the group action \citep{Nguyen2024EQNN}.
 A recent image classifier of that kind builds $C_4$ rotation symmetry into the circuit itself \citep{SanSebastianSein2025}.
 In PCAE the symmetry comes from averaging the observable grid over the group after measurement.
@@ -722,7 +725,7 @@ Beyond the results above, we tracked two exploratory training-dynamics readouts.
 These are a magnetisation-style statistic $M_z(t)$ and a signed energy-to-entanglement ratio $R_{ES}(t)$.
 Both drift smoothly over training with run-to-run fluctuations, and neither shows a sharp transition.
 Any apparent onset is a within-run median-plus-$2\sigma$ threshold crossing, rather than a calibrated statistical test.
-\blue{Appendix~\ref{app:dynamics} defines both readouts and the threshold rule.}
+\brown{Appendix~\ref{app:dynamics} defines both readouts and the threshold rule.}
 
 A negative control fixes the scope.
 We applied the identical protocol to a classical-replacement variant, in which the Hamiltonian energy is identically zero throughout training.
@@ -937,7 +940,7 @@ Future work should integrate the $D_4$-pooled map into an end-to-end trainable p
 
 \bmhead{\del{Supplementary information}}
 
-\del{Supplementary Material accompanies this manuscript.}
+\blue{\del{Supplementary}} \del{Material accompanies this manuscript.}
 
 \bmhead{Acknowledgements}
 
@@ -967,10 +970,10 @@ We thank the maintainers of the open-source scientific computing libraries used 
 
 % ============================== APPENDICES =================================
 % Condensed on 2026-10-08 from supplementary_shortened.tex (existing results only).
-% The block is new to this file and is set in blue. Floats reset to the default
-% colour, so the default is set to blue inside the environment as well.
+% The block is new to this file and is set in brown. Floats reset to the default
+% colour, so the default is set to brown inside the environment as well.
 \begin{appendices}
-\color{blue}\expandafter\let\csname default@color\expandafter\endcsname
+\color{brown}\expandafter\let\csname default@color\expandafter\endcsname
   \csname current@color\endcsname
 % distinct hyperref anchors for the appendix floats and equations
 \renewcommand{\theHtable}{app.\thetable}%
