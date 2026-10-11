@@ -1,5 +1,23 @@
 [
   {
+    "label": "Contrastive energy",
+    "energy_loss_mode": "contrastive",
+    "steps": 200,
+    "seed": 43,
+    "psnr_db": 33.102088813638545,
+    "ssim": 0.9933861870067852,
+    "mse": 0.0004895433085039258
+  },
+  {
+    "label": "Contrastive energy",
+    "energy_loss_mode": "contrastive",
+    "steps": 200,
+    "seed": 44,
+    "psnr_db": 33.130330635921126,
+    "ssim": 0.9934163171809974,
+    "mse": 0.00048637017607688904
+  },
+  {
     "label": "Signed energy",
     "energy_loss_mode": "linear",
     "steps": 200,
