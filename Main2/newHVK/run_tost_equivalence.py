@@ -43,6 +43,21 @@ TREATMENT = "HVK2D-real-cifar"
 DELTA_DB = 1.0
 ALPHA = 0.05
 
+# ``raw-linear-classical`` and ``local-observables-only`` are identical retained
+# feature maps in this experiment (and therefore have identical seed differences).
+# The manuscripts collapse them into one raw/local row, so the multiplicity family
+# contains seven distinct comparisons rather than all eight stored aliases.
+HOLM_CANONICAL_CONTROLS = [
+    "local-observables-only",
+    "no-entanglement",
+    "zz-only",
+    "quadratic-classical",
+    "shuffled-pair-observables",
+    "strict-classical-rff",
+    "random-vqc",
+]
+HOLM_ALIASES = {"raw-linear-classical": "local-observables-only"}
+
 # Display names matching the supplement's Table tab:hvk_real_cifar_stats.
 CONTROL_LABELS = {
     "raw-linear-classical": "Raw-linear classical",
@@ -127,6 +142,35 @@ def tost_paired(diffs: np.ndarray, delta: float, alpha: float) -> dict:
     }
 
 
+def add_holm_adjustment(results: list[dict], alpha: float) -> None:
+    """Add Holm-adjusted TOST p-values for the seven distinct comparisons."""
+    by_control = {row["control"]: row for row in results}
+    missing = set(HOLM_CANONICAL_CONTROLS) - set(by_control)
+    if missing:
+        raise ValueError(f"Missing controls from Holm family: {sorted(missing)}")
+
+    ordered = sorted(
+        HOLM_CANONICAL_CONTROLS,
+        key=lambda control: by_control[control]["tost_p_value"],
+    )
+    family_size = len(ordered)
+    running_max = 0.0
+    adjusted: dict[str, float] = {}
+    for rank, control in enumerate(ordered, start=1):
+        raw_p = by_control[control]["tost_p_value"]
+        candidate = min(1.0, (family_size - rank + 1) * raw_p)
+        running_max = max(running_max, candidate)
+        adjusted[control] = running_max
+
+    for row in results:
+        canonical = HOLM_ALIASES.get(row["control"], row["control"])
+        holm_p = adjusted[canonical]
+        row["holm_family_size"] = family_size
+        row["holm_canonical_control"] = canonical
+        row["holm_adjusted_p_value"] = holm_p
+        row["equivalent_after_holm"] = bool(holm_p < alpha)
+
+
 def main() -> None:
     data = load_seed_image_psnr(HOLDOUT_CSV)
     assert TREATMENT in data, f"{TREATMENT} not found in {HOLDOUT_CSV}"
@@ -149,6 +193,8 @@ def main() -> None:
             f"TOST p={stats_row['tost_p_value']:.4f}  -> {verdict} (+/-{DELTA_DB} dB)"
         )
 
+    add_holm_adjustment(results, ALPHA)
+
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(json.dumps(results, indent=2), encoding="utf-8")
     with OUT_CSV.open("w", newline="", encoding="utf-8") as f:
@@ -158,7 +204,8 @@ def main() -> None:
                 "control_label", "control", "n_seeds", "mean_diff_db", "sd_diff_db",
                 "se_diff_db", "df", "delta_margin_db", "alpha", "t_lower", "p_lower",
                 "t_upper", "p_upper", "tost_p_value", "ci90_low_db", "ci90_high_db",
-                "equivalent_at_1db", "ci90_within_margin",
+                "equivalent_at_1db", "ci90_within_margin", "holm_family_size",
+                "holm_canonical_control", "holm_adjusted_p_value", "equivalent_after_holm",
             ],
         )
         writer.writeheader()
@@ -166,7 +213,13 @@ def main() -> None:
             writer.writerow({k: row[k] for k in writer.fieldnames})
 
     n_equiv = sum(r["equivalent_at_1db"] for r in results)
+    n_holm_equiv = sum(
+        by_control["equivalent_after_holm"]
+        for by_control in results
+        if by_control["control"] in HOLM_CANONICAL_CONTROLS
+    )
     print(f"\n{n_equiv}/{len(results)} controls statistically equivalent to HVK2D within +/-{DELTA_DB} dB (alpha={ALPHA}).")
+    print(f"{n_holm_equiv}/{len(HOLM_CANONICAL_CONTROLS)} distinct comparisons remain equivalent after Holm correction.")
     print(f"Wrote {OUT_JSON}")
     print(f"Wrote {OUT_CSV}")
 

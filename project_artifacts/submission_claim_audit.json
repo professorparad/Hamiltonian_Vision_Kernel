@@ -77,6 +77,18 @@
       "headline_control": "raw-linear-classical",
       "headline_ci90_db": [-0.9549797048675421, -0.3968942113480052],
       "headline_tost_p": 0.034259665897203084,
+      "multiple_comparison_method": "Holm adjustment over seven distinct comparisons; raw-linear-classical and local-observables-only are identical aliases and form one comparison",
+      "holm_family_size": 7,
+      "n_distinct_controls_equivalent_after_holm": 4,
+      "holm_adjusted_p_values": {
+        "shuffled-pair-observables": 0.0015958529551389767,
+        "zz-only": 0.00666728246389292,
+        "quadratic-classical": 0.00666728246389292,
+        "no-entanglement": 0.03237027752941213,
+        "raw-local-linear": 0.10277899769160925,
+        "strict-classical-rff": 1.0,
+        "random-vqc": 1.0
+      },
       "scope": "Pre-declared +/-1 dB equivalence margin on five seed-level paired held-out CIFAR-10 PSNR differences. Equivalence is a claim of practical tie, not of superiority; the two non-equivalent controls (strict classical random features, random-VQC) are ones HVK2D exceeds.",
       "source": "Main2/newHVK/results/q1_validation/tost_equivalence.json"
     },

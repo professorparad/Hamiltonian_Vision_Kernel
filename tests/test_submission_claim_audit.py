@@ -75,6 +75,27 @@ class SubmissionClaimAuditTests(unittest.TestCase):
         self.assertEqual(headline["mean_diff_db"], claim["headline_artifact_value_db"])
         self.assertEqual(headline["tost_p_value"], claim["headline_tost_p"])
         self.assertEqual(headline["delta_margin_db"], claim["margin_db"])
+        self.assertEqual(headline["holm_family_size"], claim["holm_family_size"])
+        by_control = {row["control"]: row for row in records}
+        audit_holm = claim["holm_adjusted_p_values"]
+        for control in (
+            "shuffled-pair-observables", "zz-only", "quadratic-classical",
+            "no-entanglement", "strict-classical-rff", "random-vqc",
+        ):
+            self.assertEqual(by_control[control]["holm_adjusted_p_value"], audit_holm[control])
+        self.assertEqual(
+            by_control["local-observables-only"]["holm_adjusted_p_value"],
+            audit_holm["raw-local-linear"],
+        )
+        self.assertEqual(
+            by_control["raw-linear-classical"]["holm_adjusted_p_value"],
+            audit_holm["raw-local-linear"],
+        )
+        corrected = [
+            row for row in records
+            if row["control"] != "raw-linear-classical" and row["equivalent_after_holm"]
+        ]
+        self.assertEqual(len(corrected), claim["n_distinct_controls_equivalent_after_holm"])
         # Every control HVK2D is NOT equivalent to must be one it is ahead of,
         # never one it loses to -- otherwise "competitive" would be unsupported.
         for row in records:

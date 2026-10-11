@@ -1,0 +1,20 @@
+[
+  {
+    "label": "Signed energy",
+    "energy_loss_mode": "linear",
+    "steps": 200,
+    "seed": 43,
+    "psnr_db": 32.42939721805098,
+    "ssim": 0.9924159631350804,
+    "mse": 0.0005715579609386623
+  },
+  {
+    "label": "Signed energy",
+    "energy_loss_mode": "linear",
+    "steps": 200,
+    "seed": 44,
+    "psnr_db": 32.96376961338478,
+    "ssim": 0.9932203021021118,
+    "mse": 0.000505385803990066
+  }
+]
