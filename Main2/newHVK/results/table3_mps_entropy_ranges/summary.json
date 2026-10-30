@@ -1,0 +1,80 @@
+{
+  "protocol": {
+    "source_table_script": "Main2/newHVK/run_full_dataset_sameset.py",
+    "patch_size": 8,
+    "patch_stride": 8,
+    "patches_per_image": 16,
+    "n_sites": 6,
+    "bond_dim": 4,
+    "input_offset": 0.0001,
+    "entropy_log_base": "natural",
+    "range_definition": "minimum and maximum over every patch and MPS bond"
+  },
+  "datasets": {
+    "cifar10": {
+      "n_images": 3,
+      "n_patches": 48,
+      "n_entropy_values": 240,
+      "min": 6.230888721647787e-11,
+      "max": 0.14583931863307953,
+      "mean": 0.006086615171438557,
+      "std": 0.01814503697780142
+    },
+    "pathmnist": {
+      "n_images": 3,
+      "n_patches": 48,
+      "n_entropy_values": 240,
+      "min": 2.1369520736280734e-11,
+      "max": 0.0013712570071220398,
+      "mean": 5.5501626828377645e-05,
+      "std": 0.0001537278893378214
+    },
+    "bloodmnist": {
+      "n_images": 2,
+      "n_patches": 32,
+      "n_entropy_values": 160,
+      "min": 1.126415654084667e-07,
+      "max": 0.0038484185934066772,
+      "mean": 0.00040307139458817254,
+      "std": 0.0007509292043926306
+    },
+    "pneumoniamnist": {
+      "n_images": 2,
+      "n_patches": 32,
+      "n_entropy_values": 160,
+      "min": 8.360117220718166e-08,
+      "max": 0.026994314044713974,
+      "mean": 0.0008526215321099873,
+      "std": 0.0029131083537183716
+    }
+  },
+  "groups": {
+    "CIFAR-10": {
+      "n_images": 3,
+      "n_patches": 48,
+      "n_entropy_values": 240,
+      "min": 6.230888721647787e-11,
+      "max": 0.14583931863307953,
+      "mean": 0.006086615171438557,
+      "std": 0.01814503697780142
+    },
+    "MedMNIST": {
+      "n_images": 7,
+      "n_patches": 112,
+      "n_entropy_values": 560,
+      "min": 2.1369520736280734e-11,
+      "max": 0.026994314044713974,
+      "mean": 0.0003825558191259218,
+      "std": 0.0016446773610531613
+    }
+  },
+  "combined": {
+    "n_images": 10,
+    "n_patches": 160,
+    "n_entropy_values": 800,
+    "min": 2.1369520736280734e-11,
+    "max": 0.14583931863307953,
+    "mean": 0.002093773624819712,
+    "std": 0.010368163104571363
+  }
+}

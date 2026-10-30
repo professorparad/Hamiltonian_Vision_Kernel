@@ -1,0 +1,256 @@
+{
+  "control": "position-only; 19 PCAE2D observable channels fixed to zero",
+  "seed": 0,
+  "steps_per_image": 100,
+  "learning_rate": 0.004,
+  "patch_size": 8,
+  "patch_stride": 8,
+  "positional_dim": 4,
+  "observable_dim": 19,
+  "decoder_parameters": 52544,
+  "total_elapsed_seconds": 78.75178961799975,
+  "runs": [
+    {
+      "dataset": "cifar10",
+      "image_index": 0,
+      "mse": 3.499570993881207e-06,
+      "psnr": 54.559851917667636,
+      "ssim": 0.9999226331710815,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.2866493050005374
+    },
+    {
+      "dataset": "cifar10",
+      "image_index": 1,
+      "mse": 0.0003776176308747381,
+      "psnr": 34.229477367975505,
+      "ssim": 0.9980067014694214,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.22454551699956937
+    },
+    {
+      "dataset": "cifar10",
+      "image_index": 2,
+      "mse": 9.646358375903219e-05,
+      "psnr": 40.15636607458088,
+      "ssim": 0.9992523193359375,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.22954826499972114
+    },
+    {
+      "dataset": "mnist",
+      "image_index": 0,
+      "mse": 0.004209358710795641,
+      "psnr": 23.75784063208711,
+      "ssim": 0.974702000617981,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.22553505199994106
+    },
+    {
+      "dataset": "mnist",
+      "image_index": 1,
+      "mse": 0.0012161816703155637,
+      "psnr": 29.150015463441612,
+      "ssim": 0.9936648607254028,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.2306588469991766
+    },
+    {
+      "dataset": "mnist",
+      "image_index": 2,
+      "mse": 0.0032059969380497932,
+      "psnr": 24.940368967631322,
+      "ssim": 0.9704297184944153,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.2051547170003687
+    },
+    {
+      "dataset": "fashion-mnist",
+      "image_index": 0,
+      "mse": 0.0004426206578500569,
+      "psnr": 33.539683206823156,
+      "ssim": 0.9985105991363525,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.25475322600050276
+    },
+    {
+      "dataset": "fashion-mnist",
+      "image_index": 1,
+      "mse": 0.0003667033452074975,
+      "psnr": 34.35685128221752,
+      "ssim": 0.9987292289733887,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.2837311260000206
+    },
+    {
+      "dataset": "fashion-mnist",
+      "image_index": 2,
+      "mse": 0.00047948569408617914,
+      "psnr": 33.192243458908465,
+      "ssim": 0.9930879473686218,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.2719870529999753
+    },
+    {
+      "dataset": "pathmnist",
+      "image_index": 0,
+      "mse": 0.00024197116727009416,
+      "psnr": 36.16236380472076,
+      "ssim": 0.8382055163383484,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.21905923899976187
+    },
+    {
+      "dataset": "pathmnist",
+      "image_index": 1,
+      "mse": 0.00018109306984115392,
+      "psnr": 37.42098169163212,
+      "ssim": 0.9827118515968323,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.2138954250003735
+    },
+    {
+      "dataset": "pathmnist",
+      "image_index": 2,
+      "mse": 0.0005157223786227405,
+      "psnr": 32.87584022943682,
+      "ssim": 0.8502395749092102,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.20993508299943642
+    },
+    {
+      "dataset": "bloodmnist",
+      "image_index": 0,
+      "mse": 0.0008536882232874632,
+      "psnr": 30.68700709671858,
+      "ssim": 0.9682084918022156,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.21467662099985318
+    },
+    {
+      "dataset": "bloodmnist",
+      "image_index": 1,
+      "mse": 0.00013638859672937542,
+      "psnr": 38.6522193895031,
+      "ssim": 0.9983301758766174,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.24776588499935315
+    },
+    {
+      "dataset": "pneumoniamnist",
+      "image_index": 0,
+      "mse": 1.4713491509610321e-05,
+      "psnr": 48.322842570189685,
+      "ssim": 0.999747097492218,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.2491200160002336
+    },
+    {
+      "dataset": "pneumoniamnist",
+      "image_index": 1,
+      "mse": 2.3783231881679967e-05,
+      "psnr": 46.237291298262726,
+      "ssim": 0.9994254112243652,
+      "steps": 100,
+      "seed": 0,
+      "n_patches": 16,
+      "decoder_parameters": 52544,
+      "elapsed_seconds": 0.22151760399992781
+    }
+  ],
+  "summary": [
+    {
+      "dataset": "cifar10",
+      "n_images": 3,
+      "mean_psnr": 42.98189845340801,
+      "std_psnr": 8.536929863853974,
+      "mean_ssim": 0.9990605513254801,
+      "std_ssim": 0.0007938428890457167
+    },
+    {
+      "dataset": "mnist",
+      "n_images": 3,
+      "mean_psnr": 25.94940835438668,
+      "std_psnr": 2.314088404532976,
+      "mean_ssim": 0.979598859945933,
+      "std_ssim": 0.010097933190571512
+    },
+    {
+      "dataset": "fashion-mnist",
+      "n_images": 3,
+      "mean_psnr": 33.69625931598305,
+      "std_psnr": 0.48816998678595636,
+      "mean_ssim": 0.9967759251594543,
+      "std_ssim": 0.0026093210982509156
+    },
+    {
+      "dataset": "pathmnist",
+      "n_images": 3,
+      "mean_psnr": 35.4863952419299,
+      "std_psnr": 1.9161207079675109,
+      "mean_ssim": 0.890385647614797,
+      "std_ssim": 0.06546907971310338
+    },
+    {
+      "dataset": "bloodmnist",
+      "n_images": 2,
+      "mean_psnr": 34.669613243110845,
+      "std_psnr": 3.9826061463922606,
+      "mean_ssim": 0.9832693338394165,
+      "std_ssim": 0.015060842037200928
+    },
+    {
+      "dataset": "pneumoniamnist",
+      "n_images": 2,
+      "mean_psnr": 47.280066934226205,
+      "std_psnr": 1.0427756359634799,
+      "mean_ssim": 0.9995862543582916,
+      "std_ssim": 0.0001608431339263916
+    }
+  ]
+}
