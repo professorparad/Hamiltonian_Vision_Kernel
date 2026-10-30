@@ -52,7 +52,7 @@ of `report_2.md` — see §6 there. This file documents the *design*, not the cl
 | Training loop | `Main/src/training/training.py` |
 | IBM/Qiskit probe | `IBM_Cloud/run_ibm_hvk_probe.py` |
 | CIFAR benchmark runners | `Baselines/cifar10_comparisons/{hvk1d,hvk2d,symmetric_hvk1d}/` |
-| newHVK diagnostic suite | `main2/newHVK/run_newhvk_suite.py` |
+| newHVK diagnostic suite | `Main2/newHVK/run_newhvk_suite.py` |
 
 ---
 
@@ -153,7 +153,7 @@ an advantage claim.
 
 ## 6. newHVK diagnostic suite (second generation)
 
-**File:** `main2/newHVK/run_newhvk_suite.py`
+**File:** `Main2/newHVK/run_newhvk_suite.py`
 
 A rebuilt, statistics-first workspace (multi-seed, real held-out CIFAR-10,
 same-width classical controls, shot-noise sweep, IBM probe). It reuses the same
@@ -198,7 +198,7 @@ python Baselines/cifar10_comparisons/hvk2d/run_hvk2d_cifar32.py
 python Baselines/cifar10_comparisons/symmetric_hvk1d/run_symmetric_hvk1d_cifar32.py
 
 # newHVK second-generation suite (multi-seed, held-out CIFAR, shot noise)
-./main2/newHVK/scripts/run_all.sh
+./Main2/newHVK/scripts/run_all.sh
 
 # IBM hardware probe (dry-run = build + depth/gate report, no token needed)
 python IBM_Cloud/run_ibm_hvk_probe.py --variant both --dry-run

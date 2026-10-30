@@ -10,7 +10,7 @@ null of "no difference" -- it cannot license the word "competitive", because fai
 to find a difference is not the same as showing the difference is small. A Two
 One-Sided Tests (TOST) equivalence test instead asks the question the paper actually
 wants to make: is the HVK2D-minus-control PSNR gap, whichever sign it has, safely
-inside a pre-declared +/-1 dB margin of practical equivalence?
+inside a declared +/-1 dB margin of practical equivalence?
 
 For each control C and each of the 5 split seeds, the paired unit is the same one
 used elsewhere in this study: the seed-level mean of (HVK2D PSNR - control PSNR)
@@ -200,6 +200,7 @@ def main() -> None:
     with OUT_CSV.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
             f,
+            lineterminator="\n",
             fieldnames=[
                 "control_label", "control", "n_seeds", "mean_diff_db", "sd_diff_db",
                 "se_diff_db", "df", "delta_margin_db", "alpha", "t_lower", "p_lower",

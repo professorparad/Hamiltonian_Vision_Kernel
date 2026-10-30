@@ -1,11 +1,10 @@
 import importlib.util
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import numpy as np
 
-
-SCRIPT = Path(__file__).parents[1] / "main2" / "newHVK" / "run_newhvk_suite.py"
+SCRIPT = Path(__file__).parents[1] / "Main2" / "newHVK" / "run_newhvk_suite.py"
 SPEC = importlib.util.spec_from_file_location("run_newhvk_suite", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 SUITE = importlib.util.module_from_spec(SPEC)

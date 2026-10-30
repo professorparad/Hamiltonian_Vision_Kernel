@@ -5,7 +5,7 @@
 > retained restricted nonlocal diagnostic is leakage-audited, whereas the old
 > Monalisa freeze aggregate cannot be reproduced from per-seed artifacts and is
 > excluded. Consult the main manuscript, supplementary study, and
-> `main2/newHVK/WHAT_WAS_TESTED_AND_PROVED.md` for the current claim boundary.
+> `Main2/newHVK/WHAT_WAS_TESTED_AND_PROVED.md` for the current claim boundary.
 
 **Reviewer role:** publication-quality scrutiny of the results in
 `experiments/quantum_contribution/results/`.
@@ -16,9 +16,9 @@
 one headline number (Exp 1) is internally contradictory and cannot be trusted as
 reported.**
 
-> **Addendum (2026-07-12): review of the new `main2/newHVK/` workspace.**
+> **Addendum (2026-07-12): review of the new `Main2/newHVK/` workspace.**
 > Since the first review the student built a second-generation study
-> (`main2/newHVK/`, commits `2cc8631`→`c4c2e2c`) that directly answers most of
+> (`Main2/newHVK/`, commits `2cc8631`→`c4c2e2c`) that directly answers most of
 > report_2's methodology critique: 5-seed error bars, real held-out CIFAR-10
 > (20 images), same-width classical controls, shot-noise/hardware proxies, and
 > an IBM circuit probe. This is a large, genuine improvement. **But its single
@@ -194,7 +194,7 @@ not a quantum-advantage claim.
 
 ---
 
-## 9. Review of the new `main2/newHVK/` second-generation study
+## 9. Review of the new `Main2/newHVK/` second-generation study
 
 The student rebuilt the study to address §5's statistical objections. Credit
 where due — this is a real step up in rigor. But the results split cleanly into

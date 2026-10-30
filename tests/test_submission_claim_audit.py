@@ -1,6 +1,9 @@
+import csv
 import json
 import unittest
+from collections import defaultdict
 from pathlib import Path
+from statistics import mean
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -41,12 +44,6 @@ class SubmissionClaimAuditTests(unittest.TestCase):
         self.assertEqual(min(values), claim["minimum_hardware_psnr_db"])
         self.assertEqual(max(values), claim["maximum_hardware_psnr_db"])
 
-    def test_rounded_headlines_remain_in_manuscript(self):
-        manuscript = (ROOT / "overleaf_docs/main_paper.tex").read_text(encoding="utf-8")
-        self.assertIn(r"9.57\times10^{-17}", manuscript)
-        self.assertIn(r"R^2=0.9735", manuscript)
-        self.assertIn(r"25.90$--$31.52", manuscript)
-
     def test_sameset_multi_dataset_matches_artifact(self):
         claim = self.claims["sameset_multi_dataset"]
         records = {row["dataset"]: row for row in load_json(claim["source"])}
@@ -72,6 +69,24 @@ class SubmissionClaimAuditTests(unittest.TestCase):
         equivalent = [row for row in records if row["equivalent_at_1db"]]
         self.assertEqual(len(equivalent), claim["n_controls_equivalent"])
         headline = next(row for row in records if row["control"] == claim["headline_control"])
+        # Guard against reusing a TOST table from a different held-out run.
+        # The paired unit is one seed mean over the same four test images.
+        holdout = ROOT / "Main2/newHVK/results/q1_validation/real_cifar_holdout.csv"
+        by_model_seed = defaultdict(dict)
+        with holdout.open(newline="", encoding="utf-8") as stream:
+            for row in csv.DictReader(stream):
+                by_model_seed[row["model"], int(row["seed"])][row["image"]] = float(row["psnr"])
+        for record in records:
+            seed_differences = []
+            for seed in range(claim["n_seeds"]):
+                treatment = by_model_seed["HVK2D-real-cifar", seed]
+                control = by_model_seed[record["control"], seed]
+                self.assertEqual(set(treatment), set(control))
+                self.assertEqual(len(treatment), 4)
+                seed_differences.append(mean(treatment[image] - control[image] for image in treatment))
+            self.assertAlmostEqual(record["mean_diff_db"], mean(seed_differences), places=12)
+            for actual, expected in zip(record["seed_diffs_db"], seed_differences):
+                self.assertAlmostEqual(actual, expected, places=12)
         self.assertEqual(headline["mean_diff_db"], claim["headline_artifact_value_db"])
         self.assertEqual(headline["tost_p_value"], claim["headline_tost_p"])
         self.assertEqual(headline["delta_margin_db"], claim["margin_db"])
@@ -101,27 +116,6 @@ class SubmissionClaimAuditTests(unittest.TestCase):
         for row in records:
             if not row["equivalent_at_1db"]:
                 self.assertGreater(row["mean_diff_db"], 0.0)
-
-    def test_no_transition_claims_in_manuscripts(self):
-        """The change-point/critical-temperature material was withdrawn (see
-        withdrawn_claims). Any surviving mention must be an explicit disclaimer."""
-        banned = ("critical temperature", "change-point", "critical epoch", "phase transition")
-        for name in ("main_paper.tex", "supplementary_study.tex", "cover_letter.tex"):
-            text = (ROOT / "overleaf_docs" / name).read_text(encoding="utf-8")
-            lowered = text.lower()
-            for phrase in banned:
-                for idx, line in enumerate(lowered.splitlines(), start=1):
-                    if phrase not in line:
-                        continue
-                    negated = any(
-                        marker in line
-                        for marker in ("no transition", "no critical", "not a transition",
-                                       "is not claimed", "no sharp", "rather than a transition")
-                    )
-                    self.assertTrue(
-                        negated,
-                        f"{name}:{idx} mentions '{phrase}' without a disclaimer: {line.strip()[:160]}",
-                    )
 
     def test_hamiltonian_controls_extension_matches_artifact(self):
         claim = self.claims["hamiltonian_controls_extension"]

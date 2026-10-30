@@ -69,7 +69,10 @@ CFIR10Dataset/
 *.synctex.gz
 *.toc
 
-main2/newHVK/datasets/
+Main2/newHVK/datasets/
+
+# Local manuscript sources, PDFs, and review notes stay off GitHub.
+/overleaf_docs/
 
 # Quantum-contribution experiments: track code + result data (csv/json/md/py),
 # ignore only generated media (png/npy) so evidence isn't silently untracked.
@@ -79,7 +82,6 @@ experiments/quantum_contribution/**/*.pt
 Main/outputs/
 Main/experiments/
 Main2/outputs/
-main2/newHVK/datasets/
 
 # Scaling sweep runtime state (authoritative scaling_study.json stays tracked)
 Main2/newHVK/results/scaling_study/queue*/

@@ -9,6 +9,10 @@ purpose; they protect the parts that are easiest to break while refactoring:
 - CIFAR benchmark helper functions
 - MPS utility helpers
 - package import paths
+- retained numerical claim-to-artifact mappings, including the corrected TOST input
+
+The GitHub test suite does not depend on local files in `overleaf_docs/`.
+Manuscript sources and review notes are maintained separately from the code.
 
 ## Run
 

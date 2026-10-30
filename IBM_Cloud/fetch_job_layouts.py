@@ -71,9 +71,9 @@ def fetch(service, record: dict) -> dict:
         layouts = [measured_qubits(pub_circuit(p)) for p in pubs]
         distinct = sorted(set(layouts))
         out["n_circuits"] = len(layouts)
-        out["layouts"] = [list(l) for l in distinct]
-        out["layout_counts"] = [layouts.count(l) for l in distinct]
-        out["physical_qubits"] = sorted({q for l in distinct for q in l})
+        out["layouts"] = [list(layout) for layout in distinct]
+        out["layout_counts"] = [layouts.count(layout) for layout in distinct]
+        out["physical_qubits"] = sorted({q for layout in distinct for q in layout})
     except Exception as exc:  # noqa: BLE001
         out["layout_error"] = repr(exc)
 
@@ -122,7 +122,8 @@ def to_markdown(rows: list[dict], title: str, note: str) -> str:
         "order (c0..c5). Calibration = `backend.properties(datetime=job start).last_update_date`.",
         "Times are UTC.",
         "",
-        "| Campaign | Image | Job ID | Backend | Shots | Circuits | Physical qubits used | Distinct layouts | Job ran (UTC) | Calibration (UTC) |",
+        "| Campaign | Image | Job ID | Backend | Shots | Circuits | Physical qubits used | "
+        "Distinct layouts | Job ran (UTC) | Calibration (UTC) |",
         "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:

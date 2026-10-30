@@ -53,7 +53,7 @@ line-length = 120
 target-version = "py312"
 exclude = [
     "Main2",
-    "main2",
+    "overleaf_docs",
     "Baselines",
     "*.ipynb",
     ".venv",

@@ -42,6 +42,8 @@ training structure.
 - `Main/`: the main HVK1D implementation, including the standard and
   U(1)-symmetric variants.
 - `Main2/`: the 2D-grid HVK variant, with lattice-style correlations.
+- `Main2/newHVK/`: consolidated validation drivers and retained results;
+  all experiment commands use this capitalization on Linux and Windows.
 - `Baselines/`: CIFAR-10 and Mona Lisa comparison runners for HVK and classical
   baselines, including CNN, MLP, autoencoder, GAN, PHL, HVK1D, HVK2D, and
   Symmetric HVK1D.
@@ -135,9 +137,10 @@ pdflatex -interaction=nonstopmode main_paper.tex
 pdflatex -interaction=nonstopmode main_paper.tex
 ```
 
-The manuscripts live in `overleaf_docs/` (Springer `sn-jnl` sources, figures and
-compiled PDFs under `overleaf_docs/assets/`). The supplement and the literature
-review use an inline `thebibliography` and need only two `pdflatex` passes.
+Manuscripts may be kept locally in `overleaf_docs/`. This directory is excluded
+from Git and is not included in a fresh checkout. If the local sources are
+available, the supplement and literature review use an inline `thebibliography`
+and need only two `pdflatex` passes.
 
 Run a fast smoke test:
 

@@ -92,7 +92,7 @@ Source: `experiments/quantum_contribution/results/`. Baseline = full HVK1D, 32.2
 
 ## 4. Multi-image benchmarks vs classical baselines
 
-Source: `main2/newHVK/results/baselines/`.
+Source: `Main2/newHVK/results/baselines/`.
 
 ### CIFAR-10, 32×32, 5 images (HVK is competitive here)
 
@@ -128,7 +128,7 @@ bottleneck does not scale to large patches.*
 
 ## 5. newHVK second-generation suite (multi-seed, stricter)
 
-Source: `main2/newHVK/results/`.
+Source: `Main2/newHVK/results/`.
 
 ### 5a. Real held-out CIFAR-10 — 20 images, multi-seed (TRUSTWORTHY, negative)
 

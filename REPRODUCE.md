@@ -8,6 +8,11 @@ the headline claims, and `q1_revision/` for the provenance write-ups behind
 the two newest additions (dataset-level generalization, Hamiltonian
 objective).
 
+All validation drivers and results now use the canonical `Main2/newHVK/` path.
+The former lowercase `main2/` tree has been merged into it. Historical source
+paths inside raw result records retain their original spelling. Manuscript
+sources in `overleaf_docs/` are local files and are not included in this repository.
+
 ## `paper_hvk.tex`
 
 | Section | Result | Script | Output |
@@ -50,8 +55,8 @@ control fires 4/4 with the Hamiltonian energy identically zero — exactly as of
 `run_bond_dimension_phase_transition.py`, `run_critical_temperature.py`,
 `run_qubit_energy_phase_transition.py`) remain in the tree for provenance, and 27
 orphaned figures were deleted. See `project_artifacts/submission_claim_audit.json` →
-`withdrawn_claims`. `tests/test_submission_claim_audit.py::test_no_transition_claims_in_manuscripts`
-fails the build if transition language reappears without a disclaimer.
+`withdrawn_claims`. The code test suite verifies the retained numerical artifact
+mappings; review of manuscript language is maintained with the local manuscript sources.
 
 ## `literature_review.tex`
 

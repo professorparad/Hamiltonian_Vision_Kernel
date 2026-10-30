@@ -54,7 +54,7 @@ After looking at the actual plots (`critical_temperature_traces.pdf` and `critic
 | **6** | Packet — cover letter (TQE + arXiv), CRediT split | Student |
 
 ## What needs YOU / supervisor (flagged, not the student's)
-- **§5d** — `.git` is **1.8 GB** (duplicated binaries across `main2/` + `Main2/` + history). Decide: leave as-is, or destructive history-rewrite (BFG / git filter-repo) before public release.
+- **§5d** — `.git` is **1.8 GB** (duplicated binaries across `Main2/` + `Main2/` + history). Decide: leave as-is, or destructive history-rewrite (BFG / git filter-repo) before public release.
 - **§5e** — Mint a **Zenodo DOI** from a tagged release; add it to `CITATION.cff`.
 - **§6c** — **ORCID iDs** for both authors.
 - **§6d** — 2–3 **suggested reviewers** (active, appropriate, non-conflicted).
