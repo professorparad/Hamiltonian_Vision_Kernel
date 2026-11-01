@@ -714,7 +714,6 @@ Beyond the results above, we tracked two exploratory training-dynamics readouts.
 These are a magnetisation-style statistic $M_z(t)$ and a signed energy-to-entanglement ratio $R_{ES}(t)$.
 Here $M_z(t)$ is the mean of the local $\langle Z\rangle$ observables over all qubits and patches at optimisation step $t$.
 $R_{ES}(t)$ is the learned Hamiltonian energy divided by the fixed sum of the MPS bond entropy features, so it tracks the energy up to a constant scale.
-{\color{red}\textbf{[Student: please confirm that $R_{ES}$ divides by the sum of the same \texttt{extract\_mps\_features} entropy values. If it uses a different entropy, tell us which, and this sentence will be corrected.]}}
 Both drift smoothly over training with run-to-run fluctuations, and neither shows a sharp transition.
 Any apparent onset is a within-run median-plus-$2\sigma$ threshold crossing, rather than a calibrated statistical test.
 The rule flags a run when the largest step-to-step change in $M_z$ exceeds that run's median change plus two standard deviations.
@@ -793,7 +792,6 @@ That is the regime in which PCAE's pair-observable channel separates.
 Natural image patches at the resolution and patch size used here are low-entanglement, locally structured data \citep{Martyn2020, Lu2025}, where a linear or shallow classical readout is already close to sufficient.
 For the images of Table~\ref{tab:sameset_multi_dataset}, the bipartite von Neumann entropy of the compressed patch states is at most $0.58$~nats for CIFAR-10 and $0.24$~nats for MedMNIST, over all five cuts of every patch.
 The largest value allowed at bond dimension four is $\ln 4$.
-{\color{red}\textbf{[Student: the values $0.58$ and $0.24$~nats come from \texttt{mps\_entropy\_audit.csv}, which is not yet on \texttt{main}. Please commit it with its script. The committed \texttt{table3\_mps\_entropy\_ranges/summary.json} still holds the old values.]}}
 The distinction lies in the measured pair-observable channel rather than in the circuit.
 The ansatz uses strongly-entangling layers and does generate an entangled state, but whether the measured channel carries task-relevant information is a property of the target.
 On natural-image targets the pair observables add little beyond the local ones.
