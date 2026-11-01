@@ -8,6 +8,9 @@
 \usepackage{tabularx}
 \usepackage{ragged2e}
 \usepackage{xcolor}
+\usepackage[normalem]{ulem}
+\newcommand{\del}[1]{\sout{#1}}
+\newcommand{\add}[1]{\textbf{\textcolor{black}{#1}}}
 
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash\hspace{0pt}}X}
@@ -249,7 +252,7 @@ These were rebuilt in Qiskit for the hardware pilot of Section~\ref{sec:hardware
   \centering
   \includegraphics[width=\textwidth]{figures/hvk1d_ansatz.pdf}\\[6pt]
   \includegraphics[width=\textwidth]{figures/hvk2d_ansatz.pdf}
-  \caption{The PCAE1D (top) and PCAE2D (bottom) variational ans\"atze, exactly as executed (encoding $R_X$ rotations, positional $R_Y$ rotations, then two entangling layers of $R_Z$-$R_Y$-$R_Z$ single-qubit rotations with a CNOT ring for PCAE1D or fixed grid-edge CNOTs for PCAE2D).
+  \caption{The PCAE1D (top) and PCAE2D (bottom) variational ans\"atze, \del{exactly as executed} \add{as built for execution, before transpilation} (encoding $R_X$ rotations, positional $R_Y$ rotations, then two entangling layers of $R_Z$-$R_Y$-$R_Z$ single-qubit rotations with a CNOT ring for PCAE1D or fixed grid-edge CNOTs for PCAE2D).
   Both circuits were rebuilt gate-for-gate in Qiskit and validated against the original PennyLane training circuit before use in the hardware pilot of Section~\ref{sec:hardware_pilot}.}
   \label{fig:hvk_ansatz}
 \end{figure}
@@ -258,7 +261,7 @@ Table~\ref{tab:variants} summarises the tested variants.
 PCAE1D uses a linear 6-qubit chain (5 nearest-neighbour bonds, 27-D observable vector).
 PCAE2D arranges the same 6 qubits on a $2\times3$ lattice matching patch-boundary adjacency (19-D latent signature).
 A $D_4$-pooled PCAE2D variant (Section~\ref{sec:symmetry}) group-averages the observable grid over the eight symmetries of the $4\times4$ patch grid, $\Phi_{D_4}(x)=\tfrac{1}{8}\sum_{g\in D_4}P_g^{-1}\Phi(gx)$, which is equivariant by construction.
-Both PCAE1D and PCAE2D compile to depth-18, 6-qubit circuits on a Heron-class basis (Appendix~\ref{sec:hardware_methodology}).
+Each circuit has two entangling layers, with 12 CNOTs for PCAE1D and 14 for PCAE2D before transpilation (\del{Appendix~\ref{sec:hardware_methodology}} \add{Figure~\ref{fig:hvk_ansatz}}).
 
 \begin{table}[t]
   \centering
@@ -467,6 +470,7 @@ Each image used 256 shots per basis, totalling 12{,}288 shots for \textit{Monali
 The original jobs' physical-qubit layouts and contemporaneous calibration timestamps were not serialised and could not subsequently be recovered.
 Every hardware reconstruction remains above the random-latent control range.
 Substituting random latents for the observables at evaluation gives $13.92$ and $14.61$~dB on the \textit{Monalisa} PCAE1D checkpoints.
+{\color{red}\textbf{[Student: $13.92$ and $14.61$~dB come from the \texttt{verify\_shuffle\_permutations} checkpoints, not from the hardware checkpoint. The hardware checkpoint's own \texttt{shared-baseline-seed-42/metrics.json} gives $12.49$~dB for random latents and $12.45$~dB for zero latents. Please confirm, and say whether we should quote $12.49$~dB here instead.]}}
 The pilot used 176 circuits.
 The contemporaneous account-meter reading increased by 16 quantum-processor seconds.
 A similar protocol, with training in simulation and inference on IBM hardware, has been used for MedMNIST classification with error suppression and mitigation \citep{Singh2026}.
@@ -511,7 +515,7 @@ The pilot establishes that the trained PCAE observable channel survives executio
 With five images it is a pilot, and it makes no hardware-advantage claim.
 The learned parameters, the measurement circuits and the classical decoder all transfer unchanged, and the decoded images remain quantitatively informative at 256 shots per basis on an unmitigated device.
 This is the sense in which PCAE runs on real quantum hardware.
-Gate sequences, measurement construction and validation results are in Appendix~\ref{sec:hardware_methodology}.
+\del{Gate sequences, measurement construction} \add{The measurement construction} and validation results are in Appendix~\ref{sec:hardware_methodology}.
 
 \subsection{Noise/shot trade-off: a free simulator complement}
 \label{sec:hardware_robustness}
@@ -542,7 +546,7 @@ Comparing the 256-shot noisy simulation directly against the real-hardware point
 That comparison leaves a further $4.24$~dB average gap, ranging from $2.26$ to $8.06$~dB across images.
 This residual is consistent with effects that the calibration model does not capture, such as drift between calibration and execution, crosstalk, and correlated errors.
 The pilot does not separate these sources.
-The airplane image is the clear outlier, with an $8.06$~dB residual gap, roughly double any other image.
+The airplane image is the clear outlier, with an $8.06$~dB residual gap, \del{roughly double} \add{well above} any other image.
 We report it rather than exclude it, since a single-execution, five-image pilot cannot distinguish an image-specific effect from ordinary job-to-job variation.
 This calibrated-noise simulation is a free, repeatable complement to the pilot, not a substitute for it.
 It bounds how much of the observed hardware gap is attributable to modelled device noise rather than unmodelled effects, using zero additional quantum-processor time.
@@ -895,7 +899,7 @@ The threshold fires whether the Hamiltonian term is present or absent, at 4/4 in
 The hardware pilot (Section~\ref{sec:hardware_pilot}) is a five-image, unmitigated pilot with one run per image on the main backend rather than a statistically resolved hardware benchmark.
 The matched real-circuit topology comparison uses 3 seeds and 3 held-out images per topology.
 These results support a resource-cost interpretation rather than formal equivalence of the topologies.
-Every result here is at a six-qubit, depth-18 scale.
+Every result here is at a six-qubit, two-layer scale.
 Trainability of variational models is known to degrade with width and depth through barren-plateau effects \citep{McClean2018, Larocca2025}.
 Further, models that provably avoid barren plateaus are often also efficiently simulable on a classical computer \citep{Cerezo2025}.
 Thus, whether the tested boundary moves at larger scale is an open question.
@@ -989,6 +993,7 @@ The drivers of the six-dataset fits and the CIFAR-10 hardware fits did not set o
 ``Mean $\pm$ std'' denotes the mean and the population standard deviation over the unit named in each caption.
 Bootstrap intervals are percentile 95\% intervals, and Wilcoxon values are two-sided signed-rank tests.
 The runs used Python 3.11.9, PyTorch 2.6.0 with CUDA 12.4, PennyLane 0.42.3, Qiskit 2.5.0, NumPy 2.4.6 and quimb 1.11.2 on an NVIDIA GeForce GTX 1050.
+{\color{red}\textbf{[Student: only PennyLane 0.42.3 and PyTorch 2.6.0+cu124 are recorded in the repository (\texttt{REPRODUCE.md}). Please send the output of \texttt{python --version}, \texttt{pip freeze} and \texttt{nvidia-smi} from the machine that ran these experiments, and commit it as an environment file. Your entropy script reports quimb 1.14.0, while this sentence says 1.11.2; please say which version the experiments used. Versions that cannot be confirmed will be removed.]}}
 
 \section{Matched-budget component ablation}
 \label{sec:core_multiseed_rerun}
@@ -1073,11 +1078,12 @@ The control is higher at each of the three seeds.
 The \textit{Monalisa} circuit is the legacy PCAE1D checkpoint \texttt{shared-baseline-seed-42}, trained for 200 steps with seed 42 and learning rate $0.003$.
 It is distinct from the fresh ``Legacy baseline, signed energy'' rerun of Table~\ref{tab:hamiltonian_controls}.
 Its noiseless reference of $37.99$~dB (Table~\ref{tab:hardware_pilot_summary}) is an exact statevector replay of the saved checkpoint through the hardware-reconstruction pipeline.
+{\color{red}\textbf{[Student: the same checkpoint's \texttt{metrics.json} records $32.24$~dB. As far as we can see, the training-run evaluation stitches the patches and blends the seams (\texttt{blend\_seams}), while the hardware pipeline computes PSNR on the decoded patches without blending, for both hardware and simulator. Please confirm, so that we can add one sentence saying so.]}}
 The four CIFAR-10 circuits are PCAE2D checkpoints, each trained on its own image with 16 non-overlapping $8\times8$ patches (Table~\ref{tab:training_settings}).
 PCAE1D measures $Z$, $X$, $ZZ$, $XX$ and $YY$ (27 observables).
 Its pair correlators are joint parities of the same all-$Z$, all-$X$ and all-$Y$ basis measurements that give the single-qubit values, so three measurement circuits per patch suffice, or 48 circuits for \textit{Monalisa}.
 PCAE2D measures $Z$, $X$ and $ZZ$ (19 observables) and needs two circuits per patch, or 128 circuits for the four CIFAR-10 images.
-At optimisation level 1 on \texttt{ibm\_fez}, both per-patch circuits transpile to depth 18 with 10--14 CX gates.
+{\color{red}\textbf{[Student: the depth-18 and 10--14 CX values came from \texttt{IBM\_Cloud/outputs/circuits\_summary.json}, written by \texttt{run\_ibm\_hvk\_probe.py} before transpilation. They do not describe the pilot circuits after transpilation on \texttt{ibm\_fez}, and the probe PCAE1D circuit has 10 CX while the pilot ansatz has 12 CNOTs. We have therefore removed the depth claim here and in Sections~\ref{sec:architecture} and~\ref{sec:limitations}, and state 12 and 14 CNOTs before transpilation. Please confirm these two counts. If the transpiled depth and two-qubit gate count of the pilot circuits are already saved anywhere, send the file. Do not run anything new.]}}
 
 Before any hardware submission, every circuit was checked against the cached training-time observables by exact statevector simulation.
 The largest absolute error was $7.89\times10^{-4}$ for \textit{Monalisa} and at most $9.42\times10^{-6}$ for the CIFAR-10 checkpoints.
