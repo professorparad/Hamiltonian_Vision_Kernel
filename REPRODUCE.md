@@ -101,7 +101,4 @@ above — new numbers land within 0.5 dB of the previously unsourced ones);
 `hamiltonian_controls`'s no-observable-noise/ZZ-only rows (rebuilt, see
 above).
 
-Environment: PennyLane 0.42.3, PyTorch 2.6.0+cu124 (see individual results
-directories for any run-specific deviations). Multi-seed studies default to
-seeds `{0,1,2,3,4}` unless a section states otherwise (see
-`supplementary_study.tex` §Reproducibility for exceptions).
+Environment: PennyLane 0.42.3, PyTorch 2.6.0+cu124, Quimb 1.14.0 (see `environment.txt` for the current environment freeze, and individual results directories for any run-specific deviations). Multi-seed studies default to seeds `{0,1,2,3,4}` unless a section states otherwise (see `supplementary_study.tex` §Reproducibility for exceptions).
