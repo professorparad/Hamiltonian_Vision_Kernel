@@ -11,6 +11,7 @@
 \usepackage[normalem]{ulem}
 \newcommand{\del}[1]{\sout{#1}}
 \newcommand{\add}[1]{\textbf{\textcolor{black}{#1}}}
+\DeclareRobustCommand{\blue}[1]{{\color{blue}#1}}
 
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{Y}{>{\RaggedRight\arraybackslash\hspace{0pt}}X}
@@ -468,9 +469,8 @@ Circuits were transpiled at optimisation level 1 and submitted through SamplerV2
 Dynamical decoupling, Pauli twirling and readout-error mitigation were not enabled \citep[see][]{Temme2017, vandenBerg2022, Kim2023}.
 Each image used 256 shots per basis, totalling 12{,}288 shots for \textit{Monalisa} and 8{,}192 for each CIFAR-10 image.
 The original jobs' physical-qubit layouts and contemporaneous calibration timestamps were not serialised and could not subsequently be recovered.
-Every hardware reconstruction remains above the random-latent control range.
-Substituting random latents for the observables at evaluation gives $13.92$ and $14.61$~dB on the \textit{Monalisa} PCAE1D checkpoints.
-{\color{red}\textbf{[Student: $13.92$ and $14.61$~dB come from the \texttt{verify\_shuffle\_permutations} checkpoints, not from the hardware checkpoint. The hardware checkpoint's own \texttt{shared-baseline-seed-42/metrics.json} gives $12.49$~dB for random latents and $12.45$~dB for zero latents. Please confirm, and say whether we should quote $12.49$~dB here instead.]}}
+Every hardware reconstruction remains above the random-latent control\del{ range}.
+\del{Substituting random latents for the observables at evaluation gives $13.92$ and $14.61$~dB on the \textit{Monalisa} PCAE1D checkpoints.} \blue{On the \textit{Monalisa} hardware checkpoint, substituting random latents for the observables at evaluation gives $12.49$~dB.}
 The pilot used 176 circuits.
 The contemporaneous account-meter reading increased by 16 quantum-processor seconds.
 A similar protocol, with training in simulation and inference on IBM hardware, has been used for MedMNIST classification with error suppression and mitigation \citep{Singh2026}.
@@ -992,8 +992,7 @@ Where Table~\ref{tab:training_settings} lists seeds, the experiment drivers set 
 The drivers of the six-dataset fits and the CIFAR-10 hardware fits did not set or record a seed, so these are reported as not recorded.
 ``Mean $\pm$ std'' denotes the mean and the population standard deviation over the unit named in each caption.
 Bootstrap intervals are percentile 95\% intervals, and Wilcoxon values are two-sided signed-rank tests.
-The runs used Python 3.11.9, PyTorch 2.6.0 with CUDA 12.4, PennyLane 0.42.3, Qiskit 2.5.0, NumPy 2.4.6 and quimb 1.11.2 on an NVIDIA GeForce GTX 1050.
-{\color{red}\textbf{[Student: only PennyLane 0.42.3 and PyTorch 2.6.0+cu124 are recorded in the repository (\texttt{REPRODUCE.md}). Please send the output of \texttt{python --version}, \texttt{pip freeze} and \texttt{nvidia-smi} from the machine that ran these experiments, and commit it as an environment file. Your entropy script reports quimb 1.14.0, while this sentence says 1.11.2; please say which version the experiments used. Versions that cannot be confirmed will be removed.]}}
+The runs used \del{Python 3.11.9, }PyTorch 2.6.0 with CUDA 12.4, PennyLane 0.42.3\del{, Qiskit 2.5.0, NumPy 2.4.6} and quimb \del{1.11.2} \blue{1.14.0} on an NVIDIA GeForce GTX 1050.
 
 \section{Matched-budget component ablation}
 \label{sec:core_multiseed_rerun}
@@ -1078,12 +1077,12 @@ The control is higher at each of the three seeds.
 The \textit{Monalisa} circuit is the legacy PCAE1D checkpoint \texttt{shared-baseline-seed-42}, trained for 200 steps with seed 42 and learning rate $0.003$.
 It is distinct from the fresh ``Legacy baseline, signed energy'' rerun of Table~\ref{tab:hamiltonian_controls}.
 Its noiseless reference of $37.99$~dB (Table~\ref{tab:hardware_pilot_summary}) is an exact statevector replay of the saved checkpoint through the hardware-reconstruction pipeline.
-{\color{red}\textbf{[Student: the same checkpoint's \texttt{metrics.json} records $32.24$~dB. As far as we can see, the training-run evaluation stitches the patches and blends the seams (\texttt{blend\_seams}), while the hardware pipeline computes PSNR on the decoded patches without blending, for both hardware and simulator. Please confirm, so that we can add one sentence saying so.]}}
+\blue{Both the hardware and the simulator PSNR are computed over the decoded patches, without stitching them or blending the seams.}
+\blue{The training-run evaluation of the same checkpoint blends the seams of the stitched image and records $32.24$~dB.}
 The four CIFAR-10 circuits are PCAE2D checkpoints, each trained on its own image with 16 non-overlapping $8\times8$ patches (Table~\ref{tab:training_settings}).
 PCAE1D measures $Z$, $X$, $ZZ$, $XX$ and $YY$ (27 observables).
 Its pair correlators are joint parities of the same all-$Z$, all-$X$ and all-$Y$ basis measurements that give the single-qubit values, so three measurement circuits per patch suffice, or 48 circuits for \textit{Monalisa}.
 PCAE2D measures $Z$, $X$ and $ZZ$ (19 observables) and needs two circuits per patch, or 128 circuits for the four CIFAR-10 images.
-{\color{red}\textbf{[Student: the depth-18 and 10--14 CX values came from \texttt{IBM\_Cloud/outputs/circuits\_summary.json}, written by \texttt{run\_ibm\_hvk\_probe.py} before transpilation. They do not describe the pilot circuits after transpilation on \texttt{ibm\_fez}, and the probe PCAE1D circuit has 10 CX while the pilot ansatz has 12 CNOTs. We have therefore removed the depth claim here and in Sections~\ref{sec:architecture} and~\ref{sec:limitations}, and state 12 and 14 CNOTs before transpilation. Please confirm these two counts. If the transpiled depth and two-qubit gate count of the pilot circuits are already saved anywhere, send the file. Do not run anything new.]}}
 
 Before any hardware submission, every circuit was checked against the cached training-time observables by exact statevector simulation.
 The largest absolute error was $7.89\times10^{-4}$ for \textit{Monalisa} and at most $9.42\times10^{-6}$ for the CIFAR-10 checkpoints.
