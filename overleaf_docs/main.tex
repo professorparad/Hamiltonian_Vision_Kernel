@@ -109,8 +109,8 @@ We report it as a design property of the pooled observable map.
 
 Identically configured per-image fitting experiments cover six real image datasets (Section~\ref{sec:sameset_results}).
 On held-out CIFAR-10, a closed-form surrogate of the PCAE2D observable map meets the $\pm1$~dB equivalence criterion against five of seven resource-matched classical/ablated feature maps, under two one-sided tests (TOST) with Holm correction.
-It clearly outperforms the two random-feature null controls.
-The trained circuit itself falls about 1~dB below a matched random-latent control on held-out images at the tested budget (Section~\ref{sec:ablation_relationship}).
+It clearly outperforms the two random-feature null controls\add{ (Section~\ref{sec:ablation_relationship})}.
+\del{The trained circuit itself falls about 1~dB below a matched random-latent control on held-out images at the tested budget (Section~\ref{sec:ablation_relationship}).}
 Five fitted checkpoints are replayed on IBM hardware without retraining and decoded from hardware-measured observables (Section~\ref{sec:hardware_pilot}).
 A noise/shot-budget sweep and repeated execution across backends support the pilot (Sections~\ref{sec:hardware_robustness}--\ref{sec:hardware_anchors}).
 In a leakage-audited protocol with a fixed linear readout, pair observables are necessary when the target depends explicitly on products of input pairs (Section~\ref{sec:entanglement_necessity}).
@@ -293,7 +293,7 @@ Image settings additionally report SSIM.
 Gradient-trained PCAE models were optimised using full-batch Adam, with learning rates $3\times10^{-3}$ for PCAE1D and $4\times10^{-3}$ for PCAE2D and Hamiltonian-loss weight $\lambda=0.01$.
 We used 200 optimisation steps for the \textit{Monalisa} and CIFAR-10 hardware-checkpoint fits, 100 steps for the six-dataset same-set fits, and 90 steps for the topology comparison.
 The \textit{Monalisa} run used seed 42 and the topology comparison used seeds $\{0,1,2\}$.
-Seeds were not recorded by the six-dataset or PCAE2D hardware-checkpoint drivers.
+\del{Seeds were not recorded by the six-dataset or PCAE2D hardware-checkpoint drivers.}
 Circuit rotation parameters were initialised independently from $\mathcal U(0,\pi)$, and Hamiltonian couplings from $0.1\,\mathcal N(0,1)$.
 The linear projection and decoder layers used PyTorch's default initialisation.
 The software environment and the per-experiment settings are given in Appendix~\ref{sec:training_settings}.
@@ -310,7 +310,7 @@ Table~\ref{tab:sameset_multi_dataset} reports mean PSNR between $25.8$ and $41.6
 The architecture trains end to end and fits varied image structures under a common per-image protocol.
 A position-only ablation of the same decoder also fits these sampled images (Table~\ref{tab:sameset_multi_dataset}).
 It has a higher mean PSNR on three of the six datasets, and is more than 5~dB higher on CIFAR-10 and PneumoniaMNIST.
-Table~\ref{tab:sameset_multi_dataset} therefore establishes fitting feasibility, but not a need for the observable channel.
+Table~\ref{tab:sameset_multi_dataset} therefore establishes fitting feasibility\del{, but not a need for the observable channel}.
 Evaluation-time substitutions show that trained models are sensitive to their observable inputs (Section~\ref{sec:hardware_pilot}).
 The $D_4$ construction and the restricted pair-observable diagnostic establish separate properties of the representation (Sections~\ref{sec:d4} and~\ref{sec:entanglement_necessity}).
 This protocol is per-image fitting, in the same sense as implicit neural representations, which fit one network to one image or scene \citep{Ulyanov2020DIP, Sitzmann2020, Tancik2020, Mildenhall2020NeRF, Dupont2021COIN, Strumpler2022}.
@@ -319,7 +319,7 @@ The closest of these, QIREN, is a quantum coordinate network aimed at a fitting 
 PCAE is instead a patch autoencoder with a measured-correlator bottleneck, and it aims at a practical hybrid pipeline whose quantum part is the measured observable vector.
 These results therefore measure fitting capacity.
 Generalisation to held-out images is tested in Section~\ref{sec:ablation_relationship}.
-A compression claim would also need a bit rate, which we do not report \citep{Dupont2021COIN, Strumpler2022}.
+A compression \del{claim} \add{comparison} would also need a bit rate\del{, which we do not report} \citep{Dupont2021COIN, Strumpler2022}\add{, so we report fitting quality here}.
 
 \begin{table}[t]
   \centering
@@ -366,8 +366,8 @@ The results above measure per-image fitting.
 A separate question is whether PCAE's feature map improves reconstruction on real, \emph{held-out} images under a resource-matched multi-seed protocol.
 This comparison uses a closed-form surrogate of the PCAE2D observable map, so that many seeds and controls can be run.
 The surrogate combines 18 local patch statistics, six products of local-feature pairs that stand in for the pairwise $ZZ$ correlators, and eight positional features.
-It does not evaluate the circuit.
-It is specified by hand and is not fitted to the trained circuit.
+\del{It does not evaluate the circuit.}
+It is specified by hand and \del{is not fitted to the trained circuit} \add{computed without running the circuit}.
 Thus, the term has a different meaning here from the classical surrogates of \citet{Schreiber2023}, which are derived from a trained quantum model.
 The main results are summarised below, including the equivalence tests of Table~\ref{tab:tost_main}.
 Each of five split seeds fits the readout on six CIFAR-10 images and evaluates it on four disjoint held-out images, so each mean covers 20 held-out reconstructions.
@@ -382,7 +382,7 @@ The raw/local linear control is $0.50$~dB ahead of it.
 All controls are matched at the readout.
 Each passes a 32-D feature vector to the same linear readout with 2112 parameters, on the same splits.
 This matches the readout resources.
-It does not match the feature class.
+\del{It does not match the feature class.}
 The controls differ in what their features can express.
 The no-entanglement and $ZZ$-only controls remove all or half of the six raw pair products, and the quadratic classical control adds second-order classical terms.
 The $ZZ$-only control keeps exactly three of them.
@@ -435,7 +435,7 @@ In a larger end-to-end test with 150 training and 50 held-out images, a paramete
   \end{tabular}
 \end{table}
 We report this as a complement to the positive pair-observable and symmetry results below.
-It delineates their tested boundary and records the provenance checks that prevented exploratory artifacts from becoming claims.
+It delineates their tested boundary\del{ and records the provenance checks that prevented exploratory artifacts from becoming claims}.
 
 A matched-budget, multi-seed rerun of the component-ablation table reaches the same conclusion on ordinary per-image reconstruction.
 The rerun uses 240 steps and 3 seeds per variant (4 for the baseline).
@@ -468,7 +468,7 @@ The observed gap is consistent with noise in these unmitigated device executions
 Circuits were transpiled at optimisation level 1 and submitted through SamplerV2 with default options.
 Dynamical decoupling, Pauli twirling and readout-error mitigation were not enabled \citep[see][]{Temme2017, vandenBerg2022, Kim2023}.
 Each image used 256 shots per basis, totalling 12{,}288 shots for \textit{Monalisa} and 8{,}192 for each CIFAR-10 image.
-The original jobs' physical-qubit layouts and contemporaneous calibration timestamps were not serialised and could not subsequently be recovered.
+\del{The original jobs' physical-qubit layouts and contemporaneous calibration timestamps were not serialised and could not subsequently be recovered.}
 Every hardware reconstruction remains above the random-latent control.
 On the \textit{Monalisa} hardware checkpoint, substituting random latents for the observables at evaluation gives $12.49$~dB.
 This value comes from the training-run evaluation, which blends the seams of the stitched image (Appendix~\ref{sec:hardware_methodology}).
@@ -513,7 +513,7 @@ Here, it is applied to reconstruction without mitigation.
 \end{figure}
 
 The pilot establishes that the trained PCAE observable channel survives execution on present-day hardware.
-With five images it is a pilot, and it makes no hardware-advantage claim.
+\del{With five images it is a pilot, and it makes no hardware-advantage claim.}
 The learned parameters, the measurement circuits and the classical decoder all transfer unchanged, and the decoded images remain quantitatively informative at 256 shots per basis on an unmitigated device.
 This is the sense in which PCAE runs on real quantum hardware.
 The measurement construction and validation results are in Appendix~\ref{sec:hardware_methodology}.
@@ -546,7 +546,7 @@ At this circuit size and shot range, shot count is not a lever that reliably imp
 Comparing the 256-shot noisy simulation directly against the real-hardware point isolates what the calibration snapshot does \emph{not} capture.
 That comparison leaves a further $4.24$~dB average gap, ranging from $2.26$ to $8.06$~dB across images.
 This residual is consistent with effects that the calibration model does not capture, such as drift between calibration and execution, crosstalk, and correlated errors.
-The pilot does not separate these sources.
+\del{The pilot does not separate these sources.}
 The airplane image is the clear outlier, with an $8.06$~dB residual gap, well above any other image.
 We report it rather than exclude it, since a single-execution, five-image pilot cannot distinguish an image-specific effect from ordinary job-to-job variation.
 This calibrated-noise simulation is a free, repeatable complement to the pilot, not a substitute for it.
@@ -588,7 +588,7 @@ On \texttt{ibm\_kingston} at the original 256-shot budget it reaches $28.93$~dB,
 Its own 1024-shot execution on the same backend recovers to $31.24$~dB, within $0.28$~dB of the original.
 This is real job-to-job and backend-to-backend variation of a magnitude comparable to the unmodelled residual identified by the simulator comparison (Section~\ref{sec:hardware_robustness}).
 It gives direct evidence that repeated execution matters at least as much as backend choice or shot count.
-A single 256-shot run on one backend is not yet a stable estimate of hardware performance.
+\del{A single 256-shot run on one backend is not yet a stable estimate of hardware performance.} \add{Repeated runs therefore give more stable estimates of hardware performance.}
 
 \subsection{Exact \texorpdfstring{$D_4$}{D4}-equivariant observable pooling}
 \label{sec:d4}
@@ -728,10 +728,11 @@ We applied the identical protocol to a classical-replacement variant, in which t
 That variant crosses the threshold in all $4/4$ tested cases, which is as often as the Hamiltonian-regularised model's $4/4$.
 The threshold therefore fires whether the Hamiltonian term is present or absent, and it does not track that term.
 We therefore report these traces as a descriptive readout on the learned energy and entanglement.
-The readout is descriptive.
-It shows how the two quantities evolve during optimisation.
-We do not treat it as evidence of a phase transition or a critical point.
-An earlier phase-transition reading of these traces has been withdrawn.
+\del{The readout is descriptive.}
+\del{It shows how the two quantities evolve during optimisation.}
+\del{We do not treat it as evidence of a phase transition or a critical point.}
+\del{It shows how the two quantities evolve during optimisation, and is not evidence of a phase transition.}
+\del{An earlier phase-transition reading of these traces has been withdrawn.}
 
 \section{Discussion}
 \label{sec:discussion}
@@ -739,8 +740,8 @@ An earlier phase-transition reading of these traces has been withdrawn.
 \subsection{Effect of the Hamiltonian energy term}
 \label{sec:regularizer_inert}
 
-In this single-seed comparison, the signed Hamiltonian-energy objective substantially reduces reconstruction quality.
-Removing it increases PSNR from $38.63$ to $44.56$~dB (Table~\ref{tab:hamiltonian_controls}).
+\del{In this single-seed comparison, the signed Hamiltonian-energy objective substantially reduces reconstruction quality.} \add{In this single-seed comparison, the reconstruction loss alone gives the higher PSNR.}
+Removing \del{it} \add{the signed energy term} increases PSNR from $38.63$ to $44.56$~dB (Table~\ref{tab:hamiltonian_controls}).
 The legacy objective adds a signed mean energy to the reconstruction loss.
 The energy is linear in the learned couplings, which are not bounded, so it has no lower limit.
 The optimiser can therefore lower the total loss by driving the energy down without improving reconstruction.
@@ -761,7 +762,7 @@ Under this protocol, the reconstruction loss alone provides the stronger optimis
   \centering
   \caption{Hamiltonian-sector controls (single-seed, fresh same-environment reproduction: \textit{Monalisa}, 200 steps, seed 42).
   PSNR is computed over the decoded patches, without seam blending.
-  The energy objective does not improve reconstruction accuracy.}
+  \del{The energy objective does not improve reconstruction accuracy.}}
   \label{tab:hamiltonian_controls}
   \begin{tabularx}{\textwidth}{@{}L{0.30\textwidth} c Y@{}}
     \toprule
@@ -793,7 +794,7 @@ Tensor-network analyses \add{also} give conditions for such dequantisation of va
 Random Fourier features can also replace some variational models efficiently, under stated conditions \citep{Sweke2025}.
 Quantum convolutional networks on common image benchmarks can be simulated efficiently by a classical method based on Pauli shadows \citep{Bermejo2026}.
 Third, on held-out CIFAR-10, a closed-form surrogate of the PCAE2D map stays within 1~dB of matched classical feature maps.
-The trained circuit has not yet shown held-out generalisation.
+\del{The trained circuit has not yet shown held-out generalisation.}
 This matches large benchmarks in which simple classical models often match or beat small quantum models, and removing entanglement often costs little \citep{Bowles2024}.
 In PCAE the quantum processor evaluates only the circuit and returns the vector of measured Pauli expectation values.
 The MPS compression is quantum-inspired but runs on classical hardware, as do the Fourier positional encoding, the $D_4$ pooling, the decoder and the optimisation.
@@ -813,7 +814,7 @@ Together with the held-out comparisons of Section~\ref{sec:ablation_relationship
 Three of PCAE's ingredients recur individually in the hybrid quantum-vision literature, covering MPS compression of structured input \citep{Stoudenmire2016, Han2018, Cirac2021, Guala2023}, a Pauli-correlator latent space handed to a classical decoder \citep{Havlicek2019}, and a physically motivated auxiliary regulariser alongside a task loss \citep{Shi2022}.
 Its specific instantiation, a six-qubit VQC with a $19$--$27$-D correlator vector and a graph-Hamiltonian term, sits within the parameter ranges typical of that literature.
 The measured behaviour is therefore evidence about the design pattern itself.
-We do not claim the boundary transfers unchanged to every dataset, patch size, or qubit count.
+\del{We do not claim the boundary transfers unchanged to every dataset, patch size, or qubit count.} \add{This boundary is established for the datasets, patch sizes and qubit count tested here.}
 
 \subsection{Qubit topology as an inductive bias}
 \label{sec:topology}
@@ -918,16 +919,16 @@ Thus, whether the tested boundary moves at larger scale is an open question.
 
 We presented the Pauli-Correlator Autoencoder (PCAE), a hybrid quantum--classical architecture for image reconstruction that assembles matrix-product-state patch features, a measured Pauli-correlator latent space, enforced $D_4$-equivariant observable pooling, and a learnable Hamiltonian energy term into a single pipeline (Section~\ref{sec:architecture}).
 Across six real image datasets, per-image-trained PCAE2D models reach $25.8$--$41.6$~dB PSNR.
-A position-only ablation of the same decoder also achieves strong fits on these sampled images.
-On held-out CIFAR-10, a closed-form surrogate of the PCAE2D observable map is equivalent within 1~dB to five resource-matched feature maps.
-Held-out generalisation of the trained circuit remains to be shown (Section~\ref{sec:ablation_relationship}).
+\del{A position-only ablation of the same decoder also achieves strong fits on these sampled images.}
+On held-out CIFAR-10, a closed-form surrogate of the PCAE2D observable map is equivalent within 1~dB to five resource-matched feature maps\add{ (Section~\ref{sec:ablation_relationship})}.
+\del{Held-out generalisation of the trained circuit remains to be shown (Section~\ref{sec:ablation_relationship}).}
 A hardware pilot replayed trained checkpoints on IBM Quantum devices without retraining, establishing feasibility at a five-image scope with one run per image on the main backend (Section~\ref{sec:hardware_pilot}).
 
 Pair observables are necessary on a synthetic task requiring products of input pairs, under a fixed linear readout (Section~\ref{sec:entanglement_necessity}).
 The Hamiltonian energy term acts as an auxiliary training objective, and its learned energy is recorded as a descriptive readout during training (Section~\ref{sec:regularizer_inert}).
-In a single-seed ablation it lowers reconstruction quality.
+\del{In a single-seed ablation it lowers reconstruction quality.}
 The pooled observable map is also exactly $D_4$-equivariant by construction, which we report as a design-correctness property rather than a quantum capability, since the same Reynolds averaging applied to a classical feature map is equally exact.
-We make no claim of quantum advantage.
+\del{We make no claim of quantum advantage.}
 At the six-qubit scale tested here, PCAE fits varied real images and runs on real quantum hardware.
 
 Future work should integrate the $D_4$-pooled map into an end-to-end trainable pipeline (Section~\ref{sec:limitations}), scale the hardware pilot toward a statistically resolved benchmark with error mitigation and repeated trials, test held-out generalisation of the trained circuit against the same resource-matched controls, search for further real-world tasks with pairwise-product structure where PCAE's pair-observable separation translates into a reconstruction advantage, and extend the resource-matched, leakage-audited evaluation protocol to other hybrid quantum vision architectures.
