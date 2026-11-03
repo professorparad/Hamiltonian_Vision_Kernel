@@ -252,8 +252,8 @@ These were rebuilt in Qiskit for the hardware pilot of Section~\ref{sec:hardware
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\textwidth]{figures/hvk1d_ansatz.pdf}\\[6pt]
-  \includegraphics[width=\textwidth]{figures/hvk2d_ansatz.pdf}
+  \includegraphics[width=\textwidth]{hvk1d_ansatz.pdf}\\[6pt]
+  \includegraphics[width=\textwidth]{hvk2d_ansatz.pdf}
   \caption{The PCAE1D (top) and PCAE2D (bottom) variational ans\"atze, \del{exactly as executed} \add{as built for execution, before transpilation} (encoding $R_X$ rotations, positional $R_Y$ rotations, then two entangling layers of $R_Z$-$R_Y$-$R_Z$ single-qubit rotations with a CNOT ring for PCAE1D or fixed grid-edge CNOTs for PCAE2D).
   Both circuits were rebuilt gate-for-gate in Qiskit and validated against the original PennyLane training circuit before use in the hardware pilot of Section~\ref{sec:hardware_pilot}.}
   \label{fig:hvk_ansatz}
@@ -502,7 +502,7 @@ Here, it is applied to reconstruction without mitigation.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\textwidth]{figures/ibm_hardware_reconstruction_monalisa.pdf}
+  \includegraphics[width=\textwidth]{ibm_hardware_reconstruction_monalisa.pdf}
   \caption{\textit{Monalisa} reconstructed from real IBM Quantum hardware measurements (right) against the same trained checkpoint's noiseless-simulator replay (centre) and ground truth (left).
   The hardware image is visibly noisier and exhibits patch-boundary banding, while the subject remains recognisable.}
   \label{fig:hardware_reconstruction_monalisa}
@@ -510,7 +510,7 @@ Here, it is applied to reconstruction without mitigation.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\textwidth]{figures/ibm_hardware_reconstruction_cifar.pdf}
+  \includegraphics[width=\textwidth]{ibm_hardware_reconstruction_cifar.pdf}
   \caption{Four CIFAR-10 images reconstructed from real IBM Quantum hardware measurements (bottom row) against noiseless-simulator replays of the same trained PCAE2D checkpoints (middle row) and ground truth (top row).}
   \label{fig:hardware_reconstruction_cifar}
 \end{figure}
@@ -532,7 +532,7 @@ Using \texttt{qiskit-aer} with the live calibration snapshot of \texttt{ibm\_fez
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/hardware_robustness_shot_sweep.pdf}
+  \includegraphics[width=0.7\textwidth]{hardware_robustness_shot_sweep.pdf}
   \caption{Calibrated device-noise simulation (\texttt{FakeFez}, mean $\pm$ std over three executions).
   Dotted lines show noiseless ceilings and stars show real-hardware measurements.
   Increasing 256 to 4096 shots changes mean PSNR by only $-0.05$~dB.}
@@ -644,7 +644,7 @@ The circuit itself is not equivariant, and the same average applies equally to a
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.55\textwidth]{figures/d4_equivariance_summary.png}
+  \includegraphics[width=0.55\textwidth]{d4_equivariance_summary.png}
   \caption[$D_4$ equivariance diagnostic]{$D_4$ equivariance diagnostic.
   The group-pooled map is equivariant to numerical precision.
   The unpooled positional map is not.}
@@ -709,7 +709,7 @@ For this reason we scope the claim to the linear protocol rather than to classic
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.9\textwidth]{figures/full_ablation_metric_comparison.png}
+  \includegraphics[width=0.9\textwidth]{full_ablation_metric_comparison.png}
   \caption[Restricted pair-correlation diagnostic summary]{Restricted pair-correlation diagnostic summary (mean $\pm$ std over five seeds).
   The pair-observable feature map dominates every control on this deliberately favourable task.}
   \label{fig:hvk_pair_diagnostic}
