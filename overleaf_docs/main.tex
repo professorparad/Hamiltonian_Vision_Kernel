@@ -788,10 +788,10 @@ Where provable separations do exist, they are established for carefully construc
 We separate three questions.
 First, PCAE at six qubits can be simulated exactly on a classical computer, which says little about larger scales.
 Second, whether its model class admits an efficient classical replacement at scale is open.
-Tensor-network analyses give conditions for such dequantisation of variational models \citep{Shin2024Dequant}, and a classical tie at small scale does not settle it.
+\add{Tensor networks are one route to such a replacement, and they have been used to simulate quantum circuits \citep{Patra2024IBM, Patra2025PEPS} and variational quantum algorithms \citep{Aizpurua2025}.}
+Tensor-network analyses \add{also} give conditions for such dequantisation of variational models \citep{Shin2024Dequant}, and a classical tie at small scale does not settle it.
 Random Fourier features can also replace some variational models efficiently, under stated conditions \citep{Sweke2025}.
 Quantum convolutional networks on common image benchmarks can be simulated efficiently by a classical method based on Pauli shadows \citep{Bermejo2026}.
-\add{Tensor networks can also simulate circuits on IBM's largest quantum processors \citep{Patra2024IBM}, quantum dynamics on graphs without a fixed lattice \citep{Patra2025PEPS}, and variational quantum algorithms \citep{Aizpurua2025}.}
 Third, on held-out CIFAR-10, a closed-form surrogate of the PCAE2D map stays within 1~dB of matched classical feature maps.
 The trained circuit has not yet shown held-out generalisation.
 This matches large benchmarks in which simple classical models often match or beat small quantum models, and removing entanglement often costs little \citep{Bowles2024}.
