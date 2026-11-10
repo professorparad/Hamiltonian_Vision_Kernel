@@ -1,0 +1,133 @@
+
+\documentclass[11pt,a4paper]{letter}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{7pt}
+
+\begin{document}
+
+\begin{flushright}
+9 November 2026
+\end{flushright}
+
+\textbf{To}\\
+The Editor-in-Chief\\
+\textit{Quantum Machine Intelligence}\\
+Springer Nature
+
+\vspace{0.3cm}
+
+\textbf{Subject: Submission of Manuscript --- Hybrid Quantum--Classical
+Pauli-Correlator Architecture for Image Reconstruction}
+
+\vspace{0.3cm}
+
+Dear Editor-in-Chief,
+
+We are pleased to submit our manuscript entitled
+\textbf{``Hybrid Quantum--Classical Pauli-Correlator Architecture
+for Image Reconstruction''}
+for consideration for publication in
+\textit{Quantum Machine Intelligence}.
+
+In this work, we introduce the
+\textbf{Pauli-Correlator Autoencoder (PCAE)},
+a hybrid quantum--classical framework combining matrix product
+state (MPS) compression, variational quantum circuits, physically
+motivated Hamiltonian regularization, and classical neural
+networks for image reconstruction.
+
+Our central objective is to investigate how quantum-mechanical
+observables, particularly local Pauli expectation values and
+two-qubit correlations, can serve as structured latent
+representations for reconstructing classical visual information.
+
+The principal contributions of our manuscript are:
+
+\begin{enumerate}[leftmargin=*, itemsep=4pt]
+
+\item \textbf{Hybrid quantum--classical architecture:}
+We develop two six-qubit architectures, PCAE1D and PCAE2D,
+employing MPS-based feature extraction and Pauli-correlator
+representations with different circuit connectivity patterns.
+
+\item \textbf{Image reconstruction across multiple datasets:}
+We evaluate the framework on six image datasets, including
+CIFAR-10, MNIST, Fashion-MNIST, and three medical imaging
+datasets, demonstrating reconstruction of diverse image
+structures through per-image optimization.
+
+\item \textbf{Symmetry-aware quantum representations:}
+We introduce and numerically verify a group-averaged observable
+representation that is equivariant under the dihedral group
+$D_4$, providing a mathematically controlled approach to
+incorporating rotational and reflection symmetries.
+
+\item \textbf{Experimental validation on IBM quantum hardware:}
+We execute trained models on real IBM Quantum processors,
+reconstructing images from experimentally measured quantum
+observables without retraining the classical decoder.
+The hardware experiments achieve reconstruction PSNR values
+ranging from 25.90 to 31.52 dB in the initial five-image pilot.
+
+\item \textbf{Comparative evaluation and physical interpretation:}
+We perform classical baseline comparisons, component
+ablations, noise analyses, and controlled tests of pairwise
+observables to investigate the representational capabilities
+and limitations of the architecture.
+
+\end{enumerate}
+
+We believe that this manuscript is particularly well suited
+to \textit{Quantum Machine Intelligence}, as it addresses
+the intersection of quantum information processing,
+tensor-network representations, quantum machine learning,
+and experimentally implementable hybrid computational
+architectures.
+
+Beyond reconstruction feasibility, our study examines the
+structure and limitations of quantum-derived feature
+representations, including their behavior under realistic
+hardware noise.
+
+Importantly, we do not claim a quantum computational advantage
+over classical approaches. Instead, we present a systematic
+investigation of how structured quantum observables can be
+incorporated into classical learning pipelines, supported by
+quantitative comparisons and real-hardware experiments.
+
+We thank you for considering our manuscript for publication
+in \textit{Quantum Machine Intelligence}.
+We look forward to your evaluation.
+
+\vspace{0.4cm}
+
+Sincerely,
+
+\textbf{Sparsho Chakraborty}\\
+Department of Physics, School of Basic Sciences\\
+Indian Institute of Technology Bhubaneswar\\
+Odisha, India
+
+\vspace{0.2cm}
+
+\textit{On behalf of the authors:}\\
+Sparsho Chakraborty and Siddhartha Patra
+
+\vspace{0.2cm}
+
+\textbf{Corresponding Author:}\\
+Dr.\ Siddhartha Patra\\
+Centre for Quantum Engineering, Research and Education\\
+TCG CREST, Kolkata, India\\
+\href{mailto:siddhartha.patra@tcgcrest.org}
+{siddhartha.patra@tcgcrest.org}
+
+\end{document}
