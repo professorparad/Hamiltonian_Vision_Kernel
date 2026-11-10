@@ -1,133 +1,79 @@
+\documentclass[11pt,a4paper]{article}
 
-\documentclass[11pt,a4paper]{letter}
-
-\usepackage[margin=1in]{geometry}
+\usepackage[top=1.5cm,bottom=1.5cm,left=2.2cm,right=2.2cm]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
 
+\pagestyle{empty}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{7pt}
+\setlength{\parskip}{5pt}
 
 \begin{document}
 
-\begin{flushright}
-9 November 2026
-\end{flushright}
+% Space reserved for the institutional letterhead (adjust to its height)
+\vspace*{3.2cm}
 
-\textbf{To}\\
+\begin{minipage}[t]{0.65\textwidth}
 The Editor-in-Chief\\
-\textit{Quantum Machine Intelligence}\\
-Springer Nature
+\textit{Quantum Machine Intelligence}, Springer Nature
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\raggedleft 9 November 2026
+\end{minipage}
 
-\vspace{0.3cm}
-
-\textbf{Subject: Submission of Manuscript --- Hybrid Quantum--Classical
-Pauli-Correlator Architecture for Image Reconstruction}
-
-\vspace{0.3cm}
+\medskip
+\textbf{Subject:} Submission of the manuscript ``Hybrid Quantum--Classical
+Pauli-Correlator Architecture for Image Reconstruction''
 
 Dear Editor-in-Chief,
 
-We are pleased to submit our manuscript entitled
-\textbf{``Hybrid Quantum--Classical Pauli-Correlator Architecture
-for Image Reconstruction''}
-for consideration for publication in
-\textit{Quantum Machine Intelligence}.
+We submit the above manuscript for consideration in
+\textit{Quantum Machine Intelligence}. It introduces the
+\textbf{Pauli-Correlator Autoencoder (PCAE)}, a hybrid quantum--classical
+model that combines matrix product state (MPS) compression, a six-qubit
+variational circuit, Hamiltonian regularisation and a classical neural
+decoder. The question we address is whether local Pauli expectation values
+and two-qubit correlations can serve as a structured latent representation
+from which classical images are rebuilt. The main contributions are:
 
-In this work, we introduce the
-\textbf{Pauli-Correlator Autoencoder (PCAE)},
-a hybrid quantum--classical framework combining matrix product
-state (MPS) compression, variational quantum circuits, physically
-motivated Hamiltonian regularization, and classical neural
-networks for image reconstruction.
-
-Our central objective is to investigate how quantum-mechanical
-observables, particularly local Pauli expectation values and
-two-qubit correlations, can serve as structured latent
-representations for reconstructing classical visual information.
-
-The principal contributions of our manuscript are:
-
-\begin{enumerate}[leftmargin=*, itemsep=4pt]
-
-\item \textbf{Hybrid quantum--classical architecture:}
-We develop two six-qubit architectures, PCAE1D and PCAE2D,
-employing MPS-based feature extraction and Pauli-correlator
-representations with different circuit connectivity patterns.
-
-\item \textbf{Image reconstruction across multiple datasets:}
-We evaluate the framework on six image datasets, including
-CIFAR-10, MNIST, Fashion-MNIST, and three medical imaging
-datasets, demonstrating reconstruction of diverse image
-structures through per-image optimization.
-
-\item \textbf{Symmetry-aware quantum representations:}
-We introduce and numerically verify a group-averaged observable
-representation that is equivariant under the dihedral group
-$D_4$, providing a mathematically controlled approach to
-incorporating rotational and reflection symmetries.
-
-\item \textbf{Experimental validation on IBM quantum hardware:}
-We execute trained models on real IBM Quantum processors,
-reconstructing images from experimentally measured quantum
-observables without retraining the classical decoder.
-The hardware experiments achieve reconstruction PSNR values
-ranging from 25.90 to 31.52 dB in the initial five-image pilot.
-
-\item \textbf{Comparative evaluation and physical interpretation:}
-We perform classical baseline comparisons, component
-ablations, noise analyses, and controlled tests of pairwise
-observables to investigate the representational capabilities
-and limitations of the architecture.
-
+\begin{enumerate}[leftmargin=*, itemsep=1pt, topsep=2pt, parsep=0pt]
+\item Two six-qubit architectures, PCAE1D and PCAE2D, with MPS-based
+  feature extraction and different circuit connectivity.
+\item Per-image reconstruction on six datasets: CIFAR-10, MNIST,
+  Fashion-MNIST and three medical imaging sets.
+\item A group-averaged observable representation that is equivariant under
+  the dihedral group $D_4$, verified numerically.
+\item Trained models run on IBM Quantum processors without retraining the
+  classical decoder, giving 25.90 to 31.52~dB PSNR in a five-image pilot.
+\item Classical baselines, component ablations, noise studies and controlled
+  tests of the pairwise observables, which map the capabilities and limits
+  of the architecture.
 \end{enumerate}
 
-We believe that this manuscript is particularly well suited
-to \textit{Quantum Machine Intelligence}, as it addresses
-the intersection of quantum information processing,
-tensor-network representations, quantum machine learning,
-and experimentally implementable hybrid computational
-architectures.
+We do not claim a quantum computational advantage. The work is a
+systematic study of how quantum observables can enter a classical learning
+pipeline, supported by quantitative comparisons and real-hardware
+experiments. Since it brings together tensor networks, quantum machine
+learning and hybrid models that run on present-day hardware, we consider it
+a good fit for the readership of the journal.
 
-Beyond reconstruction feasibility, our study examines the
-structure and limitations of quantum-derived feature
-representations, including their behavior under realistic
-hardware noise.
-
-Importantly, we do not claim a quantum computational advantage
-over classical approaches. Instead, we present a systematic
-investigation of how structured quantum observables can be
-incorporated into classical learning pipelines, supported by
-quantitative comparisons and real-hardware experiments.
-
-We thank you for considering our manuscript for publication
-in \textit{Quantum Machine Intelligence}.
-We look forward to your evaluation.
-
-\vspace{0.4cm}
+Thank you for considering our manuscript.
 
 Sincerely,
 
-\textbf{Sparsho Chakraborty}\\
-Department of Physics, School of Basic Sciences\\
-Indian Institute of Technology Bhubaneswar\\
-Odisha, India
+\vspace{1.1cm} % space for signature
 
-\vspace{0.2cm}
+\textbf{Dr Siddhartha Patra} (Corresponding author, on behalf of both authors)\\
+Centre for Quantum Engineering, Research and Education, TCG CREST,
+Kolkata, India\\
+\href{mailto:siddhartha.patra@tcgcrest.org}{siddhartha.patra@tcgcrest.org}
 
-\textit{On behalf of the authors:}\\
-Sparsho Chakraborty and Siddhartha Patra
-
-\vspace{0.2cm}
-
-\textbf{Corresponding Author:}\\
-Dr.\ Siddhartha Patra\\
-Centre for Quantum Engineering, Research and Education\\
-TCG CREST, Kolkata, India\\
-\href{mailto:siddhartha.patra@tcgcrest.org}
-{siddhartha.patra@tcgcrest.org}
+\smallskip
+\textit{Co-author:} Sparsho Chakraborty, Department of Physics, School of
+Basic Sciences, Indian Institute of Technology Bhubaneswar, Odisha, India
 
 \end{document}
